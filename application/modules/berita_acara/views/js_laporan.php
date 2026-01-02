@@ -1,0 +1,122 @@
+<?php
+/**
+	* Author     : Alfikri, M.Kom
+	* Created By : Alfikri, M.Kom
+	* E-Mail     : alfikri.name@gmail.com
+	* No HP      : 081277337405
+*/
+?>
+<!-- Datatables -->
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<!-- Select2 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+<!-- Leaflet -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/leaflet/leaflet.js"></script>
+<script>
+	$('#id_opd').select2({
+			placeholder: "Pilih OPD",
+			allowClear: false,
+			width: 'style',
+			theme: 'bootstrap4'
+		});
+	$('#periode').select2({
+			placeholder: "Pilih Periode",
+			allowClear: false,
+			width: 'style',
+			theme: 'bootstrap4'
+		});
+
+function show_laporan() {
+		// Swal.showLoading();
+		// start_loading('Mengambil data laporan');
+
+		// checkIframeLoaded();
+
+
+		let id_opd = $('#id_opd').val();
+		let periode = $('#periode').val();
+		let pengambilan = $('#pengambilan').val();
+
+
+
+$('#tampil_pdf').show();
+					$('#tampil_pdf').attr('src', baseUrl('berita_acara/pdf_berita_acara?id_opd=') + id_opd + '&id_periode=' + periode + '&pengambilan_data=' + pengambilan + '#view=FitH');
+		
+
+
+
+	}
+
+
+
+function cek_synchronize(){
+		let id_opd = $('#id_opd').val();
+		let periode = $('#periode').val();
+
+		$.ajax({
+			url: baseUrl('berita_acara/cek_synchronize'),
+			type: 'POST',
+			dataType: 'JSON',
+			data: {			
+				id_opd :id_opd,
+				periode : periode	
+			},
+			success: function(data) {
+				// console.log(data.status);
+				if (data.status==1) {
+					synchronize()
+				}else{
+					Swal.fire('Tidak di izinkan',data.pesan,'warning');
+				}
+							
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				
+			}
+		});
+
+}
+
+
+
+function synchronize() {
+		// Swal.showLoading();
+		// start_loading('Mengambil data laporan');
+		// toastr.success('3213');
+		// checkIframeLoaded();
+
+				// $('#tombol_action').html(`<button type="button" class="btn-icon btn-shadow btn-outline-2x btn btn-outline-primary" onclick="show_laporan()" disabled><i class="fa fa-search"> </i>Loading pengambilan data</button>`);
+
+		let id_opd = $('#id_opd').val();
+		let periode = $('#periode').val();
+
+
+		$.ajax({
+			url: baseUrl('berita_acara/synchronize'),
+			type: 'POST',
+			dataType: 'JSON',
+			data: {			
+				id_opd :id_opd,
+				periode : periode,	
+			},
+			success: function(data) {
+				Swal.fire('Selesai','Synchronize Selesai<br>Data berita acara anda sudah ditampilkan','success');
+				// $('#tombol_action').html(`<button type="button" class="btn-icon btn-shadow btn-outline-2x btn btn-outline-primary" onclick="show_laporan()"><i class="fa fa-search"> </i>  Tampilkan Laporan (PDF)</button>`);
+					show_laporan();		
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				
+			}
+		});
+
+
+
+}
+
+
+
+
+
+</script>
