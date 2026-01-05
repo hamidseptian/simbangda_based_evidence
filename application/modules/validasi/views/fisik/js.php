@@ -753,7 +753,7 @@
 		$('#status').val('Pilih Status').trigger('change');
 		var parent = $('#modal-dokumen-realisasi').find('iframe').parent();
 		var srcpdf = $('#modal-dokumen-realisasi').find('iframe');
-		var newElement = '<iframe src="' + baseUrl(file_url) + '" width="100%" height="500px">';
+		var newElement = '<iframe src="' + file_url + '" width="100%" height="500px">';
 		$(srcpdf).remove();
 		parent.append(newElement);
 		// let parent = $('#modal-dokumen-realisasi').find('iframe').parent();

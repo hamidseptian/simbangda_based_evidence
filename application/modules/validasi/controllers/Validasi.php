@@ -808,14 +808,15 @@ class Validasi extends MY_Controller
             $output['data']['id_helpesk_utama'] = $q_helpdesk_utama['id_user'];
 
             $dok_realisasi      = $this->validasi_fisik_model->get_dok_realisasi($id_paket);
-            $primary_folder     = 'sbe_files_data/';
+            $primary_folder     = 'evience/';
             $directory          = [
+                'evidence',
                 $q['tahun'],
                 $q['id_instansi'],
                 'REALISASI-FISIK',
                 $id_paket,
             ];
-            $list_directory     = $this->sbe_directory($primary_folder, $directory);
+            $list_directory     = implode('/', $directory);//$this->sbe_directory($primary_folder, $directory);
             foreach ($dok_realisasi->result_array() as $key => $value) {
 
             $id_vol_pelaksanaan_pekerjaan = $value['id_vol_pelaksanaan_pekerjaan'];
@@ -840,8 +841,9 @@ class Validasi extends MY_Controller
                         $output['evidence'][$key]['file_dokumen']       = $file_url;
                         # code...
                     }else{
-                        $file_url = $list_directory . $value['file_dokumen'];
-                        $output['evidence'][$key]['file_dokumen']       = $file_url;
+                        $file_url = $list_directory .'/' . $value['file_dokumen'];
+                        $sourceminio = $_ENV['MINIO_ENDPOINT'] . '/'. $_ENV['MINIO_BUCKET'] . '/' .$file_url;
+                        $output['evidence'][$key]['file_dokumen']       = $this->minio->presignedUrl($file_url);//$file_url;
 
                     }
                     $output['evidence'][$key]['nilai']              = $value['nilai'];

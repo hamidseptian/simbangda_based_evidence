@@ -29,7 +29,7 @@ if ($q_kuisioner->num_rows()>0) {
     <meta http-equiv="X-Frame-Options" content="Sameorigin">
     <title><?php echo $title; ?> - <?php echo $this->template->settings('app_name'); ?></title>
     <!-- Favico -->
-    <link rel="shortcut icon" href="<?php echo base_url(); ?>assets/sbe/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= asset('sbe/favicon.ico') ?>" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" />
     <meta name="author" content="Alfikri" />
     <meta name="description" content="SIMBANGDA Based Evidence, simbangda based evidence, SIMBANGDA berbasis pembuktian, simbangda berbasis pembuktian, SIMBANGDA SUMBAR, simbangda sumbar, Sistem Informasi Manajemen Pembangunan Daerah, Sistem Informasi Manajemen Pembangunan Daerah Sumbar, Sumatera Barat" />
@@ -38,12 +38,12 @@ if ($q_kuisioner->num_rows()>0) {
     <!-- Bootstrap 4.3.1 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <!-- Architectui HTML FREE -->
-    <link href="<?php echo base_url() ?>assets/architectui-html-pro/main.87c0748b313a1dda75f5.css" rel="stylesheet">
+    <link href="<?= asset('architectui-html-pro/main.87c0748b313a1dda75f5.css') ?>" rel="stylesheet">
     <!-- Font Awesome -->
-    <link href="<?php echo base_url() ?>assets/fontawesome/css/all.css" rel="stylesheet">
+    <link href="<?= asset('fontawesome/css/all.css') ?>" rel="stylesheet">
 
-    <script src="<?php echo base_url() ?>assets/sweetalert/dist/sweetalert2.min.js"></script>
-<link rel="stylesheet" href="<?php echo base_url() ?>assets/sweetalert/dist/sweetalert2.min.css">
+    <script src="<?= asset('sweetalert/dist/sweetalert2.min.js') ?>"></script>
+<link rel="stylesheet" href="<?= asset('sweetalert/dist/sweetalert2.min.css') ?>">
     <?php echo $extra_css; ?>
 </head>
 
@@ -863,8 +863,8 @@ if ($q_kuisioner->num_rows()>0) {
             return alamat;
         }
     </script>
-    <script type="text/javascript" src="<?php echo base_url() ?>assets/sbe/fungsi.js"></script>
-    <script src="<?php echo base_url(); ?>assets/jquery_number/jquery.number.js"></script>
+    <script type="text/javascript" src="<?php echo asset('assets/sbe/fungsi.js') ?>"></script>
+    <script src="<?= asset('jquery_number/jquery.number.js') ?>"></script>
     <?php echo $extra_js; ?>
     <?php echo $modal; ?>
 

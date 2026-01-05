@@ -715,159 +715,215 @@ class Realisasi extends MY_Controller
         }
     }
 
+    
+
+
+
+
     public function upload_file()
     {
         if (!$this->input->is_ajax_request()) {
             show_404();
-        } else {
-            $output = [
-                'status'    => false,
-                'data'      => [],
-                'dokumen'   => [],
-                'message'   => '',
-                'cek'       => []
-            ];
-
-            $id_instansi            = $this->input->post('id_instansi');
-            $id_kpa                 = $this->input->post('id_kpa');
-            $id_pptk                = $this->input->post('id_pptk');
-            $id_volume                = $this->input->post('id_volume');
-            $id_paket_pekerjaan     = $this->input->post('id_paket_pekerjaan');
-            $jenis_paket            = $this->input->post('jenis_paket');
-            $dokumen                = $this->input->post('dokumen');
-            $dokumen_key            = $this->input->post('dokumen_key');
-            $id                     = $this->input->post('id');
-            if ($id_volume==null) {
-                $nama_file_disimpan = $dokumen;
-            }else{
-                $cek_pelaksanaan = $this->db->query("SELECT pelaksanaan_ke from vol_pelaksanaan_pekerjaan where id_vol_pelaksanaan_pekerjaan ='$id_volume'")->row()->pelaksanaan_ke ;
-                $nama_file_disimpan = 'Pelaksanaan ke-'.$cek_pelaksanaan;
-            }
-            $fix_id_volume = $id_volume;//str_replace("_", "", $id_volume);
-
-            $kode_rekening_sub_kegiatan = $this->input->post('kode_rekening_sub_kegiatan');
-            $pecah = explode('.', $kode_rekening_sub_kegiatan );
-            $kode_sub_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
-            $kode_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4];
-            $kode_program = $pecah[0].'.'.$pecah[1].'.'.$pecah[2];
-            $kode_bu = $pecah[0].'.'.$pecah[1];
-            $tahun =  tahun_anggaran();
-
-            
-            $primary_folder         = './sbe_files_data/';
-            $directory              = [
-               $tahun,
-                id_instansi(),
-                'REALISASI-FISIK',
-                $id_paket_pekerjaan,
-            ];
-            $list_directory         = $this->sbe_directory($primary_folder, $directory);
-
-            if (!file_exists($list_directory)) {
-                mkdir($list_directory, 0777, TRUE);
-            }
-
-            $config['upload_path']      = $list_directory;
-            $config['overwrite']        = true;
-            $config['allowed_types']    = 'pdf';
-            $config['encrypt_name']     = false;
-            $config['file_name']        = slug($nama_file_disimpan).'-'.date('Ymdhi');
-            $config['max_size']         = '10000';
-            $config['file_ext_tolower']         = true;
-
-
-            $this->load->library('upload', $config);
-
-            if (!$this->upload->do_upload($id)) {
-                $output['status']   = false;
-                $output['message']  = $this->upload->display_errors();
-            } else {
-                $upload = ['upload_data' => $this->upload->data()];
-
-                if (bulan_aktif()==intval(date('m'))) {
-                	if (tahun_anggaran()==date('Y')) {
-	                	$bulan_simpan = bulan_aktif() -1 ;
-                	}else{
-	                	$bulan_simpan = 12;
-                	}
-                }else{
-                	$bulan_simpan = intval(date('m')) -1 ;
-
-                }
-                	$bulan_ditambahkan = intval(date('m'));
-
-                $batas_evidence = 200;	
-
-
-                $batas_evidence_helpdesk_utama = 250;
-
-
-
-                $id_helpdesk = id_user()    ;
-
-
-                $q_evidence_belum_validasi = $this->db->query("SELECT id_realisasi_fisik from realisasi_fisik where status='Belum Validasi' and id_instansi='$id_instansi' and id_helpdesk !='$id_helpdesk' and tahun='$tahun'")->num_rows();
-
-                if ($q_evidence_belum_validasi > $batas_evidence_helpdesk_utama) {
-                    $helpdesk = $this->db->query("SELECT hi.id_user, (select count(id_realisasi_fisik) from realisasi_fisik where id_helpdesk=hi.id_user and status='Belum Validasi' and id_instansi=hi.id_instansi and id_helpdesk !='$id_helpdesk') as jumlah_evidence from helpdesk_instansi hi where hi.id_instansi = '$id_instansi' and hi.utama !='1'")->result_array();
-                    $id_helpdesk = "";
-                    $jumlah_h = "";
-                    foreach ($helpdesk as $k => $v) {
-                    		if ($v['jumlah_evidence']<$batas_evidence) {
-                    			$id_helpdesk = $v['id_user'];
-                    		}
-                    }
-
-                }else{
-                                $id_helpdesk = "";
-                }
-                $primary = [
-                    'id_instansi'               => $id_instansi,
-                    'id_pptk'                   => $id_pptk,
-                    'id_paket_pekerjaan'        => $id_paket_pekerjaan,
-                    'kode_rekening_sub_kegiatan'    => $kode_rekening_sub_kegiatan,
-                    'dokumen'                   => $dokumen
-                ];
-                $simpan = [
-                    'id_instansi'               => $id_instansi,
-                    'id_pptk'                   => $id_pptk,
-                    'id_paket_pekerjaan'        => $id_paket_pekerjaan,
-                    'id_vol_pelaksanaan_pekerjaan'        => $fix_id_volume,
-                    'kode_rekening_sub_kegiatan'    => $kode_rekening_sub_kegiatan,
-                    'kode_rekening_kegiatan'    => $kode_kegiatan,
-                    'kode_rekening_program'    => $kode_program,
-                    'kode_bidang_urusan'    => $kode_bu,
-                    'bulan'                     => bulan_aktif(),
-                    'bulan_ditambahkan'                     => $bulan_ditambahkan,
-                    'tahun'                     => tahun_anggaran(),
-                    'dokumen_key'               => $dokumen_key,
-                    'dokumen'                   => $dokumen,
-                    'file_dokumen'              => slug($nama_file_disimpan).'-'.date('Ymdhi').'.pdf', //$upload['upload_data']['file_name'],
-                    'nilai'                     => 0,
-                    'created_on'                => timestamp(),
-                    'id_helpdesk'                => $id_helpdesk,
-                  //  'updated_on'                => timestamp(),
-                    'created_by'                => $this->sbe_id_user(),
-                    'updated_by'                => $this->sbe_id_user()
-                ];
-                $update = [
-                    'updated_on' => timestamp(),
-                    'updated_by' => $this->sbe_id_user()
-                ];
-
-                $cek = $this->db->get_where('realisasi_fisik', $primary)->num_rows();
-                if ($cek > 0) {
-                    $this->db->update('realisasi_fisik', $update, $primary);
-                } else {
-                    $this->db->insert('realisasi_fisik', $simpan);
-                }
-
-                $output['status'] = true;
-            }
-
-            echo json_encode($output);
         }
+
+        $output = [
+            'status'    => false,
+            'data'      => [],
+            'dokumen'   => [],
+            'message'   => '',
+            'cek'       => []
+        ];
+
+        $id_instansi        = $this->input->post('id_instansi');
+        $id_kpa             = $this->input->post('id_kpa');
+        $id_pptk            = $this->input->post('id_pptk');
+        $id_volume          = $this->input->post('id_volume');
+        $id_paket_pekerjaan = $this->input->post('id_paket_pekerjaan');
+        $jenis_paket        = $this->input->post('jenis_paket');
+        $dokumen            = $this->input->post('dokumen');
+        $dokumen_key        = $this->input->post('dokumen_key');
+        $id                 = $this->input->post('id');
+
+        if ($id_volume == null) {
+            $nama_file_disimpan = $dokumen;
+        } else {
+            $cek_pelaksanaan = $this->db
+                ->query("SELECT pelaksanaan_ke FROM vol_pelaksanaan_pekerjaan WHERE id_vol_pelaksanaan_pekerjaan = ?", [$id_volume])
+                ->row()
+                ->pelaksanaan_ke;
+
+            $nama_file_disimpan = 'Pelaksanaan ke-' . $cek_pelaksanaan;
+        }
+
+        $fix_id_volume = $id_volume;
+
+        $kode_rekening_sub_kegiatan = $this->input->post('kode_rekening_sub_kegiatan');
+        $pecah = explode('.', $kode_rekening_sub_kegiatan);
+
+        $kode_sub_kegiatan = implode('.', array_slice($pecah, 0, 6));
+        $kode_kegiatan     = implode('.', array_slice($pecah, 0, 5));
+        $kode_program      = implode('.', array_slice($pecah, 0, 3));
+        $kode_bu            = implode('.', array_slice($pecah, 0, 2));
+
+        $tahun = tahun_anggaran();
+
+        /**
+         * ===============================
+         * CONFIG UPLOAD CI (TMP SAJA)
+         * ===============================
+         */
+        $primary_folder = './tmp_upload/';
+     
+
+        $config['upload_path']      = $primary_folder;
+        $config['allowed_types']    = 'pdf';
+        $config['overwrite']        = true;
+        $config['encrypt_name']     = false;
+        $config['file_name']        = slug($nama_file_disimpan) . '-' . date('YmdHi');
+        $config['max_size']         = 10000;
+        $config['file_ext_tolower'] = true;
+
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload($id)) {
+            $output['message'] = $this->upload->display_errors();
+            echo json_encode($output);
+            return;
+        }
+
+        /**
+         * ===============================
+         * UPLOAD KE MINIO
+         * ===============================
+         */
+        $upload_data = $this->upload->data();
+
+        $file_name = $upload_data['file_name'];
+        $tmp_path  = $upload_data['full_path'];
+        $mime_type = $upload_data['file_type'];
+
+        $objectName = implode('/', [
+            'evidence',
+            $tahun,
+            id_instansi(),
+            'REALISASI-FISIK',
+            $id_paket_pekerjaan,
+            $file_name
+        ]);
+
+        try {
+            $this->minio->upload($objectName, $tmp_path, $mime_type);
+            @unlink($tmp_path);
+        } catch (Exception $e) {
+            $output['message'] = 'Gagal upload ke storage';
+            echo json_encode($output);
+            return;
+        }
+
+        /**
+         * ===============================
+         * LOGIKA BULAN
+         * ===============================
+         */
+        if (bulan_aktif() == intval(date('m'))) {
+            $bulan_simpan = (tahun_anggaran() == date('Y')) ? bulan_aktif() - 1 : 12;
+        } else {
+            $bulan_simpan = intval(date('m')) - 1;
+        }
+
+        $bulan_ditambahkan = intval(date('m'));
+
+        $batas_evidence = 200;
+        $batas_evidence_helpdesk_utama = 250;
+        $id_helpdesk = id_user();
+
+        $q_evidence_belum_validasi = $this->db->query("
+            SELECT id_realisasi_fisik 
+            FROM realisasi_fisik 
+            WHERE status='Belum Validasi'
+            AND id_instansi=?
+            AND id_helpdesk != ?
+            AND tahun=?
+        ", [$id_instansi, $id_helpdesk, $tahun])->num_rows();
+
+        if ($q_evidence_belum_validasi > $batas_evidence_helpdesk_utama) {
+            $helpdesk = $this->db->query("
+                SELECT hi.id_user,
+                (
+                    SELECT COUNT(id_realisasi_fisik)
+                    FROM realisasi_fisik
+                    WHERE id_helpdesk=hi.id_user
+                    AND status='Belum Validasi'
+                    AND id_instansi=hi.id_instansi
+                ) AS jumlah_evidence
+                FROM helpdesk_instansi hi
+                WHERE hi.id_instansi=?
+                AND hi.utama != '1'
+            ", [$id_instansi])->result_array();
+
+            foreach ($helpdesk as $v) {
+                if ($v['jumlah_evidence'] < $batas_evidence) {
+                    $id_helpdesk = $v['id_user'];
+                    break;
+                }
+            }
+        }
+
+        /**
+         * ===============================
+         * SIMPAN DATABASE
+         * ===============================
+         */
+        $primary = [
+            'id_instansi'        => $id_instansi,
+            'id_pptk'            => $id_pptk,
+            'id_paket_pekerjaan' => $id_paket_pekerjaan,
+            'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan,
+            'dokumen'            => $dokumen
+        ];
+
+        $simpan = [
+            'id_instansi'        => $id_instansi,
+            'id_pptk'            => $id_pptk,
+            'id_paket_pekerjaan' => $id_paket_pekerjaan,
+            'id_vol_pelaksanaan_pekerjaan' => $fix_id_volume,
+            'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan,
+            'kode_rekening_kegiatan' => $kode_kegiatan,
+            'kode_rekening_program' => $kode_program,
+            'kode_bidang_urusan' => $kode_bu,
+            'bulan'              => bulan_aktif(),
+            'bulan_ditambahkan'  => $bulan_ditambahkan,
+            'tahun'              => $tahun,
+            'dokumen_key'        => $dokumen_key,
+            'dokumen'            => $dokumen,
+            'file_dokumen'       => $objectName,
+            'nilai'              => 0,
+            'created_on'         => timestamp(),
+            'id_helpdesk'        => $id_helpdesk,
+            'created_by'         => $this->sbe_id_user(),
+            'updated_by'         => $this->sbe_id_user()
+        ];
+
+        $update = [
+            'updated_on' => timestamp(),
+            'updated_by' => $this->sbe_id_user()
+        ];
+
+        if ($this->db->get_where('realisasi_fisik', $primary)->num_rows() > 0) {
+            $this->db->update('realisasi_fisik', $update, $primary);
+        } else {
+            $this->db->insert('realisasi_fisik', $simpan);
+        }
+
+        $output['status'] = true;
+        echo json_encode($output);
     }
+
+
+
+
+
+
 
     public function dokumen_realisasi()
     {
