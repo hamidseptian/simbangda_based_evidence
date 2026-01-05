@@ -1,0 +1,21 @@
+stages:
+  - image-building
+  - deploy-dev
+  - deploy-prod
+
+variables:
+  CICD_BRANCH: main
+  PORT_IN_CONTAINER: 5001
+  # Untuk environment development
+  SERVICES_PORT_DEV: 6900
+  SERVICES_ENV_DEV: deploy/.env.dev
+  # Untuk environment production
+  SERVICES_PORT_PROD: 6901
+  SERVICES_ENV_PROD: deploy/.env.prod
+  # Token diambil dari CI/CD Variables
+  ACCESS_TOKEN: $ACCESS_TOKEN
+
+include:
+  - project: $CI_PROJECT
+    ref: master
+    file: '/deploy-opd.yml'
