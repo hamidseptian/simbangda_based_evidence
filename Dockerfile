@@ -102,10 +102,14 @@ RUN rm -rf /var/www/deploy \
 # ===============================
 # Permission
 # ===============================
-RUN mkdir -p /var/log/nginx \
-    && chown -R www-data:www-data /var/log/nginx /var/lib/nginx /run/nginx \
-    && chown -R root:root /var/www
 
+RUN mkdir -p /var/log/nginx \
+    && chown -R www-data:www-data /var/log/nginx \
+    && chmod -R 755 /var/log/nginx
+
+RUN chown -R root:root /var/www
+RUN chown -R www-data:www-data /var/lib/nginx
+RUN chown www-data:www-data /var/run/nginx.pid || true
 # ===============================
 # Expose Port
 # ===============================
@@ -114,6 +118,6 @@ EXPOSE 5001
 # ===============================
 # Run Services
 # ===============================
-CMD ["sh", "-c", "rm -rf /var/www/deploy && php-fpm -D && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
 
 USER www-data
