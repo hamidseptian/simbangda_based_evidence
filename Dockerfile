@@ -4,7 +4,7 @@ FROM php:7.3-fpm-alpine AS build-stage
 # Metadata
 LABEL maintainer="Rio Bayu Sentosa <riobayusentosa@sumbarprov.go.id>" \
       description="Dockerfile aplikasi CodeIgniter 3 dengan PHP 7.3 FPM + Nginx (Alpine)" \
-      version="1.2"
+      version="1.3"
 
 # Copy konfigurasi PHP
 COPY deploy/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
@@ -55,13 +55,12 @@ RUN docker-php-ext-install \
     exif \
     pcntl
 
-# Enable mysqli
 RUN docker-php-ext-enable mysqli
 
-# ✅ GD FIX KHUSUS ALPINE + PHP 7.3
+# ✅ FIX GD UNTUK PHP 7.3 + ALPINE (INI KUNCI UTAMA)
 RUN docker-php-ext-configure gd \
-    --with-freetype \
-    --with-jpeg \
+    --with-freetype-dir=/usr \
+    --with-jpeg-dir=/usr \
     && docker-php-ext-install gd
 
 # Konfigurasi Nginx
