@@ -843,7 +843,7 @@ class Validasi extends MY_Controller
                     }else{
                         $file_url = $value['file_dokumen'];
                         $sourceminio = $_ENV['MINIO_ENDPOINT'] . '/'. $_ENV['MINIO_BUCKET'] . '/' .$file_url;
-                        $output['evidence'][$key]['file_dokumen']       = $this->minio->presignedUrl($file_url);//$file_url;
+                        $output['evidence'][$key]['file_dokumen']       = minio_signed_url($file_url);//$this->minio->presignedUrl($file_url);//$file_url;
 
                     }
                     $output['evidence'][$key]['nilai']              = $value['nilai'];
