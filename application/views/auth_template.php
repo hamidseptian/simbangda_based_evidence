@@ -112,7 +112,7 @@
   <?php echo $contents; ?>
 
   <!-- jQuery 3 -->
-  <script src="<?php echo base_url(); ?>assets/admin_lte/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="<?php echo base_url(); ?>assets/jquery/jquery.js"></script>
   <!-- Bootstrap 3.3.7 -->
   <script src="<?php echo base_url(); ?>assets/admin_lte/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <!-- iCheck -->
