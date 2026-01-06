@@ -426,6 +426,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 						let a = v.split("_");
 						let b = a.length > 1 ? a[1] : a[0];
 						let id_dok = a[0].replace(/\s/g, '');
+						console.log(id_dok);
 
 						let pecah_id_dan_nama = v.split("___");
 						let id_volume = pecah_id_dan_nama[1] != null ? pecah_id_dan_nama[1] : '' ;
@@ -446,7 +447,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 							'<label for="">File Scan ' + b + '</label>' +
 							'<div class="input-group">' +
 							'<div class="custom-file">' +
-							'<input type="file" class="custom-file-input" id="' + id_dok + '-' + id + '" name="' + id_dok + '-' + id + '" aria-describedby="inputGroupFileAddon04" onchange="get_file_name(this)">' +
+							'<input type="file" class="custom-file-input" id="' + id_dok + '-' + id + '" name="img" aria-describedby="inputGroupFileAddon04" onchange="get_file_name(this)">' +
 							'<label class="custom-file-label" id="label-' + id_dok + '-' + id + '" for="' + id_dok + '-' + id + '">Choose File</label>' +
 							'</div>' +
 							'<div class="input-group-append">' +

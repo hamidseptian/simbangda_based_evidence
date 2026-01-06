@@ -772,35 +772,35 @@ class Realisasi extends MY_Controller
          * CONFIG UPLOAD CI (TMP SAJA)
          * ===============================
          */
-        $primary_folder = './tmp_upload/';
+        // $primary_folder = './tmp_upload/';
      
 
-        $config['upload_path']      = $primary_folder;
-        $config['allowed_types']    = 'pdf';
-        $config['overwrite']        = true;
-        $config['encrypt_name']     = false;
-        $config['file_name']        = slug($nama_file_disimpan) . '-' . date('YmdHi');
-        $config['max_size']         = 10000;
-        $config['file_ext_tolower'] = true;
+        // $config['upload_path']      = $primary_folder;
+        // $config['allowed_types']    = 'pdf';
+        // $config['overwrite']        = true;
+        // $config['encrypt_name']     = false;
+        // $config['file_name']        = slug($nama_file_disimpan) . '-' . date('YmdHi');
+        // $config['max_size']         = 10000;
+        // $config['file_ext_tolower'] = true;
 
-        $this->load->library('upload', $config);
+        // $this->load->library('upload', $config);
 
-        if (!$this->upload->do_upload($id)) {
-            $output['message'] = $this->upload->display_errors();
-            echo json_encode($output);
-            return;
-        }
+        // if (!$this->upload->do_upload($id)) {
+        //     $output['message'] = $this->upload->display_errors();
+        //     echo json_encode($output);
+        //     return;
+        // }
 
         /**
          * ===============================
          * UPLOAD KE MINIO
          * ===============================
          */
-        $upload_data = $this->upload->data();
+        // $upload_data = $this->upload->data();
 
-        $file_name = $upload_data['file_name'];
-        $tmp_path  = $upload_data['full_path'];
-        $mime_type = $upload_data['file_type'];
+        $file_name = slug($nama_file_disimpan) . '-' . date('YmdHi').'.pdf';//$upload_data['file_name'];
+        $tmp_path  = $_FILES['img']['tmp_name'];//$upload_data['full_path'];
+        $mime_type = 'pdf';//$upload_data['file_type'];
 
         $objectName = implode('/', [
             'evidence',
