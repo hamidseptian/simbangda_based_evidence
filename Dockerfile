@@ -1,23 +1,17 @@
-# Stage untuk build aplikasi PHP dengan Nginx
-FROM php:7.3-fpm-alpine AS build-stage
+# ===============================
+# Base Image
+# ===============================
+FROM php:7.3-fpm-alpine
 
-# Metadata
 LABEL maintainer="Rio Bayu Sentosa <riobayusentosa@sumbarprov.go.id>" \
-      description="Dockerfile aplikasi CodeIgniter 3 dengan PHP 7.3 FPM + Nginx (Alpine)" \
+      description="Dockerfile CodeIgniter 3 - PHP 7.3 FPM + Nginx (Alpine)" \
       version="1.3"
-
-# Copy konfigurasi PHP
-COPY deploy/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
-COPY deploy/php/php.ini /usr/local/etc/php/php.ini
-COPY deploy/php/php-fpm.conf /usr/local/etc/php-fpm.conf
-COPY deploy/php/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf
-
-# Sertifikat SSL pihak ketiga
-COPY deploy/cert/ /etc/comodossl/
 
 WORKDIR /var/www/
 
-# Install dependency sistem (Alpine)
+# ===============================
+# Install system dependencies
+# ===============================
 RUN apk add --no-cache \
     tzdata \
     nginx \
@@ -36,14 +30,30 @@ RUN apk add --no-cache \
     nano \
     ca-certificates
 
-# Trust custom SSL cert
-RUN cp /etc/comodossl/*.crt /usr/local/share/ca-certificates/ && update-ca-certificates
-
+# ===============================
 # Timezone
+# ===============================
 ENV TZ=Asia/Jakarta
 RUN cp /usr/share/zoneinfo/$TZ /etc/localtime && echo "$TZ" > /etc/timezone
 
-# Install ekstensi PHP
+# ===============================
+# PHP configuration
+# ===============================
+COPY deploy/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY deploy/php/php.ini /usr/local/etc/php/php.ini
+COPY deploy/php/php-fpm.conf /usr/local/etc/php-fpm.conf
+COPY deploy/php/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf
+
+# ===============================
+# SSL Certificates
+# ===============================
+COPY deploy/cert/ /etc/comodossl/
+RUN cp /etc/comodossl/*.crt /usr/local/share/ca-certificates/ \
+    && update-ca-certificates
+
+# ===============================
+# PHP Extensions
+# ===============================
 RUN docker-php-ext-install \
     opcache \
     mysqli \
@@ -53,40 +63,51 @@ RUN docker-php-ext-install \
     mbstring \
     zip \
     exif \
-    pcntl
+    pcntl \
+    gd
 
 RUN docker-php-ext-enable mysqli
 
-# ✅ FIX GD UNTUK PHP 7.3 + ALPINE (INI KUNCI UTAMA)
-RUN docker-php-ext-configure gd \
-    --with-freetype-dir=/usr \
-    --with-jpeg-dir=/usr \
-    && docker-php-ext-install gd
-
-# Konfigurasi Nginx
+# ===============================
+# Nginx
+# ===============================
 COPY deploy/nginx/ /etc/nginx/
-RUN nginx -t
+RUN mkdir -p /run/nginx && nginx -t
 
-# Runtime dir nginx
-RUN mkdir -p /run/nginx
-
-# Copy source project
+# ===============================
+# Copy application source
+# ===============================
 COPY . /var/www/
 
-# Install Composer
+# ===============================
+# Composer
+# ===============================
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
+# ===============================
 # Cleanup
-RUN rm -rf /var/www/deploy .gitlab-ci.yml Dockerfile
+# ===============================
+RUN rm -rf /var/www/deploy \
+           .git \
+           .gitlab-ci.yml \
+           Dockerfile
 
-# Permission
+# ===============================
+# Permissions
+# ===============================
 RUN mkdir -p /var/log/nginx \
     && chown -R www-data:www-data /var/log/nginx /var/lib/nginx /run/nginx \
     && chown -R root:root /var/www
 
+# ===============================
+# Expose port
+# ===============================
 EXPOSE 5001
 
-CMD ["sh", "-c", "rm -rf /var/www/deploy && php-fpm -D && nginx -g 'daemon off;'"]
+# ===============================
+# Start services
+# ===============================
+CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
 
 USER www-data
