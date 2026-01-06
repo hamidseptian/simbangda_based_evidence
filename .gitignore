@@ -28,10 +28,7 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-project
 /tests/tests/
 /tests/results/
-application/config/database.php
-application/config/config.php
 2018/
 2019/
 sbe_files_data/
-application/config/config.php
 .env
