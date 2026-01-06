@@ -54,6 +54,8 @@ RUN cp /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo "$TZ" > /etc/timezone \
     && date
 
+
+RUN docker-php-ext-install calendar
 # ===============================
 # PHP Extensions
 # ===============================
