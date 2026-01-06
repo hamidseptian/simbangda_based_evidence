@@ -846,28 +846,28 @@ class Realisasi extends MY_Controller
             AND tahun=?
         ", [$id_instansi, $id_helpdesk, $tahun])->num_rows();
 
-        if ($q_evidence_belum_validasi > $batas_evidence_helpdesk_utama) {
-            $helpdesk = $this->db->query("
-                SELECT hi.id_user,
-                (
-                    SELECT COUNT(id_realisasi_fisik)
-                    FROM realisasi_fisik
-                    WHERE id_helpdesk=hi.id_user
-                    AND status='Belum Validasi'
-                    AND id_instansi=hi.id_instansi
-                ) AS jumlah_evidence
-                FROM helpdesk_instansi hi
-                WHERE hi.id_instansi=?
-                AND hi.utama != '1'
-            ", [$id_instansi])->result_array();
+        // if ($q_evidence_belum_validasi > $batas_evidence_helpdesk_utama) {
+        //     $helpdesk = $this->db->query("
+        //         SELECT hi.id_user,
+        //         (
+        //             SELECT COUNT(id_realisasi_fisik)
+        //             FROM realisasi_fisik
+        //             WHERE id_helpdesk=hi.id_user
+        //             AND status='Belum Validasi'
+        //             AND id_instansi=hi.id_instansi
+        //         ) AS jumlah_evidence
+        //         FROM helpdesk_instansi hi
+        //         WHERE hi.id_instansi=?
+        //         AND hi.utama != '1'
+        //     ", [$id_instansi])->result_array();
 
-            foreach ($helpdesk as $v) {
-                if ($v['jumlah_evidence'] < $batas_evidence) {
-                    $id_helpdesk = $v['id_user'];
-                    break;
-                }
-            }
-        }
+        //     foreach ($helpdesk as $v) {
+        //         if ($v['jumlah_evidence'] < $batas_evidence) {
+        //             $id_helpdesk = $v['id_user'];
+        //             break;
+        //         }
+        //     }
+        // }
 
         /**
          * ===============================
@@ -896,7 +896,7 @@ class Realisasi extends MY_Controller
             'tahun'              => $tahun,
             'dokumen_key'        => $dokumen_key,
             'dokumen'            => $dokumen,
-            'file_dokumen'       => $objectName,
+            'file_dokumen'       => $file_name,
             'nilai'              => 0,
             'created_on'         => timestamp(),
             'id_helpdesk'        => $id_helpdesk,
