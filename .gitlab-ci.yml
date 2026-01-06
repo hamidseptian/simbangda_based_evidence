@@ -5,7 +5,7 @@ stages:
 
 variables:
   CICD_BRANCH: main
-  PORT_IN_CONTAINER: 5001
+  PORT_IN_CONTAINER: 8080
   # Untuk environment development
   SERVICES_PORT_DEV: 6900
   SERVICES_ENV_DEV: deploy/.env.dev

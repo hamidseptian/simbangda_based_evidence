@@ -113,7 +113,7 @@ RUN chown www-data:www-data /var/run/nginx.pid || true
 # ===============================
 # Expose Port
 # ===============================
-EXPOSE 5001
+EXPOSE 8080
 
 # ===============================
 # Run Services
