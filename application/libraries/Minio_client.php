@@ -5,8 +5,8 @@ use Aws\S3\Exception\S3Exception;
 class Minio_client {
     protected $s3;
     protected $bucket;
-    protected $max_size = 3 * 1024 * 1024; // 3MB
-    protected $allowed_types = ['jpg', 'jpeg', 'png'];
+    protected $max_size = 10 * 1024 * 1024; // 3MB
+    protected $allowed_types = ['pdf'];
     protected $max_size_file = 80 * 1024 * 1024; // 80MB
     protected $allowed_types_file = ['pdf', 'docx','zip', 'rar', 'xlsx', 'doc', 'pptx', 'ppt','xls','csv'];
 
@@ -33,7 +33,7 @@ class Minio_client {
     public function upload($folder,$file_path, $filename)
     {
         $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-
+        // $contentType = 'application/pdf';
         if (!in_array($file_ext, $this->allowed_types)) {
             return [
                 'success' => false,
@@ -45,7 +45,7 @@ class Minio_client {
         if ($file_size > $this->max_size) {
             return [
                 'success' => false,
-                'error' => 'Ukuran file melebihi (' . ($this->max_size / 1024 / 1024) . ' MB).',
+                'error' => 'Ukuran file melebihi<br>Maksimal file boleh diupload : ' . ($this->max_size / 1024 / 1024) . ' MB.',
             ];
         }
 
@@ -53,9 +53,10 @@ class Minio_client {
             $unique_name = uniqid() . '_' . $filename;
             $result = $this->s3->putObject([
                 'Bucket' => $this->bucket,
-                'Key'    => $folder.$unique_name,
+                'Key'    => $folder.'/'.$unique_name,
                 'SourceFile' => $file_path,
-                'ACL'    => 'public-read',
+                // 'ContentType' => $contentType,
+                // 'ACL'    => 'public-read',
             ]);
 
             return [
@@ -67,7 +68,7 @@ class Minio_client {
             log_message('error', $e->getMessage());
             return [
                 'success' => false,
-                'error' => 'Gagal mengunggah ke MinIO: ' . $e->getAwsErrorMessage(),
+                'error' => 'Gagal mengunggah ke MinIO: ' . $e,
             ];
         }
     }

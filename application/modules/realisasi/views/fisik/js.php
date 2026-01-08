@@ -447,7 +447,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 							'<label for="">File Scan ' + b + '</label>' +
 							'<div class="input-group">' +
 							'<div class="custom-file">' +
-							'<input type="file" class="custom-file-input" id="' + id_dok + '-' + id + '" name="img" aria-describedby="inputGroupFileAddon04" onchange="get_file_name(this)">' +
+							'<input type="file" class="custom-file-input" id="' + id_dok + '-' + id + '" name="berkas" aria-describedby="inputGroupFileAddon04" onchange="get_file_name(this)">' +
 							'<label class="custom-file-label" id="label-' + id_dok + '-' + id + '" for="' + id_dok + '-' + id + '">Choose File</label>' +
 							'</div>' +
 							'<div class="input-group-append">' +
@@ -580,7 +580,7 @@ function table_lokasi(id_paket_pekerjaan)
 			type: 'POST',
 			success: function(data) {
 				console.log(data);
-				if (data.status == true) {
+				if (data.success == true) {
 					$('.progress-bar').text('0%');
 					$('.progress-bar').width('0%');
 					$('#' + btn).removeClass('btn btn-info')

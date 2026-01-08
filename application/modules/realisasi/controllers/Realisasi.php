@@ -726,6 +726,7 @@ class Realisasi extends MY_Controller
             show_404();
         }
 
+        $this->load->helper();
         $output = [
             'status'    => false,
             'data'      => [],
@@ -733,7 +734,7 @@ class Realisasi extends MY_Controller
             'message'   => '',
             'cek'       => []
         ];
-
+        $this->load->library('minio_client');
         $id_instansi        = $this->input->post('id_instansi');
         $id_kpa             = $this->input->post('id_kpa');
         $id_pptk            = $this->input->post('id_pptk');
@@ -767,64 +768,48 @@ class Realisasi extends MY_Controller
 
         $tahun = tahun_anggaran();
 
-        /**
-         * ===============================
-         * CONFIG UPLOAD CI (TMP SAJA)
-         * ===============================
-         */
-        // $primary_folder = './tmp_upload/';
-     
 
-        // $config['upload_path']      = $primary_folder;
-        // $config['allowed_types']    = 'pdf';
-        // $config['overwrite']        = true;
-        // $config['encrypt_name']     = false;
-        // $config['file_name']        = slug($nama_file_disimpan) . '-' . date('YmdHi');
-        // $config['max_size']         = 10000;
-        // $config['file_ext_tolower'] = true;
 
-        // $this->load->library('upload', $config);
 
-        // if (!$this->upload->do_upload($id)) {
-        //     $output['message'] = $this->upload->display_errors();
-        //     echo json_encode($output);
-        //     return;
-        // }
+        header('Content-Type: application/json');
 
-        /**
-         * ===============================
-         * UPLOAD KE MINIO
-         * ===============================
-         */
-        // $upload_data = $this->upload->data();
+        if (empty($_FILES['berkas']['name'])) {
+            echo json_encode([
+                'status' => false,
+                'message' => 'No file uploaded',
+                'csrf_hash' => $this->security->get_csrf_hash()
+            ]);
+            return;
+        }
 
-        $file_name = slug($nama_file_disimpan) . '-' . date('YmdHi').'.pdf';//$upload_data['file_name'];
-        $tmp_path  = $_FILES['img']['tmp_name'];//$upload_data['full_path'];
-        $mime_type = 'pdf';//$upload_data['file_type'];
+
+
+
+        $file_ext = strtolower(pathinfo($_FILES['berkas']['name'], PATHINFO_EXTENSION));
+            $file_name = slug($nama_file_disimpan) . '-' . date('YmdHi').'.'.$file_ext;
+        $tmp_path  = $_FILES['berkas']['tmp_name'];//$upload_data['full_path'];
 
         $objectName = implode('/', [
             'evidence',
             $tahun,
             id_instansi(),
             'REALISASI-FISIK',
-            $id_paket_pekerjaan,
-            $file_name
+            $id_paket_pekerjaan
         ]);
+        $folder = $objectName;
 
-        try {
-            $this->minio->upload($objectName, $tmp_path, $mime_type);
-            @unlink($tmp_path);
-        } catch (Exception $e) {
-            $output['message'] = 'Gagal upload ke storage';
-            echo json_encode($output);
-            return;
-        }
+        //     // $this->minio->upload($objectName, $tmp_path, $mime_type);
+        $upload = $this->minio_client->upload($objectName, $tmp_path, $file_name); 
+        if ($upload['success']) {
+            // $fileSize  = $_FILES['berkas']['size'];
+            // $object_key = $folder. '/'. $upload['filname'];
+            // $encryptedKey = urlencode(base64_encode($this->encryption->encrypt($object_key)));
+            // $encryptedKey = urlencode(base64_encode(sbe_crypt($object_key)));
 
-        /**
-         * ===============================
-         * LOGIKA BULAN
-         * ===============================
-         */
+
+
+
+
         if (bulan_aktif() == intval(date('m'))) {
             $bulan_simpan = (tahun_anggaran() == date('Y')) ? bulan_aktif() - 1 : 12;
         } else {
@@ -833,47 +818,7 @@ class Realisasi extends MY_Controller
 
         $bulan_ditambahkan = intval(date('m'));
 
-        $batas_evidence = 200;
-        $batas_evidence_helpdesk_utama = 250;
-        $id_helpdesk = id_user();
 
-        $q_evidence_belum_validasi = $this->db->query("
-            SELECT id_realisasi_fisik 
-            FROM realisasi_fisik 
-            WHERE status='Belum Validasi'
-            AND id_instansi=?
-            AND id_helpdesk != ?
-            AND tahun=?
-        ", [$id_instansi, $id_helpdesk, $tahun])->num_rows();
-
-        // if ($q_evidence_belum_validasi > $batas_evidence_helpdesk_utama) {
-        //     $helpdesk = $this->db->query("
-        //         SELECT hi.id_user,
-        //         (
-        //             SELECT COUNT(id_realisasi_fisik)
-        //             FROM realisasi_fisik
-        //             WHERE id_helpdesk=hi.id_user
-        //             AND status='Belum Validasi'
-        //             AND id_instansi=hi.id_instansi
-        //         ) AS jumlah_evidence
-        //         FROM helpdesk_instansi hi
-        //         WHERE hi.id_instansi=?
-        //         AND hi.utama != '1'
-        //     ", [$id_instansi])->result_array();
-
-        //     foreach ($helpdesk as $v) {
-        //         if ($v['jumlah_evidence'] < $batas_evidence) {
-        //             $id_helpdesk = $v['id_user'];
-        //             break;
-        //         }
-        //     }
-        // }
-
-        /**
-         * ===============================
-         * SIMPAN DATABASE
-         * ===============================
-         */
         $primary = [
             'id_instansi'        => $id_instansi,
             'id_pptk'            => $id_pptk,
@@ -896,10 +841,10 @@ class Realisasi extends MY_Controller
             'tahun'              => $tahun,
             'dokumen_key'        => $dokumen_key,
             'dokumen'            => $dokumen,
-            'file_dokumen'       => $file_name,
+            'file_dokumen'       => $upload['filname'],
             'nilai'              => 0,
             'created_on'         => timestamp(),
-            'id_helpdesk'        => $id_helpdesk,
+            // 'id_helpdesk'        => $id_helpdesk,
             'created_by'         => $this->sbe_id_user(),
             'updated_by'         => $this->sbe_id_user()
         ];
@@ -909,14 +854,33 @@ class Realisasi extends MY_Controller
             'updated_by' => $this->sbe_id_user()
         ];
 
+
         if ($this->db->get_where('realisasi_fisik', $primary)->num_rows() > 0) {
             $this->db->update('realisasi_fisik', $update, $primary);
         } else {
             $this->db->insert('realisasi_fisik', $simpan);
         }
 
-        $output['status'] = true;
-        echo json_encode($output);
+
+
+
+
+            echo json_encode([
+                'success' => true,
+                'message' =>  'Upload Sukses',
+                // 'file' => ['url' => $upload['url'],'name' => $upload['filname'],'size' => $fileSize,'file_publik' => site_url('fitur/publicfile/view/' . $encryptedKey) ],
+                // 'csrf_hash' => $this->security->get_csrf_hash()
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' =>  $upload['error'],
+                'csrf_hash' => $this->security->get_csrf_hash()
+            ]);
+        }
+
+
+
     }
 
 

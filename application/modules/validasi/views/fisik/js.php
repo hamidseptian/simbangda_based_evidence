@@ -9,7 +9,7 @@
 ?>
 <!-- Datatables -->
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-<!-- Select2 -->
+<!-- Select2 --> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 <script>
 	$(document).ready(function() {
@@ -23,7 +23,7 @@
 		show_table_penyedia(id_instansi, id_helpdesk, tahun);
 		show_table_belum_validasi(id_instansi, id_helpdesk, tahun);
 		show_table_evidence_ditolak(id_instansi, id_helpdesk, tahun);
-		show_table_belum_validasi_bantuan(id_helpdesk, tahun);
+		// show_table_belum_validasi_bantuan(id_helpdesk, tahun);
 
 		show_statistika(id_instansi, id_helpdesk, tahun);
 		info_validasi_skpd(id_instansi,id_helpdesk, tahun);
@@ -751,16 +751,30 @@
 		$('#dokumen').val(dokumen);
 		$('#nilai_pelaksanaan').val(nilai_pelaksanaan);
 		$('#status').val('Pilih Status').trigger('change');
+		var newElement = '<iframe src="' + baseUrl('validasi/view/') + file_url + '" width="100%" height="500px">';
+		console.log(file_url);
+
+			// $.ajax({
+			// 	url: baseUrl('validasi/view/'+ file_url),
+				
+			// 	data: {
+					
+			// 	},
+			// 	success: function(data) {
+			// 		console.log(data);
+					
+			// 	},
+			// 	error: function(){
+			// 	}
+			// });
+
+
+
 		var parent = $('#modal-dokumen-realisasi').find('iframe').parent();
 		var srcpdf = $('#modal-dokumen-realisasi').find('iframe');
-		var newElement = '<iframe src="' + file_url + '" width="100%" height="500px">';
 		$(srcpdf).remove();
 		parent.append(newElement);
-		// let parent = $('#modal-dokumen-realisasi').find('iframe').parent();
-		// let srcpdf = $('#modal-dokumen-realisasi').find('iframe');
-		// let newElement = '<iframe src="' + baseUrl('pdfjs/web/viewer.html?file=..') + '/../' + file_url + '&' + Math.floor(Math.random() * 1011000) + '" width="100%" height="500px">';
-		// $(srcpdf).remove();
-		// parent.append(newElement);
+	
 	}
 
 	function form_keterangan(value) {

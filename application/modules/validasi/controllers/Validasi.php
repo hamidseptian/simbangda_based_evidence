@@ -18,6 +18,8 @@ class Validasi extends MY_Controller
             'validasi/validasi_fisik_model' => 'validasi_fisik_model',
             'datatables_model'              => 'datatables_model'
         ]);
+        $this->load->library('encryption');
+        $this->load->library('minio_client');
     }
 
     public function fisik()
@@ -842,8 +844,8 @@ class Validasi extends MY_Controller
                         # code...
                     }else{
                         $file_url = $list_directory.'/'.$value['file_dokumen'];
-                        $sourceminio = $_ENV['MINIO_ENDPOINT'] . '/'. $_ENV['MINIO_BUCKET'] . '/' .$file_url;
-                        $output['evidence'][$key]['file_dokumen']       = minio_signed_url($file_url);//$this->minio->presignedUrl($file_url);//$file_url;
+                        // $sourceminio = $_ENV['MINIO_ENDPOINT'] . '/'. $_ENV['MINIO_BUCKET'] . '/' .$file_url;
+                        $output['evidence'][$key]['file_dokumen']       = sbe_crypt($file_url);
 
                     }
                     $output['evidence'][$key]['nilai']              = $value['nilai'];
@@ -922,6 +924,58 @@ class Validasi extends MY_Controller
             echo json_encode($output);
         }
     }
+
+
+
+
+    public function view($encoded = null)
+    {
+        $enkripsi =sbe_crypt( $encoded,'D');
+        $object_key = $enkripsi;
+        if (!$encoded) {
+            show_404();
+        }
+
+        // // // Dekripsi object_key
+        // // $decoded = base64_decode(urldecode($encoded));
+        // // $object_key = $this->encryption->decrypt($decoded);
+        $filename = basename($object_key); 
+        $filename = preg_replace('/^[a-z0-9]{8,}_/', '', $filename);
+       
+        if (!$object_key) {
+            show_404();
+        }
+
+        // // // Ambil URL dari MinIO
+        $url = $this->minio_client->get_file_url($object_key);
+        if (!$url) {
+            show_404();
+        }
+        echo $url;
+
+        // // Ambil konten file dari URL
+        $pdf_content = @file_get_contents($url);
+        if ($pdf_content === false) {
+            show_404();
+        }
+
+        // // Tentukan Content-Type (bisa juga pakai getimagesizefromstring)
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_buffer($finfo, $pdf_content);
+        finfo_close($finfo);
+
+        // // Kirim gambar ke browser
+        header('Content-Type: ' . $mimeType);
+        header("Content-Disposition: inline; filename=\"$filename\"");
+        echo $pdf_content;
+
+    }
+
+
+
+
+
+
 
     private function vol($id_paket_pekerjaan)
     {
