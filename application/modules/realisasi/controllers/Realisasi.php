@@ -786,7 +786,8 @@ class Realisasi extends MY_Controller
 
 
         $file_ext = strtolower(pathinfo($_FILES['berkas']['name'], PATHINFO_EXTENSION));
-            $file_name = slug($nama_file_disimpan) . '-' . date('YmdHi').'.'.$file_ext;
+            // $file_name = slug($nama_file_disimpan) . '-' . date('YmdHi').'.'.$file_ext;
+            $file_name = slug($nama_file_disimpan).'.'.$file_ext; //tidak menggunakan waktu karena kadang2 di db dan di directori berbeda nama
         $tmp_path  = $_FILES['berkas']['tmp_name'];//$upload_data['full_path'];
 
         $objectName = implode('/', [
@@ -2003,13 +2004,20 @@ class Realisasi extends MY_Controller
                 id_instansi ='$id_instansi' and 
                 bulan<='$bulan_aktif' ");
 
-            $subkeg                 = $this->db->query("SELECT nama_sub_kegiatan from master_sub_kegiatan where kode_sub_kegiatan='$krsk'")->row()->nama_sub_kegiatan;
+
+            $subkeg                 = $this->db->query("SELECT nama_sub_kegiatan from sub_kegiatan_instansi where kode_sub_kegiatan='$kode_rekening_sub_kegiatan'")->row();
+            if (!$subkeg) {
+                $nama_sub_kegiatan  ='<span class="text-danger">Sub kegiatan belum terdaftar di master. harap hubungi admin untuk ditambahkan</span>' ; 
+                # code...
+            }else{
+                $nama_sub_kegiatan  =$subkeg->nama_sub_kegiatan ; 
+            }
 
             $upel = $this->db->query("SELECT ski.kategori, ski.jenis_sub_kegiatan, ski.keterangan,
             	total_anggaran_sub_kegiatan(ski.kode_sub_kegiatan,ski.kode_tahap,ski.id_instansi,ski.kode_kegiatan,ski.kode_program,ski.tahun) as pagu_sub_kegiatan 
              from sub_kegiatan_instansi ski where ski.kode_sub_kegiatan='$kode_rekening_sub_kegiatan' and ski.id_instansi='$id_instansi' and ski.kategori='$kategori' and ski.kode_tahap='$tahap' and ski.tahun='$tahun'")->row();
             $output['totaldata']  = $target->num_rows();
-            $output['nama_sub_kegiatan']  = $kategori == "Sub Kegiatan SKPD" ? $subkeg : $subkeg.'<br>'.$upel->jenis_sub_kegiatan .' - '. $upel->keterangan ;
+            $output['nama_sub_kegiatan']  = $kategori == "Sub Kegiatan SKPD" ? $nama_sub_kegiatan : $nama_sub_kegiatan.'<br>'.$upel->jenis_sub_kegiatan .' - '. $upel->keterangan ;
             $output['nama_tahapan']  = pilihan_nama_tahapan($tahap);
             if ($target->num_rows() > 0) {
                 foreach ($target->result()  as $key => $value) {

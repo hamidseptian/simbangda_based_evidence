@@ -331,7 +331,8 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = '';
+$config['encryption_key'] = 'my_simple_secret_key_sbe_v5';
+
 
 /*
 |--------------------------------------------------------------------------

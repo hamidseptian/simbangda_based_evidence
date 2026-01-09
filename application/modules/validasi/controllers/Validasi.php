@@ -845,7 +845,10 @@ class Validasi extends MY_Controller
                     }else{
                         $file_url = $list_directory.'/'.$value['file_dokumen'];
                         // $sourceminio = $_ENV['MINIO_ENDPOINT'] . '/'. $_ENV['MINIO_BUCKET'] . '/' .$file_url;
-                        $output['evidence'][$key]['file_dokumen']       = sbe_crypt($file_url);
+
+                        $encrypted = $this->encryption->encrypt($file_url);
+                        $encoded   = urlencode(base64_encode($encrypted));
+                        $output['evidence'][$key]['file_dokumen']       = $encoded;
 
                     }
                     $output['evidence'][$key]['nilai']              = $value['nilai'];
@@ -927,51 +930,59 @@ class Validasi extends MY_Controller
 
 
 
-
-    public function view($encoded = null)
-    {
-        $enkripsi =sbe_crypt( $encoded,'D');
-        $object_key = $enkripsi;
-        if (!$encoded) {
-            show_404();
-        }
-
-        // // // Dekripsi object_key
-        // // $decoded = base64_decode(urldecode($encoded));
-        // // $object_key = $this->encryption->decrypt($decoded);
-        $filename = basename($object_key); 
-        $filename = preg_replace('/^[a-z0-9]{8,}_/', '', $filename);
-       
-        if (!$object_key) {
-            show_404();
-        }
-
-        // // // Ambil URL dari MinIO
-        $url = $this->minio_client->get_file_url($object_key);
-        if (!$url) {
-            show_404();
-        }
-        echo $url;
-
-        // // Ambil konten file dari URL
-        $pdf_content = @file_get_contents($url);
-        if ($pdf_content === false) {
-            show_404();
-        }
-
-        // // Tentukan Content-Type (bisa juga pakai getimagesizefromstring)
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mimeType = finfo_buffer($finfo, $pdf_content);
-        finfo_close($finfo);
-
-        // // Kirim gambar ke browser
-        header('Content-Type: ' . $mimeType);
-        header("Content-Disposition: inline; filename=\"$filename\"");
-        echo $pdf_content;
-
+public function view($encoded = null)
+{
+    if (!$encoded) {
+        show_404();
     }
 
+    // WAJIB: decode URL dulu
+    $encoded = urldecode($encoded);
 
+    // Decrypt object key
+
+
+        $decoded = base64_decode(urldecode($encoded));
+        $object_key = $this->encryption->decrypt($decoded);
+        $filename = basename($object_key); 
+        $filename = preg_replace('/^[a-z0-9]{8,}_/', '', $filename);
+
+
+    // $object_key = sbe_crypt($encoded, 'D');
+    if (!$object_key) {
+        show_404();
+    }
+  
+
+    // Ambil nama file
+    // $filename = basename($object_key);
+    // $filename = preg_replace('/^[a-z0-9]{8,}_/', '', $filename);
+
+    // Ambil presigned URL MinIO
+    $url = $this->minio_client->get_file_url($object_key);
+    if (!$url) {
+        show_404();
+    }
+
+    // Ambil konten file
+    $file_content = @file_get_contents($url);
+    if ($file_content === false) {
+        show_404();
+    }
+
+    // Deteksi MIME
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = finfo_buffer($finfo, $file_content);
+    finfo_close($finfo);
+
+    // Kirim ke browser
+    header('Content-Type: ' . $mimeType);
+    header('Content-Disposition: inline; filename="'.$filename.'"');
+    header('Content-Length: ' . strlen($file_content));
+
+    echo $file_content;
+    exit;
+}
 
 
 
