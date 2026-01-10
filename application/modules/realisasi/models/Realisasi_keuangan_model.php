@@ -41,7 +41,7 @@ class Realisasi_keuangan_model extends CI_Model
     public function get_realisasi($id_instansi)
     {
         $tahun = tahun_anggaran();
-        $bulan  = date('n');
+        $bulan  = bulan_aktif();
         $tahap = tahapan_apbd();
 
         if ($tahap==4) {
@@ -84,6 +84,7 @@ rk.kode_sub_kegiatan=ski.kode_sub_kegiatan and rk.id_instansi=ski.id_instansi an
 
                                     $where
                                     and bulan <= '$bulan'
+                                    and rk.kode_tahap='$tahap'
                                     ");
         return $query;
     }

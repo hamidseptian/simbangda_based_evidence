@@ -22,11 +22,15 @@ class Dokumen_evidence_model extends CI_Model
         $result = $this->db->query("SELECT
                                         rf.id_realisasi_fisik,
                                         rf.id_paket_pekerjaan,
-                                        mu.full_name,
-                                        msk.nama_sub_kegiatan,
+                                        ski.nama_sub_kegiatan,
                                         pp.nama_paket,
+                                        pp.jenis_paket, 
+                                        pp.tahun, 
+                                        pp.kode_rekening_sub_kegiatan, 
+                                        m.metode, 
                                         rf.dokumen,
                                         rf.file_dokumen,
+                                        rf.id_vol_pelaksanaan_pekerjaan,
                                         rf.masalah,
                                         rf.solusi,
                                         vp.nama_pelaksanaan,
@@ -35,9 +39,10 @@ class Dokumen_evidence_model extends CI_Model
                                     FROM
                                         realisasi_fisik rf
                                         LEFT JOIN paket_pekerjaan pp ON rf.id_paket_pekerjaan = pp.id_paket_pekerjaan
+                                        left join metode m on pp.id_metode = m.id_metode
                                         left join vol_pelaksanaan_pekerjaan vp on rf.id_vol_pelaksanaan_pekerjaan = vp.id_vol_pelaksanaan_pekerjaan
                                         LEFT JOIN master_users mu ON rf.id_pptk = mu.id_user 
-                                        LEFT JOIN master_sub_kegiatan msk ON pp.kode_rekening_sub_kegiatan = msk.kode_sub_kegiatan
+                                        LEFT JOIN sub_kegiatan_instansi ski ON pp.kode_rekening_sub_kegiatan = ski.kode_sub_kegiatan
                                     WHERE
                                         rf.id_realisasi_fisik = '{$id_realisasi_fisik}'");
         return $result;

@@ -21,7 +21,7 @@
 		let id_realisasi_fisik = $('#id_realisasi_fisik').val();
 		let id_paket_pekerjaan = $('#id_paket_pekerjaan').val();
 		let pelaksanaan = $('#pelaksanaan').val();
-		form_data.append('file', file_data);
+		form_data.append('berkas', file_data);
 		form_data.append('id', 'upload_file');
 		form_data.append('id_realisasi_fisik', id_realisasi_fisik);
 		form_data.append('id_paket_pekerjaan', id_paket_pekerjaan);
@@ -41,6 +41,8 @@
 				if (data.status == true) {
 					get_paket_ditolak();
 					window.location.href = baseUrl('dashboard');
+				}else{
+					Swal.fire('Error',data.message,'error');
 				}
 			},
 			error : function(){

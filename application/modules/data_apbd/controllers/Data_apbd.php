@@ -122,7 +122,13 @@ class Data_apbd extends MY_Controller
             }
             $data['bidang_urusan']        = $kumpul_bu;
             $data['master_program']        = $kumpul_master_program;
-            $data['program']        = $this->db->query("SELECT  kode_program, id_instansi, tahun, kode_bidang_urusan from sub_kegiatan_instansi where id_instansi='$id_instansi' and tahun='$tahun' group by kode_program");
+            if ($tahap==4) {
+                $data['program']        = $this->db->query("SELECT  kode_program, id_instansi, tahun, kode_bidang_urusan from sub_kegiatan_instansi where id_instansi='$id_instansi' and tahun='$tahun' and status='1' group by kode_program");
+                # code...
+            }else{
+                $data['program']        = $this->db->query("SELECT  kode_program, id_instansi, tahun, kode_bidang_urusan from sub_kegiatan_instansi where id_instansi='$id_instansi' and tahun='$tahun' and kode_tahap ='2' group by kode_program");
+
+            }
 
 
         $data['icon']                       = "metismenu-icon fa fa-list-ul";

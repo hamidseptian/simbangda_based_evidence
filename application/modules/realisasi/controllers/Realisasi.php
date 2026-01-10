@@ -105,8 +105,7 @@ class Realisasi extends MY_Controller
         $data['breadcrumbs'] = $breadcrumbs->render();
         $page                = 'realisasi/fisik/by_sub_kegiatan';
         $id_instansi = id_instansi();
-        $nilai_rf            = $this->nilai_realisasi_fisik($id_instansi);
-        $data['nilai_rf']       = $nilai_rf[bulan_aktif()-1];
+        
         $data['link']        = $this->router->fetch_method();
         $data['menu']        = $this->load->view('layout/menu', $data, true);
         $data['extra_css']   = $this->load->view('realisasi/fisik/css', $data, true);
@@ -1100,63 +1099,68 @@ class Realisasi extends MY_Controller
                 'data'   => []
             ];
 
-            $id                 = $this->input->post('id');
+            $id_realisasi_fisik                 = $this->input->post('id_realisasi_fisik');
+            $id_realisasi_fisik = sbe_crypt($id_realisasi_fisik,'D');
             $id_paket_pekerjaan = $this->input->post('id_paket_pekerjaan');
             $dokumen            = $this->input->post('dokumen');
-            $pelaksanaan            = $this->input->post('pelaksanaan');
             $filelama            = $this->input->post('filelama');
-            $inputnamadokumen = $dokumen . '-'.date('Ymdhi');
-            $primary_folder     = './sbe_files_data/';
-            $directory          = [
-                tahun_anggaran(),
-                id_instansi(),
-                'REALISASI-FISIK',
-                $id_paket_pekerjaan,
-            ];
-            $list_directory = $this->sbe_directory($primary_folder, $directory);
-
-            if (!file_exists($list_directory)) {
-                mkdir($list_directory, 0777, TRUE);
-            }
-            // untuk menghapus file sebelumnya
-        
-            // untuk menghapus file sebelumnya
-            $namafiledisimpan = str_replace(" ", "_", $inputnamadokumen);
-
-            if ($pelaksanaan=='') {
-               $simpan_file_ok = $namafiledisimpan;
-            }else{
-               $simpan_file_ok = "PELAKSANAAN_".$pelaksanaan."_".date('Ymdhi');
-
-            }
-
-            $config['upload_path']   = $list_directory;
-            $config['overwrite']     = true;
-            $config['allowed_types'] = 'pdf|zip';
-            $config['encrypt_name']  = false;
-            $config['file_name']     = $simpan_file_ok;
-            $config['max_size']      = '10000';
-            $config['file_ext_tolower']         = true;
+            $id_volume            = $this->input->post('id_vol_pelaksanaan_pekerjaan');
 
 
-            $this->load->library('upload', $config);
 
-            if (!$this->upload->do_upload($id)) {
-                $output['status']   = false;
-                $output['message']  = $this->upload->display_errors();
+
+            if ($id_volume == null) {
+                $nama_file_disimpan = $dokumen;
             } else {
-                    $cekfilelama = $list_directory.$filelama;
-                     if (file_exists($cekfilelama)) {
-                       unlink($cekfilelama);
-                    }
-                $upload = ['upload_data' => $this->upload->data()];
-   $file_ext = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
-                $this->dokumen_evidence_model->update_realisasi_fisik($simpan_file_ok.'.'.$file_ext);
+                $cek_pelaksanaan = $this->db
+                    ->query("SELECT pelaksanaan_ke FROM vol_pelaksanaan_pekerjaan WHERE id_vol_pelaksanaan_pekerjaan = ?", [$id_volume])
+                    ->row()
+                    ->pelaksanaan_ke;
 
-                $output['status']   = true;
+                $nama_file_disimpan = 'Pelaksanaan ke-' . $cek_pelaksanaan;
             }
 
-            echo json_encode($output);
+
+
+
+
+        // $this->load->helper();
+
+        $this->load->library('minio_client');
+
+        header('Content-Type: application/json');
+
+        if (empty($_FILES['berkas']['name'])) {
+            echo json_encode([
+                'status' => false,
+                'message' => 'No file uploaded',
+                'csrf_hash' => $this->security->get_csrf_hash()
+            ]);
+            return;
+        }
+
+       $file_ext = strtolower(pathinfo($_FILES['berkas']['name'], PATHINFO_EXTENSION));
+            // $file_name = slug($nama_file_disimpan) . '-' . date('YmdHi').'.'.$file_ext;
+            $file_name = slug($nama_file_disimpan).'.'.$file_ext; //tidak menggunakan waktu karena kadang2 di db dan di directori berbeda nama
+        $tmp_path  = $_FILES['berkas']['tmp_name'];//$upload_data['full_path'];
+
+        $objectName = implode('/', [
+            'evidence',
+            $tahun,
+            id_instansi(),
+            'REALISASI-FISIK',
+            $id_paket_pekerjaan
+        ]);
+        $folder = $objectName;
+
+        //     // $this->minio->upload($objectName, $tmp_path, $mime_type);
+        $upload = $this->minio_client->upload($objectName, $tmp_path, $file_name); 
+
+
+            
+            // $this->dokumen_evidence_model->update_realisasi_fisik($simpan_file_ok.'.'.$file_ext);
+
+            echo json_encode($id_realisasi_fisik);
         }
     }
 
@@ -1334,11 +1338,13 @@ class Realisasi extends MY_Controller
             'keu'    => []
         ];
         $anggaran                = $keuangan->anggaran_apbd($id_instansi);
-        $bo     = $keuangan->get_realisasi($id_instansi)->row()->realisasi_bo;
-        $bm           = $keuangan->get_realisasi($id_instansi)->row()->realisasi_bm;
-        $btt           = $keuangan->get_realisasi($id_instansi)->row()->realisasi_btt;
-        $bt                   = $keuangan->get_realisasi($id_instansi)->row()->realisasi_btt;
-        $total         = $keuangan->get_realisasi($id_instansi)->row()->total;
+
+        $q_rk = $keuangan->get_realisasi($id_instansi)->row();
+        $bo     = $q_rk->realisasi_bo;
+        $bm           = $q_rk->realisasi_bm;
+        $btt           = $q_rk->realisasi_btt;
+        $bt                   = $q_rk->realisasi_btt;
+        $total         = $q_rk->total;
 
         $output['total']         = $total;
         $output['anggaran']         = $anggaran;
@@ -1840,8 +1846,8 @@ class Realisasi extends MY_Controller
                 $no++;
                 $kode_rekening_program = $lists->kode_rekening_program;
                 $kode_rekening_kegiatan = $lists->kode_rekening_kegiatan;
-                $kegiatan  = $this->db->query("SELECT nama_kegiatan from master_kegiatan where kode_kegiatan = '$kode_rekening_kegiatan'")->row();
-                $program  = $this->db->query("SELECT nama_program from master_program where kode_program = '$kode_rekening_program'")->row();
+                // $kegiatan  = $this->db->query("SELECT nama_kegiatan from master_kegiatan where kode_kegiatan = '$kode_rekening_kegiatan'")->row();
+                // $program  = $this->db->query("SELECT nama_program from master_program where kode_program = '$kode_rekening_program'")->row();
 
                  $nama_sub_kegiatan ='<b>'.$kode_sub_kegiatan .'</b><br>'.$lists->nama_sub_kegiatan. $keterangan;
                 $row    = [];
@@ -1926,6 +1932,7 @@ class Realisasi extends MY_Controller
                 }
 
 
+                // $row[]  = '<span class="text-danger">Maintenance</span>';//$jumlah_paket;
                 $row[]  = $jumlah_paket;
 
                
