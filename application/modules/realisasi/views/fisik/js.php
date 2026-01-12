@@ -343,7 +343,6 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 				}
 			},
 			error : function(){
-				console.log('error');
 			}
 		});
 	}
@@ -426,12 +425,10 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 						let a = v.split("_");
 						let b = a.length > 1 ? a[1] : a[0];
 						let id_dok = a[0].replace(/\s/g, '');
-						console.log(id_dok);
 
 						let pecah_id_dan_nama = v.split("___");
 						let id_volume = pecah_id_dan_nama[1] != null ? pecah_id_dan_nama[1] : '' ;
 						let nama_volume =  pecah_id_dan_nama[0];
-						// console.log(id_dok);
 
 
 					//	$('#form-upload-dokumen').append('<input type="text" id="id_vol" name="id_vol" value="'+ "???"+'">');
@@ -554,9 +551,6 @@ function table_lokasi(id_paket_pekerjaan)
 				var xhr = new window.XMLHttpRequest();
 				xhr.upload.addEventListener('progress', function(e) {
 					if (e.lengthComputable) {
-						// console.log('Bytes Loaded : ' + e.loaded);
-						// console.log('Total Size : ' + e.total);
-						// console.log('Persen : ' + (e.loaded / e.total));
 						var percent = Math.round((e.loaded / e.total) * 100);
 
 						$('#progress').attr('aria-valuenow', percent).css('width', percent + '%').text(percent + '%');
@@ -579,7 +573,6 @@ function table_lokasi(id_paket_pekerjaan)
 			data: form_data,
 			type: 'POST',
 			success: function(data) {
-				console.log(data);
 				if (data.success == true) {
 					$('.progress-bar').text('0%');
 					$('.progress-bar').width('0%');
@@ -665,7 +658,6 @@ function table_lokasi(id_paket_pekerjaan)
 				}
 			},
 			error : function(){
-				console.log('errorccc');
 			}
 		});
 
@@ -740,7 +732,6 @@ function table_lokasi(id_paket_pekerjaan)
 						id_realisasi_fisik: id_realisasi_fisik
 					},
 			  		success : function(data){
-			  			console.log(data.id_paket_pekerjaan);
 			  			if(data.status == true)
 						{
 							Swal.fire(
@@ -807,7 +798,6 @@ function table_lokasi(id_paket_pekerjaan)
 
 
 		function lihat_evidence(link_file, nama_paket, jenis_dokumen) {
-		console.log(link_file);
 		$('#modal-lihat-evidence').modal('show');
 		$('#modal-lihat-evidence').find('#exampleModalLabel').html(nama_paket +'<br>'+jenis_dokumen);
 		$('.file-pdf').html(`
@@ -818,12 +808,15 @@ function table_lokasi(id_paket_pekerjaan)
 		
 	}
 		function lihat_evidence_auto(link_file, nama_paket, jenis_dokumen) {
-		console.log(link_file);
 		$('#modal-lihat-evidence').modal('show');
 		$('#modal-lihat-evidence').find('#exampleModalLabel').html(nama_paket +'<br>'+jenis_dokumen);
-		$('.file-pdf').html(`
-			<iframe src="`+link_file+`" frameborder="0" width="100%" height="500px"></iframe>
-			`);
+
+
+		var newElement = '<iframe src="' + baseUrl('validasi/view/') + link_file + '" width="100%" height="500px"></iframe>';
+
+
+
+		$('.file-pdf').html(newElement);
 
 		
 		
@@ -856,7 +849,6 @@ function table_lokasi(id_paket_pekerjaan)
 	}
 	function tidak_ada_permasalahan(kode_sub_kegiatan, kode_tahap, tahun, id_user=''){
 		var fetch_method = '<?php echo $fetch_method ?>' ; 
-		console.log(id_user);
 		$.ajax({
 			url: baseUrl('realisasi/tidak_ada_permasalahan_sub_kegiatan/'),
 			dataType: 'JSON',
@@ -867,7 +859,6 @@ function table_lokasi(id_paket_pekerjaan)
 				tahun: tahun,
 			},
 			success: function(data) {
-				console.log(data);
 				Swal.fire({
 				  title: 'OK',
 				  icon: 'success',

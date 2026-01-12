@@ -47,9 +47,7 @@ class Publicfile extends CI_Controller {
         header('Content-Type: ' . $mimeType);
         header("Content-Disposition: inline; filename=\"$filename\"");
         echo $imageContent;
-
     }
-
     public function store()
     {
         header('Content-Type: application/json');

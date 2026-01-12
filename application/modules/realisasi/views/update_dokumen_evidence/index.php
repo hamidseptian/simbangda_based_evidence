@@ -25,7 +25,7 @@
                                 <input type="hidden" id="dokumen" name="dokumen" value="<?php echo $r_fisik->dokumen; ?>">
                                 <input type="hidden" id="pelaksanaan" name="pelaksanaan" value="<?php echo $r_fisik->pelaksanaan_ke; ?>">
 
-                            <input type="text" class="form-control" id="filelama" name="filelama" readonly="true" value="<?php echo $r_fisik->file_dokumen; ?>">
+                            <input type="" class="form-control" id="filelama" name="filelama" readonly="true" value="<?php echo $r_fisik->file_dokumen; ?>">
 
                          <table width="100%" class="table">
                                     <tbody><tr>

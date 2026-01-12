@@ -38,7 +38,7 @@
 			type: 'POST',
 			success: function(data) {
 				console.log(data);
-				if (data.status == true) {
+				if (data.success == true) {
 					get_paket_ditolak();
 					window.location.href = baseUrl('dashboard');
 				}else{

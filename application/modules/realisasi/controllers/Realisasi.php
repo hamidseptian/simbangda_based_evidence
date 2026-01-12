@@ -60,8 +60,8 @@ class Realisasi extends MY_Controller
 
         $config              = $this->db->get_where('config',['id_config'=>'1'])->row();
         $id_instansi = id_instansi();
-        $nilai_rf            = $this->nilai_realisasi_fisik($id_instansi);
-        $data['nilai_rf']       = $nilai_rf[bulan_aktif()-1];
+        // $nilai_rf            = $this->nilai_realisasi_fisik($id_instansi);
+        $data['nilai_rf']       = '';//$nilai_rf[bulan_aktif()-1];
         // $prs                = explode(' ', $config->realisasi_fisik_selesai);
         // $jam_deadline       = $prs[1];
         // $ptrs               = explode('-', $prs[0]);
@@ -878,17 +878,7 @@ class Realisasi extends MY_Controller
                 'csrf_hash' => $this->security->get_csrf_hash()
             ]);
         }
-
-
-
     }
-
-
-
-
-
-
-
     public function dokumen_realisasi()
     {
         if (!$this->input->is_ajax_request()) {
@@ -916,13 +906,32 @@ class Realisasi extends MY_Controller
             ];
             $list_directory     = $this->sbe_directory($primary_folder, $directory);
 
+            $directory          = [
+                'evidence',
+                tahun_anggaran(),
+                $id_instansi,
+                'REALISASI-FISIK',
+                $id_paket_pekerjaan,
+            ];
+            $list_directory     = implode('/', $directory);
+
+
+
             if ($dokumen_realisasi->num_rows()==0) {
                 $output['caption'] = "<div class='alert alert-info'>Evidence belum di upload</div>";
             }else{
                 foreach ($dokumen_realisasi->result() as $key => $value) {
+                       $file_url = $list_directory.'/'.$value->file;
+                        // $sourceminio = $_ENV['MINIO_ENDPOINT'] . '/'. $_ENV['MINIO_BUCKET'] . '/' .$file_url;
+                        $encrypted = $this->encryption->encrypt($file_url);
+                        $encoded   = urlencode(base64_encode($encrypted));
+                        $output['evidence'][$key]['file_dokumen']       = $encoded;
+
+
+
 						$dokumen_evidence = $value->id_vol_pelaksanaan_pekerjaan=='' ? explode('_', $value->dokumen)[0] : explode('_', $value->dokumen)[0].' | '.$value->nama_pelaksanaan;
 						$nm_paket = str_replace('"', '', $desc_paket->nama_paket);
-						$file_url = '../'.$list_directory . $value->file;
+						$file_url = $encoded;
 						$tombol_lihat_evidence =    ' <button class="btn btn-info btn-sm" data-toggle="tooltip" title="Lihat Evidence evidence" target="_blank" onclick="lihat_evidence_auto('."'".$file_url."','".$nm_paket."','".$dokumen_evidence."'".')"><i class="metismenu-icon fas fa-folder-open"></i></button>';
 
                     if (jadwal_rfk()['aktif']==0) {
@@ -950,6 +959,13 @@ class Realisasi extends MY_Controller
 
                       
                     }
+
+
+
+
+
+
+
 
                     $output['data'][$key]['dokumen'] = $dokumen_evidence;
                     $output['data'][$key]['file']    = $value->file;
@@ -1098,14 +1114,13 @@ class Realisasi extends MY_Controller
                 'status' => false,
                 'data'   => []
             ];
-
             $id_realisasi_fisik                 = $this->input->post('id_realisasi_fisik');
             $id_realisasi_fisik = sbe_crypt($id_realisasi_fisik,'D');
             $id_paket_pekerjaan = $this->input->post('id_paket_pekerjaan');
             $dokumen            = $this->input->post('dokumen');
             $filelama            = $this->input->post('filelama');
             $id_volume            = $this->input->post('id_vol_pelaksanaan_pekerjaan');
-
+            $tahun = tahun_anggaran();
 
 
 
@@ -1119,51 +1134,47 @@ class Realisasi extends MY_Controller
 
                 $nama_file_disimpan = 'Pelaksanaan ke-' . $cek_pelaksanaan;
             }
+            $this->load->library('minio_client');
+            header('Content-Type: application/json');
+            if (empty($_FILES['berkas']['name'])) {
+                echo json_encode([
+                    'status' => false,
+                    'message' => 'No file uploaded',
+                    'csrf_hash' => $this->security->get_csrf_hash()
+                ]);
+                return;
+            }
+           $file_ext = strtolower(pathinfo($_FILES['berkas']['name'], PATHINFO_EXTENSION));
+                $file_name = slug($nama_file_disimpan).'.'.$file_ext; //tidak menggunakan waktu karena kadang2 di db dan di directori berbeda nama
+            $tmp_path  = $_FILES['berkas']['tmp_name'];//$upload_data['full_path'];
 
-
-
-
-
-        // $this->load->helper();
-
-        $this->load->library('minio_client');
-
-        header('Content-Type: application/json');
-
-        if (empty($_FILES['berkas']['name'])) {
-            echo json_encode([
-                'status' => false,
-                'message' => 'No file uploaded',
-                'csrf_hash' => $this->security->get_csrf_hash()
+            $objectName = implode('/', [
+                'evidence',
+                $tahun,
+                id_instansi(),
+                'REALISASI-FISIK',
+                $id_paket_pekerjaan
             ]);
-            return;
-        }
+            $folder = $objectName;
+            $upload = $this->minio_client->upload($objectName, $tmp_path, $file_name); 
+            if ($upload['success']) {
+                $this->dokumen_evidence_model->update_realisasi_fisik($upload['filname']);
+                $delete = $this->minio_client->delete_file($objectName.'/'.$filelama); 
 
-       $file_ext = strtolower(pathinfo($_FILES['berkas']['name'], PATHINFO_EXTENSION));
-            // $file_name = slug($nama_file_disimpan) . '-' . date('YmdHi').'.'.$file_ext;
-            $file_name = slug($nama_file_disimpan).'.'.$file_ext; //tidak menggunakan waktu karena kadang2 di db dan di directori berbeda nama
-        $tmp_path  = $_FILES['berkas']['tmp_name'];//$upload_data['full_path'];
-
-        $objectName = implode('/', [
-            'evidence',
-            $tahun,
-            id_instansi(),
-            'REALISASI-FISIK',
-            $id_paket_pekerjaan
-        ]);
-        $folder = $objectName;
-
-        //     // $this->minio->upload($objectName, $tmp_path, $mime_type);
-        $upload = $this->minio_client->upload($objectName, $tmp_path, $file_name); 
-
-
-            
-            // $this->dokumen_evidence_model->update_realisasi_fisik($simpan_file_ok.'.'.$file_ext);
-
-            echo json_encode($id_realisasi_fisik);
+                echo json_encode([
+                    'success' => true,
+                    // 'message' =>  $upload['error'],
+                    'csrf_hash' => $this->security->get_csrf_hash()
+                ]);
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' =>  $upload['error'],
+                    'csrf_hash' => $this->security->get_csrf_hash()
+                ]);
+            }
         }
     }
-
     public function keuangan()
     {
         $breadcrumbs    = $this->breadcrumbs;

@@ -75,7 +75,6 @@ function input_realisasi(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_
         var izin_input = <?php echo jadwal_rfk()['aktif'] ?>;
 
         var bulan_realisasi_config = <?php echo jadwal_rfk()['bulan_aktif'] ?>;
-        console.log(kode_rekening_sub_kegiatan);
         $('#modal-realisasi-keuangan').modal('show');
         $('.form-control').removeClass('is-valid')
                           .removeClass('is-invalid');
@@ -142,7 +141,6 @@ function input_realisasi(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_
             },
             success : function(data)
             {
-                console.log(data);
                 $('#modal-realisasi-keuangan').find('#pagu_sub_kegiatan').html(convert_to_rupiah(pagu==''? 0: pagu));
                 // $('#modal-realisasi-keuangan').find('#exampleModalLabel').html("Setting Target APBD");
                 $('#modal-realisasi-keuangan').find('#nama_sub_kegiatan').html(data.nama_sub_kegiatan);
@@ -353,7 +351,6 @@ function input_realisasi(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_
         let kode_program= $(x).attr('kode_program');
         let kode_bidang_urusan= $(x).attr('kode_bidang_urusan');
         let pagu= $(x).attr('pagu');
-        console.log(pagu);
         $(x).editable({
             mode: 'inline',
             pk: id,
@@ -603,7 +600,6 @@ function copy_realisasi_k_sub_kegiatan(kode_rekening_sub_kegiatan, kode_kegiatan
                             },
                             error : function(){
 
-                                console.log('eror');
                             }
                         });
               }
@@ -614,7 +610,6 @@ function copy_realisasi_k_sub_kegiatan(kode_rekening_sub_kegiatan, kode_kegiatan
 
 function hapus_realisasi_k_sub_kegiatan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, kode_bidang_urusan, nama_sub_kegiatan, bulan_ke, id_realisasi_keuangan='', pagu='', jenis='', kategori='', tahun='')
     {   
-        console.log(id_realisasi_keuangan);
         if (bulan_ke=='semua') {
             var bulan_hapus = '';
         }else{
@@ -647,7 +642,6 @@ function hapus_realisasi_k_sub_kegiatan(kode_rekening_sub_kegiatan, kode_kegiata
                             },
                             success : function(data)
                             {
-                                console.log(data);
                                 if (data.success==true) {
                                         Swal.fire(
                                       'Sukses!',
@@ -662,7 +656,6 @@ function hapus_realisasi_k_sub_kegiatan(kode_rekening_sub_kegiatan, kode_kegiata
                             },
                             error : function(){
 
-                                console.log('eror');
                             }
                         });
               }

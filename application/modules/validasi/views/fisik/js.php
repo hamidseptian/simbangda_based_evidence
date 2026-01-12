@@ -204,7 +204,6 @@
 
 
 			}, error: function(){
-				console.log('err')
 			}
 		});
 	}
@@ -221,7 +220,6 @@
 				id_paket: id_paket
 			},
 			success: function(data) {
-				console.log(data);
 				$('#modal-identitas-paket').find('#nama_program').html(data.data.nama_program);
 				$('#modal-identitas-paket').find('#nama_kegiatan').html(data.data.nama_kegiatan);
 				$('#modal-identitas-paket').find('#kode_sub_kegiatan').html(data.data.kode_sub_kegiatan);
@@ -329,7 +327,6 @@
 				}
 			},
 			error : function(){
-				console.log('error');
 			}
 		});
 	}
@@ -590,7 +587,6 @@
 	function tetapkan_skpd(id_instansi, id_helpdesk_utama) {
 		$('#id_instansi_terpilih').val(id_instansi);
 		$('#id_helpdesk_terpilih').val(id_helpdesk_utama);
-	console.log(id_helpdesk_utama);
 		// var tahun = $('#tahun_anggaran_terpilih').val();
 		$('.tables').show();
 		show_table_rutin(id_instansi, id_helpdesk_utama);
@@ -752,22 +748,7 @@
 		$('#nilai_pelaksanaan').val(nilai_pelaksanaan);
 		$('#status').val('Pilih Status').trigger('change');
 		var newElement = '<iframe src="' + baseUrl('validasi/view/') + file_url + '" width="100%" height="500px">';
-		console.log(file_url);
-
-			// $.ajax({
-			// 	url: baseUrl('validasi/view/'+ file_url),
-				
-			// 	data: {
-					
-			// 	},
-			// 	success: function(data) {
-			// 		console.log(data);
-					
-			// 	},
-			// 	error: function(){
-			// 	}
-			// });
-
+		
 
 
 		var parent = $('#modal-dokumen-realisasi').find('iframe').parent();
