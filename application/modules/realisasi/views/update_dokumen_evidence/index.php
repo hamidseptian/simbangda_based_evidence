@@ -25,13 +25,13 @@
                                 <input type="hidden" id="dokumen" name="dokumen" value="<?php echo $r_fisik->dokumen; ?>">
                                 <input type="hidden" id="pelaksanaan" name="pelaksanaan" value="<?php echo $r_fisik->pelaksanaan_ke; ?>">
 
-                            <input type="" class="form-control" id="filelama" name="filelama" readonly="true" value="<?php echo $r_fisik->file_dokumen; ?>">
+                            <input type="hidden" class="form-control" id="filelama" name="filelama" readonly="true" value="<?php echo $r_fisik->file_dokumen; ?>">
 
                          <table width="100%" class="table">
                                     <tbody><tr>
                                         <td valign="top">SKPD</td>
                                         <td valign="top">:</td>
-                                        <td valign="top"> ?? </td>
+                                        <td valign="top"><?php echo $r_fisik->nama_instansi ?></td>
                                     </tr>
                                     <tr>
                                         <td valign="top">Tahun</td>
@@ -46,12 +46,12 @@
                                     <tr>
                                         <td valign="top">Program</td>
                                         <td valign="top">:</td>
-                                        <td valign="top"> ?? </td>
+                                        <td valign="top"> <?php echo nama_program($r_fisik->kode_rekening_program) ?> </td>
                                     </tr>
                                     <tr>
                                         <td valign="top">Kegiatan</td>
                                         <td valign="top">:</td>
-                                        <td valign="top"> ?? </td>
+                                        <td valign="top"> <?php echo nama_kegiatan($r_fisik->kode_rekening_kegiatan) ?> </td>
                                     </tr>
                                     <tr>
                                         <td valign="top">Sub Kegiatan</td>
@@ -62,13 +62,30 @@
                                         <td valign="top">PPTK</td>
                                         <td valign="top">:</td>
                                          <td valign="top">
-                                            <span id="nama_pptk">
-                                                <ol>
-                                                    <li>??</li>
-                                                    <li>??</li>
-                                                    <li>??</li>
-                                                </ol>
-                                            </span>
+                                           <?php 
+
+                if ($pptk->num_rows() ==0) {
+                    echo  '<span class="text-danger">PPTK Belum ditentukan</span>';
+                    # code...
+                }else if($pptk->num_rows()==1){
+                    echo  @$pptk->row_array()['full_name'];
+
+                }else{
+                    $list_pptk = $pptk->result_array();
+                    $shoe_pptk = '<ol>';
+                    foreach ($list_pptk as $k_pptk => $v_pptk) {
+                    $shoe_pptk .= '<li>'.$v_pptk['full_name'].'</li>';
+                        # code...
+                    }
+                    $shoe_pptk .= '<ol>';
+                    echo  $shoe_pptk;
+                }
+
+
+
+
+
+ ?>
                                         </td>
                                     </tr>
                             </tbody></table>

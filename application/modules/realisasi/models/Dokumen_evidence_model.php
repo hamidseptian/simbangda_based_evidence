@@ -26,8 +26,12 @@ class Dokumen_evidence_model extends CI_Model
                                         pp.nama_paket,
                                         pp.jenis_paket, 
                                         pp.tahun, 
+                                        pp.kode_tahap, 
                                         pp.kode_rekening_sub_kegiatan, 
+                                        pp.kode_rekening_program, 
+                                        pp.kode_rekening_kegiatan, 
                                         m.metode, 
+                                        mi.nama_instansi,
                                         rf.dokumen,
                                         rf.file_dokumen,
                                         rf.id_vol_pelaksanaan_pekerjaan,
@@ -41,7 +45,7 @@ class Dokumen_evidence_model extends CI_Model
                                         LEFT JOIN paket_pekerjaan pp ON rf.id_paket_pekerjaan = pp.id_paket_pekerjaan
                                         left join metode m on pp.id_metode = m.id_metode
                                         left join vol_pelaksanaan_pekerjaan vp on rf.id_vol_pelaksanaan_pekerjaan = vp.id_vol_pelaksanaan_pekerjaan
-                                        LEFT JOIN master_users mu ON rf.id_pptk = mu.id_user 
+                                        left join master_instansi mi on rf.id_instansi = mi.id_instansi
                                         LEFT JOIN sub_kegiatan_instansi ski ON pp.kode_rekening_sub_kegiatan = ski.kode_sub_kegiatan
                                     WHERE
                                         rf.id_realisasi_fisik = '{$id_realisasi_fisik}'");

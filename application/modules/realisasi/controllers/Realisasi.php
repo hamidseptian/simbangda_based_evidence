@@ -1094,7 +1094,12 @@ class Realisasi extends MY_Controller
             $data['description']    = $description;
             $data['breadcrumbs']    = $breadcrumbs->render();
             $page                   = 'realisasi/update_dokumen_evidence/index';
+
+
+            $master_paket     = $this->master_paket_model;
+            $pptk = $master_paket->pptk_sub_kegiatan($data['r_fisik']->kode_rekening_sub_kegiatan, $data['r_fisik']->kode_tahap);
             $data['link']           = $this->router->fetch_method();
+            $data['pptk']           = $pptk;
             $data['menu']           = $this->load->view('layout/menu', $data, true);
             $data['extra_css']      = $this->load->view('realisasi/update_dokumen_evidence/css', $data, true);
             $data['extra_js']       = $this->load->view('realisasi/update_dokumen_evidence/js', $data, true);

@@ -911,6 +911,24 @@ function jadwal_input_data_dasar()
 
 	return $kunci_kuncian;
 }
+
+function nama_program($kode){
+	$program = CI()->db->query("SELECT nama_program, kode_program from master_program")->result_array(); 
+	$kumpul_program = [];
+	foreach ($program as $k => $v) {
+		$kumpul_program[$v['kode_program']] = $v['nama_program'];
+	}
+	return $kumpul_program[$kode];
+}
+function nama_kegiatan($kode){
+	$kegiatan = CI()->db->query("SELECT nama_kegiatan, kode_kegiatan from master_kegiatan")->result_array(); 
+	$kumpul_kegiatan = [];
+	foreach ($kegiatan as $k => $v) {
+		$kumpul_kegiatan[$v['kode_kegiatan']] = $v['nama_kegiatan'];
+	}
+	return $kumpul_kegiatan[$kode];
+	
+}
 function jadwal_validasi()
 {
 	// ?untuk mengunci data program, kegiatan, dan sub kegiatan (target, sumber dana, pagu, hapus ), paket (bolume, lokasi, edit, hapus), penambahan sub kegiatan batu, UPTD,  
