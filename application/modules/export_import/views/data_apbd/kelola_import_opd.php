@@ -829,7 +829,8 @@ $data_insert_all = [
                                                                      }
                                                                  }
                                                              } 
-                                                             ?>
+                                                             
+                                                         ?>
 
                                                         </tbody>
                                                     </table>

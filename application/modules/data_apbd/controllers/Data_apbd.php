@@ -48,8 +48,8 @@ class Data_apbd extends MY_Controller
 
                 $data['dropdown_option'] = [
                     // ['tipe'=>'link', 'caption'=>'Integrasi SIPD', 'fa'=>'metismenu-icon fas fa-list-ul', 'onclick'=>"data_apbd/integrasi_sipd", 'elemen_tambahan'=>'data-toggle="tooltip" title="Melihat semua data sub kegiatan yang ada pada SKPD"'],
-                      // ['tipe'=>'link', 'caption'=>'Import Data APBD', 'fa'=>'fa fa-download', 'onclick'=>'export_import/sipd/data_apbd', 'elemen_tambahan'=>'data-toggle="tooltip" title="Mengambil data malalui SIPD yang telah di importkan oleh admin. (Meliputi sub kegiatan yang terpilih, Anggaran Ssub Kegiatan, dan Sumberdana Sub Kegiatan)"'], 
-                      // ['tipe'=>'link', 'caption'=>'Import Target APBD', 'fa'=>'fa fa-download', 'onclick'=>'export_import/sipd/target_apbd', 'elemen_tambahan'=>'data-toggle="tooltip" title="Mengimport data target sub kegiatan dengan template dan data dari SIPD"'], 
+                      ['tipe'=>'link', 'caption'=>'Import Data APBD', 'fa'=>'fa fa-download', 'onclick'=>'export_import/sipd/data_apbd', 'elemen_tambahan'=>'data-toggle="tooltip" title="Mengambil data malalui SIPD yang telah di importkan oleh admin. (Meliputi sub kegiatan yang terpilih, Anggaran Ssub Kegiatan, dan Sumberdana Sub Kegiatan)"'], 
+                      ['tipe'=>'link', 'caption'=>'Import Target APBD', 'fa'=>'fa fa-download', 'onclick'=>'export_import/sipd/target_apbd', 'elemen_tambahan'=>'data-toggle="tooltip" title="Mengimport data target sub kegiatan dengan template dan data dari SIPD"'], 
                       // ['tipe'=>'button', 'caption'=>'Pilih Data APBD', 'fa'=>'fa fa-cog fa-w-16 fa-spin', 'onclick'=>'pilih_dan_alihkan_data_apbd()', 'elemen_tambahan'=>'data-toggle="tooltip" title="Memilih data program kegiatan dan sub kegiatan SKPD"'], 
                   
                     ['tipe'=>'onclick', 'caption'=>'Sub Kegiatan APBD SKPD', 'fa'=>'metismenu-icon fas fa-list-ul', 'onclick'=>"sub_kegiatan_instansi_gabungan('all')", 'elemen_tambahan'=>'data-toggle="tooltip" title="Melihat semua data sub kegiatan yang ada pada SKPD"'],

@@ -282,6 +282,8 @@ class Validasi extends MY_Controller
                 // $where          = array('id_instansi' => $id_instansi, 'tahun'=>$tahun, 'kode_tahap'=>2);
 
             }
+            $tahap    =tahapan_apbd();
+            $list_ski = list_sub_kegiatan_opd($id_instansi, $tahun, $tahap);
             $column_order   = array('', 'nama_paket');
             $column_search  = array('nama_paket','nilai');
             $order = array('nama_paket' => 'ASC');
@@ -305,14 +307,9 @@ class Validasi extends MY_Controller
 
                 $tombol_open = '<button class="btn ' . $warna_tombol . ' btn-sm" onclick="identitas_paket('.$id_paket.')"><i class="fa fa-folder-open"></i></button>';
 
-                $kode_sub_kegiatan = $lists->kode_rekening_sub_kegiatan;
-                $pecah = explode('.', $kode_sub_kegiatan);
-                $krsk = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
-                
-                $q_ski = $this->db->query("SELECT * from sub_kegiatan_instansi where kode_sub_kegiatan='$kode_sub_kegiatan' and id_instansi='$id_instansi'")->row_array();
 
-                $uptd  = $q_ski['kategori']=='Sub Kegiatan SKPD' ? '' : '<br>'.$q_ski['jenis_sub_kegiatan'].' - '.$q_ski['keterangan'];
-                
+
+                $row[] = $lists->kode_rekening_sub_kegiatan.'<br>'.$list_ski[$lists->kode_rekening_sub_kegiatan];
                
                 $row[] = $lists->nama_paket;
                 $row[] = $lists->beban_dokumen_diupload;
@@ -342,6 +339,7 @@ class Validasi extends MY_Controller
             show_404();
         } else {
             $tahun    = $this->input->post('tahun');
+            $tahap    =tahapan_apbd();
             $id_helpdesk    = sbe_crypt($this->input->post('id_helpdesk'), 'D');
             $id_instansi    = sbe_crypt($this->input->post('id_instansi'), 'D');
             $where          = array('id_instansi' => $id_instansi, 'belum_validasi > '=>0, 'tahun'=>$tahun);
@@ -351,6 +349,8 @@ class Validasi extends MY_Controller
             $list = $this->datatables_model->get_datatables('v_paket', $column_order, $column_search, $order, $where);
             $data = array();
             $no = $_POST['start'];
+
+            $list_ski = list_sub_kegiatan_opd($id_instansi, $tahun, $tahap);
             foreach ($list as $lists) {
                 $no++;
                 $id_paket =  $lists->id_paket_pekerjaan;
@@ -359,15 +359,9 @@ class Validasi extends MY_Controller
                 $row   = array();
                 $row[] = $no;
                 $tombol_open = '<button class="btn btn-outline-warning btn-sm" onclick="identitas_paket('.$id_paket.')"><i class="fa fa-folder-open"></i></button>';
-                $kode_sub_kegiatan = $lists->kode_rekening_sub_kegiatan;
-                $pecah = explode('.', $kode_sub_kegiatan);
-                $krsk = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
-                
-                $q_ski = $this->db->query("SELECT * from sub_kegiatan_instansi where kode_sub_kegiatan='$kode_sub_kegiatan' and id_instansi='$id_instansi'")->row_array();
 
-                $uptd  = $q_ski['kategori']=='Sub Kegiatan SKPD' ? '' : '<br>'.$q_ski['jenis_sub_kegiatan'].' - '.$q_ski['keterangan'];
-                
                
+                $row[] = $lists->kode_rekening_sub_kegiatan.'<br>'.$list_ski[$lists->kode_rekening_sub_kegiatan];
                 $row[] = $lists->nama_paket;
                 $row[] = $lists->jenis_paket;
                 $row[] = $lists->belum_validasi;
@@ -581,6 +575,9 @@ class Validasi extends MY_Controller
             $list = $this->datatables_model->get_datatables('v_paket_penyedia', $column_order, $column_search, $order, $where);
             $data = array();
             $no = $_POST['start'];
+            $tahap    =tahapan_apbd();
+            $list_ski = list_sub_kegiatan_opd($id_instansi, $tahun, $tahap);
+
             foreach ($list as $lists) {
                 $no++;
                 $id_paket =  $lists->id_paket_pekerjaan;
@@ -598,15 +595,9 @@ class Validasi extends MY_Controller
 
                 $tombol_open = '<button class="btn ' . $warna_tombol . ' btn-sm" onclick="identitas_paket('.$id_paket.')"><i class="fa fa-folder-open"></i></button>';
 
-                $kode_sub_kegiatan = $lists->kode_rekening_sub_kegiatan;
-                $pecah = explode('.', $kode_sub_kegiatan);
-                $krsk = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
-                
-                $q_ski = $this->db->query("SELECT * from sub_kegiatan_instansi where kode_sub_kegiatan='$kode_sub_kegiatan' and id_instansi='$id_instansi'")->row_array();
-
-                $uptd  = $q_ski['kategori']=='Sub Kegiatan SKPD' ? '' : '<br>'.$q_ski['jenis_sub_kegiatan'].' - '.$q_ski['keterangan'];
-                
+ 
                
+                $row[] = $lists->kode_rekening_sub_kegiatan.'<br>'.$list_ski[$lists->kode_rekening_sub_kegiatan];
                 $row[] = $lists->nama_paket;
                 $row[] = $lists->beban_dokumen_diupload;
                 $row[] = $lists->evidence_diupload;

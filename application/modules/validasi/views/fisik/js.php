@@ -815,7 +815,7 @@
 						$('#table-paket-swakelola').DataTable().ajax.reload(null, false);
 						$('#table-paket-penyedia').DataTable().ajax.reload(null, false);
 						$('#table-paket-belum-validasi').DataTable().ajax.reload(null, false);
-						$('#table-paket-belum-validasi-perbantuan').DataTable().ajax.reload(null, false);
+						// $('#table-paket-belum-validasi-perbantuan').DataTable().ajax.reload(null, false);
 						$('#table-paket-evidence-ditolak').DataTable().ajax.reload(null, false);
 						$('#table-paket-swakelola').find('.view_evidence_' + id_paket_pekerjaan).click();
 						$('#modal-pilih-skpd').find('.evidence_belum_validasi_' + data.id_instansi).html(data.evidence.evidence_belum_validasi);

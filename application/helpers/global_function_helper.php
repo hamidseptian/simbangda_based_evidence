@@ -929,6 +929,26 @@ function nama_kegiatan($kode){
 	return $kumpul_kegiatan[$kode];
 	
 }
+function list_sub_kegiatan_opd($id_instansi, $tahun, $tahap){
+	if ($tahap==2) {
+		$kegiatan = CI()->db->query("SELECT nama_sub_kegiatan, kode_sub_kegiatan, kategori, jenis_sub_kegiatan, keterangan from sub_kegiatan_instansi where id_instansi='$id_instansi' and tahun='$tahun' and kode_tahap='$tahap'")->result_array(); 
+		# code...
+	}else{
+		$kegiatan = CI()->db->query("SELECT nama_sub_kegiatan, kode_sub_kegiatan, kategori, jenis_sub_kegiatan, keterangan from sub_kegiatan_instansi where id_instansi='$id_instansi' and tahun='$tahun' and status='1'")->result_array(); 
+	}
+	$kumpul_kegiatan = [];
+	foreach ($kegiatan as $k => $v) {
+		if ($v['kategori']=='Unit Pelaksana') {
+			$nama_sub_kegiatan = $v['nama_sub_kegiatan'].'<br>'.$v['jenis_sub_kegiatan'].' - '.$v['keterangan'];
+		}else{
+			$nama_sub_kegiatan = $v['nama_sub_kegiatan'];
+
+		}
+		$kumpul_kegiatan[$v['kode_sub_kegiatan']] = $nama_sub_kegiatan	;
+	}
+	return $kumpul_kegiatan;
+	
+}
 function jadwal_validasi()
 {
 	// ?untuk mengunci data program, kegiatan, dan sub kegiatan (target, sumber dana, pagu, hapus ), paket (bolume, lokasi, edit, hapus), penambahan sub kegiatan batu, UPTD,  

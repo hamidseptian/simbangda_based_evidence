@@ -320,7 +320,8 @@ $id_group = $this->session->userdata('id_group');
 		                                <thead>
 		                                    <tr>
 		                                        <th rowspan="2" style="width:100px">No</th>
-		                                 
+		                                          
+                                                <th rowspan="2" width="35%">Sub Kegiatan</th>
 		                                        <th rowspan="2" width="35%">Paket</th>
                                                 <th colspan="4" width="35%"><center>Evidence</center></th>
 		                                        <th rowspan="2" width="1%">Nilai</th>
@@ -344,7 +345,8 @@ $id_group = $this->session->userdata('id_group');
                                         <thead>
                                             <tr>
                                                 <th rowspan="2" style="width:100px">No</th>
-                                         
+                                                
+                                                <th rowspan="2" width="35%">Sub Kegiatan</th>
                                                 <th rowspan="2" width="35%">Paket</th>
                                                 <th colspan="4" width="35%"><center>Evidence</center></th>
                                                 <th rowspan="2" width="1%">Nilai</th>
@@ -368,6 +370,7 @@ $id_group = $this->session->userdata('id_group');
 		                                  <thead>
                                             <tr>
                                                 <th rowspan="2" style="width:100px">No</th>
+                                                <th rowspan="2" width="35%">Sub Kegiatan</th>
                                                 <th rowspan="2" width="35%">Paket</th>
                                                 <th colspan="4" width="35%"><center>Evidence</center></th>
                                                 <th rowspan="2" width="1%">Nilai</th>
@@ -452,6 +455,8 @@ $id_group = $this->session->userdata('id_group');
 		                                <thead>
 		                                    <tr>
 		                                        <th style="width:100px">No</th>
+
+                                                <th width="35%">Sub Kegiatan</th>
 		                                        <th width="35%">Paket</th>
 		                                        <th width="1%">Jenis Paket</th>
 		                                        <th width="1%">Belum Di Validasi</th>
