@@ -36,7 +36,7 @@ class Realisasi_per_kab_kota extends CI_Model
 	}
 	public function instansi_kab_kota($id_provinsi, $id_kota)
 	{
-		$data=['id_provinsi'=>$id_provinsi,'id_kota'=>$id_kota];
+		$data=['id_provinsi'=>$id_provinsi,'id_kota'=>$id_kota,'is_active'=>1];
 		return $this->db->get_where('master_instansi_kab_kota', $data);
 	}
 
