@@ -185,7 +185,8 @@ array_push($kumpul_program, $data_program);
  
 
 <div class="mb-3 card">
-                                        <div class="card-header"><i class="header-icon lnr-license icon-gradient bg-plum-plate"> </i>Data Taget APBD Per Bulan
+                                        <div class="card-header"><i class="header-icon lnr-license icon-gradient bg-plum-plate"> </i>Data Taget APBD Per Bulan <br>
+                                          <?php echo $nama_instansi ?>
                                             <div class="btn-actions-pane-right">
                                                 <div role="group" class="btn-group-sm nav btn-group">
                                                 <!--     <a data-toggle="tab" href="#tab-eg1-0" class="btn-shadow btn btn-primary active show">Download Perbulan</a>

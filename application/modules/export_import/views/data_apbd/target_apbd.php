@@ -1,66 +1,5 @@
 
 
-<div class="row">
-                            <div class="col-lg-6 col-xl-3">
-                                <div class="card mb-3 widget-content">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-left">
-                                            <div class="widget-heading">Periode</div>
-                                            <h5 class="text-info"><b>??</b></h5>
-                                            <small>??</small>
-                                        </div>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-xl-2">
-                                <div class="card mb-3 widget-content">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-left">
-                                            <div class="widget-heading">Total Program</div>
-                                        </div>
-                                        <div class="widget-content-right">
-                                            <div class="widget-numbers text-success"> ???? </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-xl-2">
-                                <div class="card mb-3 widget-content">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-left">
-                                            <div class="widget-heading">Total kegiatan</div>
-                                        </div>
-                                        <div class="widget-content-right">
-                                            <div class="widget-numbers text-primary"> ???? </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-xl-2">
-                                <div class="card mb-3 widget-content">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-left">
-                                            <div class="widget-heading">Total Sub Kegiatan</div>
-                                        </div>
-                                        <div class="widget-content-right">
-                                            <div class="widget-numbers text-warning"> ???? </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-xl-3">
-                                <div class="card mb-3 widget-content">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-left">
-                                            <div class="widget-heading">Total Pagu</div>
-                                            <h5 class="text-info"> ?? </h5>
-                                        </div>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
 
 
@@ -72,8 +11,8 @@
           <div class="mb-3 card">
                                         <div class="card-header-tab card-header">
                                             <div class="card-header-title">
-                                                Data APBD SKPD <br>
-                                                Nama INstansi
+                                                UPLOAD Target SKPD <br>
+                                                Periode <?php echo pilihan_nama_tahapan($kode_tahap).' '.$tahun ?>
                                             </div>
                                          <!--    <ul class="nav">
                                                 <li class="nav-item"><a data-toggle="tab" href="#mentah" class="nav-link active show">Data Mentah</a></li>
@@ -87,16 +26,26 @@
                                             Pada template bagian kolom tidak boleh diubah <br>  
                                             ambil data rencana ke aliran kas kemudian di convert ke excel, setelah di convert pilih bagian sub kegiatan saja dan pindahkan ke template ini <br> 
                                             upload data yang sudah di inputkan sesuai template disini   
+                                            <hr>
+
                                             <form id="form-export-program" method="post" enctype="multipart/form-data" action="<?php echo base_url('export_import/export_sipd_target_apbd/') ?>">
-                                                 <div class="input-group">
-                                                    <div class="custom-file">
-                                                        <input type="hidden" name="id_instansi" class="" value="<?php echo $id_instansi ?>">
+                                                <div class="form-group">
+                                                    <label>OPD</label>
+                                                    <select class="form-control" name="id_instansi" id="id_instansi">
+                                                        <?php foreach ($instansi as $k => $v) { ?>
+                                                            <option value="<?php echo $v['id_instansi'] ?>"><?php echo $v['nama_instansi'] ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                                 <!-- <div class="input-group"> -->
+                                                    <div class="form-group">
+                                                        <label>File Excel </label> <br>
                                                         <input type="hidden" name="tahun" class="" value="<?php echo $tahun ?>">
                                                         <input type="hidden" name="tahap" class="" value="<?php echo $kode_tahap ?>">
                                                         <input type="file" name="upload_file" class="" required>
                                                     </div>
                                                         <button class="btn btn-info btn-block">Upload Target SIPD</button>
-                                                </div>
+                                                <!-- </div> -->
                                             </form>    
                                         </div>
                                     </div>
@@ -108,3 +57,20 @@
 
 
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+<script src="https://code.jquery.com/jquery-4.0.0.js" integrity="sha256-9fsHeVnKBvqh3FB2HYu7g2xseAZ5MlN6Kz/qnkASV8U=" crossorigin="anonymous"></script>
+<!-- Script -->
+<script>
+    $(document).ready(function() {
+        show_select2();
+    });
+
+    function show_select2() {
+        $('#id_instansi').select2({
+            placeholder: "Pilih OPD",
+            allowClear: false,
+            width: 'style',
+            theme: 'bootstrap4'
+        });
+    }
+</script>

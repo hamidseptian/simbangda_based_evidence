@@ -216,13 +216,13 @@ foreach ($program as $k_program => $v_program) {
                 'jenis_sub_kegiatan'=>$jenis_sub_kegiatan,
                 'id_instansi_pembantu_teknis'=>$v_ski['id_instansi_pembantu_teknis'],
                 'keterangan'=>$keterangan,
-                'tahun'=>2025,//$v_ski['tahun'],
+                'tahun'=>$v_ski['tahun'],
                 'created_on'=>timestamp(),
                 // 'updated_on'=>$xxxxxx,
                 'created_by'=>id_user(),
                 // 'updated_by'=>$xxxxxx,
                 'input_by'=>'Import Excel SIPD',
-                'status '=>'1'
+                'status'=>'1'
             ];
             array_push($kumpul_show_ski, $data_show_sub_kegiatan);
 
@@ -240,13 +240,13 @@ foreach ($program as $k_program => $v_program) {
                 'jenis_sub_kegiatan'=>$jenis_sub_kegiatan,
                 'id_instansi_pembantu_teknis'=>$v_ski['id_instansi_pembantu_teknis'],
                 'keterangan'=>$keterangan,
-                'tahun'=>2025,//$v_ski['tahun'],
+                'tahun'=>$v_ski['tahun'],
                 'created_on'=>timestamp(),
                 // 'updated_on'=>$xxxxxx,
                 'created_by'=>id_user(),
                 // 'updated_by'=>$xxxxxx,
                 'input_by'=>'Import Excel SIPD',
-                'status '=>'1'
+                'status'=>'1'
             ];
             array_push($kumpul_insert_ski, $data_insert_sub_kegiatan);
 
@@ -286,13 +286,13 @@ foreach ($program as $k_program => $v_program) {
                 'realisasikan_bm' => $realisasikan_bm,
                 'realisasikan_btt' => $realisasikan_btt,
                 'realisasikan_bt ' => $realisasikan_bt,
-                'tahun'=>2025,//$v_ski['tahun'],
+                'tahun'=>$v_ski['tahun'],
                 'created_on'=>timestamp(),
                 // 'updated_on'=>$xxxxxx,
                 'created_by'=>id_user(),
                 // 'updated_by'=>$xxxxxx,
                 'input_by'=>'Import Excel SIPD',
-                'status '=>'1'
+                'status'=>'1'
             ];
             array_push($kumpul_show_ask, $data_shoe_anggaran_sub_kegiatan);
 
@@ -321,13 +321,13 @@ foreach ($program as $k_program => $v_program) {
                 'realisasikan_bm' => $realisasikan_bm,
                 'realisasikan_btt' => $realisasikan_btt,
                 'realisasikan_bt ' => $realisasikan_bt,
-                'tahun'=>2025,//$v_ski['tahun'],
+                'tahun'=>$v_ski['tahun'],
                 'created_on'=>timestamp(),
                 // 'updated_on'=>$xxxxxx,
                 'created_by'=>id_user(),
                 // 'updated_by'=>$xxxxxx,
                 'input_by'=>'Import Excel SIPD',
-                'status '=>'1'
+                'status'=>'1'
             ];
             array_push($kumpul_insert_ask, $data_insert_anggaran_sub_kegiatan);
 
@@ -341,7 +341,7 @@ foreach ($program as $k_program => $v_program) {
                 'kode_bidang_urusan'=>$v_ski['kode_bidang_urusan'],
                 'id_instansi'=>$v_ski['id_instansi'],
                 'kode_tahap'=>$periode['kode_tahap'],
-                'tahun'=>2025,//$v_ski['tahun'],
+                'tahun'=>$v_ski['tahun'],
                 'pad'=>$pad,
                 'dau'=>$dau,
                 'dak'=>$dak,
@@ -352,7 +352,7 @@ foreach ($program as $k_program => $v_program) {
                 'created_on'=>timestamp(),
                 'created_by'=>id_user(),
                 'input_by'=>'Import Excel SIPD',
-                'status '=>'1'
+                'status'=>'1'
             ];
             array_push($kumpul_show_sd, $data_show_sumber_dana);
 
@@ -363,7 +363,7 @@ foreach ($program as $k_program => $v_program) {
                 'kode_bidang_urusan'=>$v_ski['kode_bidang_urusan'],
                 'id_instansi'=>$v_ski['id_instansi'],
                 'kode_tahap'=>$periode['kode_tahap'],
-                'tahun'=>2025,//$v_ski['tahun'],
+                'tahun'=>$v_ski['tahun'],
                 'pad'=>$pad,
                 'dau'=>$dau,
                 'dak'=>$dak,
@@ -374,7 +374,7 @@ foreach ($program as $k_program => $v_program) {
                 'created_on'=>timestamp(),
                 'created_by'=>id_user(),
                 'input_by'=>'Import Excel SIPD',
-                // 'status '=>'1'
+                // 'status'=>'1'
             ];
             array_push($kumpul_insert_sd, $data_insert_sumber_dana);
             $pagu_kegiatan += $pagu_sub_kegiatan;
@@ -511,7 +511,7 @@ $data_insert_all = [
                                         <div class="card-header-tab card-header">
                                             <div class="card-header-title">
                                                 Data APBD SKPD <br>
-                                                Nama INstansi
+                                                <?php echo $nama_instansi ?>
                                             </div>
                                             <ul class="nav">
                                                 <li class="nav-item"><a data-toggle="tab" href="#mentah" class="nav-link active show">Data Mentah</a></li>
@@ -841,15 +841,16 @@ $data_insert_all = [
                                             <form method="post" action="<?php echo base_url('export_import/import_all_data_apbd') ?>" id="form_import">
                                                 <input type="hidden" name="id_instansi" id="id_instansi" value="<?php echo $id_instansi ?>">
                                                 <input type="hidden" name="kode_tahap" id="kode_tahap" value="<?php echo $periode['kode_tahap'] ?>">
+                                                <input type="hidden" name="id_export_import" id="id_export_import" value="<?php echo $periode['id_export_import'] ?>">
                                                 <input type="hidden" name="tahun" id="tahun" value="<?php echo $periode['tahun'] ?>">
-                                                <textarea style="display:none" name="data_import" id="data_import"><?php echo json_encode($data_insert_all) ?></textarea>
+                                                <textarea name="data_import" id="data_import" class="form-control" rows="20" style="display:none"><?php echo json_encode($data_insert_all) ?></textarea>
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="btn-group btn-block">
                                                         
-                                           <!--  <button class=" btn btn-outline-info" type="button" onclick="import_all_data_apbd()">Import Data APBD (Pilih Data APBD, Pagu Sub Kegiatan, Sumber dana Sub Kegiatan)</button>
-                                            <a class="btn btn-outline-info" href="<?php echo base_url('data_apbd/setting') ?>">Pilih Data APBD (Manual Input)</a> -->
-                                            <button class="btn btn-block btn-info" onclick="alert('coming soon, sedang dalam pengembangan')" type="button">Import akan segera di aktifkan</button>
+                                            <button class=" btn btn-outline-info" type="button" onclick="import_all_data_apbd_alert()">Import Data APBD (Pilih Data APBD, Pagu Sub Kegiatan, Sumber dana Sub Kegiatan)</button>
+                                            <a class="btn btn-outline-info" href="<?php echo base_url('data_apbd/setting') ?>">Pilih Data APBD (Manual Input)</a>
+                                            <!-- <button class="btn btn-block btn-info" onclick="alert('coming soon, sedang dalam pengembangan')" type="button">Import akan segera di aktifkan</button> -->
                                                     
                                                     </div>
                                                 </div>
@@ -872,9 +873,13 @@ $data_insert_all = [
     }
 </style>
 <script type="text/javascript">
+    function import_all_data_apbd_alert(){
+        Swal.fire('Dilarang','Data hanya bisa di importkan oleh admin','error');
+    }
     function import_all_data_apbd(){
         var form_data = $('#form_import').serialize();
         var id_instansi = $('#id_instansi').val();
+        var id_export_import = $('#id_export_import').val();
         var kode_tahap = $('#kode_tahap').val();
         var tahun = $('#tahun').val();
         var data_import = $('#data_import').val();
@@ -916,10 +921,11 @@ $data_insert_all = [
                 $.ajax(
                 {
                     url     : baseUrl('export_import/import_all_data_apbd/'),
-                    // dataType: 'JSON',
+                    dataType: 'JSON',
                     type    : 'POST',
                     data    : { 
                         
+                        id_export_import : id_export_import,
                         id_instansi : id_instansi,
                         kode_tahap : kode_tahap,
                         tahun : tahun,
@@ -927,7 +933,9 @@ $data_insert_all = [
                     },
                     success : function(data)
                     {
-                        console.log(data);
+                        // console.log(data.id_export_import);
+
+                        // window.location.href=baseUrl('export_import/list_opd/' + data.id_export_import)  
                         
                     },
                     error : function(){

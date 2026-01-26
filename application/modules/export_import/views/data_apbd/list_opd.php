@@ -11,47 +11,47 @@
         <?php echo $this->session->flashdata('pesan'); ?>
         <div class="main-card mb-3 card">
             <div class="card-header">
-               LIST PERIODE  Export - Import | Data APBD 
+               LIST OPD | Export - Import | Data APBD 
             </div>
             <div class="card-body">
                 <div class="notifikasi"></div>
-                <?php if ($id_group==2) { ?>
-                    <div class="btn-actions-pane-right">
-                                               
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#export_sipd">Tambah Periode Export</button>
-                                            </div>
-
-
-
-                <hr>
-                <?php } ?>
+            
                 <table class="table" id="data_tabel" style="width:100%">
                     <thead>
                         <tr>
                             <th style="width:1%">No</th>
 							<th>Tahapan APBD</th>
 
-							<th>Tahun</th>
+							<th>Periode Export</th>
                             <th>Status</th>
                         
                             <th>Action</th>
                          
                         </tr>
                     </thead>
-                    <tbody> 
+                    <tbody>
                         <?php foreach ($data as $k => $v) { ?>
                             <tr>
                                 <td><?php echo $k+1 ?></td>
-                                <td><?php echo pilihan_nama_tahapan($v['kode_tahap']) ?></td>
-                                <td><?php echo $v['tahun'] ?></td>
-                                <td><?php echo $v['status'] ?></td>
+                                <td><?php echo $v['nama_instansi'] ?></td>
+                                <td><?php echo pilihan_nama_tahapan($data_export_import['kode_tahap']).'<br>Tahun '.$data_export_import['tahun'] ?></td>
+                                <td><?php 
+                                if (isset($log[$v['id_instansi']])) {
+                                	echo "<span class='badge badge-success'>";
+                                 	echo "Diimport Oleh  ".$log[$v['id_instansi']]['group'];
+                                 	echo "<br>[".$log[$v['id_instansi']]['full_name'];
+                                 	echo "]<br>Pada : ".$log[$v['id_instansi']]['tgl_import'];
+                                	echo "</span>";
+                                 }else{
+                                	echo "<span class='badge badge-danger'>";
+                                 	echo "Belum Mengimport";
+                                	echo "</span>";
+                                 } 
+                                ?></td>
+                             
                                 <td>
-                                    <?php if ($id_group==5) { ?>
-                                        <a href="<?php echo base_url('export_import/kelola_import/'.sbe_crypt($v['id_export_import']).'/'.sbe_crypt($id_instansi)) ?>" class="btn btn-outline-info btn-sm">Detail</a>
-                                    <?php }else{ ?>
-                                        <a href="<?php echo base_url('export_import/list_opd/'.sbe_crypt($v['id_export_import'])) ?>" class="btn btn-outline-info btn-sm">List OPD</a>
-
-                                    <?php } ?>
+                                        <a href="<?php echo base_url('export_import/kelola_import/'.$id_export_import.'/'.sbe_crypt($v['id_instansi'])) ?>" class="btn btn-outline-info btn-sm">Detail</a>
+                                   
                                 </td>
                             </tr>
                         <?php } ?>

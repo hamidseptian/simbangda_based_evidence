@@ -51,7 +51,54 @@ class Export_import extends MY_Controller
         $data['breadcrumbs']    = $breadcrumbs->render();
         $page                   = 'export_import/data_apbd/index';
         $data['tahun']           = $config;
+        $data['id_instansi']           = id_instansi();
         $data['data']           = $q_export;
+        $data['id_group']           = $this->session->userdata('id_group');
+        $data['link']           = $this->router->fetch_method();
+        $data['menu']           = $this->load->view('layout/menu', $data, true);
+        $data['extra_css']      = $this->load->view('export_import/data_apbd/css', $data, true);
+        $data['extra_js']       = $this->load->view('export_import/data_apbd/js', $data, true);
+        $data['modal']          = $this->load->view('export_import/data_apbd/modal', $data, true);
+        $this->template->load('backend_template', $page, $data);
+    }
+
+    public function list_opd($id_export_import)
+    {
+        $breadcrumbs    = $this->breadcrumbs;
+         $breadcrumbs->add('Admin', base_url());
+        $breadcrumbs->add('Export Import', base_url($this->router->fetch_class()));
+        $breadcrumbs->render();
+          $data['title']          = "Export - Import | Data APBD";
+        $breadcrumbs->render();
+        $config = $this->db->query("SELECT tahun_anggaran as tahun from config order by id_config desc")->result_array();
+        $id_export_import = sbe_crypt($id_export_import,'D');
+        $q_export = $this->db->query("SELECT  id_export_import, tahun, kode_tahap, status from export_import where id_export_import='$id_export_import'")->row_array();
+        $q_opd = $this->db->query("SELECT nama_instansi, id_instansi from master_instansi where kategori='OPD' and is_active='1' order by nama_instansi asc")->result_array();
+        $q_log = $this->db->query("SELECT ei.tgl_import, ei.id_instansi , mu.full_name, mg.group_name
+            from export_import_log_data_apbd ei 
+            left join master_users mu on ei.import_by = mu.id_user
+            left join master_group mg on ei.id_group_pengimport = mg.id_group
+            where  
+            ei.id_export_import='$id_export_import'")->result_array();
+
+        $kumpul_log = [];
+        foreach ($q_log as $k => $v) {
+            $kumpul_log[$v['id_instansi']] = [
+                'tgl_import'=>$v['tgl_import'],
+                'group' =>$v['group_name'],
+                'full_name' =>$v['full_name'],
+            ];
+            # code...
+        }
+        $data['icon']           = "metismenu-icon pe-7s-user";
+        $data['log']           = $kumpul_log;
+        $data['description']    = "Menampilkan Pengelolaan Import Data Excel pada SIPD";
+        $data['breadcrumbs']    = $breadcrumbs->render();
+        $page                   = 'export_import/data_apbd/list_opd';
+        $data['id_export_import']           = sbe_crypt($id_export_import);
+        $data['data_export_import']           =$q_export;
+        $data['tahun']           = $config;
+        $data['data']           = $q_opd;
         $data['id_group']           = $this->session->userdata('id_group');
         $data['link']           = $this->router->fetch_method();
         $data['menu']           = $this->load->view('layout/menu', $data, true);
@@ -73,10 +120,10 @@ class Export_import extends MY_Controller
         $data['icon']           = "metismenu-icon pe-7s-user";
         $data['description']    = "Menampilkan Pengelolaan Import Data Excel pada SIPD";
         $data['breadcrumbs']    = $breadcrumbs->render();
-        $page                   = 'export_import/data_apbd/target_apbd';
-        $data['tahun']           = tahun_anggaran();
-        $data['kode_tahap']           = tahapan_apbd();;
-        $data['id_instansi']           = id_instansi();
+        $page                   = 'export_import/data_apbd/target_apbd'; 
+        $data['tahun']           = 2026;// tahun_anggaran();
+        $data['kode_tahap']           = 2;//tahapan_apbd();
+        $data['instansi']           = $this->db->query("SELECT id_instansi, nama_instansi from master_instansi where kategori ='OPD' and is_active='1'")->result_array();
         $data['link']           = $this->router->fetch_method();
         $data['menu']           = $this->load->view('layout/menu', $data, true);
         $data['extra_css']      = $this->load->view('export_import/data_apbd/css', $data, true);
@@ -144,7 +191,7 @@ class Export_import extends MY_Controller
 
    
 
-    public function kelola_import($id_import)
+    public function kelola_import($id_import, $id_instansi)
     {
         $id_export_import = sbe_crypt($id_import,'D');
         $breadcrumbs    = $this->breadcrumbs;
@@ -159,7 +206,7 @@ class Export_import extends MY_Controller
 
         $id_group           = $this->session->userdata('id_group');
         
-            $id_instansi = id_instansi();
+            $id_instansi = sbe_crypt($id_instansi,'D');
           $program = $this->db->query("SELECT kode_program, nama_program from export_import_data_apbd_mentah where id_instansi='$id_instansi' and id_export_import_sipd ='$id_export_import' group by kode_program order by kode_program asc ")->result_array();
             $page                   = 'export_import/data_apbd/kelola_import_opd';
         
@@ -172,11 +219,12 @@ class Export_import extends MY_Controller
                 ];
 
 
-          $q_periode = $this->db->query("SELECT kode_tahap, tahun, created_at from export_import where id_export_import='$id_export_import' ")->row_array();
+          $q_periode = $this->db->query("SELECT kode_tahap, tahun, created_at, id_export_import from export_import where id_export_import='$id_export_import' ")->row_array();
 
         $data['description']    = "Menampilkan Master Sub Kegiatan";
         $data['id_instansi']    = $id_instansi;
         $data['id_import']    = $id_import;
+        $data['nama_instansi']    = nama_instansi($id_instansi);
         $data['periode']    = $q_periode;
         $data['program']    = $program;
         $data['breadcrumbs']    = '';
@@ -192,6 +240,7 @@ class Export_import extends MY_Controller
 
     public function import_all_data_apbd()
     {
+       $id_export_import = $this->input->post('id_export_import');
        $id_instansi = $this->input->post('id_instansi');
        $kode_tahap = $this->input->post('kode_tahap');
        $tahun = $this->input->post('tahun');
@@ -206,6 +255,15 @@ class Export_import extends MY_Controller
         $this->db->insert_batch('sub_kegiatan_instansi', $data_ski);
         $this->db->insert_batch('anggaran_sub_kegiatan', $data_ask);
         $this->db->insert_batch('sumber_dana', $data_sumberdana);
+        $id_group = $this->session->userdata('id_group');
+        $data_log = [ 
+            'id_instansi'=>$id_instansi,
+            'id_export_import'=>$id_export_import, 
+            'tgl_import'=>timestamp(), 
+            'import_by'=>id_user(), 
+            'id_group_pengimport '=>$id_group, 
+];
+        $this->db->insert('export_import_log_data_apbd', $data_log);
 
         if ($this->db->trans_status() === FALSE)
         {
@@ -214,6 +272,7 @@ class Export_import extends MY_Controller
         else
         {
                 $this->db->trans_commit();
+                echo json_encode(['id_export_import' => sbe_crypt($id_export_import)]);
         }
     }
 
@@ -391,7 +450,7 @@ class Export_import extends MY_Controller
             foreach ($apbd as $row) {
                 if ($numrow > 5) {
                  $kode_sub_kegiatan = $row['C'];
-                 $kode_sub_unit = $row['C'];
+                 $kode_sub_unit = $row['B'];
                  $pagu = str_replace(',', '', $row['E']);
 
 
@@ -422,13 +481,20 @@ class Export_import extends MY_Controller
                            $target_fisik_akumulasi += (float) $nilai_fisik;
                            $persen_target_keuangan_bulanan = ($pagu==0 || $pagu=='' ? 0 : ($nilai_keuangan / $pagu) * 100 ) ; 
                            $persen_target_keuangan_akumulasi = ($pagu==0 || $pagu=='' ? 0 : ($target_keuangan_akumulasi / $pagu) * 100 ) ; 
-                              
+                            
+
+                            if ($kode_sub_unit=='') {
+                               $simpan_kode_sub_kegiatan = str_replace(' ', '', $kode_sub_kegiatan);
+                            }else{
+                               $simpan_kode_sub_kegiatan = str_replace(' ', '', $kode_sub_kegiatan.'-'.$kode_sub_unit);
+
+                            }
                         $data = [
                             'id_instansi' => $id_instansi,
-                            'kode_bidang_urusan' => $kode_bidang_urusan,
-                            'kode_rekening_program' => $kode_program,
-                            'kode_rekening_kegiatan' => $kode_kegiatan,
-                            'kode_rekening_sub_kegiatan' => $kode_sub_kegiatan,
+                            'kode_bidang_urusan' => str_replace(' ', '', $kode_bidang_urusan),
+                            'kode_rekening_program' => str_replace(' ', '', $kode_program),
+                            'kode_rekening_kegiatan' => str_replace(' ', '', $kode_kegiatan),
+                            'kode_rekening_sub_kegiatan' => $simpan_kode_sub_kegiatan,
                             'kode_tahap' => $kode_tahap,
 
                             'bulan' => $bulan,
@@ -462,6 +528,21 @@ class Export_import extends MY_Controller
             // die;
             $this->db->insert_batch("target_apbd", $kumpul_data_mentah);
 
+
+            $id_group = $this->session->userdata('id_group');
+            $data_log = [ 
+                'id_instansi'=>$id_instansi,
+                'tahun'=>$tahun, 
+                'kode_tahap'=>$kode_tahap, 
+                'tgl_import'=>timestamp(), 
+                'import_by'=>id_user(), 
+                'id_group_pengimport '=>$id_group, 
+    ];
+            $this->db->insert('export_import_log_target_apbd', $data_log);
+
+
+
+
             $upload = ['upload_data' => $this->upload->data()];
             $file_ext = pathinfo($_FILES["upload_file"]["name"], PATHINFO_EXTENSION);
             $output['status'] = true;
@@ -470,13 +551,13 @@ class Export_import extends MY_Controller
                 $pesan_flashdata = '<div class="alert alert-info">' . $pesan . '<br>Silahkan perbaiki kesalahan pada baris tersebut.</div>';
             } else {
                 $this->db->trans_commit();
-                $pesan_flashdata = '<div class="alert alert-info">Data Master Sub Kegiatan berhasil di export</div>';
+                $pesan_flashdata = '<div class="alert alert-info">Data RAK Sub Kegiatan berhasil di export</div>';
             }
         }
 
         $id_import = sbe_crypt($id_export_import);
         $this->session->set_flashdata('pesan', $pesan_flashdata);
-        redirect('data_apbd/target_data_apbd?tahun='.$tahun.'&tahap='.$tahap);
+        redirect('data_apbd/target_data_apbd?tahun='.$tahun.'&tahap='.$tahap.'&id_instansi='.$id_instansi);
     }
 
 
