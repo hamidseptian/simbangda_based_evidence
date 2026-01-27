@@ -373,7 +373,6 @@
 	                            		<th>No</th>
 	                            		<th>Nama</th>
 	                            		<th>Jabatan</th>
-	                            		<th>Status</th>
 	                            		<th>Action</th>
 	                            	</tr>
                             	</thead>

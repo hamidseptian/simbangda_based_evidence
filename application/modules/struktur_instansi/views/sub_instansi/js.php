@@ -1262,7 +1262,6 @@ function hapus_sub_instansi(id_user, id_sub_instansi, id_kedudukan){
             			<td>`+ (k+1)+`</td>
             			<td>`+ v.full_name+`</td>
             			<td>`+ v.nama_sub_instansi+`</td>
-            			<td>`+ v.status+`<br>`+ v.awal_aktif+` `+ (v.akhir_aktif == '' ? ' s.d. Saat Ini' : ' - ' + v.akhir_aktif)+`</td>
             			<td>
             			<button type="button" class="btn btn-danger btn-xs" onclick="hapus_usk('`+ v.id_user_sub_kegiatan+`','`+ v.kode_rekening_sub_kegiatan+`','`+ v.kode_kegiatan+`','`+ v.kode_program+`','`+ v.tahap+`','`+ v.tahun+`','`+ v.kode_bidang_urusan+`')" data-toggle="tooltip" title="Hapus PPTK Kegiatan"><i class="fa fa-times"></i></button>
 

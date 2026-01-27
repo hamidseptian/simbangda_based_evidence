@@ -262,7 +262,7 @@ class Struktur_instansi extends MY_Controller
                  $pptk = $this->db->query("SELECT si.nama_sub_instansi, mu.full_name from users_sub_kegiatan usk
                  join master_users mu on usk.id_user = mu.id_user
                  left join sub_instansi si on mu.id_sub_instansi = si.id_sub_instansi
-                 where usk.id_instansi='$id_instansi' and usk.tahun_anggaran='$tahun' AND usk.kode_rekening_sub_kegiatan='$krsk' and usk.kode_tahap='$tahap_ski' and usk.status='1'")->result_array();
+                 where usk.id_instansi='$id_instansi' and usk.tahun_anggaran='$tahun' AND usk.kode_rekening_sub_kegiatan='$krsk' and usk.kode_tahap='$tahap_ski'")->result_array();
 
 
                 $tabel_pptk = '
@@ -373,13 +373,11 @@ class Struktur_instansi extends MY_Controller
 
             $tahap = $subkeg->kode_tahap;
            	  $pptk = $this->db->query("SELECT usk.id_user_sub_kegiatan, 
-                usk.kode_rekening_program, usk.kode_tahap, usk.tahun_anggaran,usk.kode_bidang_urusan, if(usk.status=0 , 'Tidak Aktif','Aktif') as status,
-                 si.nama_sub_instansi, 
-                 mu.full_name , mu.awal_aktif, mu.akhir_aktif
-                 from users_sub_kegiatan usk
+                usk.kode_rekening_program, usk.kode_tahap, usk.tahun_anggaran,usk.kode_bidang_urusan, 
+                 si.nama_sub_instansi, mu.full_name from users_sub_kegiatan usk
                  join master_users mu on usk.id_user = mu.id_user
                  left join sub_instansi si on mu.id_sub_instansi = si.id_sub_instansi
-                 where usk.id_instansi='$id_instansi' and usk.tahun_anggaran='$tahun' AND usk.kode_rekening_sub_kegiatan='$kode_rekening_sub_kegiatan'	and usk.kode_tahap='$tahap' order by usk.id_user_sub_kegiatan desc")->result_array();
+                 where usk.id_instansi='$id_instansi' and usk.tahun_anggaran='$tahun' AND usk.kode_rekening_sub_kegiatan='$kode_rekening_sub_kegiatan'	and usk.kode_tahap='$tahap' ")->result_array();
 
 
             $output['kategori']              = $subkeg->kategori;
@@ -772,9 +770,9 @@ class Struktur_instansi extends MY_Controller
 			$tahap 			= tahapan_apbd();
 			$tahun 			= tahun_anggaran();
 			if ($tahap==4) {
-				$kegiatan = $this->db->query("SELECT * FROM v_sub_kegiatan_apbd vska where vska.id_instansi='$id_instansi' and vska.status='1'and vska.tahun='$tahun' and vska.kode_rekening_sub_kegiatan NOT IN ( SELECT kode_rekening_sub_kegiatan FROM users_sub_kegiatan WHERE kode_rekening_sub_kegiatan = vska.kode_rekening_sub_kegiatan and id_instansi='$id_instansi' and tahun_anggaran='$tahun'  and status=1) order by vska.kode_rekening_sub_kegiatan  asc");
+				$kegiatan = $this->db->query("SELECT * FROM v_sub_kegiatan_apbd vska where vska.id_instansi='$id_instansi' and vska.status='1'and vska.tahun='$tahun' and vska.kode_rekening_sub_kegiatan NOT IN ( SELECT kode_rekening_sub_kegiatan FROM users_sub_kegiatan WHERE kode_rekening_sub_kegiatan = vska.kode_rekening_sub_kegiatan and id_instansi='$id_instansi' and kode_tahap='4' and tahun_anggaran='$tahun'  and status=1) order by vska.kode_rekening_sub_kegiatan  asc");
 			}else{
-				$kegiatan = $this->db->query("SELECT * FROM v_sub_kegiatan_apbd vska where vska.id_instansi='$id_instansi' and vska.kode_tahap='$tahap'and vska.tahun='$tahun' and vska.kode_rekening_sub_kegiatan NOT IN ( SELECT kode_rekening_sub_kegiatan FROM users_sub_kegiatan WHERE kode_rekening_sub_kegiatan = vska.kode_rekening_sub_kegiatan and id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun_anggaran='$tahun') order by vska.kode_rekening_sub_kegiatan asc");
+				$kegiatan = $this->db->query("SELECT * FROM v_sub_kegiatan_apbd vska where vska.id_instansi='$id_instansi' and vska.kode_tahap='$tahap'and vska.tahun='$tahun' and vska.kode_rekening_sub_kegiatan NOT IN ( SELECT kode_rekening_sub_kegiatan FROM users_sub_kegiatan WHERE kode_rekening_sub_kegiatan = vska.kode_rekening_sub_kegiatan and id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun_anggaran='$tahun' and status=1) order by vska.kode_rekening_sub_kegiatan asc");
 			}
 
 			if ($kegiatan->num_rows() > 0) {
@@ -1292,7 +1290,7 @@ class Struktur_instansi extends MY_Controller
 			$id_parent = $q_sub_instansi_lama['id_parent'];
 			$id_kpa = $q_sub_instansi_lama['id_kpa'];
 			$dir = $q_sub_instansi_lama['dir'];
-			$this->db->trans_begin();
+			
 			$tahap = tahapan_apbd();
 			$tahun = tahun_anggaran();
 
@@ -1327,13 +1325,12 @@ class Struktur_instansi extends MY_Controller
 					'status_kedudukan'=>'1',
 					'full_name'=>$full_name,
 					'created_on'=>timestamp(),
-                    'awal_aktif'=>timestamp(),
 					'created_by'=>id_user(),
 				];
 				$this->db->insert('master_users', $data_users_baru);
 				$id_user_baru =  $this->db->insert_id();
 
-    			$usk = $this->db->get_where('users_sub_kegiatan', ['id_user' => $id_user, 'id_instansi' => id_instansi(), 'status' => '1', 'tahun_anggaran' => $tahun]);
+    			$usk = $this->db->get_where('users_sub_kegiatan', ['id_user' => $id_user, 'id_instansi' => id_instansi(), 'kode_tahap' => $tahap, 'tahun_anggaran' => $tahun]);
     			$kumpul_usk = [];
     			foreach ($usk->result_array() as $k=>$v){
     				$data_usk_baru = [
@@ -1356,7 +1353,7 @@ class Struktur_instansi extends MY_Controller
                     $this->db->insert_batch('users_sub_kegiatan', $kumpul_usk);
                     
                 }
-                $this->db->update('users_sub_kegiatan', ['status'=>0], ['id_user' => $id_user, 'id_instansi' => id_instansi(), 'tahun_anggaran' => $tahun]);
+                $usk = $this->db->update('users_sub_kegiatan', ['status'=>0], ['id_user' => $id_user, 'id_instansi' => id_instansi(), 'kode_tahap' => $tahap, 'tahun_anggaran' => $tahun]);
             }else  if ($id_kedudukan==2) {
 
                 $q_top_parent = $this->db->query("SELECT id_sub_instansi from sub_instansi where id_kedudukan = '1' and id_instansi='$id_instansi' and status='1'");
@@ -1408,7 +1405,6 @@ class Struktur_instansi extends MY_Controller
                     'status_kedudukan'=>'1',
                     'full_name'=>$full_name,
                     'created_on'=>timestamp(),
-                    'awal_aktif'=>timestamp(),
                     'created_by'=>id_user(),
                 ];
                 $this->db->insert('master_users', $data_users_baru);   
@@ -1457,36 +1453,18 @@ class Struktur_instansi extends MY_Controller
                     'status_kedudukan'=>'1',
                     'full_name'=>$full_name,
                     'created_on'=>timestamp(),
-                    'awak_aktif'=>timestamp(),
                     'created_by'=>id_user(),
                 ];
                 $this->db->insert('master_users', $data_users_baru);   
             }
 
 
-			$this->db->update('master_users',['status_kedudukan'=>'0', 'is_active'=>'0', 'akhir_aktif'=>timestamp()], ['id_user' => $id_user]);
+			$this->db->update('master_users',['status_kedudukan'=>'0', 'is_active'=>'0'], ['id_user' => $id_user]);
 			$this->db->update('sub_instansi', ['status'=>0], ['id_sub_instansi' => $id_sub_instansi]);
             $this->db->delete('users_groups', ['id_user'=>$id_user]);
 			
-
-
-            if ($this->db->trans_status() === FALSE)
-            {
-                    $this->db->trans_rollback();
-                    $output['status'] = false;
-                    $output['cek'] = false;
-            }
-            else
-            {
-
-        			$output['status'] = true;
-        			$output['cek'] = true;
-                    $this->db->trans_commit();
-            }
-
-
-
-
+			$output['status'] = true;
+			$output['cek'] = true;
 			
 
 			echo json_encode($data_sub_instansi_baru);
