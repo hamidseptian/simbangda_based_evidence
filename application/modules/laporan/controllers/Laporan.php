@@ -3070,6 +3070,9 @@ ini_set("pcre.backtrack_limit", "5000000");
 	    }
 	    elseif ($realisasi=='dev_keu_terendah') {
 	      $caption_realisasi = "Berdasarkan Deviasi Keuangan Terendah";
+	    }
+	    elseif ($realisasi=='capaian_sirandai') {
+	      $caption_realisasi = "Pencapaian Sirandai";
 	    }else{
 	      $caption_realisasi = "";
 
@@ -3101,7 +3104,13 @@ ini_set("pcre.backtrack_limit", "5000000");
 		  	$data['desc_bulan']= $deskripsi_bulan;
 	     	$judul_laporan="Rekapitulasi SIMBANGDA Based Evidence Per SKPD ". $deskripsi_bulan.' '.$kelompok.' '.$caption_realisasi ;
         	$judul_penampilan_laporan = "Penampilan data berdasarkan Sumber Dana, Target, Realisasi, Dan Deviasi";
-		    $html =  $this->load->view('laporan/pdf/ratarata_fisik_keuangan/content_perengkingan', $data, true);
+        	if ($realisasi=='capaian_sirandai') {
+			    $html =  $this->load->view('laporan/pdf/ratarata_fisik_keuangan/content_sirandai', $data, true);
+        		# code...
+        	}else{
+			    $html =  $this->load->view('laporan/pdf/ratarata_fisik_keuangan/content_perengkingan', $data, true);
+
+        	}
         	# code...
         }
         elseif ($kategori_penampilan_laporan=='pagu_dan_realisasi_skpd_per_jenis_belanja_bulanan') {

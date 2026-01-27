@@ -54,6 +54,7 @@ $nama_tahap = [
                         <option value="dev_fisik_terendah">Berdasarkan Deviasi Fisik Terendah</option>
                         <option value="dev_keu_tertinggi">Berdasarkan Deviasi Keuangan Tertinggi</option>
                         <option value="dev_keu_terendah">Berdasarkan Deviasi Keuangan Terendah</option>
+                        <option value="capaian_sirandai">Capaian Sirandai</option>
                     </select>
                 </div>
             </div>
