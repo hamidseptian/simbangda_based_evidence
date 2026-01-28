@@ -172,7 +172,7 @@ class Ratarata_fisik_keuangan extends CI_Model
 
     // }
     else{
-      $order = "";
+      $order = "ORDER BY mi.nama_instansi asc";
 
     }
 
