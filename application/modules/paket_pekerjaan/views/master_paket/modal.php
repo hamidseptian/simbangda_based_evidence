@@ -128,6 +128,7 @@
                                 <input type="hidden" id="input_type" name="input_type">
                                 <input type="hidden" id="izin_input_pptk" name="izin_input_pptk">
                                 <input type="hidden" id="id_kedudukan" name="id_kedudukan">
+                                <input type="hidden" id="kode_sub_kegiatan" name="kode_sub_kegiatan">
                                 <input type="text" id="nama_pelaksanaan" name="nama_pelaksanaan" class="form-control">
                             </div>
                             <div class="input-group-append">
@@ -182,6 +183,7 @@
                                 <input type="hidden" id="id_paket">
                                 <input type="hidden" id="izin_input_pptk">
                                 <input type="hidden" id="id_kedudukan">
+                                <input type="hidden" id="kode_sub_kegiatan">
                                 <input type="hidden" id="input_type">
                                 <select name="id_provinsi" id="id_provinsi" class="form-control" style="width: 100%" onchange="list_kab_kota(this.value)">
                                     <option value=""></option>

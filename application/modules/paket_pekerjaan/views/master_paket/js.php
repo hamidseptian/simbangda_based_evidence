@@ -258,7 +258,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 			$(this).attr('status','expand');
 			$(this).html('-');
 			$(table).after(tr_detail_paket);
-			showPaket(id_table,id_pptk, izin_input_pptk, alert_input_pptk);
+			showPaket(id_table,id_pptk, izin_input_pptk, alert_input_pptk, kode_sub_kegiatan);
 		}else{
 			$(this).attr('status','collapse');
 			$(this).html('+');
@@ -282,7 +282,6 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 		let kedudukan 		= $(this).attr('kedudukan');
 		let pemaketan 		= $(this).attr('pemaketan');
 
-		
 		let izin_input_pptk 		= $(this).attr('izin_input_pptk');
 		let alert_input_pptk 		= $(this).attr('alert_input_pptk');
 		let id_kedudukan 		= $(this).attr('id_kedudukan');
@@ -332,7 +331,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 			$(this).attr('status','expand');
 			$(this).html('-');
 			$(table).after(tr_detail_paket);
-			showPaket(id_table,id_pptk, izin_input_pptk, id_kedudukan);
+			showPaket(id_table,id_pptk, izin_input_pptk, id_kedudukan, kode_sub_kegiatan);
 		}else{
 			$(this).attr('status','collapse');
 			$(this).html('+');
@@ -445,7 +444,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 					}else{
 						$('#modalMasterPaket').find('#jenis_paket').html(
 							`<option value=""></option>
-			                            <option value="RUTIN">NON URUSAN</option>
+			                            
 			                            <option value="SWAKELOLA">SWAKELOLA</option>
 			                            <option value="PENYEDIA">PENYEDIA</option>`);
 
@@ -668,7 +667,7 @@ function peringatan_beda_tahapan(pesan_warning){
 		}else{
 			$('#modalMasterPaket').find('#jenis_paket').html(
 				`<option value=""></option>
-                            <option value="RUTIN">NON URUSAN</option>
+                            
                             <option value="SWAKELOLA">SWAKELOLA</option>
                             <option value="PENYEDIA">PENYEDIA</option>`);
 
@@ -676,7 +675,6 @@ function peringatan_beda_tahapan(pesan_warning){
 		
 		var fungsi_anggaran_tersedia = anggaran_tersedia(kode_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, kode_tahap);
 		var pagu_tersedia = fungsi_anggaran_tersedia.anggaran_tersedia;
-		console.log(pagu_tersedia);
 			// if (pagu_tersedia>0) {
 							$('#modalMasterPaket').modal('show');
 							$('#modalMasterPaket').find('.modal-title').html('Tambah Paket Pekerjaan');
@@ -990,11 +988,9 @@ function convert_ke_rupiah(x) {
             },
             success : function(data)
             {
-            	// console.log(data);
             	result = data.data;
             }, 
             error : function(){
-            	console.log('error');
 
             }
         });
@@ -1053,11 +1049,12 @@ function convert_ke_rupiah(x) {
 							.remove();
 						element.after(value);
 					}else{
+						var kode_sub_kegiatan = data.kode_sub_kegiatan;
 						$('#formMasterPaket')[0].reset();
 						$('#modalMasterPaket').modal('hide');
 						var izin_input_pptk	= data.izin_input_pptk;
 						var id_kedudukan	= data.id_kedudukan;
-						showPaket(id_table, id_pptk, izin_input_pptk, id_kedudukan);
+						showPaket(id_table, id_pptk, izin_input_pptk, id_kedudukan, kode_sub_kegiatan);
 					}
 				}else{
 					$.each(data.messages, function (key, value)
@@ -1110,7 +1107,7 @@ function convert_ke_rupiah(x) {
 						}else{
 							var izin_input_pptk	= data.izin_input_pptk;
 						var id_kedudukan	= data.id_kedudukan;
-						showPaket(id_table, id_pptk, izin_input_pptk, id_kedudukan);
+						showPaket(id_table, id_pptk, izin_input_pptk, id_kedudukan, data.kode_sub_kegiatan);
 						}
 
 					}
@@ -1137,7 +1134,7 @@ function convert_ke_rupiah(x) {
 		});
 	}
 
-	function showPaket(id_table, id_pptk, izin_input_pptk, id_kedudukan)
+	function showPaket(id_table, id_pptk, izin_input_pptk, id_kedudukan, kode_sub_kegiatan = '')
 	{
 		let kode_rekening = id_table.split('-').join('.');
 		id_table_active   = id_table;
@@ -1152,7 +1149,7 @@ function convert_ke_rupiah(x) {
 				          	url 	: baseUrl('paket_pekerjaan/dt_paket/'),
 				            type 	: "POST",
 				          	data 	: { 
-				          		kode_rekening : kode_rekening, 
+				          		kode_rekening : kode_sub_kegiatan, 
 				          		izin_input_pptk : izin_input_pptk, 
 				          		id_kedudukan : id_kedudukan, 
 				          		id_pptk : id_pptk 
@@ -1185,20 +1182,21 @@ function convert_ke_rupiah(x) {
     	});
 	}
 
-	function lokasi(id_paket_pekerjaan , jenis_input, izin_input_pptk, id_kedudukan)
+	function lokasi(id_paket_pekerjaan , jenis_input, izin_input_pptk, id_kedudukan, kode_sub_kegiatan)
 	{
 		$('#modal-lokasi-paket').modal('show');
 		$('#id_paket').val(id_paket_pekerjaan);
 		$('#modal-lokasi-paket').find('#izin_input_pptk').val(izin_input_pptk);
 		$('#modal-lokasi-paket').find('#id_kedudukan').val(id_kedudukan);
+		$('#modal-lokasi-paket').find('#kode_sub_kegiatan').val(kode_sub_kegiatan);
 		$('#modal-lokasi-paket').find('#input_type').val(jenis_input);
-		table_lokasi(id_paket_pekerjaan, izin_input_pptk, id_kedudukan);
+		table_lokasi(id_paket_pekerjaan, izin_input_pptk, id_kedudukan, kode_sub_kegiatan);
 	  	list_provinsi();
 		list_kab_kota(id_paket_pekerjaan);
 		list_kecamatan(id_kab_kota);
 	}
 
-	function table_lokasi(id_paket_pekerjaan, izin_input_pptk, id_kedudukan)
+	function table_lokasi(id_paket_pekerjaan, izin_input_pptk, id_kedudukan, kode_sub_kegiatan)
 	{
 		$('#id_provinsi').html('');
 		$('#id_provinsi').append('<option value=""></option>');
@@ -1212,6 +1210,7 @@ function convert_ke_rupiah(x) {
 				          	url 	: baseUrl('paket_pekerjaan/dt_lokasi/'),
 				            type 	: "POST",
 				          	data 	: { 
+				          		kode_sub_kegiatan : kode_sub_kegiatan,
 				          		id_paket_pekerjaan : id_paket_pekerjaan,
 				          		izin_input_pptk : izin_input_pptk,
 				          		id_kedudukan : id_kedudukan,
@@ -1248,6 +1247,7 @@ function convert_ke_rupiah(x) {
 
 		let izin_input_pptk = $('#modal-lokasi-paket').find('#izin_input_pptk').val();
 		let id_kedudukan = $('#modal-lokasi-paket').find('#id_kedudukan').val();
+		let kode_sub_kegiatan = $('#modal-lokasi-paket').find('#kode_sub_kegiatan').val();
 		
 			$.ajax(
 			{
@@ -1273,7 +1273,7 @@ function convert_ke_rupiah(x) {
 						if (data.input_by=='export') {
 							show_paket_export();
 						}else{
-							showPaket(id_table, data.id_pptk, izin_input_pptk, id_kedudukan	);
+							showPaket(id_table, data.id_pptk, izin_input_pptk, id_kedudukan	, kode_sub_kegiatan);
 						}
 					}
 					else{
@@ -1292,13 +1292,14 @@ function convert_ke_rupiah(x) {
 		
 	}
 
-	function volume(id_paket_pekerjaan, jenis_input, izin_input_pptk, id_kedudukan)
+	function volume(id_paket_pekerjaan, jenis_input, izin_input_pptk, id_kedudukan, kode_sub_kegiatan)
 	{
 		$('#modal-volume-paket').modal('show');
 		$('#id_paket_volume').val(id_paket_pekerjaan);
 		$('#modal-volume-paket').find('#input_type').val(jenis_input);
 		$('#modal-volume-paket').find('#izin_input_pptk').val(izin_input_pptk);
 		$('#modal-volume-paket').find('#id_kedudukan').val(id_kedudukan);
+		$('#modal-volume-paket').find('#kode_sub_kegiatan').val(kode_sub_kegiatan);
 		$('#nama_pelaksanaan').val('');
 		vol(id_paket_pekerjaan, 'input', izin_input_pptk, id_kedudukan	);
 	}
@@ -1308,6 +1309,7 @@ function convert_ke_rupiah(x) {
 		let tipe_input = $('#modal-volume-paket').find('#input_type').val();
 		let izin_input_pptk = $('#modal-volume-paket').find('#izin_input_pptk').val();
 		let id_kedudukan = $('#modal-volume-paket').find('#id_kedudukan').val();
+		let kode_sub_kegiatan = $('#modal-volume-paket').find('#kode_sub_kegiatan').val();
 		$('#table-vol').DataTable(
 		{
 	        processing	: false,
@@ -1319,6 +1321,7 @@ function convert_ke_rupiah(x) {
 				            type 	: "POST",
 				          	data 	: { 
 				          		id_paket_pekerjaan : id_paket_pekerjaan, 
+				          		kode_sub_kegiatan : kode_sub_kegiatan, 
 				          		tipe_input : tipe_input,
 				          		izin_input_pptk : izin_input_pptk,
 				          		id_kedudukan : id_kedudukan,
@@ -1347,6 +1350,7 @@ function convert_ke_rupiah(x) {
 		let id_paket = $('#id_paket_volume').val();
 		let nama_pel = $('#nama_pelaksanaan').val();
 		let tipe_input = $('#modal-volume-paket').find('#input_type').val();
+		let kode_sub_kegiatan = $('#modal-volume-paket').find('#kode_sub_kegiatan').val();
 		let izin_input_pptk = $('#modal-volume-paket').find('#izin_input_pptk').val();
 		let id_kedudukan = $('#modal-volume-paket').find('#id_kedudukan').val();
 		if ( $('#modal-volume-paket').find('#nama_pelaksanaan').val()=='') {
@@ -1363,14 +1367,13 @@ function convert_ke_rupiah(x) {
 				data    : { id_paket : id_paket, nama_pelaksanaan : nama_pel, tipe_input : tipe_input },
 				success : function(data)
 				{
-					console.log(data);
 					if(data.status == true)
 					{
 						let id_table 	= data.rekening.split('.').join('-');
 						if (data.input=="export") {
 							show_paket_export();
 						}else{
-							showPaket(id_table,data.id_pptk,izin_input_pptk, id_kedudukan);
+							showPaket(id_table,data.id_pptk,izin_input_pptk, id_kedudukan, kode_sub_kegiatan);
 						}
 							volume(id_paket, 'input', izin_input_pptk, id_kedudukan	);
 					}
@@ -1379,7 +1382,7 @@ function convert_ke_rupiah(x) {
 		}
 	}
 
-	function delete_paket(id_paket_pekerjaan, jenis_input, izin_input_pptk, id_kedudukan)
+	function delete_paket(id_paket_pekerjaan, jenis_input, izin_input_pptk, id_kedudukan, kode_sub_kegiatan)
 	{
 		Swal.fire({
 			  title: 'Warning',
@@ -1411,7 +1414,7 @@ function convert_ke_rupiah(x) {
 									if (jenis_input=='export') {
 										show_paket_export();
 									}else{
-										showPaket(id_table,data.id_pptk, izin_input_pptk, id_kedudukan);
+										showPaket(id_table,data.id_pptk, izin_input_pptk, id_kedudukan, kode_sub_kegiatan);
 
 									}
 								}
@@ -1491,7 +1494,7 @@ function convert_ke_rupiah(x) {
 		});	
 	}
 
-	function delete_lokasi(id_lokasi_paket_pekerjaan, id_paket_pekerjaan, izin_input_pptk, id_kedudukan)
+	function delete_lokasi(id_lokasi_paket_pekerjaan, id_paket_pekerjaan, izin_input_pptk, id_kedudukan, kode_sub_kegiatan)
 	{
 		$.ajax(
 		{
@@ -1505,8 +1508,8 @@ function convert_ke_rupiah(x) {
 				{
 					let id_table 	= data.rekening.split('.').join('-');
 					list_provinsi();
-					showPaket(id_table,data.id_pptk , izin_input_pptk, id_kedudukan);
-					table_lokasi(id_paket_pekerjaan, izin_input_pptk, id_kedudukan);
+					showPaket(id_table,data.id_pptk , izin_input_pptk, id_kedudukan, kode_sub_kegiatan);
+					table_lokasi(id_paket_pekerjaan, izin_input_pptk, id_kedudukan, kode_sub_kegiatan);
 				}
 			}
 		});
@@ -1545,7 +1548,7 @@ function convert_ke_rupiah(x) {
         })
     }
 
-	function delete_vol(id_vol_pelaksanaan_pekerjaan, id_paket_pekerjaan , pelaksanaan_ke, tipe_input, izin_input_pptk, id_kedudukan)
+	function delete_vol(id_vol_pelaksanaan_pekerjaan, id_paket_pekerjaan , pelaksanaan_ke, tipe_input, izin_input_pptk, id_kedudukan, kode_rekening_sub_kegiatan)
 	{
 
 
@@ -1570,7 +1573,6 @@ function convert_ke_rupiah(x) {
 							data    : { id_vol_pelaksanaan_pekerjaan : id_vol_pelaksanaan_pekerjaan, id_paket_pekerjaan : id_paket_pekerjaan },
 							success : function(data)
 							{
-								console.log(data);
 								// if(data.status == true)
 								// {
 									Swal.fire(
@@ -1580,7 +1582,7 @@ function convert_ke_rupiah(x) {
 								    );
 									let id_table 	= data.rekening.split('.').join('-');
 									if (tipe_input=='input') {
-										showPaket(id_table,data.id_pptk, izin_input_pptk, id_kedudukan	);
+										showPaket(id_table,data.id_pptk, izin_input_pptk, id_kedudukan, kode_rekening_sub_kegiatan	);
 									}else{
 										show_paket_export();
 									}

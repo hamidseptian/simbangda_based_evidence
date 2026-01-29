@@ -567,7 +567,7 @@ class Paket_pekerjaan extends MY_Controller
                 $kegiatan  = $this->db->query("SELECT nama_kegiatan from master_kegiatan where kode_kegiatan = '$kode_rekening_kegiatan'")->row();
                 $program  = $this->db->query("SELECT nama_program from master_program where kode_program = '$kode_rekening_program'")->row();
 
-                 $nama_sub_kegiatan ='<b>'.$kode_sub_kegiatan .'</b><br>'.$lists->nama_sub_kegiatan. $keterangan;
+                 $nama_sub_kegiatan ='<b>'.$krsk .'</b><br>'.$lists->nama_sub_kegiatan. $keterangan;
                 $row    = [];
                 $row[]     = $no;
 
@@ -883,6 +883,7 @@ class Paket_pekerjaan extends MY_Controller
                 // }else{
                     $id_paket_pekerjaan = $master_paket->save_master_paket();
                     $output['success']     = true;
+                    $output['kode_sub_kegiatan']     = $post['kode_rekening_sub_kegiatan'];
                     $output['messages'] = "Paket berhasil di simpan";
                 // }
             } else {
@@ -931,6 +932,7 @@ class Paket_pekerjaan extends MY_Controller
                 // }else{
                     $master_paket->update_master_paket($id_paket_pekerjaan);
                     $output['success']  = true;
+                    $output['kode_sub_kegiatan']  = $post['kode_rekening_sub_kegiatan'];
                     $output['messages'] = "Paket berhasil di update";
                     $output['input_type'] = $jenis_input;
                 // }
@@ -996,9 +998,9 @@ class Paket_pekerjaan extends MY_Controller
                 $row[]  = $lists->jenis_paket == 'RUTIN' ? '' : $lists->metode;
 
                  if ($izin_input_pptk==1) {
-                    $row[]  = $lists->jenis_paket == 'RUTIN' ? '' : ($this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan) == 0 ? '<button class="btn btn-outline-primary" onclick="lokasi(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."'" . ')">Belum Ada</button>' : '<button class="btn btn-outline-primary" onclick="lokasi(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."'" . ')">' . $this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan) . ' Lokasi</button>');
+                    $row[]  = $lists->jenis_paket == 'RUTIN' ? '' : ($this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan) == 0 ? '<button class="btn btn-outline-primary" onclick="lokasi(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."','".$lists->kode_rekening_sub_kegiatan."'" . ')">Belum Ada</button>' : '<button class="btn btn-outline-primary" onclick="lokasi(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."','".$lists->kode_rekening_sub_kegiatan."'" . ')">' . $this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan) . ' Lokasi</button>');
                     // $row[]  = $lists->jenis_paket == 'RUTIN' ? '' : '<button class="btn btn-outline-primary" onclick="volume(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."'" . ')">' . $lists->volume . '</button>';
-                    $row[]  = '<button class="btn btn-outline-primary" onclick="volume(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."'" . ')">' . $lists->volume . '</button>';
+                    $row[]  = '<button class="btn btn-outline-primary" onclick="volume(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."','".$lists->kode_rekening_sub_kegiatan."'" . ')">' . $lists->volume . '</button>';
                 }else{
                       $row[]  = $lists->jenis_paket == 'RUTIN' ? '' : ($this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan) == 0 ? '<button class="btn btn-outline-danger" onclick="'.$warning_bukan_kegiatan_anda.'">Belum Ada</button>' : '<button class="btn btn-outline-danger"  onclick="'.$warning_bukan_kegiatan_anda.'">' . $this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan) . ' Lokasi</button>');
                     $row[]  = $lists->jenis_paket == 'RUTIN' ? '' : '<button class="btn btn-outline-danger"  onclick="'.$warning_bukan_kegiatan_anda.'">' . $lists->volume . '</button>';
@@ -1020,7 +1022,7 @@ class Paket_pekerjaan extends MY_Controller
                             }
                         }else{
                             if ($izin_input_pptk==1) {
-                                $row[]  = '<button class="btn btn-info btn-sm" onclick="edit_paket(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."'" . ')"><i class="fas fa-edit"></i></button> <button class="btn btn-danger btn-sm" onclick="delete_paket(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."'" . ')"><i class="fa fa-times"></i></button>';
+                                $row[]  = '<button class="btn btn-info btn-sm" onclick="edit_paket(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."'" . ')"><i class="fas fa-edit"></i></button> <button class="btn btn-danger btn-sm" onclick="delete_paket(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."','".$lists->kode_rekening_sub_kegiatan."'" . ')"><i class="fa fa-times"></i></button>';
                             }else{
                                
                                 $row[]  = '<button class="btn btn-outline-info btn-sm" onclick="'.$warning_bukan_kegiatan_anda.'"><i class="fas fa-edit"></i></button> <button class="btn btn-outline-danger btn-sm" onclick="'.$warning_bukan_kegiatan_anda.'"><i class="fa fa-times"></i></button>';
@@ -1137,6 +1139,7 @@ class Paket_pekerjaan extends MY_Controller
             if ($paket_pekerjaan->num_rows() > 0) {
                 foreach ($paket_pekerjaan->result() as $key => $value) {
                 	$krsk = $value->kode_rekening_sub_kegiatan;
+                    $tahun = $value->tahun;
                     $output['data']['id_paket_pekerjaan_sebelumnya']                  = $value->id_paket_pekerjaan_sebelumnya;
                     $output['data']['id_pptk']                  = $value->id_pptk;
                     $output['data']['kode_bidang_urusan']   = $value->kode_bidang_urusan;
@@ -1146,10 +1149,10 @@ class Paket_pekerjaan extends MY_Controller
                     $output['data']['nama_tahapan_paket']   = pilihan_nama_tahapan($value->kode_tahap);
                     $output['data']['kode_rekening_sub_kegiatan']   = $krsk ;
                     if (tahapan_apbd()==4) {
-                        $cek_pemaketan = $this->db->query("SELECT pemaketan, nama_sub_kegiatan, kategori, jenis_sub_kegiatan, keterangan from v_sub_kegiatan_apbd where kode_rekening_sub_kegiatan='$krsk' and tahun = '2025' and status = 1")->row();
+                        $cek_pemaketan = $this->db->query("SELECT pemaketan, nama_sub_kegiatan, kategori, jenis_sub_kegiatan, keterangan from v_sub_kegiatan_apbd where kode_rekening_sub_kegiatan='$krsk' and tahun = '$tahun' and status = 1")->row();
                     }else{
 
-                        $cek_pemaketan = $this->db->query("SELECT pemaketan, nama_sub_kegiatan, kategori, jenis_sub_kegiatan, keterangan from v_sub_kegiatan_apbd where kode_rekening_sub_kegiatan='$krsk' and tahun = '2025' and kode_tahap =2")->row();
+                        $cek_pemaketan = $this->db->query("SELECT pemaketan, nama_sub_kegiatan, kategori, jenis_sub_kegiatan, keterangan from v_sub_kegiatan_apbd where kode_rekening_sub_kegiatan='$krsk' and tahun = '$tahun' and kode_tahap =2")->row();
                     }
 
                      $nama_sub_kegiatan = $cek_pemaketan->kategori =='Sub Kegiatan SKPD' ? $cek_pemaketan->nama_sub_kegiatan : $cek_pemaketan->nama_sub_kegiatan.'<br>'.$cek_pemaketan->jenis_sub_kegiatan.' - '.$cek_pemaketan->keterangan; 
@@ -1192,7 +1195,8 @@ class Paket_pekerjaan extends MY_Controller
             $id_paket_pekerjaan = $this->input->post('id_paket_pekerjaan');
             $tipe_input = $this->input->post('tipe_input');
             $izin_input_pptk   = $this->input->post('izin_input_pptk');
-            $id_kedudukan = $this->input->post('id_kedudukan ');
+            $id_kedudukan = $this->input->post('id_kedudukan');
+            $kode_sub_kegiatan = $this->input->post('kode_sub_kegiatan');
 
             $where          = ['id_instansi' => id_instansi(), 'id_paket_pekerjaan' => $id_paket_pekerjaan];
             $column_order   = ['', 'nama_pelaksanaan'];
@@ -1214,7 +1218,7 @@ class Paket_pekerjaan extends MY_Controller
                                 if ($aktif==0) { 
                                     $row[]  = '<button class="btn btn-sm btn-outline-danger btn-xs" onclick="Swal.fire(`Terkunci`,`'.$pesan.'`,`error`)"><i class="fas fa-trash"></i></button>';
                                 }else{ 
-                                    $row[]  = '<button class="btn btn-sm btn-danger btn-xs" onclick="delete_vol(' . "'" . $lists->id_vol_pelaksanaan_pekerjaan . "','" . $lists->id_paket_pekerjaan . "','" . $lists->pelaksanaan_ke . "','".$tipe_input."','".$izin_input_pptk."','".$id_kedudukan."'" . ')"><i class="fas fa-trash"></i></button>';
+                                    $row[]  = '<button class="btn btn-sm btn-danger btn-xs" onclick="delete_vol(' . "'" . $lists->id_vol_pelaksanaan_pekerjaan . "','" . $lists->id_paket_pekerjaan . "','" . $lists->pelaksanaan_ke . "','".$tipe_input."','".$izin_input_pptk."','".$id_kedudukan."','".$kode_sub_kegiatan."'" . ')"><i class="fas fa-trash"></i></button>';
 
                                 }
 
@@ -1369,6 +1373,7 @@ class Paket_pekerjaan extends MY_Controller
             $id_paket_pekerjaan = $this->input->post('id_paket_pekerjaan');
             $id_kedudukan = $this->input->post('id_kedudukan');
             $izin_input_pptk = $this->input->post('izin_input_pptk');
+            $kode_sub_kegiatan = $this->input->post('kode_sub_kegiatan');
             $id_paket_pekerjaan = $this->input->post('id_paket_pekerjaan');
             $where          = ['id_instansi' => id_instansi(), 'id_paket_pekerjaan' => $id_paket_pekerjaan];
             $column_order   = ['', 'nama_kecamatan'];
@@ -1384,7 +1389,7 @@ class Paket_pekerjaan extends MY_Controller
                 $row[]  = $lists->nama_provinsi. '<br> '.$lists->nama_kota;
                 $row[]  = $lists->nama_kecamatan;
                 
-                $row[]  = '<button class="btn btn-sm btn-danger" onclick="delete_lokasi(' . "'" . $lists->id_lokasi_paket_pekerjaan . "','" . $lists->id_paket_pekerjaan . "','" . $izin_input_pptk. "','" . $id_kedudukan . "'" . ')">x</button>';
+                $row[]  = '<button class="btn btn-sm btn-danger" onclick="delete_lokasi(' . "'" . $lists->id_lokasi_paket_pekerjaan . "','" . $lists->id_paket_pekerjaan . "','" . $izin_input_pptk. "','" . $id_kedudukan . "','" . $kode_sub_kegiatan . "'" . ')">x</button>';
 
                 $data[] = $row;
             }
