@@ -903,6 +903,9 @@ public function sync_eplanning()
 
 
 
+
+
+
     
     public function update_target_fisik($kode_rekening_sub_kegiatan, $tahap)
     {
@@ -917,7 +920,7 @@ public function sync_eplanning()
         } elseif ($target['bulan'] > 1 && $target['bulan'] <= 12) {
             $nilai = $target_fisik + $target_lalu['target_fisik'];
         }
-        echo $target['bulan'].' : '.$target_fisik ."<hr>";
+
         if ($nilai >= 100) {
             for ($i = $target['bulan']; $i <= 12; $i++) {
                 if ($i==$target['bulan']) {
@@ -929,38 +932,70 @@ public function sync_eplanning()
             }
         } else {
             $this->db->update('target_apbd', ['target_fisik' => $nilai,'target_fisik_bulanan' => $target_fisik], ['id_target_apbd' => $id_target_apbd]);
-
-            // update target dibawaunya
-            $target_all    = $this->db->get_where('target_apbd', ['kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'kode_tahap' => $tahap,'tahun' => tahun_anggaran(), 'id_instansi'=>id_instansi()])->result_array();
-            foreach ($target_all as $k => $v) {
-                $index = $k-1;
-                $tf_akumulasi = $v['target_fisik'];
-                $id_target = $v['id_target_apbd'];
-                $bulan = $v['bulan'];
-                $tf_bulanan = $v['target_fisik_bulanan'];
-                if ($k>0) {
-                    # code...
-                $tf_bulan_sebelumnya = $target_all[$index]['target_fisik'];
-                }else{
-                $tf_bulan_sebelumnya = 0;
-
-                }
-
-                if ($bulan>$target['bulan']) {
-                    $nilai_akumulasi_baru =  $tf_bulan_sebelumnya + $v['target_fisik_bulanan']; 
-                    # code...
-                }else{
-                    $nilai_akumulasi_baru = $tf_bulanan ; 
-
-                }
-                    $this->db->update('targetw_apbd',  ['target_fisik' => $nilai_akumulasi_baru,'target_fisik_bulanan' => $tf_bulanan], ['id_target_apbd'=>$id_target]);
-                echo $bulan.' | B:'.$tf_bulanan.' - A:'.$tf_akumulasi.' - TFSA:'.$tf_bulan_sebelumnya.' | '.$nilai_akumulasi_baru.'<br>';
-                   # code...
-            }
-
-
         }
     }
+
+
+
+
+    
+    // public function update_target_fisik($kode_rekening_sub_kegiatan, $tahap)
+    // {
+    //     $id_target_apbd = sbe_crypt($this->input->post('pk'), 'D');
+    //     $target_fisik   = $this->input->post('value');
+    //     $tahun = tahun_anggaran();
+    //     $target         = $this->db->get_where('target_apbd', ['id_target_apbd' => $id_target_apbd])->row_array();
+    //     $target_lalu    = $this->db->get_where('target_apbd', ['kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'bulan' => $target['bulan'] - 1, 'kode_tahap' => $tahap,'tahun' => tahun_anggaran(), 'id_instansi'=>id_instansi()])->row_array();
+
+    //     if ($target['bulan'] == 1) {
+    //         $nilai = $target_fisik;
+    //     } elseif ($target['bulan'] > 1 && $target['bulan'] <= 12) {
+    //         $nilai = $target_fisik + $target_lalu['target_fisik'];
+    //     }
+    //     echo $target['bulan'].' : '.$target_fisik ."<hr>";
+    //     if ($nilai >= 100) {
+    //         for ($i = $target['bulan']; $i <= 12; $i++) {
+    //             if ($i==$target['bulan']) {
+    //                 $target_fisik_otomatis = 100 - $target_lalu['target_fisik'];
+    //                 $this->db->update('target_apbd', ['target_fisik' => 100,'target_fisik_bulanan' => $target_fisik_otomatis], ['kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'bulan' => $i,  'id_instansi'=>id_instansi(),  'kode_tahap'=>$tahap,  'tahun'=>$tahun]);
+    //             }else{
+    //                 $this->db->update('target_apbd', ['target_fisik' => 100, 'target_fisik_bulanan' => 0], ['kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'bulan' => $i,'id_instansi'=>id_instansi(),'kode_Tahap'=>$tahap,'tahun'=>$tahun]);
+    //             }
+    //         }
+    //     } else {
+    //         $this->db->update('target_apbd', ['target_fisik' => $nilai,'target_fisik_bulanan' => $target_fisik], ['id_target_apbd' => $id_target_apbd]);
+
+    //         // update target dibawaunya
+    //         $target_all    = $this->db->get_where('target_apbd', ['kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'kode_tahap' => $tahap,'tahun' => tahun_anggaran(), 'id_instansi'=>id_instansi()])->result_array();
+    //         foreach ($target_all as $k => $v) {
+    //             $index = $k-1;
+    //             $tf_akumulasi = $v['target_fisik'];
+    //             $id_target = $v['id_target_apbd'];
+    //             $bulan = $v['bulan'];
+    //             $tf_bulanan = $v['target_fisik_bulanan'];
+    //             if ($k>0) {
+    //                 # code...
+    //             $tf_bulan_sebelumnya = $target_all[$index]['target_fisik'];
+    //             }else{
+    //             $tf_bulan_sebelumnya = 0;
+
+    //             }
+
+    //             if ($bulan>$target['bulan']) {
+    //                 $nilai_akumulasi_baru =  $tf_bulan_sebelumnya + $v['target_fisik_bulanan']; 
+    //                 # code...
+    //             }else{
+    //                 $nilai_akumulasi_baru = $tf_bulanan ; 
+
+    //             }
+    //                 $this->db->update('targetw_apbd',  ['target_fisik' => $nilai_akumulasi_baru,'target_fisik_bulanan' => $tf_bulanan], ['id_target_apbd'=>$id_target]);
+    //             echo $bulan.' | B:'.$tf_bulanan.' - A:'.$tf_akumulasi.' - TFSA:'.$tf_bulan_sebelumnya.' | '.$nilai_akumulasi_baru.'<br>';
+    //                # code...
+    //         }
+
+
+    //     }
+    // }
 
 
     
