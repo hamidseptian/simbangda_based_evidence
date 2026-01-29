@@ -20,7 +20,7 @@
 			Swal.fire('Warning',"<?php echo jadwal_rfk()['pesan'] ?>",'warning');
 		<?php } ?>
 	});
-
+ 
 	/* Fungsi untuk menampilkan KPA */
 	function showKpa() {
 		$('#table-kpa').DataTable({
@@ -212,7 +212,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 			$(this).attr('status', 'expand');
 			$(this).html('-');
 			$(table).after(tr_detail_paket);
-			showPaket(id_table,id_pptk, izin_input_pptk, alert_input_pptk);
+			showPaket(id_table,id_pptk, izin_input_pptk, alert_input_pptk, kode_sub_kegiatan);
 		} else {
 			$(this).attr('status', 'collapse');
 			$(this).html('+');
@@ -268,7 +268,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 			$(this).attr('status', 'expand');
 			$(this).html('-');
 			$(table).after(tr_detail_paket);
-			showPaket(id_table,id_pptk, izin_input_pptk, id_kedudukan);
+			showPaket(id_table,id_pptk, izin_input_pptk, id_kedudukan, kode_sub_kegiatan);
 		} else {
 			$(this).attr('status', 'collapse');
 			$(this).html('+');
@@ -347,7 +347,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 		});
 	}
 
-	function showPaket(id_table, id_pptk, izin_input_pptk, id_kedudukan) {
+	function showPaket(id_table, id_pptk, izin_input_pptk, id_kedudukan, kode_sub_kegiatan) {
 		let kode_rekening = id_table.split('-').join('.');
 
 		$('#table-paket-' + id_table).DataTable({
@@ -359,7 +359,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 				url: baseUrl('realisasi/dt_paket/'),
 				type: "POST",
 				data: {
-					kode_rekening: kode_rekening,
+					kode_rekening: kode_sub_kegiatan,
 					id_pptk: id_pptk,
 					izin_input_pptk : izin_input_pptk, 
 	          		id_kedudukan : id_kedudukan, 
@@ -584,7 +584,7 @@ function table_lokasi(id_paket_pekerjaan)
 					$('#btn-upload-' + idx).prop('disabled', false);
 					$('#upload-' + id).remove();
 					let idxz = kode_rekening_kegiatan.split('.').join("-");
-					showPaket(idxz, id_pptk, izin_input_pptk, id_kedudukan);
+					showPaket(idxz, id_pptk, izin_input_pptk, id_kedudukan, kode_rekening_kegiatan);
 					let pesan_upload = $('#pesan_upload').html('');
 				}else{
 					Swal.fire('Gagal Upload Evidence', data.message ,'error');
