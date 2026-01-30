@@ -1438,7 +1438,7 @@ ski.keterangan
 
       public function api_sipedal_penyedia($token, $tahun, $id_opd){
                     $curl = curl_init();
-                    $url = "https://sipedal.sumbarprov.go.id/api/v1/simbangda/rup_paket_penyedia?tahun=2025&instansi_id=D462&idsatker=$id_opd&order_col=namasatker&order_dir=desc";
+                    $url = "https://sipedal.sumbarprov.go.id/api/v1/simbangda/rup_paket_penyedia?tahun=$tahun&instansi_id=D462&idsatker=$id_opd&order_col=namasatker&order_dir=desc";
                     curl_setopt_array($curl, array(
                         CURLOPT_URL => $url,// your preferred link
                         CURLOPT_RETURNTRANSFER => true,
@@ -1469,7 +1469,7 @@ ski.keterangan
             }
       public function api_sipedal_swakelola($token, $tahun, $id_opd){
                     $curl = curl_init();
-                    $url = "https://sipedal.sumbarprov.go.id/api/v1/simbangda/rup_paket_swakelola?tahun=2025&instansi_id=D462&idsatker=$id_opd&order_col=namasatker&order_dir=desc";
+                    $url = "https://sipedal.sumbarprov.go.id/api/v1/simbangda/rup_paket_swakelola?tahun=$tahun&instansi_id=D462&idsatker=$id_opd&order_col=namasatker&order_dir=desc";
                     curl_setopt_array($curl, array(
                         CURLOPT_URL => $url,// your preferred link
                         CURLOPT_RETURNTRANSFER => true,

@@ -15,7 +15,7 @@
                                                     </div>
                                                     <div class="widget-subheading opacity-10">
                                                             <b>
-                                                               Tahun : <?php echo $tahun ?>                                                          
+                                                               Tahun : <?php echo $tahun ?>        <br>                                                  
                                                             </b>
                                                     </div>
                                                 </div>
