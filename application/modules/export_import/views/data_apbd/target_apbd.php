@@ -44,7 +44,7 @@
                                                         <input type="hidden" name="tahap" class="" value="<?php echo $kode_tahap ?>">
                                                         <input type="file" name="upload_file" class="" required>
                                                     </div>
-                                                        <button class="btn btn-info btn-block">Upload Target SIPD</button>
+                                                        <!-- <button class="btn btn-info btn-block">Upload Target SIPD</button> -->
                                                 <!-- </div> -->
                                             </form>    
                                         </div>

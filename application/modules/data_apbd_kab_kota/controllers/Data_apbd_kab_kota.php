@@ -350,8 +350,9 @@ class Data_apbd_kab_kota extends MY_Controller
 
 
                 $tahap = $this->input->post('tahap');
+                $tahun = tahun_anggaran();
                 $id_instansi = sbe_crypt($this->input->post('id_instansi'), 'D');
-                $where = ['kode_tahap'=>$tahap,   'id_instansi' => $id_instansi];
+                $where = ['kode_tahap'=>$tahap,   'id_instansi' => $id_instansi,  'tahun' => $tahun];
 
             if ($validation->run($this)) {
                 
