@@ -61,7 +61,7 @@ $nama_tahap = [
 			<div class="col-md-2">
 				<div class="form-group">
 					<label for="tahun"><strong>Tahun Anggaran</strong></label>
-					<select name="tahun" id="tahun" class="form-control" >
+					<select name="tahun" id="tahun" class="form-control" > 
 						<?php foreach ($config as $k => $v) { ?>
 							<option value="<?php echo $v['tahun_anggaran'] ?>" <?php if($v['tahun_anggaran']==tahun_anggaran()){echo "selected";} ?>><?php echo $v['tahun_anggaran'] ?></option>
 						<?php } ?>

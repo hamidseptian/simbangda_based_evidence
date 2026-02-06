@@ -32,14 +32,48 @@ class Rekap_kegiatan_kab_kota extends CI_Model
 		
 		return $q->row();
 	}
-	public function lokasi_per_skpd($id_kota, $tahun)
+	public function lokasi_per_skpd($id_kota, $id_kecamatan , $tahun, $id_instansi)
 	{
-		$q = $this->db->query("SELECT lpp.id_kab_kota, mi.nama_instansi, lpp.id_instansi, pp.kode_rekening_sub_kegiatan, lpp.id_paket_pekerjaan, pp.nama_paket, lpp.id_kecamatan
+		if ($id_instansi=='semua') {
+			$where_opd = "";
+		}else{
+			$where_opd = "AND lpp.id_instansi = '$id_instansi'";
+
+		}
+
+
+		if ($id_kecamatan=='semua') {
+			$where_kecamatan = "";
+		}else{
+			$where_kecamatan = "AND lpp.id_kecamatan = '$id_kecamatan'";
+
+		}
+
+
+		if ($id_kota=='semua') {
+			$where_kab_kota = "";
+		}else{
+			$where_kab_kota = "AND lpp.id_kab_kota = '$id_kota'";
+
+		}
+
+		
+
+		
+		$q = $this->db->query("SELECT lpp.id_kab_kota, mi.nama_instansi, lpp.id_instansi, 
+			pp.kode_rekening_sub_kegiatan, pp.jenis_paket, pp.pagu, pp.kategori as kategori_penyedia,
+			lpp.id_paket_pekerjaan, pp.nama_paket, lpp.id_kecamatan,
+			k.nama_kota, kc.nama_kecamatan,
+			ski.nama_sub_kegiatan, ski.kategori, ski.jenis_sub_kegiatan,  ski.keterangan
 		 from lokasi_paket_pekerjaan lpp
 			left join master_instansi mi on lpp.id_instansi = mi.id_instansi
 			left join paket_pekerjaan pp on lpp.id_paket_pekerjaan = pp.id_paket_pekerjaan
-			where lpp.id_kab_kota = '$id_kota' and mi.is_active=1 and pp.tahun = '$tahun'
-			order by mi.nama_instansi
+			left join kota k on lpp.id_kab_kota = k.id_kota
+			left join kecamatan kc on lpp.id_kecamatan = kc.id_kecamatan
+			left join sub_kegiatan_instansi ski on pp.kode_rekening_sub_kegiatan = ski.kode_sub_kegiatan and ski.tahun = '$tahun' 
+			where mi.is_active=1 and pp.tahun = '$tahun' 
+			$where_opd $where_kecamatan $where_kab_kota
+			GROUP BY lpp.id_paket_pekerjaan order by mi.nama_instansi
 			");
 		
 		return $q->result_array();

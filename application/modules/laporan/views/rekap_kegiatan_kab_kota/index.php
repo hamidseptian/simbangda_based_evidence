@@ -10,7 +10,7 @@
 <div class="mb-3 card">
   <div class="card-body">
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-2">
         <div class="form-group">
           <label for="tahun"><strong>Tahun</strong></label>
           <select name="tahun" id="tahun" class="form-control">
@@ -21,7 +21,7 @@
           </select>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <div class="form-group">
           <label for="provinsi"><strong>Pilih Provinsi</strong></label>
           <select name="provinsi" id="provinsi" class="form-control" onchange="list_kab_kota(this.value)">
@@ -32,7 +32,7 @@
           </select>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <div class="form-group">
           <label for="kota"><strong>Pilih Kab. / Kota</strong></label>
           <select name="kota" id="kota" class="form-control"  onchange="list_kecamatan(this.value)">
@@ -41,11 +41,23 @@
           </select>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <div class="form-group">
           <label for="kecamatan"><strong>Pilih Kecamatan</strong></label>
           <select name="kecamatan" id="kecamatan" class="form-control">
             <option></option>
+            
+          </select>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="kecamatan"><strong>Pilih OPD</strong></label>
+          <select name="opd" id="opd" class="form-control">
+            <option value="semua">Semua OPD</option>
+            <?php foreach ($opd as $k => $v) { ?>
+            	<option value="<?php echo $v['id_instansi'] ?>"><?php echo $v['nama_instansi'] ?></option>
+            <?php } ?>
             
           </select>
         </div>

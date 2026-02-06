@@ -576,7 +576,7 @@ $total_sisa_anggaran_semua = 0;
  <thead class="header">
     <tr>
     <th rowspan="3"  width="30px"><?php echo $var ?></th>
-    <th rowspan="2" colspan="6" >Program, Kegiatan, Sub Kegiatan <?php echo $id_instansi_pembantu ?></th>
+    <th rowspan="2" colspan="6" >Program, Kegiatan, Sub Kegiatan</th>
     <th rowspan="2">Bobot</th>
     <!-- <th rowspan="3" style="width:80px">Pagu Anggaran</th> -->
     <th colspan="5">Fisik </th>
@@ -613,7 +613,7 @@ $total_sisa_anggaran_semua = 0;
     <th>Uraian</th>
     <th style="width:80px">Pagu</th>
     <th>KPA</th>
-    <th>PPTk</th>
+    <th>PPTK</th>
     <th style="width:35px">%</th>
     <th style="width:35px">%</th>
     <th style="width:35px">Ttb</th>

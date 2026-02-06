@@ -1140,13 +1140,13 @@ class Realisasi_akumulasi_model extends CI_Model
 		}
 
 		if ($id_instansi_pembantu == 'non') { 
-			$q_usk_pptk = $this->db->query("SELECT  ski.kode_sub_kegiatan,ski.kode_tahap, msk.nama_sub_kegiatan, ski.jenis_sub_kegiatan, ski.kategori, ski.keterangan,
+			$q_usk_pptk = $this->db->query("SELECT  ski.kode_sub_kegiatan,ski.kode_tahap, ski.nama_sub_kegiatan, ski.jenis_sub_kegiatan, ski.kategori, ski.keterangan,
 			total_anggaran_sub_kegiatan(ski.kode_sub_kegiatan,ski.kode_tahap,ski.id_instansi,ski.kode_kegiatan,ski.kode_program,ski.tahun) AS pagu
 			 from sub_kegiatan_instansi ski
 	            	left join master_sub_kegiatan msk on 
 				trim(substr(ski.kode_sub_kegiatan,1,15)) = trim(msk.kode_sub_kegiatan) and msk.status = 1 where ski.kode_kegiatan='$kode_kegiatan' and ski.kategori='Sub Kegiatan SKPD' and id_instansi='$id_instansi'  and ski.tahun='$tahun' and $where group by ski.kode_sub_kegiatan");
 		}else{
-			$q_usk_pptk = $this->db->query("SELECT  ski.kode_sub_kegiatan,ski.kode_tahap, msk.nama_sub_kegiatan, ski.jenis_sub_kegiatan, ski.kategori, ski.keterangan,
+			$q_usk_pptk = $this->db->query("SELECT  ski.kode_sub_kegiatan,ski.kode_tahap, ski.nama_sub_kegiatan, ski.jenis_sub_kegiatan, ski.kategori, ski.keterangan,
 			total_anggaran_sub_kegiatan(ski.kode_sub_kegiatan,ski.kode_tahap,ski.id_instansi,ski.kode_kegiatan,ski.kode_program,ski.tahun) AS pagu
 			 from sub_kegiatan_instansi ski
 	            	left join master_sub_kegiatan msk on 

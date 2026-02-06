@@ -62,29 +62,16 @@ $pilihan_bulan = [
                     </div>
 
                     <div class="form-group">
-                        <label for="kode">Bulan Mulai Realisasi</label>
-                        <select name="bulan_mulai" id="bulan_mulai" class="form-control">
-                            <?php foreach ($pilihan_bulan as $k => $v) { ?>
-                                <option value="<?php echo $k ?>"><?php echo $v ?></option>
-                            <?php } ?> ?>
-                        </select>
+                        <label for="kode">TMT Mulai Realisasi</label>
+                        <input  type="date" name="tmt_mulai" id="tmt_mulai" class="form-control">
+                        
                     </div>
-                    <div class="form-group" >
-                        <label for="kode">Bulan Akhir Realisasi</label>
-                        <select name="bulan_selesai" id="bulan_selesai" class="form-control">
-                            <?php foreach ($pilihan_bulan as $k => $v) { ?>
-                                <option value="<?php echo $k ?>" <?php if($k==12){echo "selected";} ?>><?php echo $v ?></option>
-                            <?php } ?> ?>
-                        </select>
-                    </div>
+                  
                     <div class="form-group" >
                         <label for="kode">Status</label>
                         <select class="form-control" id="status" name="status">
-                            <option value=""></option>
-                             <?php $status = ['Tidak Aktif','Aktif'];
-                            foreach ($status as $k => $v) { ?>
-                                <option value="<?php echo $k ?>"><?php echo $v ?></option>
-                            <?php } ?>
+                            <option value="1">Aktif</option>
+                          
                         </select>
                     </div>
                     
@@ -142,21 +129,12 @@ $pilihan_bulan = [
                     </div>
 
                     
+
+
                     <div class="form-group">
-                        <label for="kode">Bulan Mulai Realisasi</label>
-                        <select name="bulan_mulai" id="bulan_mulai" class="form-control">
-                            <?php foreach ($pilihan_bulan as $k => $v) { ?>
-                                <option value="<?php echo $k ?>"><?php echo $v ?></option>
-                            <?php } ?> ?>
-                        </select>
-                    </div>
-                    <div class="form-group" >
-                        <label for="kode">Bulan Akhir Realisasi</label>
-                        <select name="bulan_selesai" id="bulan_selesai" class="form-control">
-                            <?php foreach ($pilihan_bulan as $k => $v) { ?>
-                                <option value="<?php echo $k ?>"><?php echo $v ?></option>
-                            <?php } ?> ?>
-                        </select>
+                        <label for="kode">TMT Mulai Realisasi</label>
+                        <input  type="date" name="tmt_mulai" id="tmt_mulai" class="form-control">
+                        
                     </div>
                     <div class="form-group" >
                         <label for="kode">Status</label>
@@ -167,6 +145,12 @@ $pilihan_bulan = [
                                 <option value="<?php echo $k ?>"><?php echo $v ?></option>
                             <?php } ?>
                         </select>
+                    </div>
+
+                    <div class="form-group" id="f_tmt_akhir" style="display:none">
+                        <label for="kode">TMT Akhir Realisasi</label>
+                        <input  type="date" name="tmt_selesai" id="tmt_selesai" class="form-control">
+                        
                     </div>
                     
                    

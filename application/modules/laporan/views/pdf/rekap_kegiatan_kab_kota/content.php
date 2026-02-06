@@ -1,58 +1,96 @@
-
-    <?php 
-$q_msk = $this->db->query("SELECT kode_sub_kegiatan, nama_sub_kegiatan from master_sub_kegiatan")->result_array();
-
-$kumpul_msk = [];
-foreach ($q_msk as $k => $v) {
-  $kumpul_msk[$v['kode_sub_kegiatan']] = $v['nama_sub_kegiatan'];
+<style>
+  .font_laporan{
+    font-size:9px;
+    font-family: 'arial';
+  }
+  table {
+    
+    border-collapse: collapse;
+    width:100%;
+}
+table td, th {
+    border: 0.01em solid ;
+    padding:3px;
 }
 
 
+  .judul_laporan{
+    margin-top:15px;
+    text-align : center;
+    font-family: 'arial';
+    font-size:12px;
+  }
+  .skpd{
+    font-size:15px;
+  }
+</style>
 
-    $kumpul = [];
-      foreach ($lokasi_per_skpd as $key => $v) {
-        $pecah_krsk = explode('.', $v['kode_rekening_sub_kegiatan']);
-        $krsk = $pecah_krsk[0].'.'.$pecah_krsk[1].'.'.$pecah_krsk[2].'.'.$pecah_krsk[3].'.'.$pecah_krsk[4].'.'.$pecah_krsk[5];
-        $data = [
-          'id_instansi'=>$v['id_instansi'],
-          'nama_instansi'=>$v['nama_instansi'],
-          'id_kecamatan'=>$v['id_kecamatan'],
-          'kode_ski'=>$v['kode_rekening_sub_kegiatan'],
-          'krsk'=>$krsk,
-          'nama_ski'=>$kumpul_msk[$krsk],
-          'id_paket_pekerjaan'=>$v['id_paket_pekerjaan'],
-          'nama_paket'=>$v['nama_paket'],
-        ];
-
-       array_push($kumpul, $data);
-      }
-
-      // echo json_encode($kumpul);
-$cleaned = array_values($kumpul);
-
-$grouped = [];
-foreach ($cleaned as $k => $item) {
-
-    $group_ski = [];
-    $kumpul_ski = [];
-    foreach ($item as $k_item => $v_item) {
-      $data_ski = [
-        'kode_sub_kegiatan'=>$item['kode_ski'],
-        'nama_ski' =>$item['nama_ski'],
-        'data_paket' =>[]
-      ];
-
-      $kumpul_ski[$k_item] =12;//$data_ski;
-      // array_push($kumpul_ski, $data);
-
-      // $group_ski[$v_item['kode_rekening_sub_kegiatan']]= $data;
-      // $grouped[$item['id_instansi']]['kork'] = $data;
-    }
-
-    $cleaner_ski = array_values($kumpul_ski); 
-    $grouped[$item['id_kecamatan']][] = $item;
-}
+<head>
+  <title><?php echo $title ?></title>
+</head>
 
 
-echo json_encode($grouped);
-header('Content-Type: application/json'); ?>
+<body>
+<?php echo  $title ?>
+<table class="font_laporan border">
+ <thead class="header">
+    <tr>
+    <th   width="30px">No</th>
+    <th >Kabupaten <br></th>  
+    <th >Kecamatan <br></th>  
+    <th>SKPD</th>
+    <th>Sub Kegiatan</th>
+    <th>Paket Pekerjaan</th>
+    <th>Jenis Paket</th>
+    <th>Kategori</th>
+    <th>Pagu paket</th>
+  </tr>
+ 
+ </thead>
+ <tbody>
+   <?php 
+  $no   = 0;
+  $total_pagu = 0;
+  $totalpaket_swa = 0;
+  $totalpaket_penyedia_konstruksi = 0;
+  $totalpaket_penyedia_non_konstruksi = 0;
+  $totalpaket_semua = 0;
+  $totalpagu_paket_semua = 0;
+
+  foreach ($lokasi_per_skpd as $k => $v) { 
+    $tahap = 4;//tahapan_apbd();
+    $no_ski = 0;
+    $id_instansi = $v->id_instansi;
+    $id_kab_kota = $v->id_kab_kota;
+    $nama_sub_kegiatan = $v['kategori'] == 'Sub Kegiatan SKPD' ? $v['nama_sub_kegiatan'] : $v['nama_sub_kegiatan'].'<br>'.$v['jenis_sub_kegiatan'].' - '.$v['keterangan'];
+    // $j_ski = $q_ski->num_rows();
+    $no++;
+
+    ?>
+      
+      <tr>
+        <td ><?php echo $no ?></td>
+        <td><?php echo $v['nama_kota'] ?></td>
+        <td><?php echo $v['nama_kecamatan'] ?></td>
+        <td><?php echo $v['nama_instansi'] ?></td>
+        <td><?php echo $nama_sub_kegiatan ?></td>
+        <td><?php echo $v['nama_paket'] ?></td>
+        <td><?php echo $v['jenis_paket'] ?></td>
+        <td><?php echo $v['kategori_penyedia'] ?></td>
+        <td><?php echo number_format( $v['pagu']) ?></td>
+      </tr>
+      <?php
+      $n = 0; 
+  
+  }
+?>
+ </tbody>
+<!--  <tfoot>
+   <tr>
+     <td colspan="4">Total</td>
+    
+   </tr>
+ </tfoot>
+ -->
+</table>
+</body>

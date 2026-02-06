@@ -1,7 +1,6 @@
 <?php
 
 /**
- * Author     : Alfikri, M.Kom
  * Created By : Alfikri, M.Kom
  * E-Mail     : alfikri.name@gmail.com
  * No HP      : 081277337405
@@ -34,10 +33,29 @@ class Realisasi_per_kab_kota extends CI_Model
 		$data=['id_kota'=>$id_kota];
 		return $this->db->get_where('kota', $data);
 	}
-	public function instansi_kab_kota($id_provinsi, $id_kota)
+	public function instansi_kab_kota($id_provinsi, $id_kota, $tahun, $bulan)
 	{
+
+		
+		$tgls = date('Y-m-d');
+		   $q_instansi = $this->db->query("SELECT nama_instansi, id_instansi 
+                    from master_instansi_kab_kota  where kategori='OPD' and id_kota='$id_kota' and 
+                    ( (year(tmt_mulai) <= $tahun) and (month(tmt_mulai) >=$bulan) )
+                    --  and 
+                    -- ( (year(tmt_selesai) >= $tahun) and (month(tmt_selesai) <=$bulan) )
+
+                   --  CASE 
+                   --  WHEN (year(tmt_mulai) <= $tahun) THEN  (year(tmt_mulai) <= $tahun) -- and (year(tmt_selesai) >= '$tahun' or tmt_selesai = 'Sedang Aktif')
+                   -- -- ELSE tmt_mulai < '$tgls'
+                   --  END
+                ");
+
+
+
+
 		$data=['id_provinsi'=>$id_provinsi,'id_kota'=>$id_kota,'is_active'=>1];
-		return $this->db->get_where('master_instansi_kab_kota', $data);
+		// return $this->db->get_where('master_instansi_kab_kota', $data);
+		return $q_instansi	;
 	}
 
 	public function get_program($id_instansi)

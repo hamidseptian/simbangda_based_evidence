@@ -19,6 +19,10 @@
 						<label for="nama_sub_instansi">Nama Jabatan</label>
 						<input type="hidden" id="idx" name="idx" value="0">
 						<input type="hidden" id="id_kpa" name="id_kpa" value="0">
+						<input type="hidden" class="form-control" id="username" name="username">
+
+
+						<input type="hidden" class="form-control" id="email" name="email">
 						<input type="text" class="form-control" id="nama_sub_instansi" name="nama_sub_instansi">
 					</div>
 					<div class="form-group">
@@ -29,14 +33,6 @@
 					<div class="form-group">
 						<label for="full_name">Nama Lengkap</label>
 						<input type="text" class="form-control" id="full_name" name="full_name">
-					</div>
-					<div class="form-group">
-						<label for="username">Username</label>
-						<input type="text" class="form-control" id="username" name="username">
-					</div>
-					<div class="form-group">
-						<label for="email">E-Mail</label>
-						<input type="text" class="form-control" id="email" name="email">
 					</div>
 				</form>
 			</div>

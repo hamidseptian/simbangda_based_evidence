@@ -165,8 +165,30 @@ function edit_instansi_kab_kota(id_instansi)
 			$('#modal_edit_instansi').find('#asisten').val(data.data.id_parent).change();
 			$('#modal_edit_instansi').find('#status').val(data.data.is_active).change();
 
-			$('#modal_edit_instansi').find('#bulan_mulai').val(data.data.bulan_mulai_realisasi).change();
-			$('#modal_edit_instansi').find('#bulan_selesai').val(data.data.bulan_akhir_realisasi).change();
+					$('#modal_edit_instansi').find('#tmt_mulai').val(data.data.tmt_mulai);
+
+			if (data.data.is_active==0) {
+					$('#modal_edit_instansi').find('#f_tmt_akhir').show();
+			}else{
+				var tgl_selesai = data.data.tmt_selesai == '' ? '<?php echo date('Y-m-d') ?>' : data.data.tmt_selesai;
+					$('#modal_edit_instansi').find('#f_tmt_akhir').hide();
+					$('#modal_edit_instansi').find('#tmt_selesai').val(tgl_selesai);
+
+			}
+
+
+			$('#modal_edit_instansi').find('#status').change(function(){
+				var status = $('#modal_edit_instansi').find('#status').val();
+				if (status==0) {
+					var tgl_selesai = data.data.tmt_selesai == '' ? '<?php echo date('Y-m-d') ?>' : data.data.tmt_selesai;
+					$('#modal_edit_instansi').find('#f_tmt_akhir').show();
+					$('#modal_edit_instansi').find('#tmt_selesai').val(tgl_selesai);
+
+				}else{
+					$('#modal_edit_instansi').find('#f_tmt_akhir').hide();
+
+				}
+			});
 
 			
 		},
@@ -177,14 +199,31 @@ function edit_instansi_kab_kota(id_instansi)
 }
 
 
+
+
+
 function simpanedit_instansi()
 {
 	
 	$('.form-control').removeClass('is-valid')
 					  .removeClass('is-invalid');
     $('.text-danger').remove();
-    var formdata = $('#form_edit_instansi').serialize();
-    
+		  var formdata = $('#form_edit_instansi').serialize();
+		var status = $('#modal_edit_instansi').find('#status').val();
+
+		if (status == 0) {
+
+		    var tmt = $('#modal_edit_instansi').find('#tmt_selesai').val();
+
+		    if (!tmt || tmt.trim() === '') {
+		        Swal.fire('Error','Harap isi TMT Selesai karena OPD akan di nonaktifkan','error');
+		        return false; 
+		    }
+
+		} else {
+
+		}
+
 	$.ajax({
 		url: baseUrl('instansi/simpanedit_instansi_kab_kota'),
 		type: 'POST',

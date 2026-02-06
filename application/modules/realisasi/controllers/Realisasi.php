@@ -1650,7 +1650,7 @@ class Realisasi extends MY_Controller
                 $krsk = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
                 $row[]  = '<b>'.pilihan_nama_tahapan($lists->kode_tahap).'</b>';
                 $kode_tahap_kegiatan = $lists->kode_tahap;
-                $row[]  = '<b>'.$krsk.'</b><br>'.$lists->nama_sub_kegiatan.$upel;
+                $row[]  = '<b>'.$lists->kode_rekening_sub_kegiatan.'</b><br>'.$lists->nama_sub_kegiatan.$upel;
                 $kode_tahap = $lists->kode_tahap;
 
                 $realisasi_dipilih = $keuangan->cek_realisasi_dipilih($lists->kode_rekening_sub_kegiatan,$kode_tahap_kegiatan, $id_instansi)->row_array();

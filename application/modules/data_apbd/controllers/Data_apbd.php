@@ -1149,7 +1149,7 @@ public function sync_eplanning()
                 $no++;
                 $row    = [];
                 $row[]     = $no;
-                $row[]  = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
+                $row[]  = $krsk;//$pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
                 $row[]  = $nama_sub_kegiatan;
                  $pagu   = $lists->pagu =='' ? 0 : $lists->pagu;
                 $row[]  =  '<span style="float:right">'.number_format($pagu,0,'','.').'</span>';
@@ -1381,7 +1381,7 @@ public function sync_eplanning()
                 $kode_rekening_kegiatan = $lists->kode_kegiatan;
            
 
-                 $nama_sub_kegiatan ='<b>'.$kode_sub_kegiatan .'</b><br>'.$kumpul_sub_kegiatan[$kode_sub_kegiatan]. $keterangan;//. $tbl_update_upel ;
+                 $nama_sub_kegiatan ='<b>'.$krsk .'</b><br>'.$lists->nama_sub_kegiatan. $keterangan;//. $tbl_update_upel ;
                 $row    = [];
                 $row[]     = $no;
 

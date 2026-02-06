@@ -203,6 +203,28 @@ class Struktur_instansi extends MY_Controller
             $list           = $this->datatables_model->get_datatables('v_sub_kegiatan_apbd', $column_order, $column_search, $order, $where);
             $data           = [];
             $no             = $_POST['start'];
+
+
+            $program = $this->db->query("SELECT kode_program, nama_program from master_program")->result_array();
+            $kumpul_program = [];
+            foreach ($program as $k => $v) {
+                $kumpul_program[$v['kode_program']] = $v['nama_program'];
+            }
+            $kegiatan = $this->db->query("SELECT kode_kegiatan, nama_kegiatan from master_kegiatan")->result_array();
+            $kumpul_kegiatan = [];
+            foreach ($kegiatan as $k => $v) {
+                $kumpul_kegiatan[$v['kode_kegiatan']] = $v['nama_kegiatan'];
+            }
+            $sub_kegiatan = $this->db->query("SELECT kode_sub_kegiatan, nama_sub_kegiatan from master_sub_kegiatan")->result_array();
+            $kumpul_sub_kegiatan = [];
+            foreach ($sub_kegiatan as $k => $v) {
+                $kumpul_sub_kegiatan[$v['kode_sub_kegiatan']] = $v['nama_sub_kegiatan'];
+            }
+
+
+
+
+
             foreach ($list as $lists) {
                 $krsk = $lists->kode_rekening_sub_kegiatan;
                 $tahap_ski = $lists->kode_tahap;
@@ -226,10 +248,8 @@ class Struktur_instansi extends MY_Controller
                 $no++;
                 $kode_rekening_program = $lists->kode_rekening_program;
                 $kode_rekening_kegiatan = $lists->kode_rekening_kegiatan;
-                $kegiatan  = $this->db->query("SELECT nama_kegiatan from master_kegiatan where kode_kegiatan = '$kode_rekening_kegiatan'")->row_array();
-                $program  = $this->db->query("SELECT nama_program from master_program where kode_program = '$kode_rekening_program'")->row_array();
-
-                 $nama_sub_kegiatan ='<b>'.$kode_sub_kegiatan .'</b><br>'.$lists->nama_sub_kegiatan. $keterangan;//. $tbl_update_upel ;
+         
+                $nama_sub_kegiatan ='<b>'.$krsk .'</b><br>'.$lists->nama_sub_kegiatan. $keterangan;//. $tbl_update_upel ;
                 $row    = [];
                 $row[]     = $no;
 
@@ -251,8 +271,8 @@ class Struktur_instansi extends MY_Controller
 
 
                 $row[]  = '<b>'.$caption_tahapan.'</b>';
-                $row[]  = '<b>'.$lists->kode_rekening_program.'</b><br>'. $program['nama_program'];
-                $row[]  = '<b>'.$lists->kode_rekening_kegiatan.'</b><br>'. $kegiatan['nama_kegiatan'];
+                $row[]  = '<b>'.$lists->kode_rekening_program.'</b><br>'. $kumpul_program[$lists->kode_rekening_program];
+                $row[]  = '<b>'.$lists->kode_rekening_kegiatan.'</b><br>'. $kumpul_kegiatan[$lists->kode_rekening_kegiatan];
                 $row[]  = $nama_sub_kegiatan ; 
                 $row[]  = '<b>'.$lists->kategori;
                  $pagu   = $lists->pagu =='' ? 0 : $lists->pagu;

@@ -847,8 +847,9 @@ $data_insert_all = [
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="btn-group btn-block">
-                                                        
-                                            <!-- <button class=" btn btn-outline-info" type="button" onclick="import_all_data_apbd_alert()">Import Data APBD (Pilih Data APBD, Pagu Sub Kegiatan, Sumber dana Sub Kegiatan)</button> -->
+                                                <?php if ($this->session->userdata('id_group')==2) { ?>
+                                            <button class=" btn btn-outline-info" type="button" onclick="import_all_data_apbd()">Import Data APBD (Pilih Data APBD, Pagu Sub Kegiatan, Sumber dana Sub Kegiatan)</button>
+                                        <?php } ?>
                                             <a class="btn btn-outline-info" href="<?php echo base_url('data_apbd/setting') ?>">Pilih Data APBD (Manual Input)</a>
                                             <!-- <button class="btn btn-block btn-info" onclick="alert('coming soon, sedang dalam pengembangan')" type="button">Import akan segera di aktifkan</button> -->
                                                     

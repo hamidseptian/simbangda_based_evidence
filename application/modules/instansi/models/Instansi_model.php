@@ -94,8 +94,8 @@ class Instansi_model extends CI_Model
 			'is_parent'				=> 'T',
 			'position'				=> 'h',
 			'is_active'				=> $post['status'],
-			'bulan_mulai_realisasi'				=> $post['bulan_mulai'],
-			'bulan_akhir_realisasi'				=> $post['bulan_selesai'],
+			'tmt_mulai'				=> $post['tmt_mulai'],
+			'tmt_selesai'				=> 'Sedang Aktif',
 
 			'created_on'				=> timestamp(),
 			'created_by'				=> id_user(),
@@ -129,6 +129,7 @@ class Instansi_model extends CI_Model
 	public function saveedit_instansi_kab_kota($id_instansi)
 	{
 		$post = $this->input->post();
+		$tmt_Selesai = $post['status'] == 0 ? $post['tmt_selesai'] : 'Sedang Aktif';
 		$data = [
 			'kode_opd'				=> $post['kode'],
 			'nama_instansi'				=> $post['nama'],
@@ -140,8 +141,9 @@ class Instansi_model extends CI_Model
 			'is_parent'				=> 'T',
 			'position'				=> 'h',
 			'is_active'				=> $post['status'],
-			'bulan_mulai_realisasi'				=> $post['bulan_mulai'],
-			'bulan_akhir_realisasi'				=> $post['bulan_selesai'],
+			'tmt_mulai'				=> $post['tmt_mulai'],
+			'tmt_selesai'				=> $tmt_Selesai,
+			
 
 			'updated_on'				=> timestamp(),
 			'updated_by'				=> id_user(),

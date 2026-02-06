@@ -222,8 +222,8 @@ class Instansi extends MY_Controller
             $output['data']['email_instansi']                  = $instansi->email_instansi;
             $output['data']['telepon']                  = $instansi->telpon;
             $output['data']['website']                  = $instansi->website;
-            $output['data']['bulan_mulai_realisasi']                  = $instansi->bulan_mulai_realisasi;
-            $output['data']['bulan_akhir_realisasi']                  = $instansi->bulan_akhir_realisasi;
+            $output['data']['tmt_mulai']                  = $instansi->tmt_mulai;
+            $output['data']['tmt_selesai']                  = $instansi->tmt_selesai;
             $output['data']['is_active']                  = $instansi->is_active;
 
             
@@ -358,9 +358,9 @@ class Instansi extends MY_Controller
                 $row[]  = $lists->kode_opd;
                 $row[]  = $lists->nama_instansi;
                 $row[]  = $lists->kategori;
-                $row[]  = bulan_global($lists->bulan_mulai_realisasi);
-                $row[]  = bulan_global($lists->bulan_akhir_realisasi);
-                $row[]  = $status[$lists->is_active];
+                $row[]  = $lists->tmt_mulai ; //balikkan_tanggal($lists->tmt_mulai);
+                $row[]  = $lists->tmt_selesai ; //$lists->tmt_selesai =='Sedang Aktif' ? 'Sedang Aktif' : @ balikkan_tanggal($lists->tmt_selesai);
+                $row[]  = $lists->is_active == 1 ? '<span class="badge badge-success">'.$status[$lists->is_active].'</span>' : '<span class="badge badge-danger">'.$status[$lists->is_active].'</span>' ;
                 $tombol_edit = '<button class="btn btn-outline-info btn-xs"  title="Edit Instansi'.$lists->nama_instansi.'"  onclick="edit_instansi_kab_kota('."'".sbe_crypt($lists->id_instansi, 'E')."'".')"><i class="fas fa-edit"></i></button>';
                 $tombol_hapus = '<button class="btn btn-outline-danger btn-xs"  title="Edit Instansi'.$lists->nama_instansi.'"  onclick="hapus_instansi_kab_kota('."'".sbe_crypt($lists->id_instansi, 'E')."'".' , '."'".$lists->nama_instansi."'".')"><i class="fas fa-trash"></i></button>';
                 $row[]  = $tombol_edit.' '.$tombol_hapus;
@@ -371,8 +371,8 @@ class Instansi extends MY_Controller
 
             $output = [
                 "draw"              => $_POST['draw'],
-                "recordsTotal"      => $this->datatables_model->count_all('v_instansi_kab_kota', $where),
-                "recordsFiltered"   => $this->datatables_model->count_filtered('v_instansi_kab_kota', $column_order, $column_search, $order, $where),
+                "recordsTotal"      => $this->datatables_model->count_all('master_instansi_kab_kota', $where),
+                "recordsFiltered"   => $this->datatables_model->count_filtered('master_instansi_kab_kota', $column_order, $column_search, $order, $where),
                 "data"              => $data,
             ];
 
@@ -992,7 +992,7 @@ class Instansi extends MY_Controller
 
 
 
-
+ 
 
                 
                 

@@ -95,45 +95,71 @@ class Data_apbd_kab_kota extends MY_Controller
                 $id_kota = $this->session->userdata('id_kota') ;    
                 $where          = ['kategori'=>'OPD', 'id_kota'=>$id_kota];
             
-            $column_order   = ['', 'nama_instansi'];
-            $column_search  = ['nama_instansi','kode_opd'];
-            $order          = ['nama_instansi' => 'ASC'];
-            $list           = $this->datatables_model->get_datatables('master_instansi_kab_kota', $column_order, $column_search, $order, $where);
-            $data           = [];
-            $no             = $_POST['start'];
-            $status = ['Tidak Aktif','Aktif'];
-            foreach ($list as $lists) {
-                $no++;
-                $id_instansi  = $lists->id_instansi;
-                $q_pagu = $this->db->query("SELECT pagu_bo,pagu_bm,pagu_btt,pagu_bt from v_instansi_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun='$tahun_anggaran'");
-                $d_pagu = $q_pagu->row();
-                $j_pagu = $q_pagu->num_rows();
-                $pagu_bo = $j_pagu == 0 ? 0 : $d_pagu->pagu_bo ;
-                $pagu_bm = $j_pagu == 0 ? 0 : $d_pagu->pagu_bm ;
-                $pagu_btt = $j_pagu == 0 ? 0 : $d_pagu->pagu_btt ;
-                $pagu_bt = $j_pagu == 0 ? 0 : $d_pagu->pagu_bt ;
-                $pagu_total = $pagu_bo + $pagu_bm + $pagu_btt + $pagu_bt;
+         $no             = $_POST['start'];
+  
+         $start = $no;
+         $length             = $_POST['length'];
+         $key = $_POST['search']['value'];
+         $tgls = date('Y-m-d');
+        $data = [];
+         if ($key) {
+            $q_instansi = $this->db->query("SELECT mi.nama_instansi, mi.id_instansi, 
+                    total_anggaran_instansi_kab_kota_bo(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_bo,total_anggaran_instansi_kab_kota_bm(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_bm,total_anggaran_instansi_kab_kota_btt(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_btt,total_anggaran_instansi_kab_kota_bt(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_bt,total_anggaran_instansi_kab_kota_semua(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_total
 
+                    from master_instansi_kab_kota mi where mi.kategori='OPD' and mi.id_kota='$id_kota' and 
+                    CASE 
+                    WHEN is_active = '0' THEN  tmt_mulai < '$tgls' and (tmt_selesai >= '$tgls' or tmt_selesai = 'Sedang Aktif')
+                    ELSE is_active = '1'
+                    END
+                    and mi.nama_instansi like '%$key%'
+                    limit $start, $length
+                ")->result_array();
+            
+         }else{
+            $q_instansi = $this->db->query("SELECT nama_instansi, id_instansi 
+                    ,total_anggaran_instansi_kab_kota_bo(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_bo,total_anggaran_instansi_kab_kota_bm(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_bm,total_anggaran_instansi_kab_kota_btt(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_btt,total_anggaran_instansi_kab_kota_bt(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_bt,total_anggaran_instansi_kab_kota_semua(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_total
+                    from master_instansi_kab_kota mi where mi.kategori='OPD' and mi.id_kota='$id_kota' and 
+                    CASE 
+                    WHEN is_active = '0' THEN  tmt_mulai < '$tgls' and (tmt_selesai >= '$tgls' or tmt_selesai = 'Sedang Aktif')
+                    ELSE is_active = '1'
+                    END
+                    limit $start, $length
+                ")->result_array();
+         }
+         
+            $count_data = $this->db->query("SELECT id_instansi from master_instansi_kab_kota where kategori='OPD' and id_kota='$id_kota'
+                ")->num_rows();
+
+
+
+
+            foreach ($q_instansi as $k => $v) {
+                $id_instansi  = $v['id_instansi'];
                 $row    = [];
+                $no++;
                 $row[]     = $no;
-                $row[]  = $lists->nama_instansi;
-               
-                $row[]  = number_format($pagu_bo);
-                $row[]  = number_format($pagu_bm);
-                $row[]  = number_format($pagu_btt);
-                $row[]  = number_format($pagu_bt);
-                $row[]  = number_format($pagu_total);
-               
-
-               $onclick3 = "get_target_kab_kota('".$lists->nama_instansi."','".$lists->id_instansi."','".$lists->id_kota."','".tahapan_apbd()."','".tahun_anggaran()."','".$pagu_total."')";
-            $tomboltarget = ' <button class="btn btn-outline-info btn-xs"  title="Input target realisasi  '.$lists->nama_instansi.'"  onclick="'.$onclick3.'"><i class="fas fa-crosshairs"></i></button> ';
-            $tomboltarget_forbidden = ' <button class="btn btn-outline-danger btn-xs"  title="Input target realisasi  '.$lists->nama_instansi.'"  onclick="input_target_forbidden('."'".$lists->nama_instansi."'".')"><i class="fas fa-crosshairs"></i></button> ';
-
+                $pagu_bo =  $v['pagu_bo'] == '' ? 0 : $v['pagu_bo'];
+                $pagu_bm =  $v['pagu_bm'] == '' ? 0 : $v['pagu_bm'];
+                $pagu_btt =  $v['pagu_btt'] == '' ? 0 : $v['pagu_btt'];
+                $pagu_bt =  $v['pagu_bt'] == '' ? 0 : $v['pagu_bt'];
+                $pagu_total = $pagu_bo + $pagu_bm + $pagu_btt+$pagu_bt;
+                $row[]     = $v['nama_instansi'];
+                $row[]     = number_format($pagu_bo);
+                $row[]     = number_format($pagu_bm);
+                $row[]     = number_format($pagu_btt);
+                $row[]     = number_format($pagu_bt);
+                $row[]     = number_format($pagu_total);
 
 
-                $tombol_edit = '<button class="btn btn-outline-info btn-xs"  title="Input / Edit Pagu Instansi '.$lists->nama_instansi.'"  onclick="input_pagu_instansi('."'".sbe_crypt($lists->id_instansi, 'E')."'".','.$tahap.')"><i class="fas fa-money-bill"></i></button>';
+                $onclick3 = "get_target_kab_kota('".$v['nama_instansi']."','".$v['id_instansi']."','".$id_kota."','".tahapan_apbd()."','".tahun_anggaran()."','".$pagu_total."')";
+                $tomboltarget = ' <button class="btn btn-outline-info btn-xs"  title="Input target realisasi  '.$v['nama_instansi'].'"  onclick="'.$onclick3.'"><i class="fas fa-crosshairs"></i></button> ';
+                $tomboltarget_forbidden = ' <button class="btn btn-outline-danger btn-xs"  title="Input target realisasi  '.$v['nama_instansi'].'"  onclick="input_target_forbidden('."'".$v['nama_instansi']."'".')"><i class="fas fa-crosshairs"></i></button> ';
 
-                $tombol_copy = ' <button class="btn btn-outline-info btn-xs"  title="Copu Pagu  APBD AWAL Instansi '.$lists->nama_instansi.'"  onclick="copy_pagu_instansi('."'".sbe_crypt($lists->id_instansi, 'E')."'".','.$tahap.', '."'".$lists->nama_instansi."'".')"><i class="fas fa-copy"></i></button>';
+
+
+                $tombol_edit = '<button class="btn btn-outline-info btn-xs"  title="Input / Edit Pagu Instansi '.$v['nama_instansi'].'"  onclick="input_pagu_instansi('."'".sbe_crypt($v['id_instansi'], 'E')."'".','.$tahap.')"><i class="fas fa-money-bill"></i></button>';
+
+                $tombol_copy = ' <button class="btn btn-outline-info btn-xs"  title="Copu Pagu  APBD AWAL Instansi '.$v['nama_instansi'].'"  onclick="copy_pagu_instansi('."'".sbe_crypt($v['id_instansi'], 'E')."'".','.$tahap.', '."'".$v['nama_instansi']."'".')"><i class="fas fa-copy"></i></button>';
 
                 if ($pagu_total >0) {
                     $show_tombol_target = $tomboltarget;
@@ -151,15 +177,86 @@ class Data_apbd_kab_kota extends MY_Controller
                 }
 
 
+
                 $data[] = $row;
             }
 
-            $output = [
+
+            // $column_order   = ['', 'nama_instansi'];
+            // $column_search  = ['nama_instansi','kode_opd'];
+            // $order          = ['nama_instansi' => 'ASC'];
+            // $list           = $this->datatables_model->get_datatables('master_instansi_kab_kota', $column_order, $column_search, $order, $where);
+            // $data           = [];
+            // $no             = $_POST['start'];
+            // $status = ['Tidak Aktif','Aktif'];
+            // foreach ($list as $lists) {
+            //     $no++;
+            //     $id_instansi  = $lists->id_instansi;
+            //     $q_pagu = $this->db->query("SELECT pagu_bo,pagu_bm,pagu_btt,pagu_bt from v_instansi_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun='$tahun_anggaran' and is_active = 1");
+            //     $d_pagu = $q_pagu->row();
+            //     $j_pagu = $q_pagu->num_rows();
+            //     $pagu_bo = $j_pagu == 0 ? 0 : $d_pagu->pagu_bo ;
+            //     $pagu_bm = $j_pagu == 0 ? 0 : $d_pagu->pagu_bm ;
+            //     $pagu_btt = $j_pagu == 0 ? 0 : $d_pagu->pagu_btt ;
+            //     $pagu_bt = $j_pagu == 0 ? 0 : $d_pagu->pagu_bt ;
+            //     $pagu_total = $pagu_bo + $pagu_bm + $pagu_btt + $pagu_bt;
+
+            //     $row    = [];
+            //     $row[]     = $no;
+            //     $row[]  = $lists->nama_instansi;
+               
+            //     $row[]  = number_format($pagu_bo);
+            //     $row[]  = number_format($pagu_bm);
+            //     $row[]  = number_format($pagu_btt);
+            //     $row[]  = number_format($pagu_bt);
+            //     $row[]  = number_format($pagu_total);
+               
+
+            //    $onclick3 = "get_target_kab_kota('".$lists->nama_instansi."','".$lists->id_instansi."','".$lists->id_kota."','".tahapan_apbd()."','".tahun_anggaran()."','".$pagu_total."')";
+            // $tomboltarget = ' <button class="btn btn-outline-info btn-xs"  title="Input target realisasi  '.$lists->nama_instansi.'"  onclick="'.$onclick3.'"><i class="fas fa-crosshairs"></i></button> ';
+            // $tomboltarget_forbidden = ' <button class="btn btn-outline-danger btn-xs"  title="Input target realisasi  '.$lists->nama_instansi.'"  onclick="input_target_forbidden('."'".$lists->nama_instansi."'".')"><i class="fas fa-crosshairs"></i></button> ';
+
+
+
+            //     $tombol_edit = '<button class="btn btn-outline-info btn-xs"  title="Input / Edit Pagu Instansi '.$lists->nama_instansi.'"  onclick="input_pagu_instansi('."'".sbe_crypt($lists->id_instansi, 'E')."'".','.$tahap.')"><i class="fas fa-money-bill"></i></button>';
+
+            //     $tombol_copy = ' <button class="btn btn-outline-info btn-xs"  title="Copu Pagu  APBD AWAL Instansi '.$lists->nama_instansi.'"  onclick="copy_pagu_instansi('."'".sbe_crypt($lists->id_instansi, 'E')."'".','.$tahap.', '."'".$lists->nama_instansi."'".')"><i class="fas fa-copy"></i></button>';
+
+            //     if ($pagu_total >0) {
+            //         $show_tombol_target = $tomboltarget;
+            //     }else{
+            //         $show_tombol_target = $tomboltarget_forbidden;
+
+            //     }
+                
+            //     if ($tahap==4 && $j_pagu==0) {
+            //         $row[]  = $tombol_edit.$tombol_copy;
+            //         # code...
+            //     }else{
+            //         $row[]  = $tombol_edit.$show_tombol_target;
+
+            //     }
+
+
+            //     $data[] = $row;
+            // }
+
+            // $output = [
+            //     "draw"              => $_POST['draw'],
+            //     "recordsTotal"      => $this->datatables_model->count_all('master_instansi_kab_kota', $where),
+            //     "recordsFiltered"   => $this->datatables_model->count_filtered('master_instansi_kab_kota', $column_order, $column_search, $order, $where),
+            //     "data"              => $data,
+            // ];
+
+
+             $output = [
                 "draw"              => $_POST['draw'],
-                "recordsTotal"      => $this->datatables_model->count_all('master_instansi_kab_kota', $where),
-                "recordsFiltered"   => $this->datatables_model->count_filtered('master_instansi_kab_kota', $column_order, $column_search, $order, $where),
+                "recordsTotal"      => $count_data,//$this->datatables_model->count_all('master_instansi_kab_kota', $where),
+                "recordsFiltered"   => $count_data,//$this->datatables_model->count_filtered('master_instansi_kab_kota', $column_order, $column_search, $order, $where),
                 "data"              => $data,
             ];
+
+
 
             echo json_encode($output);
         }
