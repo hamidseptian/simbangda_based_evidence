@@ -3151,36 +3151,49 @@ ini_set("pcre.backtrack_limit", "5000000");
 		    'orientation' => 'L',
 		    'tempDir' => '/tmp'
 		]);
+		ini_set('memory_limit', '512M');
+		ini_set('pcre.backtrack_limit', '5000000');
+ini_set('pcre.recursion_limit', '5000000');
 
 		$id_instansi 	= sbe_crypt($this->input->get('id_opd'), 'D');
 		$id_kota 	= sbe_crypt($this->input->get('id_kota'), 'D');
 		$id_kecamatan 	=   sbe_crypt($this->input->get('id_kecamatan'), 'D');
 		$tahun 	= $this->input->get('tahun');
+		$id_provinsi 	= sbe_crypt( $this->input->get('id_provinsi'),'D');
 		$id_opd 	= $this->input->get('id_opd');
+		$jenis_paket 	= $this->input->get('jenis_paket');
     // $id_instansi = 12;
 	
 
-	  
+	    $identitas = $this->db->get('identitas')->row_array();
+$data['identitas']=$identitas;
 	    
-	    $data['judul_laporan']="Laporan pelaksanaan kegiatan di Kabupaten / Kota";
-	    $domisili =$this->rekap_kegiatan_kab_kota->kab_kota($id_kota);
+	    $data['judul_laporan']="Laporan pelaksanaan kegiatan di ";
 
+	    if ($id_kota=='semua') {
+	    	$provinsi = $this->db->query("SELECT nama_provinsi from provinsi where id_provinsi='$id_provinsi'")->row_array();
+	    	$nama_kota = "Provinsi ". $provinsi['nama_provinsi']. " Semua Kab Kota";
+	    }else{
+		    $domisili =$this->rekap_kegiatan_kab_kota->kab_kota($id_kota);
+	    	$nama_kota =$domisili['nama_provinsi'].' '.$domisili['nama_kota'];
+
+	    }
 	    $data['provinsi']=$domisili->nama_provinsi;
 	    $data['kab_kota']=$domisili->nama_kota;
 	    $data['tahun']=$tahun;
-	    $data['title']=$data['judul_laporan'].' | '.$data['provinsi'].' '.$data['kab_kota'];
+	    $data['title']=$data['judul_laporan'].' <br>'.$nama_kota;
 	    // if ($id_kecamatan=='semua') {
 		   //  $data['lokasi_per_skpd']=$this->rekap_kegiatan_kab_kota->lokasi_per_skpd($id_kota, $tahun);
 		   //  $html = $this->load->view('laporan/pdf/rekap_kegiatan_kab_kota/content_semua', $data, true);
 	    // }else{
 	    // }
-		    $data['lokasi_per_skpd']=$this->rekap_kegiatan_kab_kota->lokasi_per_skpd($id_kota, $id_kecamatan, $tahun, $id_opd);
+		    $data['lokasi_per_skpd']=$this->rekap_kegiatan_kab_kota->lokasi_per_skpd($id_kota, $id_kecamatan, $tahun, $id_opd, $jenis_paket);
 		    $html =  $this->load->view('laporan/pdf/rekap_kegiatan_kab_kota/content', $data, true);
 
-	    // $header =  $this->load->view('laporan/pdf/rekap_kegiatan_kab_kota/header', $data, true);
-	    // $footer =  $this->load->view('laporan/pdf/rekap_kegiatan_kab_kota/footer', $data, true);
+	    $header =  $this->load->view('laporan/pdf/rekap_kegiatan_kab_kota/header', $data, true);
+	    $footer =  $this->load->view('laporan/pdf/rekap_kegiatan_kab_kota/footer', $data, true);
 
-	    $mpdf->SetMargins(0, 0, 30);
+	    $mpdf->SetMargins(0, 0, 28);
 	    $mpdf->SetDisplayMode('fullpage');
 		 $mpdf->SetHTMLHeader($header);
 		$mpdf->SetHTMLFooter($footer);

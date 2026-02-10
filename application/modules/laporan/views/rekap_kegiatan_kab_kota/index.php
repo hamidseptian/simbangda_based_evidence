@@ -62,6 +62,19 @@
           </select>
         </div>
       </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="kecamatan"><strong>Jenis Paket</strong></label>
+          <select name="jenis_paket" id="jenis_paket" class="form-control">
+            <option value="semua">Semua Jenis Paket</option>
+            <option value="SWAKELOLA">SWAKELOLA</option>
+            <option value="PENYEDIA-KONTRUKSI">PENYEDIA - KONTRUKSI</option>
+            <option value="PENYEDIA-NON KONTRUKSI">PENYEDIA - NON KONTRUKSI</option>
+     
+            
+          </select>
+        </div>
+      </div>
       <div class="col-md-12">
         <div class="form-group">
           <button class="btn btn-info btn-block" onclick="show_laporan()" type="button">Searching</button>

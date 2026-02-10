@@ -996,7 +996,7 @@ public function saveedit_user()
         $level = $this->input->get('id_group');
         $kategori = $this->input->get('kategori');
         $tahun = tahun_anggaran();
-        $tahun_sebelumnya = $tahun -1;
+        $tahun_sebelumnya = 2025;//$tahun -1;
         $tahap = tahapan_apbd();
         $tahap_sebelumnya = 4;
         $bulan_aktif = bulan_aktif();

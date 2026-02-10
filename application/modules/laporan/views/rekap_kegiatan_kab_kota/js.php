@@ -53,6 +53,7 @@
     var id_kota = $('#kota').val();
     var id_provinsi = $('#provinsi').val();
     var id_kecamatan = $('#kecamatan').val();
+    var jenis_paket = $('#jenis_paket').val();
     var id_opd = $('#opd').val();
 
     if (tahun=='') {
@@ -63,17 +64,17 @@
     //   Swal.fire('Error','Pilih Provinsi','error');
     //   return false;
     // }
-    else if (id_kota=='') {
-      Swal.fire('Error','Pilih Kab Kota','error');
-      return false;
-    }
-    else if (id_kecamatan=='') {
-      Swal.fire('Error','Pilih Kecamatan','error');
-      return false;
-    }
+    // else if (id_kota=='') {
+    //   Swal.fire('Error','Pilih Kab Kota','error');
+    //   return false;
+    // }
+    // else if (id_kecamatan=='') {
+    //   Swal.fire('Error','Pilih Kecamatan','error');
+    //   return false;
+    // }
     else{
       $('#tampil_pdf').show();
-      $('#tampil_pdf').attr('src', baseUrl('laporan/pdf_laporan_kegiatan_kab_kota?id_kota=') + id_kota + "&tahun="+ tahun + "&id_kecamatan="+ id_kecamatan+ "&id_opd="+ id_opd);
+      $('#tampil_pdf').attr('src', baseUrl('laporan/pdf_laporan_kegiatan_kab_kota?id_kota=') + id_kota + "&id_provinsi="+ id_provinsi + "&tahun="+ tahun + "&id_kecamatan="+ id_kecamatan+ "&id_opd="+ id_opd+ "&jenis_paket="+ jenis_paket);
     }
 
 
@@ -99,6 +100,7 @@
                   $.each(data.data, function(k, v){
                     $('#kota').append('<option value='+ v.id +'>'+ v.kab_kota +'</option>');
                   });
+                  $('#kecamatan').html('<option value="<?php echo sbe_crypt('semua') ?>">Semua Kecamatan</option>');
                 }
             }
         });
