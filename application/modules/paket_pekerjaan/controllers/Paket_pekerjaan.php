@@ -555,7 +555,7 @@ class Paket_pekerjaan extends MY_Controller
             foreach ($list as $lists) {
                 $krsk = $lists->kode_rekening_sub_kegiatan;
                 $pecah = explode('.', $lists->kode_rekening_sub_kegiatan);
-                $kode_sub_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
+                // $kode_sub_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
                 $kategori = $lists->kategori;
                 $sub_organisasi = '<br>'.$lists->jenis_sub_kegiatan.' - '.$lists->keterangan;
                 $keterangan = $kategori =='Sub Kegiatan SKPD' ? '' : $sub_organisasi;
