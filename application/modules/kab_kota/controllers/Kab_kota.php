@@ -42,7 +42,7 @@ class Kab_kota extends MY_Controller
     		$data['extra_css']		= $this->load->view('kab_kota/css', $data, true);
     		$data['extra_js']		= $this->load->view('kab_kota/js', $data, true);
     		$data['modal']		= $this->load->view('kab_kota/modal', $data, true);
-    		$this->template->load('backend_template', $page, $data);
+    		$this->template->load("backend_template", $page, $data);
         
 	}
 
