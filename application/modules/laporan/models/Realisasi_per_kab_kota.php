@@ -38,27 +38,28 @@ class Realisasi_per_kab_kota extends CI_Model
 
 		
 		$tgls = date('Y-m-d');
-		   // $q_instansi = $this->db->query("SELECT nama_instansi, id_instansi 
-     //                from master_instansi_kab_kota  where kategori='OPD' and id_kota='$id_kota' and 
-     //                (
-     //                (year(tmt_mulai) <= $tahun) 
-     //                and 
-     //                	(
-     //                	CASE
-     //                	when month(tmt_mulai) >= $bulan then 
-     //                	)
-     //                )
+		   $q_instansi = $this->db->query("SELECT nama_instansi, id_instansi 
+                    from master_instansi_kab_kota  where kategori='OPD' and id_kota='$id_kota' 
+                    -- and 
+                    -- (
+                    -- (year(tmt_mulai) <= $tahun) 
+                    -- and 
+                    -- 	(
+                    -- 	CASE
+                    -- 	when month(tmt_mulai) >= $bulan then 
+                    -- 	)
+                    -- )
 
 
 
-     //                --  and 
-     //                -- ( (year(tmt_selesai) >= $tahun) and (month(tmt_selesai) <=$bulan) )
+                    --  and 
+                    -- ( (year(tmt_selesai) >= $tahun) and (month(tmt_selesai) <=$bulan) )
 
-     //               --  CASE 
-     //               --  WHEN (year(tmt_mulai) <= $tahun) THEN  (year(tmt_mulai) <= $tahun) -- and (year(tmt_selesai) >= '$tahun' or tmt_selesai = 'Sedang Aktif')
-     //               -- -- ELSE tmt_mulai < '$tgls'
-     //               --  END
-     //            ");
+                   --  CASE 
+                   --  WHEN (year(tmt_mulai) <= $tahun) THEN  (year(tmt_mulai) <= $tahun) -- and (year(tmt_selesai) >= '$tahun' or tmt_selesai = 'Sedang Aktif')
+                   -- -- ELSE tmt_mulai < '$tgls'
+                   --  END
+                ");
 
 		
 
