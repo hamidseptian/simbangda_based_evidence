@@ -1,19 +1,19 @@
 <?php 
-// $id_user = id_user();
-// $id_instansi = id_instansi();
+$id_user = id_user();
+$id_instansi = id_instansi();
 
-// $q_kuisioner = $this->db->query("SELECT  id_kuisioner, judul_kuisioner, status from kuisioner where status='1'");
-// if ($q_kuisioner->num_rows()>0) {
-//     $id_kuisioner = $q_kuisioner->row_array()['id_kuisioner'];
-//     $q_diisi = $this->db->query("SELECT kp.id_kuisioner from   kuisioner_pengisian kp 
-//     where kp.id_user = '$id_user' and kp.id_instansi='$id_instansi' and kp.id_kuisioner='$id_kuisioner'
-//     ")->num_rows();
-//     if ($q_diisi==0) {
-//         if ($this->router->fetch_class()!='kuisioner') {
-//         redirect('kuisioner/redirect_pengisian/'.sbe_crypt($id_kuisioner));
-//         }
-//     }
-// }
+$q_kuisioner = $this->db->query("SELECT  id_kuisioner, judul_kuisioner, status from kuisioner where status='1'");
+if ($q_kuisioner->num_rows()>0) {
+    $id_kuisioner = $q_kuisioner->row_array()['id_kuisioner'];
+    $q_diisi = $this->db->query("SELECT kp.id_kuisioner from   kuisioner_pengisian kp 
+    where kp.id_user = '$id_user' and kp.id_instansi='$id_instansi' and kp.id_kuisioner='$id_kuisioner'
+    ")->num_rows();
+    if ($q_diisi==0) {
+        if ($this->router->fetch_class()!='kuisioner') {
+        redirect('kuisioner/redirect_pengisian/'.sbe_crypt($id_kuisioner));
+        }
+    }
+}
  ?>
 
 
