@@ -146,7 +146,7 @@ class Realisasi extends MY_Controller
                 $where = [
                     'id_instansi'       => id_instansi(),
                     'id_kedudukan'      => 2,
-                    'id_sub_instansi'   => $this->sbe_id_sub_instansi()
+                    // 'id_sub_instansi'   => $this->sbe_id_sub_instansi()
                 ];
             } else {
                 $where = [
@@ -1607,7 +1607,7 @@ class Realisasi extends MY_Controller
             }    
 
             $column_order   = ['', 'nama_sub_kegiatan'];
-            $column_search  = ['nama_sub_kegiatan','kode_rekening_sub_kegiatan'];
+            $column_search  = ['nama_sub_kegiatan','kode_rekening_sub_kegiatan','keterangan'];
             $order          = ['kode_rekening_sub_kegiatan' => 'ASC'];
             $list           = $this->datatables_model->get_datatables('v_sub_kegiatan_apbd', $column_order, $column_search, $order, $where);
             $data           = [];
@@ -1647,7 +1647,7 @@ class Realisasi extends MY_Controller
                 $kategori = $lists->kategori;
                 $upel = $lists->kategori == 'Unit Pelaksana' ? '<br>'.$lists->jenis_sub_kegiatan .' - '.$lists->keterangan : '';
                 $pecah = explode('.', $lists->kode_rekening_sub_kegiatan);
-                $krsk = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
+            
                 $row[]  = '<b>'.pilihan_nama_tahapan($lists->kode_tahap).'</b>';
                 $kode_tahap_kegiatan = $lists->kode_tahap;
                 $row[]  = '<b>'.$lists->kode_rekening_sub_kegiatan.'</b><br>'.$lists->nama_sub_kegiatan.$upel;
@@ -1817,7 +1817,7 @@ class Realisasi extends MY_Controller
             }
            
             $column_order   = ['', 'nama_sub_kegiatan'];
-            $column_search  = ['nama_sub_kegiatan','kode_rekening_sub_kegiatan'];
+            $column_search  = ['nama_sub_kegiatan','kode_rekening_sub_kegiatan','keterangan'];
             $order          = ['nama_sub_kegiatan' => 'ASC'];
             $list           = $this->datatables_model->get_datatables('v_sub_kegiatan_apbd', $column_order, $column_search, $order, $where);
             $data           = [];
@@ -1853,7 +1853,7 @@ class Realisasi extends MY_Controller
                 $krsk = $lists->kode_rekening_sub_kegiatan;
                 $kode_tahap = $lists->kode_tahap;
                 $pecah = explode('.', $lists->kode_rekening_sub_kegiatan);
-                $kode_sub_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
+                // $kode_sub_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
                 $kategori = $lists->kategori;
                 $sub_organisasi = '<br>'.$lists->jenis_sub_kegiatan.' - '.$lists->keterangan;
                 $keterangan = $kategori =='Sub Kegiatan SKPD' ? '' : $sub_organisasi;
@@ -1865,7 +1865,7 @@ class Realisasi extends MY_Controller
                 // $kegiatan  = $this->db->query("SELECT nama_kegiatan from master_kegiatan where kode_kegiatan = '$kode_rekening_kegiatan'")->row();
                 // $program  = $this->db->query("SELECT nama_program from master_program where kode_program = '$kode_rekening_program'")->row();
 
-                 $nama_sub_kegiatan ='<b>'.$kode_sub_kegiatan .'</b><br>'.$lists->nama_sub_kegiatan. $keterangan;
+                 $nama_sub_kegiatan ='<b>'.$krsk .'</b><br>'.$lists->nama_sub_kegiatan. $keterangan;
                 $row    = [];
                 $row[]     = $no;
                  if ($tahap==4) {

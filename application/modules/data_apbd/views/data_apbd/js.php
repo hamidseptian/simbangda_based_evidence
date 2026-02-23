@@ -334,7 +334,7 @@
             },
             success : function(data)
             {
-            	
+            	console.log(data);	
             	$('#modal_input_anggaran').find('.kategori').html(data.data.kategori);
             	$('#modal_input_anggaran').find('.nama_sub_kegiatan').html(data.data.nama_sub_kegiatan);
             	$('#modal_input_anggaran').find('.kode_sub_kegiatan').html(kode_rekening_sub_kegiatan);
@@ -345,7 +345,8 @@
                 {
                 	
                 	
-                	$('#bo_bp').val(data.data. bo_bp);
+                	$('#pergeseran_ke').val(data.data.pergeseran_ke);
+                	$('#bo_bp').val(data.data.bo_bp);
                 	$('#bo_bbj').val(data.data.bo_bbj);
                 	$('#bo_bs').val(data.data.bo_bs);
                 	$('#bo_bh').val(data.data.bo_bh);
@@ -372,6 +373,34 @@
 	}
 
 
+function lakukan_pergeseran(ke, id_ski, kode_rekening_sub_kegiatan, tahap, tahun){
+
+		$.ajax(
+        {
+            url     : baseUrl('data_apbd/insert_pergeseran/'),
+            dataType: 'JSON',
+            type    : 'POST',
+            data    : { 
+            	id_ski : id_ski,
+             
+            	ke : ke,
+            },
+            success : function(data)
+            {
+            	if (data.status==true) {
+            	Swal.fire('Digeser','Digeser','success');
+            	
+				var id_table_kegiatan = data.data.id_table_kegiatan;
+				$('#table-sub-kegiatan-'+ id_table_kegiatan).DataTable().ajax.reload(null, false);
+            	}else{
+            	Swal.fire('Error','Terjadi kesalahan','error');
+            	}
+            	
+            }, error : function(){
+            	Swal.fire('Error','error','error');
+            }
+        });
+}
 
 
 	function input_anggaran_pergeseran(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pergeseran_ke, pengelompokan)
@@ -797,7 +826,8 @@
 	{
 		let id_pptk 	= $('#id_pptk').val();
 		//let id_table 	= $('#kode_rekening_kegiatan').val().split('.').join('-');
-
+		var formdata = $('#form_anggaran_sub_kegiatan').serialize();
+		console.log(formdata);
 		$('.form-control').removeClass('is-valid')
 						  .removeClass('is-invalid');
         $('.text-danger').remove();

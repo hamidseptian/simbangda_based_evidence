@@ -137,7 +137,7 @@ class Paket_pekerjaan extends MY_Controller
             show_404();
         } else {
             if ($this->session->userdata('kedudukan') == 'PPTK') {
-                $where = ['id_instansi' => id_instansi(), 'id_kedudukan' => 2, 'id_sub_instansi' => $this->sbe_id_sub_instansi()];
+                $where = ['id_instansi' => id_instansi(), 'id_kedudukan' => 2];
             } else {
                 $where = ['id_instansi' => id_instansi(), 'id_kedudukan' => 2];
             }

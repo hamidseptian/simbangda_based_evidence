@@ -1097,7 +1097,7 @@ public function sync_eplanning()
 
             }
             $column_order   = ['', 'nama_sub_kegiatan'];
-            $column_search  = ['nama_sub_kegiatan','kode_rekening_sub_kegiatan'];
+            $column_search  = ['nama_sub_kegiatan','kode_rekening_sub_kegiatan','keterangan'];
             $caption_status = [2=>'Melanjutkan data APBD AWAL pada APBD PERUBAHAN', '','APBD PERUBAHAN'];
             $order          = ['nama_sub_kegiatan' => 'ASC'];
             $list           = $this->datatables_model->get_datatables('v_sub_kegiatan_apbd', $column_order, $column_search, $order, $where);
@@ -1157,7 +1157,11 @@ public function sync_eplanning()
                 if ($tahap_aktif==4) {
                 	$caption_tahapan = $caption_status[$lists->kode_tahap];
                 }else{
-                	$caption_tahapan = pilihan_nama_tahapan($lists->kode_tahap);
+                    if ($lists->pergeseran_ke=='') {
+                    	$caption_tahapan = "APBD AWAL" ;//pilihan_nama_tahapan($lists->kode_tahap);
+                    }else{
+                        $caption_tahapan = "APBD PERGESERAN<br>Pergeseran ke-".$lists->pergeseran_ke ;//pilihan_nama_tahapan($lists->kode_tahap);
+                    }
 
                 }
                 $row[]  = $caption_tahapan;
@@ -1313,7 +1317,7 @@ public function sync_eplanning()
 			$caption_status_tahapan = [2=>'Melanjutkan data APBD AWAL pada APBD PERUBAHAN', '','APBD PERUBAHAN'];
             $status_sub_kegiatan = ['Tidak Aktif','Aktif','Digeser'];
             $column_order   = ['', 'nama_sub_kegiatan'];
-            $column_search  = ['nama_sub_kegiatan','kode_sub_kegiatan'];
+            $column_search  = ['nama_sub_kegiatan','kode_sub_kegiatan','keterangan'];
             $order          = ['nama_sub_kegiatan' => 'ASC'];
             $list           = $this->datatables_model->get_datatables('sub_kegiatan_instansi', $column_order, $column_search, $order, $where);
             $data           = [];
@@ -2951,12 +2955,18 @@ public function sync_eplanning()
             $tahun = $this->input->post('tahun');
             $id_instansi = id_instansi();
 
-            $identitas_ski        = $this->db->query("SELECT ski.nama_sub_kegiatan, ski.kode_sub_kegiatan, ski.kategori, ski.keterangan, ski.jenis_sub_kegiatan from sub_kegiatan_instansi ski 
+            $identitas_ski        = $this->db->query("SELECT ski.id_sub_kegiatan_instansi, ski.nama_sub_kegiatan, ski.kode_sub_kegiatan, ski.kategori, ski.keterangan, ski.pergeseran_ke, ski.jenis_sub_kegiatan from sub_kegiatan_instansi ski 
             where ski.id_instansi='$id_instansi' and ski.kode_sub_kegiatan='$kode_rekening_sub_kegiatan' and ski.kode_tahap='$tahap' and ski.tahun='$tahun'")->row();
             $output['data']['nama_sub_kegiatan']                  = $identitas_ski->kategori =='Sub Kegiatan SKPD' ? $identitas_ski->nama_sub_kegiatan : $identitas_ski->nama_sub_kegiatan.'<br>'.$identitas_ski ->jenis_sub_kegiatan.' - '.$identitas_ski->keterangan;
             $output['data']['kategori']                  = $identitas_ski->kategori;
 
-            $where = ['kode_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'kode_kegiatan'=>$kode_kegiatan, 'kode_program'=>$kode_program, 'kode_tahap'=>$tahap,'tahun'=>$tahun,   'id_instansi' => id_instansi()];
+            if ($identitas_ski->pergeseran_ke=='') {
+                $where = ['kode_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'kode_kegiatan'=>$kode_kegiatan, 'kode_program'=>$kode_program, 'kode_tahap'=>$tahap,'tahun'=>$tahun,   'id_instansi' => id_instansi()];
+                # code...
+            }else{
+                $where = ['kode_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'kode_kegiatan'=>$kode_kegiatan, 'kode_program'=>$kode_program, 'kode_tahap'=>$tahap,'tahun'=>$tahun,'pergeseran_ke'=>$identitas_ski->pergeseran_ke,   'id_instansi' => id_instansi()];
+
+            }
             $pagu_sub_kegiatan    = $this->db->get_where('anggaran_sub_kegiatan', $where);
 
 
@@ -2969,21 +2979,16 @@ public function sync_eplanning()
             if ($pagu_sub_kegiatan->num_rows() > 0) {
                 $value = $pagu_sub_kegiatan->row();
                        $pagu_total = $value->bo_bp + $value->bo_bbj + $value->bo_bs + $value->bo_bh + $value->bm_bmt + $value->bm_bmpm + $value->bm_bmgb + $value->bm_bmjji + $value->bm_bmatl + $value->btt + $value->bt_bbh + $value->bt_bbk;
+
                 if ($tahap==2) {
-                    if ($value->lakukan_pergeseran=='') {
+                    if ($identitas_ski->pergeseran_ke=='') {
                         // $output['data']['pagu_aktif']                  = "APBD AWAL";
-                        $output['data']['tahapan']                  = "APBD AWAL";
+                        $output['data']['tahapan']                  = "APBD AWAL".'<br>'.'<button type="button" class="btn btn-outline-info btn-sm" onclick="lakukan_pergeseran('."'1'".','."'".$identitas_ski->id_sub_kegiatan_instansi."'".','."'".$tahap."'".','."'".$tahun."'".')">Lakukan Pergeseran</button>';
 
                     }else{
-                        if ($value->pagu_berubah=='Ya') {
-                            $output['data']['tahapan']                  = "APBD PERGESERAN<br>Pergeseran Ke-".$value->pergeseran_ke;
-                            // $output['data']['pagu_aktif']                  = "APBD PERGESERAN<br>Pergeseran Ke-".$value->pergeseran_ke;
-                            # code...
-                        }else{
-                            $output['data']['tahapan']                  = "APBD PERGESERAN<br>Pergeseran Ke-".$value->pergeseran_ke;
-                            // $output['data']['pagu_aktif']                  = "APBD AWAL<br>Belum ada perubahan pagu";
-
-                        }
+                      
+                            $output['data']['tahapan']                  = "APBD PERGESERAN<br>Pergeseran Ke-".$identitas_ski->pergeseran_ke.'<br>';//.'<button type="button" class="btn btn-outline-info btn-sm">Edit Pergeseran Ke</button>';
+                          
                     }
                     $output['data']['pagu_aktif']                  = $pagu_total ;
 
@@ -2992,6 +2997,7 @@ public function sync_eplanning()
                     $output['data']['pagu_aktif']                  = $pagu_total ;
                     $output['data']['tahapan']                  = pilihan_nama_tahapan($tahap);
                 }
+                    $output['data']['pergeseran_ke']                  = $identitas_ski->pergeseran_ke ;
                     $output['data']['bo_bp']                  = $value->bo_bp;
                     $output['data']['bo_bbj']                  = $value->bo_bbj;
                     $output['data']['bo_bs']                  = $value->bo_bs;
@@ -3306,6 +3312,167 @@ public function sync_eplanning()
             echo json_encode($output);
         }
     }
+
+
+
+  public function insert_pergeseran()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        } else {
+            $output = [
+                'status'    => false,
+                'data'      => [],
+            ];
+
+            $id_ski = $this->input->post('id_ski');
+            $ke = $this->input->post('ke');
+            $ski = $this->db->get_where('sub_kegiatan_instansi', ['id_sub_kegiatan_instansi'=>$id_ski])->row_array();
+            $kode_sub_kegiatan = $ski['kode_sub_kegiatan'];
+            $tahun = $ski['tahun'];
+            $kode_tahap = $ski['kode_tahap'];
+            $id_instansi = $ski['id_instansi'];
+
+
+            $this->db->trans_begin();
+
+            $where_pagu_awal = [
+                'kode_sub_kegiatan' => $kode_sub_kegiatan, 
+                'kode_tahap' => 2,
+                'id_instansi' => $id_instansi,
+                'tahun'=>$tahun
+                // 'pergeseran_ke' => $ke,
+            ];
+
+
+            $where_awal = [
+                'kode_rekening_sub_kegiatan' => $kode_sub_kegiatan, 
+                'kode_tahap' => 2,
+                'id_instansi' => id_instansi(),
+                'tahun'=>$tahun
+            ];
+
+
+
+            $anggaran_awal                 = $this->db->get_where('anggaran_sub_kegiatan', $where_pagu_awal);
+            $target                 = $this->db->order_by('bulan', 'ASC')->get_where('target_apbd', $where_awal);
+            $sumber_dana                 = $this->db->get_where('sumber_dana', $where_awal);
+            $sumber_dana_awal = $sumber_dana->row_array();
+            // $realisasi_keuangan          = $this->db->order_by('bulan', 'ASC')->get_where('realisasi_keuangan', $where_pagu_awal);
+
+
+
+
+
+            $anggaran_apbd_awal = $anggaran_awal->row_array();
+ $data_pagu = [
+                'kode_sub_kegiatan'=>$anggaran_apbd_awal['kode_sub_kegiatan'],
+                'kode_kegiatan'=>$anggaran_apbd_awal['kode_kegiatan'],
+                'kode_program'=>$anggaran_apbd_awal['kode_program'],
+                'kode_bidang_urusan'=>$anggaran_apbd_awal['kode_bidang_urusan'],
+                'id_instansi'=>$anggaran_apbd_awal['id_instansi'],
+                'kode_tahap'=>$kode_tahap,
+                'pergeseran_ke'=>$ke,
+                'bo_bp'=>$anggaran_apbd_awal['bo_bp'],
+                'bo_bbj'=>$anggaran_apbd_awal['bo_bbj'],
+                'bo_bs'=>$anggaran_apbd_awal['bo_bs'],
+                'bo_bh'=>$anggaran_apbd_awal['bo_bh'],
+                'bm_bmt'=>$anggaran_apbd_awal['bm_bmt'],
+                'bm_bmpm'=>$anggaran_apbd_awal['bm_bmpm'],
+                'bm_bmgb'=>$anggaran_apbd_awal['bm_bmgb'],
+                'bm_bmjji'=>$anggaran_apbd_awal['bm_bmjji'],
+                'bm_bmatl'=>$anggaran_apbd_awal['bm_bmatl'],
+                'btt'=>$anggaran_apbd_awal['btt'],
+                'bt_bbh'=>$anggaran_apbd_awal['bt_bbh'],
+                'bt_bbk'=>$anggaran_apbd_awal['bt_bbk'],
+                'realisasikan_bo'=>$anggaran_apbd_awal['realisasikan_bo'],
+                'realisasikan_bm'=>$anggaran_apbd_awal['realisasikan_bm'],
+                'realisasikan_btt'=>$anggaran_apbd_awal['realisasikan_btt'],
+                'realisasikan_bt'=>$anggaran_apbd_awal['realisasikan_bt'],
+                'tahun'=>$anggaran_apbd_awal['tahun'],
+                'created_on'=>timestamp(),
+                'created_by'=>id_user(),
+                'input_by '=>'Copy',
+                'status '=>'1',
+               ];
+
+            $kumpul_target_baru = [];
+            foreach ($target->result_array() as $k => $v) {
+                 $data_target = [
+                    'bulan'=>$v['bulan'],
+                    'id_instansi'=>$v['id_instansi'],
+                    'kode_bidang_urusan'=>$v['kode_bidang_urusan'],
+                    'kode_rekening_program'=>$v['kode_rekening_program'],
+                    'kode_rekening_kegiatan'=>$v['kode_rekening_kegiatan'],
+                    'kode_rekening_sub_kegiatan'=>$v['kode_rekening_sub_kegiatan'],
+                    'kode_tahap'=>2,
+                    'pergeseran_ke'=>$ke,
+                    'target_fisik'=>$v['target_fisik'],
+                    'target_fisik_bulanan'=>$v['target_fisik_bulanan'],
+                    'target_keuangan'=>$v['target_keuangan'],
+                    'target_keuangan_bulanan'=>$v['target_keuangan_bulanan'],
+                    'tahun'=>$v['tahun'],
+                    'created_on'=>timestamp(),
+                    'created_by'=>$v['created_by'],
+                 
+                   ];
+                   array_push($kumpul_target_baru, $data_target);
+            }
+
+
+               $data_sumber_dana = [
+                'id_instansi'=>$sumber_dana_awal['id_instansi'],
+                'kode_rekening_sub_kegiatan'=>$sumber_dana_awal['kode_rekening_sub_kegiatan'],
+                'kode_rekening_kegiatan'=>$sumber_dana_awal['kode_rekening_kegiatan'],
+                'kode_rekening_program'=>$sumber_dana_awal['kode_rekening_program'],
+                'kode_bidang_urusan'=>$sumber_dana_awal['kode_bidang_urusan'],
+                'kode_tahap'=>2,
+                'pergeseran_ke'=>$ke,
+                'pad'=>$sumber_dana_awal['pad'],
+                'dau'=>$sumber_dana_awal['dau'],
+                'dak'=>$sumber_dana_awal['dak'],
+                'dbh'=>$sumber_dana_awal['dbh'],
+                'tahun'=>$sumber_dana_awal['tahun'],
+                'lainnya'=>$sumber_dana_awal['lainnya'],
+                'created_on'=>timestamp(),
+                'created_by'=>id_user(),
+                
+                'input_by'=>'Copy',
+               ];
+
+                $this->db->insert('anggaran_sub_kegiatan', $data_pagu);
+                $this->db->insert_batch('target_apbd', $kumpul_target_baru);
+                $this->db->insert('sumber_dana', $data_sumber_dana);
+                $this->db->update('sub_kegiatan_instansi', ['pergeseran_ke'=>$ke], ['id_sub_kegiatan_instansi'=>$id_ski]);
+
+
+
+
+
+            
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $output['status'] = false;
+            } else {
+                $this->db->trans_commit();
+                $kode_kegiatan = $ski['kode_kegiatan']; 
+                $id_table_kegiatan = str_replace('.', '-', $kode_kegiatan);
+                $output['data']['id_table_kegiatan'] = $id_table_kegiatan;
+                $output['status'] = true;
+            }
+
+
+
+            // $output['data'] = $data_ski_baru ;
+
+
+            echo json_encode($output);
+        }
+    }
+
+
+
 
     public function akhiri_sub_kegiatan_instansi_apbd_awal()
     {
@@ -3803,7 +3970,14 @@ $kode_rekening_sub_kegiatan = $this->input->post('kode_sub_kegiatan');
                 $kode_program = $this->input->post('kode_program');
                 $tahap = $this->input->post('tahap');
                 $tahun = $this->input->post('tahun');
-                $where = ['kode_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'kode_kegiatan'=>$kode_kegiatan, 'kode_program'=>$kode_program, 'kode_tahap'=>$tahap,  'tahun'=>$tahun,   'id_instansi' => id_instansi()];
+                $pergeseran_ke = $this->input->post('pergeseran_ke');
+                if ($pergeseran_ke=='') {
+                    $where = ['kode_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'kode_kegiatan'=>$kode_kegiatan, 'kode_program'=>$kode_program, 'kode_tahap'=>$tahap,  'tahun'=>$tahun,   'id_instansi' => id_instansi()];
+                    # code...
+                }else{
+                    $where = ['kode_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'pergeseran_ke'=>$pergeseran_ke, 'kode_kegiatan'=>$kode_kegiatan, 'kode_program'=>$kode_program, 'kode_tahap'=>$tahap,  'tahun'=>$tahun,   'id_instansi' => id_instansi()];
+
+                }
 
                 $pagu_sub_kegiatan    = $this->db->get_where('anggaran_sub_kegiatan', $where);
             if ($validation->run($this)) {

@@ -309,4 +309,109 @@ class Kuisioner extends MY_Controller
     }
 
 
+
+        public function api_master_pekerjaan(){
+                    $curl = curl_init();
+                    $url = 'https://sepakat.sumbarprov.go.id/api/v1/pekerjaan';
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => $url,// your preferred link
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => "",
+                        CURLOPT_SSL_VERIFYHOST => 0,
+                        CURLOPT_SSL_VERIFYPEER => 0,
+                        CURLOPT_TIMEOUT => 30000,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_HTTPHEADER => array(
+                            // Set Here Your Requesred Headers
+                            'Content-Type: application/json',
+                           // "Authorization: Bearer ".$token
+                          
+                        ),
+                        // CURLOPT_POST => true,
+                        // CURLOPT_POSTFIELDS => http_build_query($a_params)
+                    ));
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+                    curl_close($curl);
+                    $result = null;
+                    if ($err) {
+                        $result = "cURL Error #:" . $err;
+                    } else {
+                        $result = json_decode($response);
+                    }
+                        return $result;
+            }
+
+        public function api_master_pendidikan(){
+                    $curl = curl_init();
+                    $url = 'https://sepakat.sumbarprov.go.id/api/v1/pendidikan';
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => $url,// your preferred link
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => "",
+                        CURLOPT_SSL_VERIFYHOST => 0,
+                        CURLOPT_SSL_VERIFYPEER => 0,
+                        CURLOPT_TIMEOUT => 30000,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_HTTPHEADER => array(
+                            // Set Here Your Requesred Headers
+                            'Content-Type: application/json',
+                           // "Authorization: Bearer ".$token
+                          
+                        ),
+                        // CURLOPT_POST => true,
+                        // CURLOPT_POSTFIELDS => http_build_query($a_params)
+                    ));
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+                    curl_close($curl);
+                    $result = null;
+                    if ($err) {
+                        $result = "cURL Error #:" . $err;
+                    } else {
+                        $result = json_decode($response);
+                    }
+                        return $result;
+            }
+        public function api_master_periode(){
+                    $curl = curl_init();
+                    $url = 'https://sepakat.sumbarprov.go.id/api/v1/periode';
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => $url,// your preferred link
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => "",
+                        CURLOPT_SSL_VERIFYHOST => 0,
+                        CURLOPT_SSL_VERIFYPEER => 0,
+                        CURLOPT_TIMEOUT => 30000,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_HTTPHEADER => array(
+                            // Set Here Your Requesred Headers
+                            'Content-Type: application/json',
+                           // "Authorization: Bearer ".$token
+                          
+                        ),
+                        // CURLOPT_POST => true,
+                        // CURLOPT_POSTFIELDS => http_build_query($a_params)
+                    ));
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+                    curl_close($curl);
+                    $result = null;
+                    if ($err) {
+                        $result = "cURL Error #:" . $err;
+                    } else {
+                        $result = json_decode($response);
+                    }
+                        return $result;
+            }
+        public function api_master_all(){
+                   $data =[
+                    'pekerjaan' =>$this->api_master_pekerjaan() ,
+                    'pendidikan' =>$this->api_master_pendidikan()   ,
+                   ];
+
+                   echo json_encode($data);
+                   header('Content-Type: application/json');
+            }
+
 }

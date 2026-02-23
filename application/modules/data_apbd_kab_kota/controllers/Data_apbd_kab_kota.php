@@ -168,7 +168,7 @@ class Data_apbd_kab_kota extends MY_Controller
 
                 }
                 
-                if ($tahap==4 && $j_pagu==0) {
+                if ($tahap==4 && $pagu_total==0) {
                     $row[]  = $tombol_edit.$tombol_copy;
                     # code...
                 }else{

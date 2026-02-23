@@ -19,14 +19,14 @@
             <div class="modal-body">
                
                 <form id="form_anggaran_sub_kegiatan">
-                	<input type="hidden" name="pengelompokan" id="pengelompokan">
+                	<input type="hidden" name="pergeseran_ke" id="pergeseran_ke" value="">
+                    <input type="hidden" name="pengelompokan" id="pengelompokan">
                     <input type="hidden" name="kode_sub_kegiatan" id="kode_sub_kegiatan" class="kode_sub_kegiatan">
                     <input type="hidden" name="kode_kegiatan" id="kode_kegiatan">
                     <input type="hidden" name="kode_program" id="kode_program">
                     <input type="hidden" name="kode_bidang_urusan" id="kode_bidang_urusan">
                     <input type="hidden" name="tahap" id="tahap">
                     <input type="hidden" name="tahun" id="tahun">
-                    <input type="hidden" name="pergeseran_ke" id="pergeseran_ke">
                     <input type="hidden" name="pagu_berubah" id="pagu_berubah">
                     <input type="hidden" name="berubah_pada_pergeseran_ke" id="berubah_pada_pergeseran_ke">
                         
