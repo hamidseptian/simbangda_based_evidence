@@ -217,14 +217,20 @@ table td, th {
   $totalpaket_swa = 0;
   $totalpaket_penyedia_konstruksi = 0;
   $totalpaket_penyedia_non_konstruksi = 0;
-  $totalpaket_semua = 0;
+  $total_pagu_sub_keg = 0;
   $totalpagu_paket_semua = 0;
 
-
+  $pad_total = 0;
+  $dau_total = 0;
+  $dak_total = 0;
+  $dbh_total = 0;
+  $lainnya_total = 0;
   foreach ($lokasi_per_skpd as $k => $v) { 
  
     $no++;
  $nama_sub_kegiatan = $v['kategori'] == 'Sub Kegiatan SKPD' ? $v['nama_sub_kegiatan'] : $v['nama_sub_kegiatan'].'<br>'.$v['jenis_sub_kegiatan'].' - '.$v['keterangan'];
+  $total_pagu_sub_keg += $v['pagu_sub_kegiatan'];
+  $totalpagu_paket_semua += $v['pagu'];
     ?>
       
       <tr>
@@ -242,22 +248,27 @@ table td, th {
 
           if ($v['pad']>0) {
             $pad = "PAD : ". number_format($v['pad']);
+            $pad_total += $v['pad'];
             array_push($kumpul_sd, $pad);
           }
           if ($v['dau']>0) {
             $dau = "DAU : ". number_format($v['dau']);
             array_push($kumpul_sd, $dau);
+            $dau_total += $v['dau'];
           }
           if ($v['dak']>0) {
             $dak = "DAK : ". number_format($v['dak']);
+            $pad_total += $v['pad'];
             array_push($kumpul_sd, $dak);
           }
           if ($v['dbh']>0) {
             $dbh = "DBH : ". number_format($v['dbh']);
+            $dbh_total += $v['dbh'];
             array_push($kumpul_sd, $dbh);
           }
           if ($v['lainnya']>0) {
             $lainnya = $v['nama_sumber_dana_lainnya']." : ". number_format($v['lainnya']);
+            $lainnya_total += $v['lainnya'];
             array_push($kumpul_sd, $lainnya);
           }
 
@@ -272,7 +283,7 @@ table td, th {
         <td><?php echo $v['nama_paket'] ?></td>
         <td><?php echo $v['jenis_paket'] ?></td>
         <td><?php echo $v['kategori_penyedia'] ?></td>
-        <td><?php echo number_format( $v['pagu']) ?></td>
+        <td <?php if($v['pagu']>$v['pagu_sub_kegiatan']){ echo "style='background:#FFF7F7'";} ?>><?php echo number_format( $v['pagu']) ?></td>
       </tr>
       <?php
       $n = 0; 
@@ -283,12 +294,28 @@ table td, th {
 
 ?>
  </tbody>
-<!--  <tfoot>
+ <tfoot>
    <tr>
-     <td colspan="4">Total</td>
+     <td colspan="7">Total</td>
+    <td><?php echo number_format($total_pagu_sub_keg) ?></td>
+    <td>
+      <ol>
+        <?php echo $pad_total > 0 ? "<li>PAD : ".number_format($pad_total)."</li>" : ''; ?>
+        <?php echo $dau_total > 0 ? "<li>DAU : ".number_format($dau_total)."</li>" : ''; ?>
+        <?php echo $dak_total > 0 ? "<li>DAK : ".number_format($dak_total)."</li>" : ''; ?>
+        <?php echo $dbh_total > 0 ? "<li>DBH : ".number_format($dbh_total)."</li>" : ''; ?>
+        <?php echo $lainnya_total > 0 ? "<li>Lainnya : ".number_format($lainnya_total)."</li>" : ''; ?>
+       
+      </ol>
+    </td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td><?php echo number_format($totalpagu_paket_semua) ?></td>
+
     
    </tr>
  </tfoot>
- -->
+
 </table>
 </body>

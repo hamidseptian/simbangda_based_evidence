@@ -60,8 +60,8 @@
 	                			<input type="text" class="form-control" name="unit_kerja">
 	                		</div>
 	                		<div class="form-group">
-	                			<label>Jabatan / Posisi</label>
-	                			<input type="text" class="form-control" name="jabatan">
+	                			<label>Email</label>
+	                			<input type="text" class="form-control" name="email">
 	                		</div>
 	                		<!-- <div class="form-group">
 	                			<label>Status Kepegawaian</label>
