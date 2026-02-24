@@ -64,6 +64,9 @@ class Rekap_kegiatan_kab_kota extends CI_Model
 		elseif ($jenis_paket=='SWAKELOLA') {
 			$where_jenis_paket = "AND pp.jenis_paket='SWAKELOLA'";
 		}
+		elseif ($jenis_paket=='PENYEDIA') {
+			$where_jenis_paket = "AND pp.jenis_paket='PENYEDIA'";
+		}
 		elseif ($jenis_paket=='PENYEDIA-KONTRUKSI') {
 			$pisah = explode('-', $jenis_paket);
 			$kategori = $pisah[1];

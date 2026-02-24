@@ -1,4 +1,5 @@
-<form action="<?php echo base_url('kuisioner/simpan_identitas_responden') ?>" method="post">
+<?php echo $this->session->flashdata('pesan'); ?>
+<hr><form action="<?php echo base_url('kuisioner/simpan_identitas_responden') ?>" method="post">
 	
 	<div class="row">
 	    <div class="col-md-12 col-lg-12">
@@ -17,8 +18,8 @@
 	                		<div class="form-group">
 	                			<label>Jenis Kelamin</label>
 	                			<select class="form-control" name="jk">
-	                				<option>Laki laki</option>
-	                				<option>Perempuan</option>
+	                				<option value="L">Laki laki</option>
+	                				<option value="P">Perempuan</option>
 	                			</select>
 	                		</div>
 	                		<div class="form-group">
@@ -30,43 +31,46 @@
 	                		<div class="form-group">
 	                			<label>Usia</label>
 	                			<select class="form-control" name="usia">
-	                				<option><25 tahun</option>
-	            					<option>25-35 tahun</option>
-	            					<option>36-45 tahun</option>
-	            					<option>46-55 tahun</option>
-	            					<option>>56 tahun</option>
+	                				<option value="Pilih Usia"></option>
+	                				<?php foreach ($select['usia'] as $k => $v) { ?>
+	                				<option value="<?php echo $v->id ?>"><?php echo $v->rentang ?></option>
+	                				<?php } ?>
+	            					
 	                			</select>
+	                		</div>
+	                		<div class="form-group">
+	                			<label>Email</label>
+	                			<input type="text" class="form-control" name="email">
 	                		</div>
 	                		<div class="form-group">
 	                			<label>Pendidikan</label>
 	                			<select class="form-control" name="pendidikan">
-	                				<option>SD</option>
-	            					<option>SMP</option>
-	            					<option>SMA</option>
-	            					<option selected>S1</option>
-	            					<option>S2</option>
-	            					<option>S3</option>
+	                				<?php foreach ($select['pendidikan'] as $k => $v) { ?>
+	                				<option value="<?php echo $v->id ?>"><?php echo $v->nama ?></option>
+	                				<?php } ?>
+	            				
 	                			</select>
 	                			
 	                		</div>
 	                	</div>
 	                	<div class="col-md-4">
 	                		<div class="form-group">
-	                			<label>SKPD</label>
-	                			<input type="text" class="form-control" name="skpd" value="<?php echo nama_instansi() ?>" readonly>
+	                			<label>pekerjaan</label>
+	                			<select class="form-control" name="pekerjaan">
+	                				<?php foreach ($select['pekerjaan'] as $k => $v) { ?>
+	                				<option value="<?php echo $v->id ?>"><?php echo $v->nama ?></option>
+	                				<?php } ?>
+	            				
+	                			</select>
+	                			
 	                		</div>
 	                		<div class="form-group">
-	                			<label>Unit Kerja</label>
-	                			<input type="text" class="form-control" name="unit_kerja">
+	                			<label>Unit Kerja yang dinilai</label>
+	                			<select class="form-control" name="unit_kerja">
+	                				<option value="<?php echo $select['unit_kerja'][5]->id ?>"><?php echo $select['unit_kerja'][5]->nama ?></option>
+	                			
+	                			</select>
 	                		</div>
-	                		<div class="form-group">
-	                			<label>Email</label>
-	                			<input type="text" class="form-control" name="email">
-	                		</div>
-	                		<!-- <div class="form-group">
-	                			<label>Status Kepegawaian</label>
-	                			<input type="text" class="form-control" name="">
-	                		</div> -->
 
 	                		<div class="form-group">
 	                		</div>

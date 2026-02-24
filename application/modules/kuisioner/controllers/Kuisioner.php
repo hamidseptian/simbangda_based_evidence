@@ -142,6 +142,7 @@ class Kuisioner extends MY_Controller
 
 
         $page                   = 'kuisioner/survei/identitas';
+        $data['select'] = $this->api_master_all();
         $data['query']    = $q_kuisioner;
         $data['id_kuisioner']    = $id_kuisioner;
         $data['breadcrumbs']    = $breadcrumbs->render();
@@ -205,13 +206,13 @@ class Kuisioner extends MY_Controller
             [
                 'field' => 'nohp',
                 'label' => 'No HP',
-                'rules' => 'required|trim|is_unique[master_users.username]'
+                'rules' => 'required'
             ],
-            // [
-            //  'field' => 'usia',
-            //      'label' => 'E-mail',
-            //      'rules' => 'required|trim|is_unique[master_users.email]|valid_email'
-            // ],
+            [
+             'field' => 'usia',
+                 'label' => 'Usia',
+                 'rules' => 'required'
+            ],
             [
                 'field' => 'pendidikan',
                 'label' => 'Pendidikan',
@@ -224,11 +225,7 @@ class Kuisioner extends MY_Controller
                 'label' => 'Unit Kerja',
                 'rules' => 'required'
             ],
-            [
-                'field' => 'jabatan',
-                'label' => 'Jabatan / Posisi',
-                'rules' => 'required'
-            ],
+        
         ];
 
 
@@ -248,9 +245,45 @@ class Kuisioner extends MY_Controller
                             'jabatan'=>$this->input->post('jabatan'),
                         ];
                         $this->session->set_userdata('responden', $userdata);
-                    redirect('kuisioner/survei/'.sbe_crypt($id_kuisioner).'/input_kuisioner');
+
+
+                          $params = [
+                                "nik" => $this->input->post('nohp'),
+                                "nama_lengkap" => $this->input->post('nama'),
+                                "usia" => $this->input->post('usia'),
+                                "email" => $this->input->post('email'),
+                                "jenkel" => $this->input->post('jk'),
+                                "pendidikan" =>$this->input->post('pendidikan'),
+                                "pekerjaan" => $this->input->post('pekerjaan'),
+                                "unit_kerja" => $this->input->post('unit_kerja')
+                            ];
+
+                            $payload = json_encode($params);
+                            $register = $this->api_register($payload);
+                            var_dump($register->status);
+                            if ($register->status==false) {
+                            $this->session->set_flashdata('pesan','<div class="alert alert-danger">'.$register->message.'</div>');
+                             $this->input_identitas(sbe_crypt($id_kuisioner));
+                                # code...
+                            }else{
+                                $token = $register->token;
+                                $userdata = [
+                                     'token'=>$token,
+                                    "nik" => $this->input->post('nohp'),
+                                    "nama_lengkap" => $this->input->post('nama'),
+                                    "usia" => $this->input->post('usia'),
+                                    "email" => $this->input->post('email'),
+                                    "jenkel" => $this->input->post('jk'),
+                                    // "pendidikan" =>$this->input->post('pendidikan'),
+                                    // "pekerjaan" => $this->input->post('pekerjaan'),
+                                    "unit_kerja" => "BIRO ADMINISTRASI PEMBANGUNAN"
+                                ];
+                                $this->session->set_userdata('responden', $userdata);
+                            redirect('kuisioner/survei/'.sbe_crypt($id_kuisioner).'/input_kuisioner');
+
+                            }
                 }else{
-                     $this->input_identitas(sbe_crypt($id_kuisioner));
+                     // $this->input_identitas(sbe_crypt($id_kuisioner));
 
                 }
        
@@ -330,6 +363,42 @@ class Kuisioner extends MY_Controller
                         // CURLOPT_POST => true,
                         // CURLOPT_POSTFIELDS => http_build_query($a_params)
                     ));
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+                    curl_close($curl);
+                    $result = null;
+                    if ($err) {
+                        $result = "cURL Error #:" . $err;
+                    } else {
+                        $result = json_decode($response);
+                    }
+                        return $result;
+            }
+
+        public function api_register($payload){
+
+                    $curl = curl_init();
+                    $url = 'https://dev-sepakat.sumbarprov.go.id/api/v1/register';
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => $url,
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => "",
+                        CURLOPT_SSL_VERIFYHOST => 0,
+                        CURLOPT_SSL_VERIFYPEER => 0,
+                        CURLOPT_TIMEOUT => 30000,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+
+                        // POST JSON
+                        CURLOPT_POST => true,
+                        CURLOPT_POSTFIELDS => $payload,
+
+                        CURLOPT_HTTPHEADER => array(
+                            'Content-Type: application/json',
+                            'Accept: application/json',
+                            'Content-Length: ' . strlen($payload)
+                        ),
+                    ));
+
                     $response = curl_exec($curl);
                     $err = curl_error($curl);
                     curl_close($curl);
@@ -474,9 +543,7 @@ class Kuisioner extends MY_Controller
                     'unit_kerja' =>$this->api_master_unit_kerja()->data   ,
                     'usia' =>$this->api_master_usia()->data   ,
                    ];
-
-                   echo json_encode($data);
-                   header('Content-Type: application/json');
+                   return $data;
             }
 
 }

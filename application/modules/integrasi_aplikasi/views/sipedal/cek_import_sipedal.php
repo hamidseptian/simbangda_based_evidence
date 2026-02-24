@@ -34,7 +34,8 @@
 													<thead>	
 														<tr>	
 															<th>No</th>
-															<th>Sub Kegiatan</th>
+															<th>Kode RUP</th>
+                                                            <th>Sub Kegiatan</th>
                                                             <th>Nama Paket</th>
 															<th>Jenis Paket</th>
                                                             <th>Kategori</th>

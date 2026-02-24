@@ -934,7 +934,7 @@ ski.keterangan
 
             }
             $column_order   = ['', 'nama_paket'];
-            $column_search  = ['nama_paket'];
+            $column_search  = ['nama_paket','integrasi_sipedal_id_rup'];
             $order          = ['nama_paket' => 'ASC'];
             $list           = $this->datatables_model->get_datatables('v_paket', $column_order, $column_search, $order, $where);
             $data           = [];
@@ -943,13 +943,20 @@ ski.keterangan
                 $no++;
                 $row    = [];
                 $row[]     = $no;
+                $row[]  = $lists->integrasi_sipedal_id_rup;
 
                 $id_paket_pekerjaan = $lists->id_paket_pekerjaan ; 
                 $q_lokasi = $this->db->query("SELECT * from lokasi_paket_pekerjaan where id_paket_pekerjaan='$id_paket_pekerjaan'");
                 $j_lokasi = $q_lokasi->num_rows();
                 
                 $caption_kategori = $lists->jenis_paket == 'PENYEDIA' ? ( $lists->kategori == '' ? 'Belum Ditentukan' : $lists->kategori) : '' ; 
-                $row[]  = '<a href="javascript:void(0)" onclick="edit_sub_kegiatan_import_sipedal('."'".$lists->kode_rekening_sub_kegiatan."','".$lists->id_paket_pekerjaan."'".')">'.$lists->kode_rekening_sub_kegiatan.'<br>'.@$kumpul_msk[$lists->kode_rekening_sub_kegiatan].'</a>';
+                if ($lists->kode_rekening_sub_kegiatan=='') {
+                    $row[]  = '<a href="javascript:void(0)" class="text-danger" onclick="edit_sub_kegiatan_import_sipedal('."'".$lists->kode_rekening_sub_kegiatan."','".$lists->id_paket_pekerjaan."'".')">Sub kegiatan belum di ketahui<br>Silahkan tentukan dulu</a>';
+                    # code...
+                }else{
+                    $row[]  = '<a href="javascript:void(0)" onclick="edit_sub_kegiatan_import_sipedal('."'".$lists->kode_rekening_sub_kegiatan."','".$lists->id_paket_pekerjaan."'".')">'.$lists->kode_rekening_sub_kegiatan.'<br>'.@$kumpul_msk[$lists->kode_rekening_sub_kegiatan].'</a>';
+
+                }
                 $row[]  = $lists->nama_paket;
                 $row[]  = $lists->jenis_paket;
 
