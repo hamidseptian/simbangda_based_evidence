@@ -171,9 +171,12 @@ class Kuisioner extends MY_Controller
         $data['icon']           = "metismenu-icon pe-7s-user";
 
 
+
         $page                   = 'kuisioner/survei/input_kuisioner';
         $data['query']    = $q_kuisioner;
-        $data['pertanyaan']    = $q_pertanyaan;
+        // $data['pertanyaan']    = $q_pertanyaan;
+        $token = $this->session->userdata('responden')['token'];
+        $data['pertanyaan']    = $this->api_pertanyaan($token);
         $data['id_kuisioner']    = $id_kuisioner;
         $data['breadcrumbs']    = $breadcrumbs->render();
         $data['link']           = $this->router->fetch_method();
@@ -250,7 +253,7 @@ class Kuisioner extends MY_Controller
                           $params = [
                                 "nik" => $this->input->post('nohp'),
                                 "nama_lengkap" => $this->input->post('nama'),
-                                "usia" => $this->input->post('usia'),
+                                "usia" => $this->       input->post('usia'),
                                 "email" => $this->input->post('email'),
                                 "jenkel" => $this->input->post('jk'),
                                 "pendidikan" =>$this->input->post('pendidikan'),
@@ -260,7 +263,7 @@ class Kuisioner extends MY_Controller
 
                             $payload = json_encode($params);
                             $register = $this->api_register($payload);
-                            var_dump($register->status);
+                            // var_dump($register); die;
                             if ($register->status==false) {
                             $this->session->set_flashdata('pesan','<div class="alert alert-danger">'.$register->message.'</div>');
                              $this->input_identitas(sbe_crypt($id_kuisioner));
@@ -269,7 +272,18 @@ class Kuisioner extends MY_Controller
                                 $token = $register->token;
                                 $userdata = [
                                      'token'=>$token,
-                                    "nik" => $this->input->post('nohp'),
+                                        'id_user'=>id_user(),
+                            'id_instansi'=>id_instansi(),
+                            'id_kuisioner'=>$id_kuisioner,
+                            'skpd'=>$this->input->post('skpd'),
+                            'nama'=>$this->input->post('nama'),
+                            'jk'=>$this->input->post('jk'),
+                            'nohp'=>$this->input->post('nohp'),
+                            'pendidikan'=>$this->input->post('pendidikan'),
+                            'unit_kerja'=>$this->input->post('unit_kerja'),
+
+
+                            "nik" => $this->input->post('nohp'),
                                     "nama_lengkap" => $this->input->post('nama'),
                                     "usia" => $this->input->post('usia'),
                                     "email" => $this->input->post('email'),
@@ -544,6 +558,73 @@ class Kuisioner extends MY_Controller
                     'usia' =>$this->api_master_usia()->data   ,
                    ];
                    return $data;
+            }
+
+
+        public function api_pertanyaan($token){
+                    $curl = curl_init();
+                    $url = 'https://sepakat.sumbarprov.go.id/api/v1/unsur';
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => $url,// your preferred link
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => "",
+                        CURLOPT_SSL_VERIFYHOST => 0,
+                        CURLOPT_SSL_VERIFYPEER => 0,
+                        CURLOPT_TIMEOUT => 30000,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_HTTPHEADER => array(
+                            // Set Here Your Requesred Headers
+                            'Content-Type: application/json',
+                           "Authorization: Bearer ".$token
+                          
+                        ),
+                        // CURLOPT_POST => true,
+                        // CURLOPT_POSTFIELDS => http_build_query($a_params)
+                    ));
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+                    curl_close($curl);
+                    $result = null;
+                    if ($err) {
+                        $result = "cURL Error #:" . $err;
+                    } else {
+                        $result = json_decode($response);
+                    }
+                        return $result;
+            }
+
+        public function api_option_pertanyaan(){
+            $token = $this->input->post('token');
+            $id = $this->input->post('id');
+                    $curl = curl_init();
+                    $url = 'https://sepakat.sumbarprov.go.id/api/v1/unsur-jawaban?id='.$id;
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => $url,// your preferred link
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => "",
+                        CURLOPT_SSL_VERIFYHOST => 0,
+                        CURLOPT_SSL_VERIFYPEER => 0,
+                        CURLOPT_TIMEOUT => 30000,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_HTTPHEADER => array(
+                            // Set Here Your Requesred Headers
+                            'Content-Type: application/json',
+                           "Authorization: Bearer ".$token
+                          
+                        ),
+                        // CURLOPT_POST => true,
+                        // CURLOPT_POSTFIELDS => http_build_query($a_params)
+                    ));
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+                    curl_close($curl);
+                    $result = null;
+                    if ($err) {
+                        $result = "cURL Error #:" . $err;
+                    } else {
+                        $result = $response;
+                    }
+                        echo $result;
             }
 
 }

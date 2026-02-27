@@ -1285,8 +1285,9 @@ function get_target_pergeseran(kode_rekening_sub_kegiatan, kode_kegiatan, kode_p
 								'<td style="text-align: right;">' + v.t_fisik + '</td>' +
 								'<td style="text-align: right;">' + ((v.t_keuangan_bulanan / pagu) * 100).toFixed(2) + '</td>' +
 								'<td style="text-align: right;">' + ((v.t_keuangan / pagu) * 100).toFixed(2) + '</td>' +
-								'<td style="text-align: right;">' + '<a href="#" style="color:red" id="target-fisik" kode_sub_kegiatan="' + kode_rekening_sub_kegiatan + '" kode_bidang_urusan="' + kode_bidang_urusan + '" kode_program="' + kode_program + '" kode_kegiatan="' + kode_kegiatan + '" pagu="' + pagu + '"  tahap="' + tahap + '", tahun="' + tahun + '" pk="' + v.id + '" class="edit" data-type="text" onclick="edit_target_keuangan(this)">' + convert_to_rupiah(v.t_keuangan_bulanan) + '</a>'  + '</td>' +
+								'<td style="text-align: right;">' + '<a href="#" style="color:red" id="target-fisik" kode_sub_kegiatan="' + kode_rekening_sub_kegiatan + '" kode_bidang_urusan="' + kode_bidang_urusan + '" kode_program="' + kode_program + '" kode_kegiatan="' + kode_kegiatan + '" pagu="' + pagu + '"  tahap="' + tahap + '", tahun="' + tahun + '", pergeseran_ke="' + pergeseran_ke + '" pk="' + v.id + '" class="edit" data-type="text" onclick="edit_target_keuangan_pergeseran(this)">' + convert_to_rupiah(v.t_keuangan_bulanan) + '</a>'  + '</td>' +
 								'<td>' + convert_to_rupiah(v.t_keuangan) + '</td>' +
+									'<td>' + v.input_by + '</td>' +
 								'</tr>'
 							);
 						});
@@ -1716,6 +1717,30 @@ function edit_target_keuangan(x) {
 			url: baseUrl('data_apbd/update_target_keuangan/' + kode_sub_kegiatan + '/' + tahap),
 			success: function(c) {
 				get_target(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu)
+			},
+		});
+	}
+
+function edit_target_keuangan_pergeseran(x) {
+		$.fn.editableform.buttons = '<button type="submit" class="btn btn-primary btn-xs editable-submit">OK</button>' +
+			'<button type="button" class="btn btn-default btn-xs editable-cancel">Batal</button>';
+		let id = $(x).attr('pk');
+		let kode_sub_kegiatan = $(x).attr('kode_sub_kegiatan');
+		let kode_bidang_urusan = $(x).attr('kode_bidang_urusan');
+		let kode_program = $(x).attr('kode_program');
+		let kode_kegiatan = $(x).attr('kode_kegiatan');
+		let pagu = $(x).attr('pagu');
+		let tahap = $(x).attr('tahap');
+		let tahun = $(x).attr('tahun');
+		let pergeseran_ke = $(x).attr('pergeseran_ke');
+		
+		$(x).editable({
+			mode: 'inline',
+			pk: id,
+			savenochange: true,
+			url: baseUrl('data_apbd/update_target_keuangan_pergeseran/' + kode_sub_kegiatan + '/' + tahap + '/' + pergeseran_ke),
+			success: function(c) {
+				get_target_pergeseran(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, pergeseran_ke)
 			},
 		});
 	}

@@ -24,21 +24,13 @@
 	            			<td>:</td>
 	            			<td><?php echo $responden['nohp'] ?></td>
 	            		</tr>
+	            	
 	            		<tr>
-	            			<td>Pendidikan</td>
-	            			<td>:</td>
-	            			<td><?php echo $responden['pendidikan'] ?></td>
-	            		</tr>
-	            		<tr>
-	            			<td>Unit Kerja</td>
+	            			<td>Unit Kerja yang dinilai</td>
 	            			<td>:</td>
 	            			<td><?php echo $responden['unit_kerja'] ?></td>
 	            		</tr>
-	            		<tr>
-	            			<td>Jabatan</td>
-	            			<td>:</td>
-	            			<td><?php echo $responden['jabatan'] ?></td>
-	            		</tr>
+	            		
 	            	</table>
 	            </div>
 	        </div>
@@ -50,54 +42,11 @@
 	                			<input type="hidden" class="form-control" name="id_kuisioner" value="<?php echo $id_kuisioner ?>">
 	            </div>
 	            <div class="card-body" style="max-height:700px; overflow-y: scroll">
-
-
-	            	<?php foreach ($pertanyaan as $k => $v) {  ?>
-	            			<div class="card-shadow-info border mb-3 card card-body border-info"   style="text-transform: capitalize;">
-	            		<?php 
-		            		$tanda_required = $v['required'] ==1 ? '*)' : '';
-	            		 ?>
-		            		<h5 class="card-title"  style="text-transform: capitalize;"><?php echo ($k+1).'. '.$v['pertanyaan'].' '.$tanda_required ?></h5> <br>
-		            		<div class="card-body">
-	            					<?php 
-	            		$id_kuisioner_pertanyaan = $v['id_kuisioner_pertanyaan'];
-	            		$required = $v['required'] ==1 ? 'required' : '';
-	            		if ($v['bentuk_jawaban']=='radio') {
-	            			$pilihan = $this->db->query("SELECT * from kuisioner_pilihan_jawaban_objektif where id_kuisioner_pertanyaan = '$id_kuisioner_pertanyaan'")->result_array();
-	            			foreach ($pilihan as $k_j => $v_j) { ?>
-	            				<input type="radio" name="jawaban_<?php echo $id_kuisioner_pertanyaan ?>" value="<?php echo $v_j['value'].'|'.$v_j['caption'] ?>" <?php echo $required ?>> <?php echo $v_j['caption'] ?> <br>
-	            			<?php }
-	            		}else if ($v['bentuk_jawaban']=='text') { ?>
-	            			
-	            			<input type="" class="form-control" name="jawaban_<?php echo $id_kuisioner_pertanyaan ?>" <?php echo $required ?>>
-	            		<?php }else{ ?>
-	            			<textarea class="form-control" name="jawaban_<?php echo $id_kuisioner_pertanyaan ?>" <?php echo $required ?>></textarea>
-	            		<?php }
-	            		?>
-		            			
-		            		</div>
-
-	            		<?php 
-	            		$id_kuisioner_pertanyaan = $v['id_kuisioner_pertanyaan'];
-	            		if ($v['bentuk_jawaban']=='radio') {
-	            			$pilihan = $this->db->query("SELECT * from kuisioner_pilihan_jawaban_objektif where id_kuisioner_pertanyaan = '$id_kuisioner_pertanyaan'")->result_array();
-	            			foreach ($pilihan as $k_j => $v_j) { ?>
-	            				<!-- <input type="radio" name="" value="<?php echo $v_j['value'] ?>"> <?php echo $v_j['caption'] ?> -->
-	            			<?php }
-	            		}else{
-
-	            		}
-	            		?>
-
-
-		            	</div>
-
-
-
-
-		    <?php } ?>
-		    
-		    <button class="btn btn-block btn-info">Submit Kuisioner</button>
+	            	<h5 class="card-title text-center"  style="text-transform: capitalize;" id="pertanyaan"></h5> 
+	            	<div class="card-body">
+	            		<div  id="option" class="btn-group btn-block"></div>
+	            		<div  id="page" class="btn-group btn-block"></div>
+	            	</div>
 
 
 
@@ -110,3 +59,44 @@
 
 	</div>
 </form>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+<script type="">
+	pertanyaan(3);
+	function pertanyaan(id){
+
+
+		$.ajax({
+			url:'<?php echo 	base_url() ?>kuisioner/api_option_pertanyaan',
+			type : "POST",
+			dataType: 'JSON',
+			data : {
+				token : '<?php echo $responden['token'] ?>',
+				id: id
+			},
+			success : function(data){
+				console.log(data.data.unsur_detail);
+				$('#pertanyaan').html(data.data.nama);
+				$('#option').html('');
+				$.each(data.data.unsur_detail, function(k,v){
+					$('#option').append(`<button type="button" onclick="simpan_jawaban('`+v.unsur_id+`','`+v.nilai+`')" class="btn btn-outline-info btn-xl" >`+v.jawaban+` </button>`);
+				})
+				$('#option').html(`<button type="button" onclick="simpan_jawaban('`+v.unsur_id+`','`+v.nilai+`')" class="btn btn-outline-info btn-xl" >`+v.jawaban+` </button><button type="button" onclick="simpan_jawaban('`+v.unsur_id+`','`+v.nilai+`')" class="btn btn-outline-info btn-xl" >`+v.jawaban+` </button>`);
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+				console.log('error');
+			}
+		 });
+	}
+
+	function simpan_jawaban(id_pertanyaan, nilai_jawaban){
+		var next = parseInt(id_pertanyaan) +1 ; 
+		if (next==10) {
+			alert('habis');
+
+		}else{
+			pertanyaan(next);
+
+		}
+	}
+</script>
