@@ -3031,7 +3031,7 @@ public function sync_eplanning()
                 if ($tahap==2) {
                     if ($identitas_ski->pergeseran_ke=='') {
                         // $output['data']['pagu_aktif']                  = "APBD AWAL";
-                        $output['data']['tahapan']                  = "APBD AWAL".'<br>'.'<button type="button" class="btn btn-outline-info btn-sm" onclick="lakukan_pergeseran('."'1'".','."'".$identitas_ski->id_sub_kegiatan_instansi."'".','."'".$tahap."'".','."'".$tahun."'".')">Lakukan Pergeseran</button>';
+                        $output['data']['tahapan']                  = "APBD AWAL";//.'<br>'.'<button type="button" class="btn btn-outline-info btn-sm" onclick="lakukan_pergeseran('."'1'".','."'".$identitas_ski->id_sub_kegiatan_instansi."'".','."'".$tahap."'".','."'".$tahun."'".')">Lakukan Pergeseran</button>';
 
                     }else{
                       
