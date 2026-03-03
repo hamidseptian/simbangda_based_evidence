@@ -231,7 +231,16 @@ class Kuisioner extends MY_Controller
         
         ];
 
-
+            $usia = $this->input->post('usia');
+            if ($usia=='Pilih Usia') {
+                $this->session->set_flashdata('pesan','<div class="alert alert-danger">Anda belum memilih usia</div>');
+                redirect('kuisioner/survei/'.sbe_crypt($id_kuisioner).'/identitas');
+            }
+            $pekerjaan = $this->input->post('pekerjaan');
+            if ($pekerjaan=='Pilih Pekerjaan') {
+                $this->session->set_flashdata('pesan','<div class="alert alert-danger">Anda belum memilih Pekerjaan</div>');
+                redirect('kuisioner/survei/'.sbe_crypt($id_kuisioner).'/identitas');
+            }
             $validation     = $this->form_validation;
             $validation->set_rules($rules_validasi);
                     if($this->form_validation->run() != false){
@@ -253,7 +262,7 @@ class Kuisioner extends MY_Controller
                           $params = [
                                 "nik" => $this->input->post('nohp'),
                                 "nama_lengkap" => $this->input->post('nama'),
-                                "usia" => $this->       input->post('usia'),
+                                "usia" => $this->input->post('usia'),
                                 "email" => $this->input->post('email'),
                                 "jenkel" => $this->input->post('jk'),
                                 "pendidikan" =>$this->input->post('pendidikan'),
@@ -355,6 +364,37 @@ class Kuisioner extends MY_Controller
        
     }
 
+   
+    public function simpan_pengisian_kuisioner()
+    {
+
+        $id_kuisioner = $this->input->post('id_kuisioner');
+
+        $data_responden = $this->session->userdata('responden');
+        $data_pengisian = ['id_user'=>id_user(), 'id_instansi'=>id_instansi(), 'id_kuisioner'=>$id_kuisioner, 'created_at'=>timestamp()];
+        $this->db->trans_begin();
+
+        // $this->db->insert('kuisioner_identitas_responden', $data_responden);
+        // $this->db->insert_batch('kuisioner_jawaban_responden', $kumpul_jawaban);
+        $this->db->insert('kuisioner_pengisian', $data_pengisian);
+
+        if  ( $this->db->trans_status()  ===  FALSE ) 
+        { 
+                $this->db->trans_rollback(); 
+        } 
+        else 
+        { 
+            $this->session->unset_userdata('responden');
+                $this->db->trans_commit(); 
+                $output = [
+                    'id_kuisioner'=>sbe_crypt($id_kuisioner),
+                    'status'=>true
+                ];
+            echo json_encode($output);
+        }
+       
+    }
+
 
 
         public function api_master_pekerjaan(){
@@ -392,7 +432,7 @@ class Kuisioner extends MY_Controller
         public function api_register($payload){
 
                     $curl = curl_init();
-                    $url = 'https://dev-sepakat.sumbarprov.go.id/api/v1/register';
+                    $url = 'https://sepakat.sumbarprov.go.id/api/v1/register';
                     curl_setopt_array($curl, array(
                         CURLOPT_URL => $url,
                         CURLOPT_RETURNTRANSFER => true,
@@ -626,5 +666,99 @@ class Kuisioner extends MY_Controller
                     }
                         echo $result;
             }
+
+
+        public function api_simpan_jawaban(){
+            $token = $this->input->post('token');
+            $id = $this->input->post('id');
+            $nilai_jawaban = $this->input->post('nilai_jawaban');
+            $action = 'selanjutnya';
+
+            $data_param = [ 
+                "unsur_id"=>$id,
+                "action"=>"selanjutnya",
+                "answer"=>$nilai_jawaban
+            ];
+
+            $json_param = json_encode($data_param);
+                    $curl = curl_init();
+                    $url = 'https://sepakat.sumbarprov.go.id/api/v1/submit-jawaban';
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => $url,// your preferred link
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => "",
+                        CURLOPT_SSL_VERIFYHOST => 0,
+                        CURLOPT_SSL_VERIFYPEER => 0,
+                        CURLOPT_TIMEOUT => 30000,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_HTTPHEADER => array(
+                            // Set Here Your Requesred Headers
+                            'Content-Type: application/json',
+                           "Authorization: Bearer ".$token,
+                          
+                        ),
+    CURLOPT_POST => true,
+    CURLOPT_POSTFIELDS => $json_param
+                    ));
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+                    curl_close($curl);
+                    // $this->session->set_userdata($id, $nilai_jawaban);
+                    $result = null;
+                    if ($err) {
+                        $result = "cURL Error #:" . $err;
+                    } else {
+                        $result = $response;
+                    }
+                        echo $result;
+            }
+
+
+    
+        public function api_kirim_aspirasi(){
+            $token = $this->input->post('token');
+            $id = $this->input->post('id');
+            $aspirasi = $this->input->post('aspirasi');
+
+            $data_param = [ 
+                "aspirasi"=>$aspirasi,
+              
+            ];
+
+            $json_param = json_encode($data_param);
+                    $curl = curl_init();
+                    $url = 'https://sepakat.sumbarprov.go.id/api/v1/kirim-aspirasi';
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => $url,// your preferred link
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => "",
+                        CURLOPT_SSL_VERIFYHOST => 0,
+                        CURLOPT_SSL_VERIFYPEER => 0,
+                        CURLOPT_TIMEOUT => 30000,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_HTTPHEADER => array(
+                            // Set Here Your Requesred Headers
+                            'Content-Type: application/json',
+                           "Authorization: Bearer ".$token,
+                          
+                        ),
+    CURLOPT_POST => true,
+    CURLOPT_POSTFIELDS => $json_param
+                    ));
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+                    curl_close($curl);
+                    // $this->session->set_userdata($id, $nilai_jawaban);
+                    $result = null;
+                    if ($err) {
+                        $result = "cURL Error #:" . $err;
+                    } else {
+                        $result = $response;
+                    }
+                        echo $result;
+            }
+
+
+
 
 }

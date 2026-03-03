@@ -31,7 +31,7 @@
 	                		<div class="form-group">
 	                			<label>Usia</label>
 	                			<select class="form-control" name="usia">
-	                				<option value="Pilih Usia"></option>
+	                				<option value="Pilih Usia">Pilih Usia</option>
 	                				<?php foreach ($select['usia'] as $k => $v) { ?>
 	                				<option value="<?php echo $v->id ?>"><?php echo $v->rentang ?></option>
 	                				<?php } ?>
@@ -55,8 +55,10 @@
 	                	</div>
 	                	<div class="col-md-4">
 	                		<div class="form-group">
-	                			<label>pekerjaan</label>
+	                			<label>Pekerjaan</label>
 	                			<select class="form-control" name="pekerjaan">
+
+	                				<option value="Pilih Pekerjaan">Pilih Pekerjaan</option>
 	                				<?php foreach ($select['pekerjaan'] as $k => $v) { ?>
 	                				<option value="<?php echo $v->id ?>"><?php echo $v->nama ?></option>
 	                				<?php } ?>
