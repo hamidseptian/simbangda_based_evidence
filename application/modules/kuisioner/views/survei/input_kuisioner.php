@@ -1,5 +1,7 @@
 <form action="<?php echo base_url('kuisioner/simpan_kuisioner') ?>" method="post">
-<?php $responden = $this->session->userdata('responden'); ?>	
+<?php $responden = $this->session->userdata('responden');
+$jk = ['L'=>"Laki laki" ,'P' =>'Perempuan'];
+ ?>	
 
 	<div class="row">
 	    <div class="col-md-4 col-lg-4">
@@ -18,7 +20,7 @@
 	            		<tr>
 	            			<td>Jenis kelamin</td>
 	            			<td>:</td>
-	            			<td><?php echo $responden['jk'] ?></td>
+	            			<td><?php echo @$jk[$responden['jk']] ?></td>
 	            		</tr>
 	            		<tr>
 	            			<td>No HP</td>
@@ -92,12 +94,10 @@
 				var prev = id-1 ;
 
 				if (id==1) {
-				$('#page').html(`
-					<button type="button"  onclick="next_prev(`+next+`)"  class="btn btn-outline-info btn-xl">Next</button>`);
+				$('#page').html(``);
 
 				}else{
-				$('#page').html(`<button type="button" onclick="next_prev(`+prev+`)" class="btn btn-outline-info btn-xl">Prev</button>
-					<button type="button"  onclick="next_prev(`+next+`)"  class="btn btn-outline-info btn-xl">Next</button>`);
+				$('#page').html(`<button type="button" onclick="next_prev(`+prev+`)" class="btn btn-outline-info btn-xl"><i class="fa fa-arrow-left"></i> Sebelumnya</button>`);
 
 				}
 			},
@@ -150,7 +150,7 @@
 		var form_saran = `<br><textarea class="form-control" name="aspirasi" id="aspirasi" rows="10"></textarea><br>`;
 				$('#pertanyaan').html('Aspirasi dan Saran');
 				$('#option').html(form_saran);
-					$('#page').html(`<button type="button" onclick="next_prev(`+prev+`)" class="btn btn-outline-info btn-xl">Prev</button> 
+					$('#page').html(`<button type="button" onclick="next_prev(`+prev+`)" class="btn btn-outline-info btn-xl"><i class="fa fa-arrow-left"></i> Sebelumnya</button> 
 						<button type="button" class="btn btn-outline-info btn-xl" onclick="simpan_aspirasi()">Kirim</button>`);
 	}
 	function simpan_aspirasi(id_pertanyaan, nilai_jawaban){
@@ -167,6 +167,8 @@
 			success : function(data){
 				if (data.status==true) {
 					simpan_pengisian_kuisioner();
+				}else{
+					Swal.fire('Gagal',data.message + "<br>Ada pertanyaan yang terlewatkan <br>Silahkan lakukan reload dan ulang lagi pengisian kuisioner",'error');
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
