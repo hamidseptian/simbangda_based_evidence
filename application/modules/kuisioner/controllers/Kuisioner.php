@@ -371,11 +371,15 @@ class Kuisioner extends MY_Controller
         $id_kuisioner = $this->input->post('id_kuisioner');
 
         $data_responden = $this->session->userdata('responden');
-        $data_pengisian = ['id_user'=>id_user(), 'id_instansi'=>id_instansi(), 'id_kuisioner'=>$id_kuisioner, 'created_at'=>timestamp()];
+        if ($this->session->userdata('id_group')==7) {
+            $id_kota = $this->session->userdata('id_kota');
+            $data_pengisian = ['id_user'=>id_user(), 'id_kota'=>$id_kota, 'id_kuisioner'=>$id_kuisioner, 'created_at'=>timestamp()];
+        }else{
+            $data_pengisian = ['id_user'=>id_user(), 'id_instansi'=>id_instansi(), 'id_kuisioner'=>$id_kuisioner, 'created_at'=>timestamp()];
+
+        }
         $this->db->trans_begin();
 
-        // $this->db->insert('kuisioner_identitas_responden', $data_responden);
-        // $this->db->insert_batch('kuisioner_jawaban_responden', $kumpul_jawaban);
         $this->db->insert('kuisioner_pengisian', $data_pengisian);
 
         if  ( $this->db->trans_status()  ===  FALSE ) 

@@ -84,7 +84,7 @@ $jk = ['L'=>"Laki laki" ,'P' =>'Perempuan'];
 				id: id
 			},
 			success : function(data){
-				$('#pertanyaan').html(data.data.nama);
+				$('#pertanyaan').html(data.data.id + '. '+data.data.nama);
 				$('#option').html('');
 				$.each(data.data.unsur_detail, function(k,v){
 					$('#option').append(`<button type="button" onclick="simpan_jawaban('`+v.unsur_id+`','`+v.nilai+`')" class="btn btn-outline-info btn-xl" > <img src="https://sepakat.sumbarprov.go.id/`+v.emoji+`" height="100px" alt="Logo" class="img-fluid"><br><b>`+v.jawaban+`</b></button>`);
