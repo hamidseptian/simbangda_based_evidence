@@ -509,7 +509,7 @@ $nilai_rf_kota_ratarata =$total_fisik_semua > 0 ? $persen_rf_total : 0 ;
   }?>
 <div style="float:right; width:220px; margin-top:20px;" class="ttd">
   <?php echo $ibukota.',  '.date('d').' '.bulan_global(date('n')).' '.date('Y') ?> <br>
-  <?php echo $config->jabatan.'<br>'.$config->nama_instansi?>
+  <?php echo $config->jabatan?>
   <br><br><br><br>
   <?php echo $config->nama.'<br>NIP : '.$config->nip?>
 </div>

@@ -812,48 +812,160 @@ public function sync_eplanning()
             $tahap = tahapan_apbd();
             $id_instansi = id_instansi();
             $kode_program  = $this->input->post('kode_program');
-            if ($tahap==4) {
-                $where          = ['id_instansi' => $id_instansi, 'kode_rekening_program' => $kode_program,'tahun'=>$tahun];
-                $tabel = 'v_kegiatan_apbd_perubahan';
+          
+             $key = "";//$_POST['search']['value'];
+
+
+
+
+
+
+
+
+
+         $no             = 1;//$_POST['start'];
+        $start = $no;
+         $length             =  "";//$_POST['length'];
+         $key = $_POST['search']['value'];
+         // untuk order by
+         $order = '';// $_POST['order'];
+         $col =0; 
+         $dir = "";
+         if (!empty($order)) {
+             foreach ($order as $o) {
+                 $col = $o['column'];
+                 $dir = $o['dir'];
+             }
+         }
+
+         if ($dir!='asc' && $dir!='desc') {
+             $dir='desc';
+         }
+         $valid_columns = [
+            1=>'m.kode_unik_member',
+           
+         ];
+
+         if (!isset($valid_columns[$col])) {
+             $order= 'rk.id_keanggotaan_member';
+         }else{
+            $order = $valid_columns[$col];
+         }
+
+         if ($order!=null) {
+            if ($col==0) {
+             $order_by = "order by rk.id_keanggotaan_member desc";
             }else{
-                $where          = ['id_instansi' => $id_instansi, 'kode_rekening_program' => $kode_program,'tahun'=>$tahun, 'kode_tahap'=>$tahap];
-                $tabel = 'v_kegiatan_apbd_awal';
+             $order_by = "order by $order $dir";
+
             }
-            $column_order   = ['', 'nama_kegiatan'];
-            $column_search  = ['nama_kegiatan'];
-            $order          = ['nama_kegiatan' => 'ASC'];
-            $list           = $this->datatables_model->get_datatables($tabel, $column_order, $column_search, $order, $where);
-            $data           = [];
-            $no             = $_POST['start'];
-            foreach ($list as $lists) {
-                $no++;
-                $kode_kegiatan = $lists->kode_rekening_kegiatan;
-                $row    = [];
-                $row[]     = $no;
-                $row[]  = $kode_kegiatan;
-                $row[]  = $lists->nama_kegiatan;
-                if ($tahap==4) {
-                    $q_pagu = $this->db->query("SELECT sum( bo_bp + bo_bbj + bo_bs + bo_bh + bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl + btt + bt_bbh + bt_bbk ) as total_anggaran FROM anggaran_sub_kegiatan where tahun='$tahun' and  id_instansi='$id_instansi' and kode_kegiatan='$kode_kegiatan' and kode_sub_kegiatan in (SELECT kode_sub_kegiatan from sub_kegiatan_instansi where tahun='$tahun' and kode_kegiatan='$kode_kegiatan' and id_instansi='$id_instansi' and status=1)
-                        and status=1")->row_array();
-                    $pagu = $q_pagu['total_anggaran'] =='' ? 0 : $q_pagu['total_anggaran'];
-                }else{
-                	 $q_pagu = $this->db->query("SELECT total_anggaran_kegiatan($tahap,$id_instansi,'$kode_kegiatan',$tahun) as pagu ")->row_array();
-                    $pagu = $q_pagu['pagu'] =='' ? 0 : $q_pagu['pagu'];
+             # code...
+         }else{
+             $order_by = "order by rk.id_keanggotaan_member desc";
+
+         }
+         // untuk order by
+         if ($key) {
+            $where_key = "";
+         }else{
+            $where_key = "";
+
+         }
+
+            $master_kegiatan = $this->db->query("SELECT kode_kegiatan, nama_kegiatan from master_kegiatan")->result_array();
+            $kumpul_kegiatan = [];
+            foreach ($master_kegiatan as $k => $v) {
+                $kumpul_kegiatan[$v['kode_kegiatan']] = $v['nama_kegiatan'];
+            }
 
 
-                    // $pagu = 555;//$lists->pagu =='' ? 0 : $lists->pagu;
+        $data = [];
+
+
+
+         $q_kegiatan = $this->db->query("SELECT * from v_sub_kegiatan_apbd where kode_rekening_program = '$kode_program' and tahun ='$tahun' and kode_tahap = '2' and id_instansi = '$id_instansi'");
+         $no =0;
+
+        
+            $kegiatan = [];
+
+            foreach ($q_kegiatan->result_array() as $item) {
+
+                $kode = $item['kode_rekening_kegiatan'];
+                $pagu = $item['pagu'];
+
+                if (!isset($kegiatan[$kode])) {
+                    $kegiatan[$kode] = [
+                        'kode_program' => $item['kode_rekening_program'],
+                        'kode_kegiatan' => $kode,
+                        'nama_kegiatan' => $kumpul_kegiatan[$kode],
+                        'pagu_kegiatan' => 0
+                    ];
                 }
 
-                $row[]  =  '<span style="float:right">'.number_format($pagu,0,'','.').'</span>';
-                $row[]     = '<button class="btn btn-info btn-xs" id="show-sub-kegiatan" status="collapse" kode_program="'.$lists->kode_rekening_program.'" kode_kegiatan="'.$lists->kode_rekening_kegiatan.'"><i class="fa fa-plus"></i></button>';
-               
-                $data[] = $row;
+                $kegiatan[$kode]['pagu_kegiatan'] += $pagu;
             }
 
+            $kegiatan = array_values($kegiatan);
+
+            if ($key) {
+                $hasil = array_values(array_filter($data, function($row) use ($key){
+                    return stripos($row[1], $keyword) !== false;
+                }));
+
+
+                    foreach ($kegiatan as $k => $v) {
+                        $row = [];
+                        $no++;
+                         $row[]  = $no;
+                         $row[]  = $v['kode_kegiatan'];
+                         $row[]  = $v['nama_kegiatan'];
+                         $row[]  = number_format($v['pagu_kegiatan']);
+                        
+                        $row[]     = '<button class="btn btn-info btn-xs" id="show-sub-kegiatan" status="collapse" kode_program="'.$v['kode_program'].'" kode_kegiatan="'.$v['kode_kegiatan'].'"><i class="fa fa-plus"></i></button>';
+                        $data[] = $row;
+                    }
+
+
+
+                
+
+
+
+             }else{
+                    foreach ($kegiatan as $k => $v) {
+                        $row = [];
+                        $no++;
+                         $row[]  = $no;
+                         $row[]  = $v['kode_kegiatan'];
+                         $row[]  = $v['nama_kegiatan'];
+                         $row[]  = number_format($v['pagu_kegiatan']);
+                        
+                        $row[]     = '<button class="btn btn-info btn-xs" id="show-sub-kegiatan" status="collapse" kode_program="'.$v['kode_program'].'" kode_kegiatan="'.$v['kode_kegiatan'].'"><i class="fa fa-plus"></i></button>';
+                        $data[] = $row;
+                    }
+
+
+             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             $output = [
-                "draw"              => $_POST['draw'],
-                "recordsTotal"      => $this->datatables_model->count_all($tabel, $where),
-                "recordsFiltered"   => $this->datatables_model->count_filtered($tabel, $column_order, $column_search, $order, $where),
+                "draw"              => '',//$_POST['draw'],
+                "recordsTotal"      => 0,//$this->datatables_model->count_all($tabel, $where),
+                "recordsFiltered"   => 0,//$this->datatables_model->count_filtered($tabel, $column_order, $column_search, $order, $where),
                 "data"              => $data,
             ];
 
@@ -1202,7 +1314,7 @@ public function sync_eplanning()
                 if ($tahap_aktif==4) {
                 	$caption_tahapan = $caption_status[$lists->kode_tahap];
                 }else{
-                    if ($lists->pergeseran_ke== null) {
+                    if ($lists->pergeseran_ke== null || $lists->pergeseran_ke== ''  ) {
                     	$caption_tahapan = "APBD AWAL".$lists->pergeseran_ke ;//pilihan_nama_tahapan($lists->kode_tahap);
                        $onclick3 = "get_target('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."')";
                     }else{
