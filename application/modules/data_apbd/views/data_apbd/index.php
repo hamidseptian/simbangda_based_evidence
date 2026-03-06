@@ -154,18 +154,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($program->result_array() as $k => $v ) { 
+                            <?php foreach ($program as $k => $v ) { 
                                 $kode_program = $v['kode_program'];
-                                $id_instansi = $v['id_instansi'];
-                                $tahun = $v['tahun'];
-                                $q_pagu_program = $this->db->query("SELECT  sum(bo_bp + bo_bbj + bo_bs + bo_bh + bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl + btt + bt_bbh + bt_bbk) as pagu_program from anggaran_sub_kegiatan where kode_program='$kode_program' and id_instansi='$id_instansi' and tahun = '$tahun' and status ='1'")->row_array();
+                          
                                 ?>
                                 <tr>
                                 <td width="1%"><?php echo $k+1 ?></td>
                                 <td><?php echo $bidang_urusan[$v['kode_bidang_urusan']]; ?></td>
                                 <td><?php echo $v['kode_program'] ?></td>
                                 <td><?php echo $master_program[$v['kode_program']]; ?></td>
-                                <td><?php echo number_format($q_pagu_program['pagu_program']) ?></td>
+                                <td><?php echo number_format($v['pagu_program']) ?></td>
                                 <td  width="10%"><button class="btn btn-info btn-xs" id="show-kegiatan" kode_program="<?php echo $v['kode_program'] ?>" title="Lihat kegiatan dari program '.$lists->nama_program.'"><i class="fa fa-plus"></i></button></td>
                             </tr>
                             <?php } ?>

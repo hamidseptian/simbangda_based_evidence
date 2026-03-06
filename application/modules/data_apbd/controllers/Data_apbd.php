@@ -126,7 +126,56 @@ class Data_apbd extends MY_Controller
                 $data['program']        = $this->db->query("SELECT  kode_program, id_instansi, tahun, kode_bidang_urusan from sub_kegiatan_instansi where id_instansi='$id_instansi' and tahun='$tahun' and status='1' group by kode_program");
                 # code...
             }else{
-                $data['program']        = $this->db->query("SELECT  kode_program, id_instansi, tahun, kode_bidang_urusan from sub_kegiatan_instansi where id_instansi='$id_instansi' and tahun='$tahun' and kode_tahap ='2' group by kode_program");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         $q_program = $this->db->query("SELECT * from v_sub_kegiatan_apbd where tahun ='$tahun' and kode_tahap = '2' and id_instansi = '$id_instansi'");
+         $no =0;
+
+        
+            $program = [];
+
+            foreach ($q_program->result_array() as $item) {
+
+                $kode = $item['kode_rekening_program'];
+                $pagu = $item['pagu'];
+
+                if (!isset($program[$kode])) {
+                    $program[$kode] = [
+                        'kode_bidang_urusan' => $item['kode_bidang_urusan'],
+                        'kode_program' => $item['kode_rekening_program'],
+                        'kode_program' => $kode,
+                        'nama_program' => $kumpul_master_program[$kode],
+                        'pagu_program' => 0
+                    ];
+                }
+
+                $program[$kode]['pagu_program'] += $pagu;
+            }
+
+            $program = array_values($program);
+
+
+
+
+
+
+
+
+
+
+                $data['program']        = $program ;//$this->db->query("SELECT  kode_program, id_instansi, tahun, kode_bidang_urusan from sub_kegiatan_instansi where id_instansi='$id_instansi' and tahun='$tahun' and kode_tahap ='2' group by kode_program");
 
             }
 
@@ -865,12 +914,7 @@ public function sync_eplanning()
 
          }
          // untuk order by
-         if ($key) {
-            $where_key = "";
-         }else{
-            $where_key = "";
-
-         }
+       
 
             $master_kegiatan = $this->db->query("SELECT kode_kegiatan, nama_kegiatan from master_kegiatan")->result_array();
             $kumpul_kegiatan = [];
@@ -907,17 +951,17 @@ public function sync_eplanning()
             }
 
             $kegiatan = array_values($kegiatan);
-
+            $keyword = $key;
             if ($key) {
-                $hasil = array_values(array_filter($data, function($row) use ($key){
-                    return stripos($row[1], $keyword) !== false;
+                 $hasil = array_values(array_filter($kegiatan, function($row) use ($keyword) {
+                    return stripos($row['kode_kegiatan'], $keyword) !== false || stripos($row['nama_kegiatan'], $keyword) !== false;
                 }));
 
 
-                    foreach ($kegiatan as $k => $v) {
+                    foreach ($hasil as $k => $v) {
                         $row = [];
                         $no++;
-                         $row[]  = $no;
+                         $row[]  = $keyword;
                          $row[]  = $v['kode_kegiatan'];
                          $row[]  = $v['nama_kegiatan'];
                          $row[]  = number_format($v['pagu_kegiatan']);
