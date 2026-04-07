@@ -1,6 +1,6 @@
 <?php 
 $nama_tahap = [
-	2=>'APBD AWAL',4=>'APBD PERUBAHAN'
+	2=>'APBD AWAL',3=>'APBD PERGESERAN',4=>'APBD PERUBAHAN'
 ];
  ?>
 

@@ -755,7 +755,7 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 		else{
 
 			$.ajax({
-				url: baseUrl('synchronize/synch_baru/' +tahun+ '/' +tahapan_apbd+'/'+id_instansi),
+				url: baseUrl('synchronize/synch_baru_2026/' +tahun+ '/' +tahapan_apbd+'/'+id_instansi),
 				type: 'GET',
 				dataType: 'JSON',
 				data: {

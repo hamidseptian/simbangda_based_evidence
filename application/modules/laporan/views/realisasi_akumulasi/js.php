@@ -331,7 +331,7 @@
 				}
 				else{
 					$('#tampil_pdf').show();
-					$('#tampil_pdf').attr('src', baseUrl('laporan/pdf_laporan_realisasi_akumulasi?id_opd=') + id_opd + '&kategori_penampilan_data=' + kategori_laporan +'&kategori=' + kategori + '&tahun=' + tahun + '&tahap=' + tahap + '&bulan=' + bulan + '&jenis_sumber_dana=' + jenis_sumber_dana + '#view=FitH');
+					$('#tampil_pdf').attr('src', baseUrl('laporan/pdf_laporan_realisasi_akumulasi_new?id_opd=') + id_opd + '&kategori_penampilan_data=' + kategori_laporan +'&kategori=' + kategori + '&tahun=' + tahun + '&tahap=' + tahap + '&bulan=' + bulan + '&jenis_sumber_dana=' + jenis_sumber_dana + '#view=FitH');
 				}
 				
 			}

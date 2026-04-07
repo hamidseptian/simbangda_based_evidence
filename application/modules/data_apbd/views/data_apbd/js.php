@@ -280,7 +280,7 @@
 	}
 
 
-	function input_anggaran(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pengelompokan, lakukan_pergeseran, pagu_berubah, pergeseran_ke_saat_ini, pagu_berubah_pada_pergeseran_ke)
+	function input_anggaran(kode_rekening_sub_kegiatan,tahap, tahun, pengelompokan)
 	{
 		$('#modal_input_anggaran').modal('show');
 		$('.form-control').removeClass('is-valid')
@@ -293,11 +293,11 @@
 		$('#kode_sub_kegiatan').val(kode_rekening_sub_kegiatan);
     	$('#tahap').val(tahap);
     	$('#tahun').val(tahun);
-    	$('#kode_bidang_urusan').val(kode_bidang_urusan);
-    	$('#kode_kegiatan').val(kode_kegiatan);
-    	$('#kode_program').val(kode_program);
-    	$('#pagu_berubah').val(pagu_berubah);
-    	$('#pergeseran_ke').val(pergeseran_ke_saat_ini);
+    	// $('#kode_bidang_urusan').val('');
+    	// $('#kode_kegiatan').val('');
+    	// $('#kode_program').val('');
+    	// $('#pagu_berubah').val(pagu_berubah);
+    	// $('#pergeseran_ke').val(pergeseran_ke_saat_ini);
 
 
     	if (lakukan_pergeseran=='') {
@@ -327,20 +327,22 @@
             type    : 'POST',
             data    : { 
             	kode_rekening_sub_kegiatan : kode_rekening_sub_kegiatan,
-            	kode_kegiatan : kode_kegiatan,
-            	kode_program : kode_program,
             	tahun : tahun,
             	tahap : tahap,
             },
             success : function(data)
             {
-            	console.log(data);	
             	$('#modal_input_anggaran').find('.kategori').html(data.data.kategori);
             	$('#modal_input_anggaran').find('.nama_sub_kegiatan').html(data.data.nama_sub_kegiatan);
             	$('#modal_input_anggaran').find('.kode_sub_kegiatan').html(kode_rekening_sub_kegiatan);
 
             	$('#modal_input_anggaran').find('.tahapan_apbd').html(data.data.tahapan);
             	$('#modal_input_anggaran').find('.pagu_tahapan_apbd').html(convert_to_rupiah(data.data.pagu_aktif));
+
+
+            	$('#modal_input_anggaran').find('#kode_kegiatan').val(data.data.kode_kegiatan);
+            	$('#modal_input_anggaran').find('#kode_program').val(data.data.kode_program);
+            	$('#modal_input_anggaran').find('#kode_bidang_urusan').val(data.data.kode_bidang_urusan);
                 if(data.status == true)
                 {
                 	
@@ -374,7 +376,8 @@
 
 
 function lakukan_pergeseran(ke, id_ski, kode_rekening_sub_kegiatan, tahap, tahun){
-
+	var pengelompokan = $('#modal_input_anggaran').find('#pengelompokan').val();
+	var nama_sub_kegiatan = $('#modal_input_anggaran').find('.nama_sub_kegiatan').html();
 		$.ajax(
         {
             url     : baseUrl('data_apbd/insert_pergeseran/'),
@@ -382,14 +385,16 @@ function lakukan_pergeseran(ke, id_ski, kode_rekening_sub_kegiatan, tahap, tahun
             type    : 'POST',
             data    : { 
             	id_ski : id_ski,
+            	nama_sub_kegiatan : nama_sub_kegiatan,
              
             	ke : ke,
             },
             success : function(data)
             {
+            	console.log(data.data.swal_caption);
             	if (data.status==true) {
-            	Swal.fire('Digeser','Digeser','success');
-            	
+            	Swal.fire('Digeser',data.data.swal_caption,'success');
+            	input_anggaran(kode_rekening_sub_kegiatan,tahap, tahun, pengelompokan)
 				var id_table_kegiatan = data.data.id_table_kegiatan;
 				$('#table-sub-kegiatan-'+ id_table_kegiatan).DataTable().ajax.reload(null, false);
             	}else{
@@ -400,6 +405,76 @@ function lakukan_pergeseran(ke, id_ski, kode_rekening_sub_kegiatan, tahap, tahun
             	Swal.fire('Error','error','error');
             }
         });
+}
+
+function edit_pergeseran_ke(ke){
+	$('#modal_input_anggaran').find('#edit_pergeseran_ke').html(`
+		<input type="" name="" class="form-control mb-1 currency" id="input_pergeseran_ke" onblur="if(value==''){value='0'}" >        
+		<button class="btn btn-info btn-sm" onclick="cancel_edit_pergeseran_ke('`+ke+`')"  type="button">Cancel</button> 
+		<button class="btn btn-info btn-sm" onclick="simpanedit_pergeseran_ke()" type="button">Simpan Perubahan Pergeseran</button> 
+
+`);
+}
+function cancel_edit_pergeseran_ke(ke){
+	$('#modal_input_anggaran').find('#edit_pergeseran_ke').html(`<button type="button" class="btn btn-outline-info btn-sm" onclick="edit_pergeseran_ke('`+ke+`')">Edit Pergeseran Ke</button></div>
+
+`);
+}
+
+function simpanedit_pergeseran_ke(){
+	var pergeseran_ke_sebelumnya = $('#modal_input_anggaran').find('#pergeseran_ke').val();
+	var input_pergeseran_ke = $('#modal_input_anggaran').find('#input_pergeseran_ke').val();
+	var kode_sub_kegiatan = $('#modal_input_anggaran').find('#kode_sub_kegiatan').val();
+	var kode_kegiatan = $('#modal_input_anggaran').find('#kode_kegiatan').val();
+	var tahap = $('#modal_input_anggaran').find('#tahap').val();
+	var tahun = $('#modal_input_anggaran').find('#tahun').val();
+	var pengelompokan = $('#modal_input_anggaran').find('#pengelompokan').val();
+
+	var nama_sub_kegiatan = $('#modal_input_anggaran').find('.nama_sub_kegiatan').html();
+
+
+	if (input_pergeseran_ke=='') {
+		Swal.fire('Error','Harap mengisi pergeseran ke','error');
+	}else{
+
+	
+		$.ajax(
+        {
+            url     : baseUrl('data_apbd/simpanedit_pergeseran_ke/'),
+            dataType: 'JSON',
+            type    : 'POST',
+            data    : { 
+				pergeseran_ke_sebelumnya : pergeseran_ke_sebelumnya , 
+				kode_sub_kegiatan : kode_sub_kegiatan , 
+				input_pergeseran_ke : input_pergeseran_ke , 
+				nama_sub_kegiatan : nama_sub_kegiatan , 
+				tahap : tahap , 
+				tahun : tahun , 
+            },
+            success : function(data)
+            {
+            	if (data.success==true) {
+	            	input_anggaran(kode_sub_kegiatan,tahap, tahun, pengelompokan);
+					
+					let id_table_sub_kegiatan 		= kode_kegiatan.split('.').join("-");
+							show_sub_kegiatan_apbd_instansi(id_table_sub_kegiatan);
+
+            		Swal.fire('Disimpan',data.swal_caption,'success');
+	            }else{
+            		Swal.fire('Error','Error','error');
+
+	            }
+            	
+            }, 
+            error : function(){
+            	alert('ee');
+            }
+        });
+
+	}
+
+
+
 }
 
 
@@ -446,7 +521,6 @@ function lakukan_pergeseran(ke, id_ski, kode_rekening_sub_kegiatan, tahap, tahun
             },
             success : function(data)
             {
-            	console.log(data);
             	$('#modal_input_anggaran').find('.kategori').html(data.data.kategori);
             	$('#modal_input_anggaran').find('.nama_sub_kegiatan').html(data.data.nama_sub_kegiatan);
             	$('#modal_input_anggaran').find('.kode_sub_kegiatan').html(kode_rekening_sub_kegiatan);
@@ -827,7 +901,6 @@ function lakukan_pergeseran(ke, id_ski, kode_rekening_sub_kegiatan, tahap, tahun
 		let id_pptk 	= $('#id_pptk').val();
 		//let id_table 	= $('#kode_rekening_kegiatan').val().split('.').join('-');
 		var formdata = $('#form_anggaran_sub_kegiatan').serialize();
-		console.log(formdata);
 		$('.form-control').removeClass('is-valid')
 						  .removeClass('is-invalid');
         $('.text-danger').remove();
@@ -1121,7 +1194,6 @@ function bulan(x) {
 function get_target(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu)
 	{	
 		var show_pagu = pagu==''? 0: pagu;
-		console.log(kode_rekening_sub_kegiatan);
 		$('#modal-target').modal('show');
 		$('.form-control').removeClass('is-valid')
 						  .removeClass('is-invalid');
@@ -1231,7 +1303,6 @@ function get_target_pergeseran(kode_rekening_sub_kegiatan, kode_kegiatan, kode_p
 	 
         $('.text-danger').remove();
         
-		
 
 		$('#modal-target').find('#kode_sub_kegiatan').val(kode_rekening_sub_kegiatan);
     	$('#modal-target').find('#tahap').val(tahap);
@@ -1358,7 +1429,6 @@ function get_target_pergeseran(kode_rekening_sub_kegiatan, kode_kegiatan, kode_p
 
 
 				if (data.status == true) {
-					console.log(data.data.id_jenis_sumber_dana);
 					$('#pad').val(data.data.pad);
 					$('#dau').val(data.data.dau);
 					$('#dak').val(data.data.dak);
@@ -1382,7 +1452,6 @@ function get_target_pergeseran(kode_rekening_sub_kegiatan, kode_kegiatan, kode_p
 
 		$('#modal-sumber_dana').find('#id_jenis_sumber_dana').change(function(){
 				var id_jenis_sumber_dana = $('#modal-sumber_dana').find('#id_jenis_sumber_dana').val();
-				console.log(id_jenis_sumber_dana);
 				if (id_jenis_sumber_dana=='Lainnya') {
 					$('#modal-sumber_dana').find('#form_nama_sumber_dana').show();
 
@@ -1452,7 +1521,6 @@ function get_target_pergeseran(kode_rekening_sub_kegiatan, kode_kegiatan, kode_p
 			            `);
 
 					$.each(data.instansi_teknis, function(k,v){
-							// console.log(v.jenis_sub_kegiatan);
 						$('#modal-ski_teknis').find('#id_instansi_teknis').append(`
 	                                 <option value="`+v.id_instansi_pembantu_teknis+`">`+v.nama_instansi_teknis+`</option>
 	                                 `);
@@ -1467,7 +1535,6 @@ function get_target_pergeseran(kode_rekening_sub_kegiatan, kode_kegiatan, kode_p
 				}
 
 
-				console.log(data.instansi_teknis);
             	$('#modal-ski_teknis').find('#nama_sub_kegiatan').html(data.nama_sub_kegiatan);
             	$('#modal-ski_teknis').find('#kode_sub_kegiatan').html(kode_rekening_sub_kegiatan);
 
@@ -1486,7 +1553,6 @@ function get_target_pergeseran(kode_rekening_sub_kegiatan, kode_kegiatan, kode_p
                                 `);
 
 					$.each(data.data_teknis_tersimpan, function(k,v){
-						console.log(v);
 						// var onclick_hapus = hapus_sub_kegiatan_instansi(v.kode_sub_kegiatan,v.kode_kegiatan,v.kode_program,v.kode_tahap, v.tahun, 'gabungan') ; 
 					$('#modal-ski_teknis').find('#list_instansi_teknis').append(`
                                  <tr>
@@ -1686,7 +1752,6 @@ function edit_target_fisik_pergeseran(x) {
 		let tahap = $(x).attr('tahap');
 		let tahun = $(x).attr('tahun');
 		let pergeseran_ke = $(x).attr('pergeseran_ke');
-		console.log(pergeseran_ke);
 		
 		$(x).editable({
 			mode: 'inline',
@@ -2372,7 +2437,6 @@ function show_sub_kegiatan_apbd_instansi(id_table)
 								}
 							},
 							error : function(){
-								console.log('error');
 							}
 						});
 			
@@ -2547,7 +2611,6 @@ function show_sub_kegiatan_apbd_instansi(id_table)
 								}
 							},
 							error : function(){
-								console.log('error');
 							}
 						});
 			
@@ -2593,7 +2656,6 @@ function show_sub_kegiatan_apbd_instansi(id_table)
 								}
 							},
 							error : function(){
-								console.log('error');
 							}
 						});
 			
@@ -2638,7 +2700,6 @@ function show_sub_kegiatan_apbd_instansi(id_table)
 								}
 							},
 							error : function(){
-								console.log('error');
 							}
 						});
 			
@@ -3823,7 +3884,6 @@ function update_master_program() {
 
 				$('#show_data_sipd').html(data);
 				$('#tessss').html(data);
-				// console.log(data);
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				alert('e');

@@ -194,7 +194,7 @@ function nama_kota($id_kota)
 }
 function pilihan_nama_tahapan($kode)
 {
-	$tahap = [0=> '<span class="text-danger">Error</span>', 2=>'APBD AWAL',3=>'APBD Pergeseran',4=>'APBD PERUBAHAN'];
+	$tahap = [0=> '<span class="text-danger">Error</span>', 2=>'APBD AWAL',3=>'APBD PERGESERAN',4=>'APBD PERUBAHAN'];
 	
 
 	return $tahap[$kode];

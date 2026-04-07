@@ -17,7 +17,7 @@
                 </button>
             </div>
             <div class="modal-body">
-               
+            
                 <form id="form_anggaran_sub_kegiatan">
                 	<input type="hidden" name="pergeseran_ke" id="pergeseran_ke" value="">
                     <input type="hidden" name="pengelompokan" id="pengelompokan">

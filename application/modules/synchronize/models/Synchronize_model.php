@@ -97,21 +97,59 @@ class Synchronize_model extends CI_Model
 
 		return $sub_kegiatan;
 	}
+	
+
+
+	public function get_sub_kegiatan_new($id_instansi, $tahun, $tahap)
+	{	
+		
+		
+				if ($tahap==2) {
+			 //    	$sub_kegiatan = $this->db->query("SELECT ski.kode_program as kode_rekening_program, ski.kategori, ski.jenis_sub_kegiatan, ski.keterangan, ski.kode_kegiatan as kode_rekening_kegiatan, ski.kode_sub_kegiatan as kode_rekening_sub_kegiatan, ski.nama_sub_kegiatan,
+			 //    		total_anggaran_sub_kegiatan(ski.kode_sub_kegiatan,2, ski.id_instansi, ski.kode_kegiatan, ski.kode_program, ski.tahun) as pagu,
+			 //    		ski.kode_tahap, ski.pergeseran_ke, ski.id_instansi, ski.tahun, ski.tambahan_kode_sub_kegiatan, ski.input_by_tambahan_kode_sub_kegiatan, ski.id_instansi_pembantu_teknis, ski.status
+			 //    	 from sub_kegiatan_instansi ski where ski.id_instansi='$id_instansi' and ski.tahun='$tahun' and ski.kode_tahap = '2'");
+				// }elseif ($tahap==3) {
+			    	$sub_kegiatan = $this->db->query("SELECT kode_rekening_program, kategori, jenis_sub_kegiatan, keterangan, kode_rekening_kegiatan, kode_rekening_sub_kegiatan, pagu, nama_sub_kegiatan,
+			    	kode_tahap, pergeseran_ke, id_instansi, tahun ,tambahan_kode_sub_kegiatan,input_by_tambahan_kode_sub_kegiatan, id_instansi_pembantu_teknis, status, pergeseran_ke
+			    		from v_sub_kegiatan_apbd where id_instansi='$id_instansi' and tahun='$tahun' and kode_tahap = '2'");
+				}else{
+			    	$sub_kegiatan = $this->db->query("SELECT kode_rekening_program, kategori, jenis_sub_kegiatan, keterangan, kode_rekening_kegiatan, kode_rekening_sub_kegiatan, pagu, nama_sub_kegiatan,
+			    	kode_tahap, pergeseran_ke, id_instansi, tahun , tambahan_kode_sub_kegiatan,input_by_tambahan_kode_sub_kegiatan, id_instansi_pembantu_teknis, status, pergeseran_ke
+			    		from v_sub_kegiatan_apbd where id_instansi='$id_instansi' and tahun='$tahun' and status = '1'");
+
+				}
+
+
+		return $sub_kegiatan;
+	}
 
 
 
 
-	public function get_target($id_instansi, $kode_rekening_sub_kegiatan,$tahap, $tahun)
+	public function get_target($id_instansi, $kode_rekening_sub_kegiatan,$tahap, $tahun, $pergeseran_ke)
 	{
 		// $tahun 				= $this->input->get('tahun');
 		// $tahap 				= $this->input->get('tahap');
 
-		$where =  [
-			'id_instansi' => $id_instansi,
-			'kode_tahap' => $tahap,
-			'tahun' => $tahun,
-			'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan
-		];
+		if ($pergeseran_ke!=='' || $pergeseran_ke!=null) {
+			# code...
+			$where =  [
+				'id_instansi' => $id_instansi,
+				'kode_tahap' => $tahap,
+				'pergeseran_ke' => $pergeseran_ke,
+				'tahun' => $tahun,
+				'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan
+			];
+		}else{
+			$where =  [
+				'id_instansi' => $id_instansi,
+				'kode_tahap' => $tahap,
+				'tahun' => $tahun,
+				'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan
+			];
+
+		}
 
 
 			$this->db->select('kode_rekening_sub_kegiatan,target_fisik,target_keuangan,target_fisik_bulanan,target_keuangan_bulanan ');

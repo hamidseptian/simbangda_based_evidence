@@ -896,6 +896,24 @@ class Realisasi_akumulasi_model extends CI_Model
 			$this->db->select('kode_rekening_sub_kegiatan,				 target_fisik,target_keuangan,target_fisik_bulanan,target_keuangan_bulanan ');
 		return $this->db->get_where('target_apbd', $where);
 	}
+	public function get_target_pergeseran($id_instansi, $kode_rekening_sub_kegiatan, $pergeseran_ke, $bulan, $tahap, $tahun)
+	{
+		// $tahun 				= $this->input->get('tahun');
+		// $tahap 				= $this->input->get('tahap');
+
+		$where =  [
+			'id_instansi' => $id_instansi,
+			'kode_tahap' => $tahap,
+			'tahun' => $tahun,
+			'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan,
+			'bulan' => $bulan,
+			'pergeseran_ke' => $pergeseran_ke
+		];
+
+
+			$this->db->select('kode_rekening_sub_kegiatan,				 target_fisik,target_keuangan,target_fisik_bulanan,target_keuangan_bulanan ');
+		return $this->db->get_where('target_apbd', $where);
+	}
 
 	public function get_realisasi_keuangan($id_instansi, $kode_rekening_sub_kegiatan, $bulan, $ope, $tahun, $tahap)
 	{

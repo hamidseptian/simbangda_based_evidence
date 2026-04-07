@@ -1,8 +1,8 @@
 
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<script src="<?php echo base_url('assets/') ?>highchart/code/highcharts.js"></script>
+
+
 <script type="text/javascript">
 
 	var pesan_warning = `
@@ -29,7 +29,7 @@
 		    zoomType: 'xy'
 		  },
 		  title: {
-		    text: 'Perncapaian Total SKPD'
+		    text: 'Pencapaian Total SKPD'
 		  },
 		  subtitle: {
 		    text: 'Berdasarkan ' + kategori
@@ -594,7 +594,7 @@ pagu_realisasi();
 		}else{
 
 			$.ajax({
-					url: baseUrl('synchronize/synch_baru/' + tahun + '/' + tahapan_apbd + '/' + id_instansi),
+					url: baseUrl('synchronize/synch_baru_2026/' + tahun + '/' + tahapan_apbd + '/' + id_instansi),
 				type: 'GET',
 				dataType: 'JSON',
 				data: {

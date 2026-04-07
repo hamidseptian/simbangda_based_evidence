@@ -1654,6 +1654,7 @@ class Laporan extends MY_Controller {
 
         if ($kategori_penampilan_laporan=='rfk_akumulasi') {
 
+		    $sub_kegiatan = $this->db->query($id_instansi, $tahap, $tahun)->result();
 		    $program = $this->realisasi_akumulasi_model->get_program($id_instansi, $tahap, $tahun)->result();
 		    $data['program']=$program;
         	$judul_penampilan_laporan = "Laporan Realisasi Fisik Dan Keuangan<br>".$judul_laporan;
@@ -1666,6 +1667,9 @@ class Laporan extends MY_Controller {
 			}
         	$mpdf->SetMargins(0, 0, 42);
         }
+
+
+
         elseif ($kategori_penampilan_laporan=='rfk_akumulasi_dengan_bobot') {
 
 		    $program = $this->realisasi_akumulasi_model->get_program($id_instansi, $tahap, $tahun)->result();
@@ -1810,6 +1814,148 @@ class Laporan extends MY_Controller {
 		    $mpdf->SetMargins(0, 0, 42);
 
         }
+         $data['judul_laporan']=$judul_penampilan_laporan;
+	    $header =  $this->load->view('laporan/pdf/realisasi_akumulasi/header', $data, true);
+	    $footer =  $this->load->view('laporan/pdf/realisasi_akumulasi/footer', $data, true);
+
+
+		$mpdf->SetHTMLHeader($header);
+		$mpdf->SetHTMLFooter($footer);
+		$mpdf->WriteHTML($html);
+		
+		$mpdf->Output($nama_instansi.' - '.$judul_laporan.' - '.str_replace(':', '.', $tanggal_penarikan).'.pdf', 'I');
+	}
+
+
+	public function pdf_laporan_realisasi_akumulasi_new()
+	{
+		$mpdf = new \Mpdf\Mpdf([
+		    'mode' => 'utf-8',
+		    'format' => 'Legal',
+		    'orientation' => 'L',
+
+			'margin_left' => 8,    	// 15 margin_left
+			'margin_right' => 8,    	// 15 margin right
+			'margin_header' => 7,     // 9 margin header
+			'margin_footer' => 7,    
+		    'tempDir' => '/tmp'
+		]);
+		$data['keuangan']=$this->realisasi_keuangan_model;
+
+        $data_apbd_model   = $this->data_apbd_model;
+
+		// $mpdf->setFooter('Page {PAGENO}');
+		global $id_instansi;
+		global $kategori;
+		global $bulan;
+
+		if ($this->input->get('id_opd')=='semua_opd') {
+			$id_instansi 	= 'semua_opd';
+			# code...
+		}else{
+			$id_instansi 	= sbe_crypt($this->input->get('id_opd'), 'D');
+
+		}
+
+		$identitas = $this->db->get('identitas')->row_array();
+    // $id_instansi = 12;
+		$kategori_penampilan_laporan 	= $this->input->get('kategori_penampilan_data');
+		$kategori 		= $this->input->get('kategori');
+		$bulan 				= $this->input->get('bulan');
+		$tahun 				= $this->input->get('tahun');
+		$id_instansi_pembantu 				= $this->input->get('id_instansi_pembantu');
+		$tahap 				= $this->input->get('tahap');
+		$jenis_sumber_dana 				= $this->input->get('jenis_sumber_dana');
+		switch ($kategori) {
+			case 'akumulasi':
+				$ope = '<=';
+				$judul_laporan = "Realisasi  sampai dengan bulan ".bulan_global($bulan);
+				break;
+			default:
+				$ope = '=';
+				$judul_laporan = "Realisasi  bulan ".bulan_global($bulan);
+				break;
+		}
+
+
+		  $master_program = $this->db->query("SELECT kode_program, nama_program from master_program")->result_array();
+		  $kumpul_master_program = [];
+		  foreach ($master_program as $k => $v) {
+		  	$kumpul_master_program[$v['kode_program']] = $v['nama_program'];
+		  }
+
+		  $master_kegiatan = $this->db->query("SELECT kode_kegiatan, nama_kegiatan from master_kegiatan")->result_array();
+		  $kumpul_master_kegiatan = [];
+		  foreach ($master_kegiatan as $k => $v) {
+		  	$kumpul_master_kegiatan[$v['kode_kegiatan']] = $v['nama_kegiatan'];
+		  }
+
+	    $data['master_program']=$kumpul_master_program;
+	    $data['master_kegiatan']=$kumpul_master_kegiatan;
+
+
+	    $data['identitas']=$identitas;
+	    $data['ope']=$ope;
+	    $data['kategori']=$kategori;
+	    $data['bulan']=$bulan;
+	    $data['nama_tahap']=pilihan_nama_tahapan($tahap);
+	    $data['kode_tahap']=$tahap;
+	    $data['tahun']=$tahun;
+	    $data['id_instansi']=$id_instansi;
+	    $data['id_instansi_pembantu']=$id_instansi_pembantu;
+	    $nama_instansi = $this->sbe_nama_instansi($id_instansi);
+	   
+	    $data['title']=$judul_laporan.' '.$nama_instansi;
+	    $data['nama_instansi']=$nama_instansi;
+	    if ($tahap=='3') {
+		    $data['grafik'] = $this->db->get_where('grafik',['id_instansi'=>$id_instansi, 'bulan'=>$bulan,'tahun'=>$tahun,'kode_tahap'=>2])->row_array();
+	    	# code...
+	    }else{
+		    $data['grafik'] = $this->db->get_where('grafik',['id_instansi'=>$id_instansi, 'bulan'=>$bulan,'tahun'=>$tahun,'kode_tahap'=>$tahap])->row_array();
+
+	    }
+
+	    $tanggal_penarikan = date('d').' '.bulan_global(date('n')).' '.date('Y').' - '.date('H:i:s');
+        $data['tanggal_penarikan'] = $tanggal_penarikan ;
+
+        // $data['grafik']=$grafik;
+
+        if ($kategori_penampilan_laporan=='rfk_akumulasi') {
+
+        	$judul_penampilan_laporan = "Laporan Realisasi Fisik Dan Keuangan<br>".$judul_laporan;
+		    // $html =  $this->load->view('laporan/pdf/realisasi_akumulasi/content_rfk_akumulasi_dengan_bobot.php', $data, true);
+		    // $html =  $this->load->view('laporan/pdf/realisasi_akumulasi/content_rfk_akumulasi', $data, true);
+			if($tahun <=2022){
+			    $program = $this->realisasi_akumulasi_model->get_program($id_instansi, $tahap, $tahun)->result();
+			    $data['program']=$program;
+				$html =  $this->load->view('laporan/pdf/realisasi_akumulasi/content_rfk_akumulasi', $data, true);
+			}else{
+				if ($tahap==2) {
+			    	$sub_kegiatan = $this->db->query("SELECT ski.kode_program as kode_rekening_program, ski.kategori, ski.jenis_sub_kegiatan, ski.keterangan, ski.kode_kegiatan as kode_rekening_kegiatan, ski.kode_sub_kegiatan as kode_rekening_sub_kegiatan, ski.nama_sub_kegiatan,
+			    		total_anggaran_sub_kegiatan(ski.kode_sub_kegiatan,2, ski.id_instansi, ski.kode_kegiatan, ski.kode_program, ski.tahun) as pagu,
+			    		ski.kode_tahap, ski.pergeseran_ke, ski.id_instansi, ski.tahun
+			    	 from sub_kegiatan_instansi ski where ski.id_instansi='$id_instansi' and ski.tahun='$tahun' and ski.kode_tahap = '2'")->result_array();
+				}elseif ($tahap==3) {
+			    	$sub_kegiatan = $this->db->query("SELECT kode_rekening_program, kategori, jenis_sub_kegiatan, keterangan, kode_rekening_kegiatan, kode_rekening_sub_kegiatan, pagu, nama_sub_kegiatan,
+			    	kode_tahap, pergeseran_ke, id_instansi, tahun 
+			    		from v_sub_kegiatan_apbd where id_instansi='$id_instansi' and tahun='$tahun' and kode_tahap = '2'")->result_array();
+				}else{
+			    	$sub_kegiatan = $this->db->query("SELECT kode_rekening_program, kategori, jenis_sub_kegiatan, keterangan, kode_rekening_kegiatan, kode_rekening_sub_kegiatan, pagu, nama_sub_kegiatan,
+			    	kode_tahap, pergeseran_ke, id_instansi, tahun 
+			    		from v_sub_kegiatan_apbd where id_instansi='$id_instansi' and tahun='$tahun' and status = '1'")->result_array();
+
+				}
+				$total_pagu_opd = 0;
+				foreach ($sub_kegiatan as $k_sk => $v_sk) {
+					$total_pagu_opd +=$v_sk['pagu'];
+				}
+			    $data['sub_kegiatan'] = $sub_kegiatan;
+			    $data['pagu_skpd'] = $total_pagu_opd;
+				$html =  $this->load->view('laporan/new_pdf/realisasi_akumulasi/content_rfk_akumulasi_rutin_sd_rk', $data, true);
+			}
+        	$mpdf->SetMargins(0, 0, 42);
+        }
+
          $data['judul_laporan']=$judul_penampilan_laporan;
 	    $header =  $this->load->view('laporan/pdf/realisasi_akumulasi/header', $data, true);
 	    $footer =  $this->load->view('laporan/pdf/realisasi_akumulasi/footer', $data, true);

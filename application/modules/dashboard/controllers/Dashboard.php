@@ -272,6 +272,9 @@ class Dashboard extends MY_Controller
             $data['persentase_bbj_prog']        = $data['anggaran_apbd'] != 0 ? ROUND(($data['belanja_barang_jasa_prog'] / $data['anggaran_apbd']) * 100, 2) : 0;
             $data['persentase_bm_prog']         = $data['anggaran_apbd'] != 0 ? ROUND(($data['belanja_modal_prog'] / $data['anggaran_apbd']) * 100, 2) : 0;*/
             $page                               = 'dashboard/index';
+
+            $grafik = $this->db->query("SELECT id_grafik from grafik where id_instansi = '$id_instansi' and tahun = '$tahun' and kode_tahap='$tahap'")->num_rows();
+            $data['num_grafik']                       = $grafik;
             $data['link']                       = $this->router->fetch_class();
             $data['menu']                       = $this->load->view('layout/menu', $data, true);
             $data['extra_css']                  = $this->load->view('dashboard/css', $data, true);
