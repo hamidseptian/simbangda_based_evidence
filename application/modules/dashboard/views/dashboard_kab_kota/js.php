@@ -1,16 +1,5 @@
-<?php
 
-/**
- * Author     : Alfikri, M.Kom
- * Created By : Alfikri, M.Kom
- * E-Mail     : alfikri.name@gmail.com
- * No HP      : 081277337405
- */
-?>
-<!-- Chart -->
-<script src="https://code.highcharts.com/highcharts.src.js"></script>
-<!-- Export -->
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="<?php echo base_url('assets/') ?>highchart/code/highcharts.js"></script>
 <script>
 	var chart_fisik;
 	var chart_keuangan;

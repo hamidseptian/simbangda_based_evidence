@@ -700,10 +700,7 @@ $total_rf_semua += $jumlah_realisasi_rf_total ;
                                                         <td><?php echo round($nilai_rf_kota_ratarata,2) ?>%</td>
                                                     </tr>
                                                 </table>
-                                                <a href="javascript:void(0)" class="btn btn-info btn-sm"
-                                                    onclick="data_kab_kota_detail('<?php echo $v->id_kota ?>', '<?php echo htmlspecialchars($v->nama_kota, ENT_QUOTES) ?>', '<?php echo $v->logo ?>')">
-                                                    Read More
-                                                </a>
+                                          
 
 
 
@@ -1212,67 +1209,7 @@ foreach ($q_pengunjungonline->row_array() as $k => $v) {
         <!--COMPONENTS-->
 
         <!--BlockUI -->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/blockui.js"></script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/blockui.js">
-        </script>
-
-        <!--Calendar -->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/calendar.js"></script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/calendar.js">
-        </script>
-
-        <!--Slick Carousel -->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/carousel-slider.js">
-        </script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/carousel-slider.js">
-        </script>
-
-        <!--Circle Progress -->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/circle-progress.js">
-        </script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/circle-progress.js">
-        </script>
-
-        <!--CountUp -->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/count-up.js"></script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/count-up.js">
-        </script>
-
-        <!--Cropper -->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/cropper.js"></script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/image-crop.js">
-        </script>
-
-        <!--Maps -->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/gmaps.js"></script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/jvectormap.js"></script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/maps-word-map.js">
-        </script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/maps.js"></script>
-
-        <!--Guided Tours -->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/guided-tours.js">
-        </script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/guided-tours.js">
-        </script>
-
-        <!--Ladda Loading Buttons -->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/ladda-loading.js">
-        </script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/spin.js"></script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/ladda-loading.js">
-        </script>
-
-        <!--Rating -->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/rating.js"></script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/rating.js">
-        </script>
-
-        <!--Perfect Scrollbar -->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/scrollbar.js"></script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/scrollbar.js">
+     
         </script>
 
         <!--Toastr-->
@@ -1284,26 +1221,6 @@ foreach ($q_pengunjungonline->row_array() as $k => $v) {
         <!--SweetAlert2-->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
         <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/sweet-alerts.js">
-        </script>
-
-        <!--Tree View -->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/treeview.js"></script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/treeview.js">
-        </script>
-
-
-        <!--Bootstrap Tables-->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/tables.js"></script>
-
-        <!--Tables Init-->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/tables.js">
-        </script>
-
-
-
-
-        <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-
 
 
         <script>

@@ -141,7 +141,7 @@ function anggaran_instansi_kab_kota()
 
 
 
-	function input_pagu_instansi(id_instansi, tahap, )
+	function input_pagu_instansi(id_instansi, tahap, pergeseran_ke)
 	{
 		$('#modal_input_anggaran').modal('show');
 		$('.form-control').removeClass('is-valid')
@@ -165,6 +165,7 @@ function anggaran_instansi_kab_kota()
             data    : { 
             	
             	id_instansi : id_instansi,
+            	pergeseran_ke : pergeseran_ke,
             	tahap : tahap
             },
             success : function(data)
@@ -191,6 +192,9 @@ function anggaran_instansi_kab_kota()
                 	$('#btt').val(data.data.btt);
                 	$('#bt_bbh').val(data.data.bt_bbh);
                 	$('#bt_bbk').val(data.data.bt_bbk);
+                	$('#pergeseran_ke').val(pergeseran_ke);
+                	$('.tahapan').html(data.data.caption_apbd);
+                	$('.show_pagu').html(data.data.pagu_total);
                 }
                 
                 	data.data.rea_bo ==1 ? $('#rea_bo').attr('checked','checked') : $('#rea_bo').removeAttr('checked');
@@ -207,6 +211,37 @@ function anggaran_instansi_kab_kota()
 	}
 
 
+
+function lakukan_pergeseran(id_aikk){
+	var pengelompokan = $('#modal_input_anggaran').find('#pengelompokan').val();
+	var skpd = $('#modal_input_anggaran').find('.instansi').html();
+		$.ajax(
+        {
+            url     : baseUrl('data_apbd_kab_kota/insert_pergeseran/'),
+            dataType: 'JSON',
+            type    : 'POST',
+            data    : { 
+            	id_aikk : id_aikk,
+            	skpd : skpd,
+             
+            },
+            success : function(data)
+            {
+            	console.log(data.data.id_instansi);
+            	if (data.status==true) {
+            	Swal.fire('Digeser',data.data.swal_caption,'success');
+            	// input_anggaran(kode_rekening_sub_kegiatan,tahap, tahun, pengelompokan)
+            	 input_pagu_instansi(data.data.id_instansi, data.data.tahap, 1)
+				$('#table-instansi').DataTable().ajax.reload(null, false);
+            	}else{
+            	Swal.fire('Error','Terjadi kesalahan','error');
+            	}
+            	
+            }, error : function(){
+            	Swal.fire('Error','error','error');
+            }
+        });
+}
 
 
 function get_target_kab_kota(nama_instansi, id_instansi, id_kota, tahap, tahun, pagu)

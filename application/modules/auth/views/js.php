@@ -36,7 +36,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 		$('#btn-signin').html('Loading....');
 		$.ajax({
-			url		: baseUrl('auth/login'),
+			url		: '<?php echo base_url() ?>auth/login',
 			type	: "POST",
 			data 	: $(this).serialize(),
 			cache 	: false,
@@ -60,7 +60,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					$(".notifikasi").html('<div class="alert alert-success alert-dismissible" id="notif">'+'<span></span>'+output.message)
 					$(".login-box").slideUp(500,function(){
 		              setTimeout(function(){
-		                window.location.href = baseUrl('dashboard');
+		                window.location.href = '<?php echo base_url() ?>dashboard';
 		              });
 		            });
 				}

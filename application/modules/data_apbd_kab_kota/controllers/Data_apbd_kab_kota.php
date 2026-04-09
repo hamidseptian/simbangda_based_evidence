@@ -104,7 +104,7 @@ class Data_apbd_kab_kota extends MY_Controller
         $data = [];
          if ($key) {
             $q_instansi = $this->db->query("SELECT mi.nama_instansi, mi.id_instansi, 
-                    total_anggaran_instansi_kab_kota_bo(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_bo,total_anggaran_instansi_kab_kota_bm(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_bm,total_anggaran_instansi_kab_kota_btt(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_btt,total_anggaran_instansi_kab_kota_bt(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_bt,total_anggaran_instansi_kab_kota_semua(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_total
+                  
 
                     from master_instansi_kab_kota mi where mi.kategori='OPD' and mi.id_kota='$id_kota' and 
                     CASE 
@@ -117,7 +117,7 @@ class Data_apbd_kab_kota extends MY_Controller
             
          }else{
             $q_instansi = $this->db->query("SELECT nama_instansi, id_instansi 
-                    ,total_anggaran_instansi_kab_kota_bo(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_bo,total_anggaran_instansi_kab_kota_bm(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_bm,total_anggaran_instansi_kab_kota_btt(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_btt,total_anggaran_instansi_kab_kota_bt(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_bt,total_anggaran_instansi_kab_kota_semua(mi.id_instansi, $tahap , $tahun_anggaran) AS pagu_total
+                   
                     from master_instansi_kab_kota mi where mi.kategori='OPD' and mi.id_kota='$id_kota' and 
                     CASE 
                     WHEN is_active = '0' THEN  tmt_mulai < '$tgls' and (tmt_selesai >= '$tgls' or tmt_selesai = 'Sedang Aktif')
@@ -134,16 +134,31 @@ class Data_apbd_kab_kota extends MY_Controller
 
 
             foreach ($q_instansi as $k => $v) {
+
                 $id_instansi  = $v['id_instansi'];
+                $q_pagu = $this->db->query("SELECT  pergeseran_ke, bo_bp, bo_bbj, bo_bs, bo_bh, bo_bbs, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatl, bm_bmatb, btt, bt_bbh, bt_bbk from anggaran_instansi_kab_kota where id_instansi = '$id_instansi' and pergeseran_ke !='' and tahun = '$tahun_anggaran' and kode_tahap = '$tahap'");
+                if ($q_pagu->num_rows()>0 ) {
+                    $d_pagu = $q_pagu->row_array();
+                    $caption_apbd = pilihan_nama_tahapan($tahap).'<br>Pergeseran ke-'.$d_pagu['pergeseran_ke'];
+                    $pergeseran_ke = $d_pagu['pergeseran_ke'];
+
+                }else{
+                    $q_pagu_pergeseran = $this->db->query("SELECT  pergeseran_ke, bo_bp, bo_bbj, bo_bs, bo_bh, bo_bbs, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatl, bm_bmatb, btt, bt_bbh, bt_bbk from anggaran_instansi_kab_kota where id_instansi = '$id_instansi' and tahun = '$tahun_anggaran' and kode_tahap = '$tahap'");
+                    $d_pagu = $q_pagu_pergeseran->row_array();
+                    $caption_apbd = pilihan_nama_tahapan($tahap);
+                    $pergeseran_ke = '';
+
+                }
                 $row    = [];
                 $no++;
                 $row[]     = $no;
-                $pagu_bo =  $v['pagu_bo'] == '' ? 0 : $v['pagu_bo'];
-                $pagu_bm =  $v['pagu_bm'] == '' ? 0 : $v['pagu_bm'];
-                $pagu_btt =  $v['pagu_btt'] == '' ? 0 : $v['pagu_btt'];
-                $pagu_bt =  $v['pagu_bt'] == '' ? 0 : $v['pagu_bt'];
-                $pagu_total = $pagu_bo + $pagu_bm + $pagu_btt+$pagu_bt;
+                $pagu_bo = $d_pagu['bo_bp'] + $d_pagu['bo_bbj'] + $d_pagu['bo_bs'] + $d_pagu['bo_bh'] + $d_pagu['bo_bbs'];
+                $pagu_bm = $d_pagu['bm_bmt'] + $d_pagu['bm_bmpm'] + $d_pagu['bm_bmgb'] + $d_pagu['bm_bmjji'] + $d_pagu['bm_bmatl'] + $d_pagu['bm_bmatb'];
+                $pagu_btt =$d_pagu['btt'] ;
+                $pagu_bt = $d_pagu['bt_bbh'] + $d_pagu['bt_bbk'] ;
+                $pagu_total =  $pagu_bo + $pagu_bm + $pagu_btt+$pagu_bt;
                 $row[]     = $v['nama_instansi'];
+                $row[]     = $caption_apbd;
                 $row[]     = number_format($pagu_bo);
                 $row[]     = number_format($pagu_bm);
                 $row[]     = number_format($pagu_btt);
@@ -157,7 +172,7 @@ class Data_apbd_kab_kota extends MY_Controller
 
 
 
-                $tombol_edit = '<button class="btn btn-outline-info btn-xs"  title="Input / Edit Pagu Instansi '.$v['nama_instansi'].'"  onclick="input_pagu_instansi('."'".sbe_crypt($v['id_instansi'], 'E')."'".','.$tahap.')"><i class="fas fa-money-bill"></i></button>';
+                $tombol_edit = '<button class="btn btn-outline-info btn-xs"  title="Input / Edit Pagu Instansi '.$v['nama_instansi'].'"  onclick="input_pagu_instansi('."'".sbe_crypt($v['id_instansi'], 'E')."'".','.$tahap.','.$pergeseran_ke.')"><i class="fas fa-money-bill"></i></button>';
 
                 $tombol_copy = ' <button class="btn btn-outline-info btn-xs"  title="Copu Pagu  APBD AWAL Instansi '.$v['nama_instansi'].'"  onclick="copy_pagu_instansi('."'".sbe_crypt($v['id_instansi'], 'E')."'".','.$tahap.', '."'".$v['nama_instansi']."'".')"><i class="fas fa-copy"></i></button>';
 
@@ -182,73 +197,7 @@ class Data_apbd_kab_kota extends MY_Controller
             }
 
 
-            // $column_order   = ['', 'nama_instansi'];
-            // $column_search  = ['nama_instansi','kode_opd'];
-            // $order          = ['nama_instansi' => 'ASC'];
-            // $list           = $this->datatables_model->get_datatables('master_instansi_kab_kota', $column_order, $column_search, $order, $where);
-            // $data           = [];
-            // $no             = $_POST['start'];
-            // $status = ['Tidak Aktif','Aktif'];
-            // foreach ($list as $lists) {
-            //     $no++;
-            //     $id_instansi  = $lists->id_instansi;
-            //     $q_pagu = $this->db->query("SELECT pagu_bo,pagu_bm,pagu_btt,pagu_bt from v_instansi_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun='$tahun_anggaran' and is_active = 1");
-            //     $d_pagu = $q_pagu->row();
-            //     $j_pagu = $q_pagu->num_rows();
-            //     $pagu_bo = $j_pagu == 0 ? 0 : $d_pagu->pagu_bo ;
-            //     $pagu_bm = $j_pagu == 0 ? 0 : $d_pagu->pagu_bm ;
-            //     $pagu_btt = $j_pagu == 0 ? 0 : $d_pagu->pagu_btt ;
-            //     $pagu_bt = $j_pagu == 0 ? 0 : $d_pagu->pagu_bt ;
-            //     $pagu_total = $pagu_bo + $pagu_bm + $pagu_btt + $pagu_bt;
-
-            //     $row    = [];
-            //     $row[]     = $no;
-            //     $row[]  = $lists->nama_instansi;
-               
-            //     $row[]  = number_format($pagu_bo);
-            //     $row[]  = number_format($pagu_bm);
-            //     $row[]  = number_format($pagu_btt);
-            //     $row[]  = number_format($pagu_bt);
-            //     $row[]  = number_format($pagu_total);
-               
-
-            //    $onclick3 = "get_target_kab_kota('".$lists->nama_instansi."','".$lists->id_instansi."','".$lists->id_kota."','".tahapan_apbd()."','".tahun_anggaran()."','".$pagu_total."')";
-            // $tomboltarget = ' <button class="btn btn-outline-info btn-xs"  title="Input target realisasi  '.$lists->nama_instansi.'"  onclick="'.$onclick3.'"><i class="fas fa-crosshairs"></i></button> ';
-            // $tomboltarget_forbidden = ' <button class="btn btn-outline-danger btn-xs"  title="Input target realisasi  '.$lists->nama_instansi.'"  onclick="input_target_forbidden('."'".$lists->nama_instansi."'".')"><i class="fas fa-crosshairs"></i></button> ';
-
-
-
-            //     $tombol_edit = '<button class="btn btn-outline-info btn-xs"  title="Input / Edit Pagu Instansi '.$lists->nama_instansi.'"  onclick="input_pagu_instansi('."'".sbe_crypt($lists->id_instansi, 'E')."'".','.$tahap.')"><i class="fas fa-money-bill"></i></button>';
-
-            //     $tombol_copy = ' <button class="btn btn-outline-info btn-xs"  title="Copu Pagu  APBD AWAL Instansi '.$lists->nama_instansi.'"  onclick="copy_pagu_instansi('."'".sbe_crypt($lists->id_instansi, 'E')."'".','.$tahap.', '."'".$lists->nama_instansi."'".')"><i class="fas fa-copy"></i></button>';
-
-            //     if ($pagu_total >0) {
-            //         $show_tombol_target = $tomboltarget;
-            //     }else{
-            //         $show_tombol_target = $tomboltarget_forbidden;
-
-            //     }
-                
-            //     if ($tahap==4 && $j_pagu==0) {
-            //         $row[]  = $tombol_edit.$tombol_copy;
-            //         # code...
-            //     }else{
-            //         $row[]  = $tombol_edit.$show_tombol_target;
-
-            //     }
-
-
-            //     $data[] = $row;
-            // }
-
-            // $output = [
-            //     "draw"              => $_POST['draw'],
-            //     "recordsTotal"      => $this->datatables_model->count_all('master_instansi_kab_kota', $where),
-            //     "recordsFiltered"   => $this->datatables_model->count_filtered('master_instansi_kab_kota', $column_order, $column_search, $order, $where),
-            //     "data"              => $data,
-            // ];
-
-
+            
              $output = [
                 "draw"              => $_POST['draw'],
                 "recordsTotal"      => $count_data,//$this->datatables_model->count_all('master_instansi_kab_kota', $where),
@@ -280,18 +229,31 @@ class Data_apbd_kab_kota extends MY_Controller
            
             $id_instansi = sbe_crypt($this->input->post('id_instansi'),'D');
             $tahap = $this->input->post('tahap');
+            $pergeseran_ke = $this->input->post('pergeseran_ke');
             $tahun = tahun_anggaran();
-            $where = [ 'kode_tahap'=>$tahap,'tahun'=>$tahun,   'id_instansi' =>$id_instansi];
+            if ($pergeseran_ke) {
+                $where = [ 'kode_tahap'=>$tahap,'tahun'=>$tahun,'id_instansi' =>$id_instansi ,'pergeseran_ke' =>$pergeseran_ke];
+                $pagu    = $this->db->get_where('anggaran_instansi_kab_kota', $where);
+                $value = $pagu->row(); 
+                $caption_apbd =  "APBD AWAL".'<br>Pergeseran Ke-'.$pergeseran_ke.'<br><button type="button" class="btn btn-outline-info btn-sm" onclick="edit_pergeseran('."'1'".','."'".$value->id_anggaran_instansi_kab_kota ."'".')">Edit Pergeseran Ke</button>';
+                # code...
+            }else{
+                $where = ['kode_tahap'=>$tahap,'tahun'=>$tahun,   'id_instansi' =>$id_instansi ];
+                $pagu    = $this->db->get_where('anggaran_instansi_kab_kota', $where);
+                $value = $pagu->row(); 
+                $caption_apbd =  "APBD AWAL".'<br>'.'<button type="button" class="btn btn-outline-info btn-sm" onclick="lakukan_pergeseran('."'".$value->id_anggaran_instansi_kab_kota ."'".')">Lakukan Pergeseran</button>';
 
-            $pagu    = $this->db->get_where('anggaran_instansi_kab_kota', $where);
-            $identitas_instansi        = $this->db->query("SELECT * from v_instansi_kab_kota where id_instansi='$id_instansi'")->row();
+            }
+
+            $identitas_instansi        = $this->db->query("SELECT nama_instansi from v_instansi_kab_kota where id_instansi='$id_instansi'")->row();
                 $output['data']['nama_instansi']                  =  $identitas_instansi->nama_instansi ;
+                $output['data']['caption_apbd']                  =  $caption_apbd;
+                $pagu_total  = $value->bo_bp + $value->bo_bbj + $value->bo_bs + $value->bo_bh + $value->bo_bbs + $value->bm_bmt + $value->bm_bmpm + $value->bm_bmgb + $value->bm_bmjji + $value->bm_bmatl + $value->bm_bmatb + $value->btt + $value->bt_bbh + $value->bt_bbk ;
+                $output['data']['pagu_total']            = number_format($pagu_total) ;
     
 
 
-
-            if ($pagu->num_rows() > 0) {
-                foreach ($pagu->result() as $key => $value) {
+            
                     $output['data']['bo_bp']                  = $value->bo_bp;
                     $output['data']['bo_bbj']                  = $value->bo_bbj;
                     $output['data']['bo_bs']                  = $value->bo_bs;
@@ -310,20 +272,161 @@ class Data_apbd_kab_kota extends MY_Controller
                     $output['data']['rea_bm']                  = $value->realisasikan_bm ;
                     $output['data']['rea_btt']                  = $value->realisasikan_btt ;
                     $output['data']['rea_bt']                  = $value->realisasikan_bt ;
-                }
+                
 
                 $output['status'] = true;
-            }else{
+           
                   
                     $output['data']['rea_bo']                  = 0;
                     $output['data']['rea_bm']                  = 0;
                     $output['data']['rea_btt']                  = 0;
                     $output['data']['rea_bt']                  = 0;
-            }
+           
 
             echo json_encode($output);
         }
     }
+
+
+
+
+
+  public function insert_pergeseran()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        } else {
+            $output = [
+                'status'    => false,
+                'data'      => [],
+            ];
+
+            $id_aikk = $this->input->post('id_aikk');
+            $skpd = $this->input->post('skpd');
+         
+            // $ski = $this->db->get_where('anggaran_instansi_kab_kota', ['id_anggaran_instansi_kab_kota'=>$id_aikk])->row_array();
+            $anggaran_awal                 = $this->db->get_where('anggaran_instansi_kab_kota', ['id_anggaran_instansi_kab_kota'=>$id_aikk]);
+            $anggaran_apbd_awal = $anggaran_awal->row_array();
+          
+            $tahun = $anggaran_apbd_awal['tahun'];
+            $kode_tahap = $anggaran_apbd_awal['kode_tahap'];
+            $id_instansi = $anggaran_apbd_awal['id_instansi'];
+
+
+            $this->db->trans_begin();
+
+        
+
+
+            $where_awal = [
+                'kode_tahap' => 2,
+                'id_instansi' => $id_instansi,
+                'tahun'=>$tahun
+            ];
+
+
+
+            $target                 = $this->db->order_by('bulan', 'ASC')->get_where('target_apbd_kab_kota', $where_awal);
+            // $realisasi_keuangan          = $this->db->order_by('bulan', 'ASC')->get_where('realisasi_keuangan', $where_pagu_awal);
+
+
+            // var_dump($anggaran_apbd_awal);
+ $data_pagu = [
+                // 'kode_sub_kegiatan'=>$anggaran_apbd_awal['kode_sub_kegiatan'],
+                // 'kode_kegiatan'=>$anggaran_apbd_awal['kode_kegiatan'],
+                'id_provinsi'=>$anggaran_apbd_awal['id_provinsi'],
+                'id_kota'=>$anggaran_apbd_awal['id_kota'],
+
+                'id_instansi'=>$anggaran_apbd_awal['id_instansi'],
+                'kode_tahap'=>$kode_tahap,
+                'pergeseran_ke'=>1,
+                'bo_bp'=>$anggaran_apbd_awal['bo_bp'],
+                'bo_bbj'=>$anggaran_apbd_awal['bo_bbj'],
+                'bo_bs'=>$anggaran_apbd_awal['bo_bs'],
+                'bo_bh'=>$anggaran_apbd_awal['bo_bh'],
+                'bo_bbs'=>$anggaran_apbd_awal['bo_bbs'],
+                'bm_bmt'=>$anggaran_apbd_awal['bm_bmt'],
+                'bm_bmpm'=>$anggaran_apbd_awal['bm_bmpm'],
+                'bm_bmgb'=>$anggaran_apbd_awal['bm_bmgb'],
+                'bm_bmjji'=>$anggaran_apbd_awal['bm_bmjji'],
+                'bm_bmatl'=>$anggaran_apbd_awal['bm_bmatl'],
+                'bm_bmatb'=>$anggaran_apbd_awal['bm_bmatb'],
+                'btt'=>$anggaran_apbd_awal['btt'],
+                'bt_bbh'=>$anggaran_apbd_awal['bt_bbh'],
+                'bt_bbk'=>$anggaran_apbd_awal['bt_bbk'],
+                'realisasikan_bo'=>$anggaran_apbd_awal['realisasikan_bo'],
+                'realisasikan_bm'=>$anggaran_apbd_awal['realisasikan_bm'],
+                'realisasikan_btt'=>$anggaran_apbd_awal['realisasikan_btt'],
+                'realisasikan_bt'=>$anggaran_apbd_awal['realisasikan_bt'],
+                'tahun'=>$anggaran_apbd_awal['tahun'],
+                'created_on'=>timestamp(),
+                'created_by'=>id_user(),
+                'input_by '=>'Pengalihan Pergeseran',
+                // 'status '=>'1',
+               ];
+
+            $kumpul_target_baru = [];
+            foreach ($target->result_array() as $k => $v) {
+                 $data_target = [
+                    // 'kode_bidang_urusan'=>$v['kode_bidang_urusan'],
+                    // 'kode_rekening_program'=>$v['kode_rekening_program'],
+                    // 'kode_rekening_kegiatan'=>$v['kode_rekening_kegiatan'],
+
+                    'id_kota'=>$v['id_kota'],
+                    'bulan'=>$v['bulan'],
+                    'id_instansi'=>$v['id_instansi'],
+                    'kode_tahap'=>$kode_tahap,
+                    'pergeseran_ke'=>1,
+                    'target_fisik'=>$v['target_fisik'],
+                    'target_fisik_bulanan'=>$v['target_fisik_bulanan'],
+                    'target_keuangan'=>$v['target_keuangan'],
+                    'target_keuangan_bulanan'=>$v['target_keuangan_bulanan'],
+                    'tahun'=>$v['tahun'],
+                    'created_on'=>timestamp(),
+                'input_by '=>'Pengalihan Pergeseran',
+                    'created_by'=>$v['created_by'],
+                 
+                   ];
+                   array_push($kumpul_target_baru, $data_target);
+            }
+
+
+                $this->db->insert('anggaran_instansi_kab_kota', $data_pagu);
+                if ($target->num_rows()>0) {
+                    $this->db->insert_batch('target_apbd_kab_kota', $kumpul_target_baru);
+                }
+                // $this->db->update('sub_kegiatan_instansi', ['pergeseran_ke'=>$ke], ['id_sub_kegiatan_instansi'=>$id_ski]);
+
+
+
+
+
+            
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $output['status'] = false;
+            } else {
+                $this->db->trans_commit();
+                $output['data']['tahap'] = $kode_tahap;
+                $output['data']['id_instansi'] = sbe_crypt($id_instansi);
+                $output['data']['swal_caption'] = $skpd.' sudah dialihkan ke APBD pergeseran ke-1<br>Silahkan sesuaikan kembali Pagu dan target pada SKPD  ini';
+                $output['status'] = true;
+            }
+
+
+
+            // $output['data'] = $data_ski_baru ;
+
+
+            echo json_encode($output);
+        }
+    }
+
+
+
+
+
 
 
     public function get_anggaran_total_kab_kota()
@@ -449,7 +552,13 @@ class Data_apbd_kab_kota extends MY_Controller
                 $tahap = $this->input->post('tahap');
                 $tahun = tahun_anggaran();
                 $id_instansi = sbe_crypt($this->input->post('id_instansi'), 'D');
-                $where = ['kode_tahap'=>$tahap,   'id_instansi' => $id_instansi,  'tahun' => $tahun];
+                $pergeseran_ke = $this->input->post('pergeseran_ke');
+                if ($this->input->post('pergeseran_ke')) {
+                    $where = ['kode_tahap'=>$tahap,   'id_instansi' => $id_instansi,  'tahun' => $tahun, 'pergeseran_ke'=>$pergeseran_ke];
+                }else{
+                    $where = ['kode_tahap'=>$tahap,   'id_instansi' => $id_instansi,  'tahun' => $tahun];
+
+                }
 
             if ($validation->run($this)) {
                 

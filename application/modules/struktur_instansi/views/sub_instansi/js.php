@@ -7,19 +7,18 @@
 */
 ?>
 <!-- Datatables -->
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-<!-- Select2 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
-<!-- X-editable -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
+<script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>		
+<script src="<?php echo base_url() ?>assets/select2/select2.min.js"></script>
+
+
 <script>
 	let skala = 0.9;
 	let lebar = 0;
 
 	window.setTimeout("lebars()",1000);
 
-	$(document).on('ready', function(){
+	$(document).ready(function(){
 		var fetch_method = '<?php echo $fetch_method; ?>';
 		if (fetch_method=='daftar_sub_instansi') {
 		   	list_user('<?php echo tahun_anggaran() ?>','<?php echo tahapan_apbd() ?>');

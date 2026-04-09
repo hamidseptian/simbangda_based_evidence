@@ -30,7 +30,7 @@ $pilihan_bulan = [
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Input Anggaran <br><span class="instansi"></span></h5>
+                <h5 class="modal-title" id="exampleModalLabel">Detail Anggaran </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -38,9 +38,36 @@ $pilihan_bulan = [
             <div class="modal-body">
                
                 <form id="form_anggaran_sub_kegiatan">
+
+
+                    <div class="form-group">
+                        <table class="table">
+                            <tr>
+                                <td>SKPD </td> 
+                                <td>:</td>  
+                                <td class="instansi"></td>
+                            </tr>  
+                            <tr>
+                                <td>Tahapan APBD</td> 
+                                <td>:</td>  
+                                <td class="tahapan"></td>
+                            </tr>   
+                            <tr>
+                                <td>Pagu</td> 
+                                <td>:</td>  
+                                <td class="show_pagu"></td>
+                            </tr>  
+                          
+                        </table>
+                    </div>
+
+
+
+
                     <input type="hidden" name="id_instansi" id="id_instansi">
 
                     <input type="hidden" name="tahap" id="tahap">
+                    <input type="hidden" name="pergeseran_ke" id="pergeseran_ke">
                         
                     <div class="form-group">
                         <table class="table">

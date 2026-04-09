@@ -103,6 +103,7 @@
                             <tr>
                                 <th style="text-align: center;" width="1%">No</th>
                                 <th style="text-align: center;">SKPD</th>
+                                <th style="text-align: center;">Tahapan APBD</th>
                                 <th style="text-align: center;">Belanja Operasi</th>
                                 <th style="text-align: center;">Melanja Modal</th>
                                 <th style="text-align: center;">Belanja Tidak Terduga</th>

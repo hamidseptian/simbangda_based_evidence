@@ -2371,7 +2371,7 @@ class Laporan extends MY_Controller {
 		$tahun_anggaran_aktif = tahun_anggaran();
 		$config =  $this->config_model->config_kab_kota($id_provinsi, $id_kota)->row();
 		// $tahap = $tahap = config_kab_kota()->tahapan_apbd;
-		$nama_tahap = [2=>'APBD AWAL',4=>'APBD PERUBAHAN'];
+		$nama_tahap = [2=>'APBD AWAL',3=>'APBD PERGESERAN',4=>'APBD PERUBAHAN'];
 		$nama_kota = $this->realisasi_per_kab_kota->nama_kota($id_kota)->row()->nama_kota;
 		$tahap = $this->input->get('tahap');
 		switch ($kategori) {
@@ -2404,21 +2404,21 @@ class Laporan extends MY_Controller {
         $data['tanggal_penarikan'] = $tanggal_penarikan ;
 	  	
 	  	if ($penampilan_data=='rfk_jenis_belanja') {
-		    $html =  $this->load->view('laporan/pdf/realisasi_per_kab_kota/content_laporan_per_jenis_belanja', $data, true);
+		    $html =  $this->load->view('laporan/new_pdf/realisasi_per_kab_kota/content_laporan_per_jenis_belanja', $data, true);
 	  			  	}
 	  	// trfkd = target dan realisasi keuangan dengan deviasi
 	  	elseif ($penampilan_data=='trfkd') {
-		    $html =  $this->load->view('laporan/pdf/realisasi_per_kab_kota/content_laporan_dengan_deviasi', $data, true);
+		    $html =  $this->load->view('laporan/new_pdf/realisasi_per_kab_kota/content_laporan_dengan_deviasi', $data, true);
 	  	}
 	  	// trfkd = target dan realisasi keuangan dengan deviasi
 	  	elseif ($penampilan_data=='rea_lra') {
-		    $html =  $this->load->view('laporan/pdf/realisasi_per_kab_kota/content_laporan_dengan_lra', $data, true);
+		    $html =  $this->load->view('laporan/new_pdf/realisasi_per_kab_kota/content_laporan_dengan_lra', $data, true);
 	  	}else{
-		    $html =  $this->load->view('laporan/pdf/realisasi_per_kab_kota/error', $data, true);
+		    $html =  $this->load->view('laporan/new_pdf/realisasi_per_kab_kota/error', $data, true);
 	  	}
 
-	    $header =  $this->load->view('laporan/pdf/realisasi_per_kab_kota/header', $data, true);
-	    $footer =  $this->load->view('laporan/pdf/realisasi_per_kab_kota/footer', $data, true);
+	    $header =  $this->load->view('laporan/new_pdf/realisasi_per_kab_kota/header', $data, true);
+	    $footer =  $this->load->view('laporan/new_pdf/realisasi_per_kab_kota/footer', $data, true);
 
 	    $mpdf->SetMargins(0, 0, 42);
 

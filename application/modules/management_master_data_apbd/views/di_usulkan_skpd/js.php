@@ -1,21 +1,5 @@
-<?php
-/**
-	* Author     : Alfikri, M.Kom
-	* Created By : Alfikri, M.Kom
-	* E-Mail     : alfikri.name@gmail.com
-	* No HP      : 081277337405
-*/
-	// echo $controller;
-?>
 
-<!-- Datatables -->
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-<!-- Select2 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
-<!-- Leaflet -->
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/leaflet/leaflet.js"></script>
+<script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <script>
 	let status_show_kegiatan 		= 'collapse';
 	let status_show_kegiatan_all 		= 'collapse';

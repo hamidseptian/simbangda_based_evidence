@@ -34,6 +34,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // 	'filename'	=> 'security.php',
 // 	'filepath' 	=> 'hooks'
 // );
+// $hook['post_controller_constructor'][] = array(
+//     "class"    => "Cors",
+//     "function" => "handle",
+//     "filename" => "Cors.php",
+//     "filepath" => "hooks"
+// );
+
 
 $hook['post_controller_constructor'][] = array(
     "class"    => "Check_session",// any name of class that you want
@@ -41,3 +48,4 @@ $hook['post_controller_constructor'][] = array(
     "filename" => "Check_session.php",// where the class declared
     "filepath" => "hooks"// this is location inside application folder
 );
+
