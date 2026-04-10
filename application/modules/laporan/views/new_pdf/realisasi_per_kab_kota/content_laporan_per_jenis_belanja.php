@@ -316,7 +316,7 @@ table td, th {
 
 
 
-    $pagu_bo = $j_pagu == 0 ? 0 : $d_pagu->bo_bp + $d_pagu->bo_bp + $d_pagu->bo_bp + $d_pagu->bo_bp + $d_pagu->bo_bp ;
+    $pagu_bo = $j_pagu == 0 ? 0 : $d_pagu->bo_bp + $d_pagu->bo_bbj + $d_pagu->bo_bs + $d_pagu->bo_bh + $d_pagu->bo_bbs ;
     $pagu_bm = $j_pagu == 0 ? 0 : $d_pagu->bm_bmt +$d_pagu->bm_bmpm +$d_pagu->bm_bmgb +$d_pagu->bm_bmjji +$d_pagu->bm_bmatl +$d_pagu->bm_bmatb  ;
     $pagu_btt = $j_pagu == 0 ? 0 : $d_pagu->btt ;
     $pagu_bt = $j_pagu == 0 ? 0 : $d_pagu->bt_bbh + $d_pagu->bt_bbk  ;
