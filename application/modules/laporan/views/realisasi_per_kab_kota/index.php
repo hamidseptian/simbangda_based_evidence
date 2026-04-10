@@ -40,6 +40,7 @@
 					<select name="tahap" id="tahap" class="form-control">
 						<option></option>
 						<option value="2" <?php if(tahapan_apbd()==2){echo "selected";} ?>>APBD Awal</option>
+						<option value="3">APBD Pergeseran</option>
 							<option value="4" <?php if(tahapan_apbd()==4){echo "selected";} ?>>APBD Perubahan</option>
 						
 					</select>

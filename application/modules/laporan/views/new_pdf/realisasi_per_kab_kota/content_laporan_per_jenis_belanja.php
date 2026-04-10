@@ -211,7 +211,6 @@ table td, th {
 
 
   foreach ($skpd as $k => $v) { 
-    $total_skpd +=1;
     $id_instansi  = $v->id_instansi;
     if ($tahap==2) {
       $tahap_realisasi = 2; 
