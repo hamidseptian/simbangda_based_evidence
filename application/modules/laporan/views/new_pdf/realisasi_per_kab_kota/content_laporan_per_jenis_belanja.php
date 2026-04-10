@@ -256,7 +256,7 @@ table td, th {
     // $d_pagu = $q_pagu->  row();
 
 
-  $pagu_bo = $j_pagu == 0 ? 0 : $d_pagu->bo_bp + $d_pagu->bo_bp + $d_pagu->bo_bp + $d_pagu->bo_bp + $d_pagu->bo_bp ;
+    $pagu_bo = $j_pagu == 0 ? 0 : $d_pagu->bo_bp + $d_pagu->bo_bbj + $d_pagu->bo_bs + $d_pagu->bo_bh + $d_pagu->bo_bbs ;
     $pagu_bm = $j_pagu == 0 ? 0 : $d_pagu->bm_bmt +$d_pagu->bm_bmpm +$d_pagu->bm_bmgb +$d_pagu->bm_bmjji +$d_pagu->bm_bmatl +$d_pagu->bm_bmatb  ;
     $pagu_btt = $j_pagu == 0 ? 0 : $d_pagu->btt ;
     $pagu_bt = $j_pagu == 0 ? 0 : $d_pagu->bt_bbh + $d_pagu->bt_bbk  ;
@@ -488,7 +488,7 @@ table td, th {
      <td class="rata_kanan"><?php echo $tampil_nilai_rk_instansi_bt; ?></td>
      <td class="rata_kanan"><?php echo $realisasi_dipilih['realisasikan_bt']==0 ? '-' :round($persen_rk_instansi_bt,2); ?></td>
      <td class="rata_kanan"><?php echo number_format($nilai_rk_instansi_total) ; ?></td>
-     <td class="rata_kanan"><?php echo number_format($total_rk_instansi); ?></td>
+     <td class="rata_kanan"><?php echo $total_rk_instansi; ?></td>
      <td class="rata_kanan"><?php echo round($bobot_fisik_skpd,2) ?></td>
      <td class="rata_kanan"><?php echo $realisasi_rf_total; ?></td>
      <td class="rata_kanan"><?php echo round($ttb_fisik_skpd,2) ?></td>
