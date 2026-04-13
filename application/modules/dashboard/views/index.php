@@ -32,7 +32,7 @@
                                                     <div class="avatar-icon rounded"><img src="<?php echo base_url() ?>assets/sbe/image/user.jpg" alt="Image"></div>
                                                 </div>
                                                 <div>
-                                                    <p>Selamat datang di aplikasi Simbangda Based Evidence V.4! </p>
+                                                    <p>Selamat datang di aplikasi Simbangda Based Evidence V.4! <?php echo $index_bulan ?> </p>
                                                     <h6 class="menu-header-subtitle"><?php echo $this->session->userdata('full_name'); ?> | <?php  echo $group_name; ?></h6>
                                                     <h5 class="menu-header-title"><b><?php echo $this->session->userdata('nama_instansi'); ?></b></h5>
 
@@ -155,51 +155,31 @@
 
 
 
-<?php if ($anggaran_apbd>0) { ?>
+<?php if ($num_grafik>0) { 
+
+    // $data_pagu_grafik = $pagu_grafik;
+    // $pagu_go = $pagu_grafik
+   ?>
 
 <div class="tabs-animation">
  <input type="hidden" class="form-control" id="id_instansi_grafik" value="<?php echo id_instansi() ?>">
     <div class="row">
-        <div class="col-lg-12 col-xl-6">
+        <div class="col-lg-12 col-xl-12">
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <div id="pagu" name="pagu"></div>
+
+                    <div id="pagu_dan_realisasi" name="pagu_dan_realisasi"></div>
                    
                     
                 </div>
             </div>
         </div>
-        <div class="col-lg-12 col-xl-6">
-            <div class="main-card mb-3 card">
-                <div class="card-body">
-                    <div id="terealisasi" name="terealisasi"></div>
-                   
-                    
-                </div>
-            </div>
-        </div>
-       <!--  <div class="col-lg-12 col-xl-4">
-            <div class="main-card mb-3 card">
-                <div class="card-body">
-                    <div id="perbandingan_kelompok" name="perbandingan_kelompok"></div>
-                   
-                    
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-12 col-xl-8">
-            <div class="main-card mb-3 card">
-                <div class="card-body">
-                    <div id="perbandingan" name="perbandingan"></div>
-                   
-                    
-                </div>
-            </div>
-        </div>
-         -->
+     
+       
         
     </div>
 </div>
+
 <div class="tabs-animation">
  <input type="hidden" class="form-control" id="id_instansi_grafik" value="<?php echo id_instansi() ?>">
     <div class="row">

@@ -271,10 +271,55 @@ class Dashboard extends MY_Controller
             $data['persentase_bp_prog']         = $data['anggaran_apbd'] != 0 ? ROUND(($data['belanja_pegawai_prog'] / $data['anggaran_apbd']) * 100, 2) : 0;
             $data['persentase_bbj_prog']        = $data['anggaran_apbd'] != 0 ? ROUND(($data['belanja_barang_jasa_prog'] / $data['anggaran_apbd']) * 100, 2) : 0;
             $data['persentase_bm_prog']         = $data['anggaran_apbd'] != 0 ? ROUND(($data['belanja_modal_prog'] / $data['anggaran_apbd']) * 100, 2) : 0;*/
+
+
+
+
+
+
+
             $page                               = 'dashboard/index';
 
-            $grafik = $this->db->query("SELECT id_grafik from grafik where id_instansi = '$id_instansi' and tahun = '$tahun' and kode_tahap='$tahap'")->num_rows();
-            $data['num_grafik']                       = $grafik;
+            $grafik = $this->db->query("SELECT id_grafik,  pagu_bo_bp, pagu_bo_bbj, pagu_bo_bs, pagu_bo_bh, pagu_bo_bbs, pagu_bm_bmt, pagu_bm_bmpm, pagu_bm_bmgb, pagu_bm_bmjji, pagu_bm_bmatl, pagu_bm_bmatb, pagu_btt, pagu_bt_bbh, pagu_bt_bbk,
+
+             rp_realisasi_keuangan_akumulasi_bo_bp,rp_realisasi_keuangan_akumulasi_bo_bbj,rp_realisasi_keuangan_akumulasi_bo_bs,rp_realisasi_keuangan_akumulasi_bo_bh,rp_realisasi_keuangan_akumulasi_bo_bbs,rp_realisasi_keuangan_akumulasi_bm_bmt,rp_realisasi_keuangan_akumulasi_bm_bmpm,rp_realisasi_keuangan_akumulasi_bm_bmgb,rp_realisasi_keuangan_akumulasi_bm_bmjji,rp_realisasi_keuangan_akumulasi_bm_bmatl,rp_realisasi_keuangan_akumulasi_bm_bmatb,rp_realisasi_keuangan_akumulasi_btt,rp_realisasi_keuangan_akumulasi_bt_bbh,rp_realisasi_keuangan_akumulasi_bt_bbk 
+
+  from grafik where id_instansi = '$id_instansi' and tahun = '$tahun' and kode_tahap='$tahap'");
+            $index_bulan = date('n'); 
+            $data['index_bulan'] = $index_bulan;
+
+
+            $pagu_grafik                      = $grafik->result_array()[$index_bulan];
+            $pagu_bo                = $pagu_grafik['pagu_bo_bp'] + $pagu_grafik['pagu_bo_bbj'] + $pagu_grafik['pagu_bo_bs'] + $pagu_grafik['pagu_bo_bh'] + $pagu_grafik['pagu_bo_bbs'];
+            $pagu_bm                = $pagu_grafik['pagu_bm_bmt'] + $pagu_grafik['pagu_bm_bmpm'] + $pagu_grafik['pagu_bm_bmgb'] + $pagu_grafik['pagu_bm_bmjji'] + $pagu_grafik['pagu_bm_bmatl'] + $pagu_grafik['pagu_bm_bmatb'];
+            $pagu_btt                = $pagu_grafik['pagu_btt'];
+            $pagu_bt                = $pagu_grafik['pagu_bt_bbk'] + $pagu_grafik['pagu_bt_bbh'];
+            $pagu_total                = $pagu_bo + $pagu_bm + $pagu_btt + $pagu_bt;
+
+
+            $data['pagu_bo'] = $pagu_bo;
+            $data['pagu_bm'] = $pagu_bm;
+            $data['pagu_btt'] = $pagu_btt;
+            $data['pagu_bt'] = $pagu_bt;
+            $data['pagu_total'] = $pagu_total;
+
+            $realisasi_bo                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bp'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbj'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bs'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bh'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbs'];
+            $realisasi_bm                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmt'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmpm'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmgb'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmjji'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatl'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatb'];
+            $realisasi_btt                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_btt'];
+            $realisasi_bt                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbk'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbh'];
+            $realisasi_total                = $realisasi_bo + $realisasi_bm + $realisasi_btt + $realisasi_bt;
+
+
+            $data['realisasi_bo'] = $realisasi_bo;
+            $data['realisasi_bm'] = $realisasi_bm;
+            $data['realisasi_btt'] = $realisasi_btt;
+            $data['realisasi_bt'] = $realisasi_bt;
+            $data['realisasi_total'] = $realisasi_total;
+            $data['persen_realisasi_total'] = ($realisasi_total / $pagu_total)   * 100;
+
+
+
+            $data['num_grafik']                       = $grafik->num_rows();
             $data['link']                       = $this->router->fetch_class();
             $data['menu']                       = $this->load->view('layout/menu', $data, true);
             $data['extra_css']                  = $this->load->view('dashboard/css', $data, true);
