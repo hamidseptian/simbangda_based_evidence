@@ -564,16 +564,11 @@ $nilai_rf_kota_ratarata =$total_fisik_semua > 0 ? $persen_rf_total : 0 ;
       <th class="rata_kanan"><?php echo number_format($total_pagu_btt); ?></th>
       <th class="rata_kanan"><?php echo number_format($total_pagu_bt); ?></th>
       <th class="rata_kanan"><?php echo number_format($total_pagu_semua); ?></th>
-      <th class="rata_kanan"><?php echo number_format($show_total_nilai_realisasi_bo); ?></th>
-      <th> <?php echo round($total_persen_realisasi_bo,2); ?>  </th>
-      <th class="rata_kanan"><?php echo number_format($show_total_nilai_realisasi_bm); ?></th>
-      <th> <?php echo round($total_persen_realisasi_bm,2); ?>  </th>
-      <th class="rata_kanan"><?php echo number_format($show_total_nilai_realisasi_btt); ?></th>
-      <th> <?php echo round($total_persen_realisasi_btt,2); ?>  </th>
-      <th class="rata_kanan"><?php echo number_format($show_total_nilai_realisasi_bt); ?></th>
-      <th> <?php echo round($total_persen_realisasi_bt,2); ?>  </th>
-      <th class="rata_kanan"> <?php echo number_format($total_nilai_rk) ?> </th>
-      <th> <?php echo round($total_persen_rk,2) ?>  </th>
+      <th colspan="2" align="center"><?php echo number_format($show_total_nilai_realisasi_bo); ?></th>
+      <th colspan="2" align="center"><?php echo number_format($show_total_nilai_realisasi_bm); ?></th>
+      <th colspan="2" align="center"><?php echo number_format($show_total_nilai_realisasi_btt); ?></th>
+      <th colspan="2" align="center"><?php echo number_format($show_total_nilai_realisasi_bt); ?></th>
+      <th colspan="2" align="center"> <?php echo number_format($total_nilai_rk) ?> </th>
       <th><?php echo round($total_bobot_fisik,2) ?></th>
       <th class="rata_kanan"> <?php echo round($persen_rf_total,2) ?><!-- <?php echo round($total_rf,2) ?> --> </th>
       <th><?php echo round($total_tertimbang_fisik,2) ?></th>
