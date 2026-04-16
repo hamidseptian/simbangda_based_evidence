@@ -50,69 +50,12 @@
                                             <div class="widget-content">
                                                 <div class="row">
                                                     <div class="col-md-6 col-xl-3">
-                                                        <div class="card mb-3 widget-content bg-night-fade">
-                                                            <div class="widget-content-wrapper text-white">
-                                                                <div class="widget-content-left">
-                                                                    <div class="widget-subheading"><b>Tahapan APBD</b></div>
-                                                                    <div class="widget-heading">
-                                                                        <?php echo nama_tahapan(); ?>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="widget-content-right">
-                                                                    <div class="widget-numbers text-white"><i class="pe-7s-cash"></i></div>
-                                                                </div>
-
-                                                               
-
-
-
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                     <div class="col-md-6 col-xl-3">
-                                                        <div class="card mb-3 widget-content bg-arielle-smile">
-                                                            <div class="widget-content-wrapper text-white">
-                                                                <div class="widget-content-left">
-                                                                    <div class="widget-subheading"><b>Tahun Anggaran</b></div>
-                                                                    <div class="widget-heading"><?php echo tahun_anggaran(); ?></div>
-                                                                </div>
-                                                                <div class="widget-content-right">
-                                                                    <div class="widget-numbers text-white"><i class="pe-7s-cash"></i></div>
-                                                                </div>
-                                                           
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                     <div class="col-md-6 col-xl-3">
-                                                        <div class="card mb-3 widget-content bg-arielle-smile">
-                                                            <div class="widget-content-wrapper text-white">
-                                                                <div class="widget-content-left">
-                                                                    <div class="widget-subheading"><b>Bulan Pelaporan</b></div>
-                                                                    <div class="widget-heading">
-                                                                        <?php echo konversi_bulan(bulan_aktif()) . ' ' . tahun_anggaran(); ?>
-                                                                    </div>
-                                                                </div>
-                                                                 <div class="widget-content-right">
-                                                                    <div class="widget-numbers text-white"><i class="pe-7s-file"></i></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                     <div class="col-md-6 col-xl-3">
-                                                        <div class="card mb-3 widget-content bg-happy-green">
-                                                            <div class="widget-content-wrapper text-white">
-                                                                <div class="widget-content-left">
-                                                                    <div class="widget-subheading"><b>Penginputan</b></div>
-                                                                    <div class="widget-heading">
-                                                                        <?php echo @$penginputan[$config['penginputan']] ?>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="widget-content-right">
-                                                                    <div class="widget-numbers text-white"><i class="pe-7s-file"></i></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                     <div class="d-xl-none d-lg-block col-md-6 col-xl-4">
                                                         <div class="card mb-3 widget-content bg-premium-dark">
@@ -132,21 +75,7 @@
                                             </div>
                                         </li>
 
-                                        <li class="p-0 list-group-item">
-                                            <div class="widget-content">
-                                                    <?php if ($jumlah_pengumuman==0) { ?>
-                                                         <div class="alert alert-info">Tidak ada pengumuman</div>
-                                                    <?php }else{ ?>
-                                                         <div class="alert alert-info"><u><b>Pengumuman Terbaru</b></u>
-                                                        <h5><?php echo $data_pengumuman->judul ?></h5>
-                                                        <?php echo substr($data_pengumuman->keterangan, 0,380) ?>.... <br>
-                                                        <button class="btn btn-info btn-sm" onclick="detail_pengumuman('<?php echo sbe_crypt($data_pengumuman->id_pengumuman,"E") ?>')">Lihat Detail Pengumuman</button>
-                                                        </div>
-                                                        
-                                                    <?php } ?>
-                                                      
-                                            </div>
-                                        </li>
+                                     
                                         
                                     </ul>
                                 </div>
@@ -155,21 +84,117 @@
 
 
 
-<?php if ($num_grafik>0) { 
-
-    // $data_pagu_grafik = $pagu_grafik;
-    // $pagu_go = $pagu_grafik
-   ?>
 
 <div class="tabs-animation">
- <input type="hidden" class="form-control" id="id_instansi_grafik" value="<?php echo id_instansi() ?>">
     <div class="row">
-        <div class="col-lg-12 col-xl-12">
+        <div class="col-lg-4 col-xl-4">
             <div class="main-card mb-3 card">
                 <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            
+                                                        <div class="card mb-3 widget-content bg-night-fade">
+                                                            <div class="widget-content-wrapper text-white">
+                                                                <div class="widget-content-left">
+                                                                    <div class="widget-subheading"><b>Tahapan APBD</b></div>
+                                                                    <div class="widget-heading">
+                                                                        <?php echo nama_tahapan(); ?>
+                                                                    </div>
+                                                                </div>
 
-                    <div id="pagu_dan_realisasi" name="pagu_dan_realisasi"></div>
+                                                                <div class="widget-content-right">
+                                                                    <div class="widget-numbers text-white"><i class="pe-7s-cash"></i></div>
+                                                                </div>
+
+                                                               
+
+
+
+                                                            </div>
+                                                        </div>
+                        </div>
+                        <div class="col-md-12">
+                            
+
+                                                        <div class="card mb-3 widget-content bg-arielle-smile">
+                                                            <div class="widget-content-wrapper text-white">
+                                                                <div class="widget-content-left">
+                                                                    <div class="widget-subheading"><b>Tahun Anggaran</b></div>
+                                                                    <div class="widget-heading"><?php echo tahun_anggaran(); ?></div>
+                                                                </div>
+                                                                <div class="widget-content-right">
+                                                                    <div class="widget-numbers text-white"><i class="pe-7s-cash"></i></div>
+                                                                </div>
+                                                           
+                                                            </div>
+                                                        </div>
+
+                        </div>
+                        <div class="col-md-12">
+                            
+
+                                                        <div class="card mb-3 widget-content bg-happy-green">
+                                                            <div class="widget-content-wrapper text-white">
+                                                                <div class="widget-content-left">
+                                                                    <div class="widget-subheading"><b>Penginputan</b></div>
+                                                                    <div class="widget-heading">
+                                                                        <?php echo @$penginputan[$config['penginputan']] ?>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="widget-content-right">
+                                                                    <div class="widget-numbers text-white"><i class="pe-7s-file"></i></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                        </div>
+                        <div class="col-md-12">
+                            
+
+                                                        <div class="card mb-3 widget-content bg-arielle-smile">
+                                                            <div class="widget-content-wrapper text-white">
+                                                                <div class="widget-content-left">
+                                                                    <div class="widget-subheading"><b>Bulan Pelaporan</b></div>
+                                                                    <div class="widget-heading">
+                                                                        <?php echo konversi_bulan(bulan_aktif()) . ' ' . tahun_anggaran(); ?>
+                                                                    </div>
+                                                                </div>
+                                                                 <div class="widget-content-right">
+                                                                    <div class="widget-numbers text-white"><i class="pe-7s-file"></i></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                        </div>
+                    </div>
                    
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-xl-8">
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <?php if ($num_grafik>0) { ?>
+
+                     <input type="hidden" class="form-control" id="id_instansi_grafik" value="<?php echo id_instansi() ?>">
+                    <div id="pagu_dan_realisasi" name="pagu_dan_realisasi"></div>
+                    <?php }else{ ?>
+                        <div class="alert alert-info">Grafik tidak daat di tampilkan <br>Silahkan lakukan synchronize untuk menampilkan grafik <br>Pastikan data APBD sudah terisi  <br>    
+            </div>
+                           <?php if ($this->session->userdata('group_name') == 'OPERATOR') : ?>
+                         <?php if (kunci_synch()['synchronize']==1) { ?>
+                                                <button class="btn-icon btn-shadow btn-outline-2x btn btn-block btn-outline-info"  onclick="sync(<?php echo $this->session->userdata('id_instansi'); ?>)" id="tombol_sync"><i class="fa fa-indent"> </i> Synchronize / Refresh Grafik</button>
+                                            <?php }else{ ?>
+                                                <button class="btn-icon btn-shadow btn-outline-2x btn btn-block btn-outline-danger" onclick="Swal.fire('Terkunci','<?php echo kunci_synch()['pesan'] ?>','error')"  style="width:150px"> Synchronize / Refresh Grafik</button>   
+
+                                            <?php } ?>
+                <?php endif; ?>
+
+
+                    <?php } ?>
                     
                 </div>
             </div>
@@ -179,6 +204,14 @@
         
     </div>
 </div>
+
+<?php if ($num_grafik>0) { 
+
+    // $data_pagu_grafik = $pagu_grafik;
+    // $pagu_go = $pagu_grafik
+   ?>
+
+
 
 <div class="tabs-animation">
  <input type="hidden" class="form-control" id="id_instansi_grafik" value="<?php echo id_instansi() ?>">
@@ -276,5 +309,3 @@
 </div>
 
 <?php   } ?>
-
-<?php echo $extra_js2 ?>

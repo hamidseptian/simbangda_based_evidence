@@ -288,6 +288,23 @@ class Dashboard extends MY_Controller
             $index_bulan = date('n'); 
             $data['index_bulan'] = $index_bulan;
 
+            if ($grafik->num_rows()==0) {
+            $pagu_grafik                      = 0;// $grafik->result_array()[$index_bulan];
+            $pagu_bo                = 0;// $pagu_grafik['pagu_bo_bp'] + $pagu_grafik['pagu_bo_bbj'] + $pagu_grafik['pagu_bo_bs'] + $pagu_grafik['pagu_bo_bh'] + $pagu_grafik['pagu_bo_bbs'];
+            $pagu_bm                = 0;// $pagu_grafik['pagu_bm_bmt'] + $pagu_grafik['pagu_bm_bmpm'] + $pagu_grafik['pagu_bm_bmgb'] + $pagu_grafik['pagu_bm_bmjji'] + $pagu_grafik['pagu_bm_bmatl'] + $pagu_grafik['pagu_bm_bmatb'];
+            $pagu_btt                = 0;// $pagu_grafik['pagu_btt'];
+            $pagu_bt                = 0;// $pagu_grafik['pagu_bt_bbk'] + $pagu_grafik['pagu_bt_bbh'];
+            $pagu_total                = 0;// $pagu_bo + $pagu_bm + $pagu_btt + $pagu_bt;
+
+            $realisasi_bo                = 0;// $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bp'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbj'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bs'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bh'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbs'];
+            $realisasi_bm                = 0;// $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmt'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmpm'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmgb'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmjji'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatl'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatb'];
+            $realisasi_btt                = 0;// $pagu_grafik['rp_realisasi_keuangan_akumulasi_btt'];
+            $realisasi_bt                = 0;// $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbk'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbh'];
+            $realisasi_total                = 0;// $realisasi_bo + $realisasi_bm + $realisasi_btt + $realisasi_bt;
+            $data['persen_realisasi_total'] = 0;// ($realisasi_total / $pagu_total)   * 100;
+                # code...
+            }else{
+
 
             $pagu_grafik                      = $grafik->result_array()[$index_bulan];
             $pagu_bo                = $pagu_grafik['pagu_bo_bp'] + $pagu_grafik['pagu_bo_bbj'] + $pagu_grafik['pagu_bo_bs'] + $pagu_grafik['pagu_bo_bh'] + $pagu_grafik['pagu_bo_bbs'];
@@ -296,26 +313,27 @@ class Dashboard extends MY_Controller
             $pagu_bt                = $pagu_grafik['pagu_bt_bbk'] + $pagu_grafik['pagu_bt_bbh'];
             $pagu_total                = $pagu_bo + $pagu_bm + $pagu_btt + $pagu_bt;
 
+            $realisasi_bo                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bp'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbj'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bs'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bh'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbs'];
+            $realisasi_bm                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmt'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmpm'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmgb'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmjji'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatl'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatb'];
+            $realisasi_btt                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_btt'];
+            $realisasi_bt                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbk'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbh'];
+            $realisasi_total                = $realisasi_bo + $realisasi_bm + $realisasi_btt + $realisasi_bt;
+            $data['persen_realisasi_total'] = ($realisasi_total / $pagu_total)   * 100;
+
+
+
+            }
 
             $data['pagu_bo'] = $pagu_bo;
             $data['pagu_bm'] = $pagu_bm;
             $data['pagu_btt'] = $pagu_btt;
             $data['pagu_bt'] = $pagu_bt;
             $data['pagu_total'] = $pagu_total;
-
-            $realisasi_bo                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bp'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbj'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bs'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bh'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbs'];
-            $realisasi_bm                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmt'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmpm'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmgb'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmjji'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatl'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatb'];
-            $realisasi_btt                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_btt'];
-            $realisasi_bt                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbk'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbh'];
-            $realisasi_total                = $realisasi_bo + $realisasi_bm + $realisasi_btt + $realisasi_bt;
-
-
             $data['realisasi_bo'] = $realisasi_bo;
             $data['realisasi_bm'] = $realisasi_bm;
             $data['realisasi_btt'] = $realisasi_btt;
             $data['realisasi_bt'] = $realisasi_bt;
             $data['realisasi_total'] = $realisasi_total;
-            $data['persen_realisasi_total'] = ($realisasi_total / $pagu_total)   * 100;
 
 
 
@@ -324,7 +342,7 @@ class Dashboard extends MY_Controller
             $data['menu']                       = $this->load->view('layout/menu', $data, true);
             $data['extra_css']                  = $this->load->view('dashboard/css', $data, true);
             $data['extra_js']                   = $this->load->view('dashboard/js', $data, true);
-            $data['extra_js2']                   = $this->load->view('informasi/pengumuman/js', $data, true);
+            // $data['extra_js2']                   = $this->load->view('informasi/pengumuman/js', $data, true);
             $data['modal']                      = $this->load->view('informasi/pengumuman/modal', $data, true);;
             $this->template->load('backend_template', $page, $data);
         }

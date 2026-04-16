@@ -20,8 +20,12 @@
         title: {
             text: null
         },
-        gridLineWidth: 1,
-        lineWidth: 0
+
+    gridLineWidth: 1, // garis vertikal
+    gridLineColor: 'pink',
+    tickInterval: 1
+
+
     },
     yAxis: {
 	    min: 0,
@@ -42,7 +46,9 @@
 		        return 'Rp ' + this.value;
 		    }
 		},
-	    gridLineWidth: 0
+
+    gridLineWidth: 1, // garis horizontal
+    gridLineColor: 'pink'
 	},
     tooltip: {
         valueSuffix: ' Rupiah '
@@ -59,9 +65,9 @@
     legend: {
         layout: 'vertical',
         align: 'right',
-        verticalAlign: 'top',
-        x: -40,
-        y: 80,
+        verticalAlign: 'bottom',// posisi vertikal (bawah)
+            x: -10,
+        y: -100,
         floating: true,
         borderWidth: 1,
         backgroundColor: 'var(--highcharts-background-color, #ffffff)',
@@ -72,10 +78,13 @@
     },
     series: [{
         name: 'Pagu',
-        data: [<?php echo $pagu_bo ?>, <?php echo $pagu_bm ?>, <?php echo $pagu_btt ?>, <?php echo $pagu_bt ?>]
+        data: [<?php echo $pagu_bo ?>, <?php echo $pagu_bm ?>, <?php echo $pagu_btt ?>, <?php echo $pagu_bt ?>],
+
+			    color: 'aqua',
     }, {
         name: 'Realisasi',
-        data: [<?php echo $realisasi_bo ?>, <?php echo $realisasi_bm ?>, <?php echo $realisasi_btt ?>, <?php echo $realisasi_bt ?>]
+        data: [<?php echo $realisasi_bo ?>, <?php echo $realisasi_bm ?>, <?php echo $realisasi_btt ?>, <?php echo $realisasi_bt ?>],
+			    color: 'blue',
     }
     ]
 });
@@ -117,6 +126,10 @@
 		  xAxis: [{
 		    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
 		      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+
+    gridLineWidth: 1, // garis vertikal
+    gridLineColor: '#e0e0e0',
+    tickInterval: 1,
 		    crosshair: true
 		  }],
 		  yAxis: [{ // Primary yAxis
@@ -132,7 +145,10 @@
 		      style: {
 		        color: Highcharts.getOptions().colors[1]
 		      }
-		    }
+		    },
+
+    gridLineWidth: 1, // garis horizontal
+    gridLineColor: '#e0e0e0'
 		  }, { 
 		    // Secondary yAxis
 
