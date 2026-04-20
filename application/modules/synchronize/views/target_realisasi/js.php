@@ -7,7 +7,7 @@
 */
 ?>
 
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <script src="https://code.highcharts.com/highcharts.src.js"></script>
 <!-- Export -->
 <script src="https://code.highcharts.com/modules/exporting.js"></script>

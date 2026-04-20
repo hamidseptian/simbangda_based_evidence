@@ -17,7 +17,7 @@
 
     <link rel="stylesheet" href="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/css/base.min.css">
     
-<link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="<?php echo base_url() ?>assets/datatables/dataTables.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
@@ -1125,7 +1125,7 @@ foreach ($q_pengunjungonline->row_array() as $k => $v) {
 
 
 
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 
 
 

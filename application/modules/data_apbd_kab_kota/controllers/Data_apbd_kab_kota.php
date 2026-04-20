@@ -103,15 +103,17 @@ class Data_apbd_kab_kota extends MY_Controller
          $tgls = date('Y-m-d');
         $data = [];
          if ($key) {
-            $q_instansi = $this->db->query("SELECT mi.nama_instansi, mi.id_instansi, 
+            $q_instansi = $this->db->query("SELECT mi.nama_instansi, mi.id_instansi 
                   
 
-                    from master_instansi_kab_kota mi where mi.kategori='OPD' and mi.id_kota='$id_kota' and 
-                    CASE 
-                    WHEN is_active = '0' THEN  tmt_mulai < '$tgls' and (tmt_selesai >= '$tgls' or tmt_selesai = 'Sedang Aktif')
-                    ELSE is_active = '1'
-                    END
-                    and mi.nama_instansi like '%$key%'
+                    from master_instansi_kab_kota mi where mi.kategori='OPD' and mi.id_kota='$id_kota'  
+                     and mi.nama_instansi like '%$key%'
+                    and
+                   ( CASE 
+                                       WHEN is_active = '0' THEN  tmt_mulai < '$tgls' and (tmt_selesai >= '$tgls' or tmt_selesai = 'Sedang Aktif')
+                                       ELSE is_active = '1'
+                                       END)
+                   
                     limit $start, $length
                 ")->result_array();
             
@@ -127,7 +129,11 @@ class Data_apbd_kab_kota extends MY_Controller
                 ")->result_array();
          }
          
-            $count_data = $this->db->query("SELECT id_instansi from master_instansi_kab_kota where kategori='OPD' and id_kota='$id_kota'
+            $count_data = $this->db->query("SELECT id_instansi from master_instansi_kab_kota mi where mi.kategori='OPD' and mi.id_kota='$id_kota' and 
+                    CASE 
+                    WHEN is_active = '0' THEN  tmt_mulai < '$tgls' and (tmt_selesai >= '$tgls' or tmt_selesai = 'Sedang Aktif')
+                    ELSE is_active = '1'
+                    END
                 ")->num_rows();
 
 

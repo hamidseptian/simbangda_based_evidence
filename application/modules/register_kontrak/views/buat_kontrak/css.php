@@ -11,7 +11,7 @@
 <!-- Leaflet -->
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/leaflet/leaflet.css"/>
 
-<link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="<?php echo base_url() ?>assets/datatables/dataTables.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.css">
 <style>
 	#mapid{
