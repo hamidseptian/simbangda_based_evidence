@@ -95,7 +95,7 @@ class Berita_acara extends MY_Controller
 
             $q = $this->db->query("SELECT  id_setting_berita_acara, kegiatan, kode_tahap, tahun, tgl_mulai_pelaksanaan, tgl_akhir_pelaksanaan, jam_mulai_pelaksanaan, jam_akhir_pelaksanaan, status, lokasi  from setting_berita_acara order by id_setting_berita_acara desc")->result_array();
 
-         $instansi = $this->db->query("SELECT  id_instansi, nama_instansi  from master_instansi where kategori='OPD' and is_active='1' ")->result_array();
+         $instansi = $this->db->query("SELECT  id_instansi, nama_instansi  from master_instansi where kategori='OPD' and is_active='1' order by nama_instansi asc ")->result_array();
             $data['ba']           = $q;
             $data['instansi']           = $instansi;
 

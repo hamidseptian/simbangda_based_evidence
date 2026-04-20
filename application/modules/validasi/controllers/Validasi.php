@@ -285,7 +285,7 @@ class Validasi extends MY_Controller
             $tahap    =tahapan_apbd();
             $list_ski = list_sub_kegiatan_opd($id_instansi, $tahun, $tahap);
             $column_order   = array('', 'nama_paket');
-            $column_search  = array('nama_paket','nilai');
+            $column_search  = array('nama_paket','nilai', 'kode_rekening_sub_kegiatan');
             $order = array('nama_paket' => 'ASC');
             $list = $this->datatables_model->get_datatables('v_paket_swakelola', $column_order, $column_search, $order, $where);
             $data = array();
@@ -344,7 +344,7 @@ class Validasi extends MY_Controller
             $id_instansi    = sbe_crypt($this->input->post('id_instansi'), 'D');
             $where          = array('id_instansi' => $id_instansi, 'belum_validasi > '=>0, 'tahun'=>$tahun);
             $column_order   = array('', 'nama_paket');
-            $column_search  = array('nama_paket','nilai','belum_validasi');
+            $column_search  = array('nama_paket','nilai','belum_validasi','kode_rekening_sub_kegiatan');
             $order = array('nama_paket' => 'ASC');
             $list = $this->datatables_model->get_datatables('v_paket', $column_order, $column_search, $order, $where);
             $data = array();
@@ -570,7 +570,7 @@ class Validasi extends MY_Controller
             }
             
             $column_order   = array('', 'nama_paket');
-            $column_search  = array('nama_paket');
+            $column_search  = array('nama_paket','kode_rekening_sub_kegiatan');
             $order = array('nama_paket' => 'ASC');
             $list = $this->datatables_model->get_datatables('v_paket_penyedia', $column_order, $column_search, $order, $where);
             $data = array();
