@@ -844,18 +844,17 @@ else if ($class=='auth' && $method=='index') {?>
 
                         <div class="row  justify-content-center">
                             <div class="col-lg-3 col-md-6 mb-5">
-                                <a href="index.html" class="navbar-brand">
+                               <!--  <a href="index.html" class="navbar-brand">
 
                                     <img class="img-fluid"
                                         src="https://biroadmpembangunan.sumbarprov.go.id/assets/gambar/logo_biro.png"
                                         alt="">
-                                </a> <br><br>
-                                <audio
-                                    src="https://biroadmpembangunan.sumbarprov.go.id/assets/music/marssumbar.mp3"></audio>
+                                </a> --> <br><br>
+                              
 
                                 <p>Jl. Jend. Sudirman No.51, Padang Pasir, Kec. Padang Barat, Kota Padang, Sumatera
                                     Barat 25129</p>
-                                <div class="d-flex justify-content-start mt-4">
+                              <!--   <div class="d-flex justify-content-start mt-4">
                                     <a class="btn btn-outline-secondary text-center mr-2 px-0"
                                         style="width: 38px; height: 38px;"
                                         href="https://biroadmpembangunan.sumbarprov.go.id/" target="_blank"><i
@@ -875,14 +874,14 @@ else if ($class=='auth' && $method=='index') {?>
                                     <a class="btn btn-outline-secondary text-center mr-2 px-0"
                                         style="width: 38px; height: 38px;" href="#" target="_blank"><i
                                             class="fab fa-youtube"></i></a>
-                                </div>
+                                </div> -->
                             </div>
 
                             <div class="col-lg-3 col-md-6 mb-5">
-                                <iframe
+                                <!-- <iframe
                                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.2840949598635!2d100.35777017560198!3d-0.9376228353457584!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2fd4b950c9c87f35%3A0x203f97613e262574!2sBiro%20Administrasi%20Pembangunan!5e0!3m2!1sid!2sid!4v1713859623223!5m2!1sid!2sid"
                                     width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"
-                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                    referrerpolicy="no-referrer-when-downgrade"></iframe> -->
                             </div>
                             <div class="col-lg-3 col-md-6 mb-5">
                                 <h4 class="font-weight-bold mb-4">Statistika User</h4>
@@ -1088,142 +1087,12 @@ foreach ($q_pengunjungonline->row_array() as $k => $v) {
 
         <!--CORE-->
 
-        <script src="<?php echo base_url(); ?>assets/admin_lte/bower_components/jquery/dist/jquery.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js"
-            crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/metismenu"></script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/app.js"></script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/demo.js"></script>
-
-        <!--CHARTS-->
-
-        <!--Apex Charts-->
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/charts/apex-charts.js">
-        </script>
-
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/charts/apex-charts.js">
-        </script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/charts/apex-series.js">
-        </script>
-
-        <!--Sparklines-->
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/charts/charts-sparklines.js">
-        </script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/charts/charts-sparklines.js">
-        </script>
-
-        <!--Chart.js-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/charts/chartsjs-utils.js">
-        </script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/charts/chartjs.js">
-        </script>
-
-        <!--FORMS-->
-
-        <!--Clipboard-->
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/form-components/clipboard.js">
-        </script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/form-components/clipboard.js">
-        </script>
-
-        <!--Datepickers-->
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/form-components/datepicker.js">
-        </script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/form-components/daterangepicker.js">
-        </script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/form-components/moment.js">
-        </script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/form-components/datepicker.js">
-        </script>
-
-        <!--Multiselect-->
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/form-components/bootstrap-multiselect.js">
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/form-components/input-select.js">
-        </script>
-
-        <!--Form Validation-->
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/form-components/form-validation.js">
-        </script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/form-components/form-validation.js">
-        </script>
-
-        <!--Form Wizard-->
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/form-components/form-wizard.js">
-        </script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/form-components/form-wizard.js">
-        </script>
-
-        <!--Input Mask-->
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/form-components/input-mask.js">
-        </script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/form-components/input-mask.js">
-        </script>
-
-        <!--RangeSlider-->
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/form-components/wnumb.js">
-        </script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/form-components/range-slider.js">
-        </script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/form-components/range-slider.js">
-        </script>
-
-        <!--Textarea Autosize-->
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/form-components/textarea-autosize.js">
-        </script>
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/form-components/textarea-autosize.js">
-        </script>
-
-        <!--Toggle Switch -->
-        <script
-            src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/vendors/form-components/toggle-switch.js">
-        </script>
-
-
-        <!--COMPONENTS-->
-
-        <!--BlockUI -->
-     
-        </script>
-
-        <!--Toastr-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous">
-        </script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/toastr.js">
-        </script>
-
-        <!--SweetAlert2-->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
-        <script src="<?php echo base_url() ?>/assets/architectui-html-pro/assets_new/js/scripts-init/sweet-alerts.js">
+    <script type="text/javascript" src="<?php echo base_url() ?>assets/jquery/jquery.js"></script>
+    <!-- <script src="<?php echo base_url() ?>assets/bootstrap/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
 
 
         <script>
+            // console.log($);
         window.setTimeout("waktu()", 1000);
 
         function waktu() {

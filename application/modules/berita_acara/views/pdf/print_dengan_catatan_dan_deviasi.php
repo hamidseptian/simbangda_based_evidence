@@ -100,7 +100,7 @@
             <?php }else{
                 foreach ($grafik as $key => $v) { 
                     $deviasi_fisik = $v['realisasi_fisik_akumulasi'] - $v['target_fisik_akumulasi'];
-                    $deviasi_keuangan = $v['realisasi_keuangan_akumulasi'] - $v['target_fisik_akumulasi'];
+                    $deviasi_keuangan = $v['realisasi_keuangan_akumulasi'] - $v['target_keuangan_akumulasi'];
 
                        if ($deviasi_fisik < -10) {
                           $warna_dev_fisik = 'background: #f8b2b2'; 

@@ -4,5 +4,26 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L]
 
 <IfModule mod_headers.c>
-    Header set Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; connect-src 'self' https:; frame-src 'self' https:;"
+    #Content Security Policy (CSP) Header Not Set
+    # CSP (dipertahankan, hanya dirapikan sedikit)
+    Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; connect-src 'self' https:; frame-src 'self' https:;"
+
+
+    #Cross-Domain Misconfiguration
+    # Security Headers tambahan
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Tambahan opsional (bagus untuk security scan)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    #untuk menghilangan laporan di console
+    #Header unset Report-To
+	#Header unset Content-Security-Policy-Report-Only
+
+
+    #Server Leaks Information via “X-Powered-By” HTTP Respons
+    Header unset X-Powered-By
 </IfModule>
