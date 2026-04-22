@@ -26,4 +26,9 @@ RewriteRule ^(.*)$ index.php/$1 [L]
 
     #Server Leaks Information via “X-Powered-By” HTTP Respons
     Header unset X-Powered-By
+
+    #Strict-Transport-Security Header Not Set
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+
 </IfModule>

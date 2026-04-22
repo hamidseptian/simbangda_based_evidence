@@ -1089,3 +1089,20 @@ function angkaKeHuruf($angka) {
 
 
 
+
+function ambil_csrf_token()
+{
+    // if (!CI()->input->is_ajax_request()) {
+    //     show_404();
+    // } else {
+    //     echo json_encode([
+    //         'csrf_token' => CI()->security->get_csrf_hash()
+    //     ]);
+    // }
+
+    echo json_encode([
+            'csrf_token' => CI()->security->get_csrf_hash()
+        ]);
+}
+
+

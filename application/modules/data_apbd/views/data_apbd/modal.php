@@ -19,6 +19,7 @@
             <div class="modal-body">
             
                 <form id="form_anggaran_sub_kegiatan">
+                     <input type="hidden" name="SIMBANGDA_BASED_EVIDENCE_TOKEN" value="<?= $this->security->get_csrf_hash() ?>">
                 	<input type="hidden" name="pergeseran_ke" id="pergeseran_ke" value="">
                     <input type="hidden" name="pengelompokan" id="pengelompokan">
                     <input type="hidden" name="kode_sub_kegiatan" id="kode_sub_kegiatan" class="kode_sub_kegiatan">
@@ -274,7 +275,7 @@
                                   <div class="input-group">
                                     <div class="custom-file">
                                         <input type="file" name="upload_file">
-                                        
+                                         <input type="hidden" name="SIMBANGDA_BASED_EVIDENCE_TOKEN" value="<?= $this->security->get_csrf_hash() ?>">
                                     </div>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">Upload</button>
@@ -337,6 +338,7 @@
                                 </tr>
                               
                             </table>
+                             <input type="hidden" name="SIMBANGDA_BASED_EVIDENCE_TOKEN" value="<?= $this->security->get_csrf_hash() ?>">
                             <input type="hidden" name="kode_sub_kegiatan" id="kode_sub_kegiatan">
                             <input type="hidden" name="kode_kegiatan" id="kode_kegiatan">
                             <input type="hidden" name="kode_program" id="kode_program">
@@ -408,6 +410,7 @@
                                 </tr>
                               
                             </table>
+                             <input type="hidden" name="SIMBANGDA_BASED_EVIDENCE_TOKEN" value="<?= $this->security->get_csrf_hash() ?>">
                             <input type="hidden" name="kode_sub_kegiatan" id="kode_sub_kegiatan">
                             <input type="hidden" name="id_sub_kegiatan_instansi" id="id_sub_kegiatan_instansi">
                         </div>
@@ -482,6 +485,7 @@
                                     <td id="pagu_sub_kegiatan"></td>
                                 </tr>
                             </table>
+                             <input type="hidden" name="SIMBANGDA_BASED_EVIDENCE_TOKEN" value="<?= $this->security->get_csrf_hash() ?>">
                             <input type="hidden" class="form-control" id="pagu" readonly="true" value="">
                             <input type="hidden" name="kode_sub_kegiatan" id="kode_sub_kegiatan">
                             <input type="hidden" name="kode_kegiatan" id="kode_kegiatan">
@@ -611,6 +615,7 @@
             <div class="modal-body">
                
                 <form id="form_input_permasalahan">
+                     <input type="hidden" name="SIMBANGDA_BASED_EVIDENCE_TOKEN" value="<?= $this->security->get_csrf_hash() ?>">
                     <input type="hidden" name="id_permasalahan" id="id_permasalahan" class="id_permasalahan">
                     <input type="hidden" name="kode_sub_kegiatan" id="kode_sub_kegiatan" class="kode_sub_kegiatan">
                     <input type="hidden" name="kode_kegiatan" id="kode_kegiatan">
@@ -669,6 +674,7 @@
             <div class="modal-body">
                
                 <form id="form_input_solusi_permasalahan">
+                     <input type="hidden" name="SIMBANGDA_BASED_EVIDENCE_TOKEN" value="<?= $this->security->get_csrf_hash() ?>">
                     <input type="hidden" name="id_instansi" id="id_instansi" class="id_instansi">
                     <input type="hidden" name="id_solusi" id="id_solusi" class="id_solusi">
                     <input type="hidden" name="kode_sub_kegiatan" id="kode_sub_kegiatan" class="kode_sub_kegiatan">
@@ -737,6 +743,7 @@
                    
                     <div class="form-group">
                         <label for="">Kode Program</label>
+                         <input type="hidden" name="SIMBANGDA_BASED_EVIDENCE_TOKEN" value="<?= $this->security->get_csrf_hash() ?>">
                         <input type="hidden" class="form-control" id="id" name="id">
                         <input type="text" class="form-control" id="kode" name="kode">
                     </div>
@@ -770,7 +777,7 @@
             </div>
             <div class="modal-body">
                 <form id="form_master_kegiatan">
-                   
+                    <input type="hidden" name="SIMBANGDA_BASED_EVIDENCE_TOKEN" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <label for="">Kode kegiatan</label>
                         <input type="hidden" class="form-control" id="id" name="id">
@@ -805,7 +812,7 @@
             </div>
             <div class="modal-body">
                 <form id="form_master_sub_kegiatan">
-                   
+                    <input type="hidden" name="SIMBANGDA_BASED_EVIDENCE_TOKEN" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <label for="">Kode Sub Kegiatan</label>
                         <input type="hidden" class="form-control" id="id" name="id">

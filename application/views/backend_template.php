@@ -35,7 +35,7 @@ if ($q_kuisioner->num_rows()>0) {
     <meta name="description" content="SIMBANGDA Based Evidence, simbangda based evidence, SIMBANGDA berbasis pembuktian, simbangda berbasis pembuktian, SIMBANGDA SUMBAR, simbangda sumbar, Sistem Informasi Manajemen Pembangunan Daerah, Sistem Informasi Manajemen Pembangunan Daerah Sumbar, Sumatera Barat" />
     <meta name="keywords" content="Simbangda based evidence, Sistem Informasi Manajemen Pembangunan Daerah, simbangda berbasis pembuktian, simbangda sumbar, Sumbar, Sumatera Barat, Pemprov Sumbar, Pemerintah Provinsi Sumatera Barat, Alfikri, Al, Fikri, alfikri, alfikri, alfikridotname" />
     <meta name="msapplication-tap-highlight" content="no">
-    <!-- Bootstrap 4.3.1 -->
+    <!-- Bootstrap 4.3.1 -->    
 
     <link href="<?php echo base_url() ?>assets/architectui-html-pro/main.87c0748b313a1dda75f5.css" rel="stylesheet">
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
@@ -43,7 +43,8 @@ if ($q_kuisioner->num_rows()>0) {
     <link href="<?php echo base_url() ?>assets/architectui-html-pro/main.87c0748b313a1dda75f5.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="<?php echo base_url() ?>assets/fontawesome/css/all.css" rel="stylesheet">
-
+    <!-- token -->
+    <meta name="csrf_token" content="<?= $this->security->get_csrf_hash() ?>">
     <script src="<?php echo base_url() ?>assets/sweetalert/dist/sweetalert2.min.js"></script>
 <link rel="stylesheet" href="<?php echo base_url() ?>assets/sweetalert/dist/sweetalert2.min.css">
     <?php echo $extra_css; ?>
@@ -928,6 +929,8 @@ function stop_loading(){
 function titik_loading(){
     $('.titik_loading').append('.');
 }
+
+
     
 // $(document).ready( function () {
 //     $('#data_sipedal').DataTable();

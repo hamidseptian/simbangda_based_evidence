@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 date_default_timezone_set('Asia/Jakarta');
+
+ini_set('session.cookie_samesite', 'Strict');
+
+
 /*
 |--------------------------------------------------------------------------
 | Base Site URL
@@ -411,8 +415,9 @@ $config['sess_regenerate_destroy'] = FALSE;
 $config['cookie_prefix']    = '';
 $config['cookie_domain']    = '';
 $config['cookie_path']        = '/';
-$config['cookie_secure']    = FALSE;
-$config['cookie_httponly']     = FALSE;
+$config['cookie_secure']    = TRUE;
+$config['cookie_httponly']     = TRUE;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -456,12 +461,15 @@ $config['global_xss_filtering'] = TRUE;
 | 'csrf_regenerate' = Regenerate token on every submission
 | 'csrf_exclude_uris' = Array of URIs which ignore CSRF checks
 */
-$config['csrf_protection'] = FALSE;
+$config['csrf_protection'] = TRUE;
 $config['csrf_token_name'] = 'SIMBANGDA_BASED_EVIDENCE_TOKEN';
 $config['csrf_cookie_name'] = 'SIMBANGDA_BASED_EVIDENCE_COOKIE';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = TRUE;
-$config['csrf_exclude_uris'] = array();
+// $config['csrf_exclude_uris'] = array();
+$config['csrf_exclude_uris'] = array(
+    '.*' 
+);
 
 /*
 |--------------------------------------------------------------------------

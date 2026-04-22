@@ -240,7 +240,7 @@
                                     <?php   }else{ ?>
 
                                     <div class="widget-heading">
-                                        <?php echo $this->session->userdata('full_name'); ?>
+                                        <a href="<?php echo base_url('dashboard') ?>"><?php echo $this->session->userdata('full_name'); ?></a>
                                     </div>
                                     <div class="widget-subheading">
                                         <?php echo $this->session->userdata('group_name'); ?>
@@ -1070,25 +1070,11 @@ foreach ($q_pengunjungonline->row_array() as $k => $v) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         <!--SCRIPTS INCLUDES-->
 
         <!--CORE-->
 
     <script type="text/javascript" src="<?php echo base_url() ?>assets/jquery/jquery.js"></script>
-    <!-- <script src="<?php echo base_url() ?>assets/bootstrap/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
 
 
         <script>

@@ -25,6 +25,19 @@ class Data_apbd extends MY_Controller
         ]);
     }
 
+
+public function get_token()
+{
+    if (!$this->input->is_ajax_request()) {
+        show_404();
+    } else {
+        echo json_encode([
+            'csrf_token' => $this->security->get_csrf_hash()
+        ]);
+    }
+}
+
+
     public function index()
     {
         $breadcrumbs     = $this->breadcrumbs;
@@ -997,6 +1010,7 @@ public function sync_eplanning()
                 "recordsTotal"      => 0,//$this->datatables_model->count_all($tabel, $where),
                 "recordsFiltered"   => 0,//$this->datatables_model->count_filtered($tabel, $column_order, $column_search, $order, $where),
                 "data"              => $data,
+                 "csrf_token"      => $this->security->get_csrf_hash() // tambahkan ini
             ];
 
             echo json_encode($output);

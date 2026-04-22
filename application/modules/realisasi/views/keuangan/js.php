@@ -69,7 +69,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 
 
 
-function input_realisasi(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, pagu, kategori, tahap, tahun)
+function input_realisasi(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, pagu, kategori, tahap, tahun, pergeseran_ke)
     {   
         
         var izin_input = <?php echo jadwal_rfk()['aktif'] ?>;
@@ -138,6 +138,7 @@ function input_realisasi(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_
                 jenis : jenis,
                 tahap : tahap,
                 tahun : tahun,
+                pergeseran_ke : pergeseran_ke,
             },
             success : function(data)
             {

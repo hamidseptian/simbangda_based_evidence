@@ -2265,16 +2265,19 @@ function show_kegiatan_apbd_instansi(id_table)
 		kode_program   = kode_rekening;
 
 		
+	    let csrf = get_token();
 		$('#table-kegiatan-'+ id_table).DataTable(
 		{
 	        processing	: true,
 	        serverSide	: true,
 	        bDestroy	: true,
 	        responsive	: true,
-	        ajax		: {
-				          	url 	: baseUrl('data_apbd/kegiatan_apbd_instansi/'),
+	        ajax		: { 
+	        				url  : baseUrl('data_apbd/kegiatan_apbd_instansi/') + '?csrf_token=' + csrf,
 				            type 	: "POST",
-				          	data 	: { kode_program : kode_program },
+				          	data 	: { kode_program : kode_program,
+
+                             },
 	        			  },
 	        columnDefs  : [
 						  	{

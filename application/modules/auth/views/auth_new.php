@@ -33,6 +33,8 @@
 
                                         <div class="form-row">
                                             <div class="col-md-12">
+                                                 <input type="hidden" name="SIMBANGDA_BASED_EVIDENCE_TOKEN" value="<?= $this->security->get_csrf_hash() ?>">
+    
                                                 <div class="position-relative form-group">
                                                     <input type="text" class="form-control" id="email" placeholder="Email/Username" name="email">
                                                 </div>
