@@ -2035,7 +2035,7 @@ class Realisasi extends MY_Controller
                     where 
                     kode_bidang_urusan ='$kode_bidang_urusan' and 
                     kode_rekening_program ='$kode_program' and 
-                    kode_rekening_wkegiatan ='$kode_kegiatan' and 
+                    kode_rekening_kegiatan ='$kode_kegiatan' and 
                     kode_rekening_sub_kegiatan ='$kode_rekening_sub_kegiatan' and 
                     kode_tahap ='$tahap' and 
                     tahun ='$tahun' and 

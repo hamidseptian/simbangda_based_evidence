@@ -1100,9 +1100,7 @@ function ambil_csrf_token()
     //     ]);
     // }
 
-    echo json_encode([
-            'csrf_token' => CI()->security->get_csrf_hash()
-        ]);
+   echo  CI()->security->get_csrf_hash();
 }
 
 

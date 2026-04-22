@@ -146,6 +146,7 @@
 	}
 
 
+
 	/* Fungsi untuk menampilkan KPA */
 	function show_program_all()
 	{
@@ -2266,6 +2267,8 @@ function show_kegiatan_apbd_instansi(id_table)
 
 		
 	    let csrf = get_token();
+	    
+    console.log('csrf:', csrf); // debug
 		$('#table-kegiatan-'+ id_table).DataTable(
 		{
 	        processing	: true,
@@ -2273,9 +2276,10 @@ function show_kegiatan_apbd_instansi(id_table)
 	        bDestroy	: true,
 	        responsive	: true,
 	        ajax		: { 
-	        				url  : baseUrl('data_apbd/kegiatan_apbd_instansi/') + '?csrf_token=' + csrf,
+	        				url  : baseUrl('data_apbd/kegiatan_apbd_instansi/') ,
 				            type 	: "POST",
 				          	data 	: { kode_program : kode_program,
+				          		csrf_token : csrf
 
                              },
 	        			  },

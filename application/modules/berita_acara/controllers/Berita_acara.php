@@ -95,7 +95,15 @@ class Berita_acara extends MY_Controller
 
             $q = $this->db->query("SELECT  id_setting_berita_acara, kegiatan, kode_tahap, tahun, tgl_mulai_pelaksanaan, tgl_akhir_pelaksanaan, jam_mulai_pelaksanaan, jam_akhir_pelaksanaan, status, lokasi  from setting_berita_acara order by id_setting_berita_acara desc")->result_array();
 
-         $instansi = $this->db->query("SELECT  id_instansi, nama_instansi  from master_instansi where kategori='OPD' and is_active='1' order by nama_instansi asc ")->result_array();
+            $id_group = $this->session->userdata('id_group');
+            $id_instansi = $this->session->userdata('id_instansi');
+            if ($id_group ==5) {
+                 $instansi = $this->db->query("SELECT  id_instansi, nama_instansi  from master_instansi where kategori='OPD' and is_active='1' and id_instansi = '$id_instansi' order by nama_instansi asc ")->result_array();
+                # code...
+            }else{
+                 $instansi = $this->db->query("SELECT  id_instansi, nama_instansi  from master_instansi where kategori='OPD' and is_active='1' order by nama_instansi asc ")->result_array();
+
+            }
             $data['ba']           = $q;
             $data['instansi']           = $instansi;
 
@@ -1127,7 +1135,10 @@ class Berita_acara extends MY_Controller
                     $row[]  = '<span class="badge badge-success">Sudah Synchronize pada <br>'.$v['synchronize'].'</span>';
                 }
                 $row[]  = $v['status'];
-                $row[]  = '';
+                $row[]  = '
+<div class="btn btn-group">
+            <a href="javascript:void(0)" onclick="reset_synchronize('."'".$v['id_isi_berita_acara']."','".$v['id_setting_berita_acara']."','".$v['id_instansi']."','".$v['nama_instansi']."'".')"  class="btn btn-outline-info btn-sm">Reset Synchronize</a>
+                </div>';
                     # code...
                 }else{
 	            $row[]  = '<a href="javascript:void(0)" onclick="catatan_helpdesk('."'".$v['id_isi_berita_acara']."', '".$v['nama_instansi']."', '".$v['helpdesk']."', `".$catatan."`, `".$solusi."`".')">'.$show_catatan.'</a>';

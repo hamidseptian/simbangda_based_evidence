@@ -188,11 +188,3 @@ $('.switch-sidebar-cs-class').on('click', function () {
 
 
 
-
-
-function get_token() {
-    var token = "<?php echo ambil_csrf_token() ?>";
-       return token;
-}
-
-

@@ -931,10 +931,26 @@ function titik_loading(){
 }
 
 
-    
-// $(document).ready( function () {
-//     $('#data_sipedal').DataTable();
-// } );
+
+function get_token() {
+    var token = "";
+    $.ajax({
+        url     : baseUrl('integrated/api/dashboard_pembangunan/get_token_csrf'), // sesuaikan URL
+        type    : 'GET',
+        dataType: 'JSON',
+        async   : false,
+        success : function(data) {
+            token = data.csrf_token;
+        },
+        error   : function() {
+            console.log('gagal ambil token');
+        }
+    });
+    return token;
+}
+
+
+
     </script>
 </body>
 

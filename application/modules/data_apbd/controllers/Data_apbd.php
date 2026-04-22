@@ -26,16 +26,6 @@ class Data_apbd extends MY_Controller
     }
 
 
-public function get_token()
-{
-    if (!$this->input->is_ajax_request()) {
-        show_404();
-    } else {
-        echo json_encode([
-            'csrf_token' => $this->security->get_csrf_hash()
-        ]);
-    }
-}
 
 
     public function index()
