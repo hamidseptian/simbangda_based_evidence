@@ -5,7 +5,7 @@
 <script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Leaflet -->
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/x-editable-bs4@1.2.2/dist/bootstrap4-editable/js/bootstrap-editable.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/leaflet/leaflet.js"></script>
 <script>
 
