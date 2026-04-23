@@ -9,7 +9,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Leaflet -->
 <script src="<?php echo base_url(); ?>assets/leaflet/leaflet.js"></script>
 <script>
@@ -397,8 +397,7 @@ $('#modalMasterPaket').find('.modal-title').html('Tambah Paket<br>Anggaran Terse
             type    : 'POST',
             data    : { id_user : id_user },
             success : function(data)
-            {
-            	console.log(data);
+            { 
                 if(data.status == true)
                 {
                 	$.each(data.data, function(k, v){

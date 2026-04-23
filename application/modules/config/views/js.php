@@ -359,7 +359,7 @@ function simpan_izin_akses_khusus()
 	$('#modal_izin_akses').modal('hide');
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 }
@@ -396,7 +396,7 @@ function edit_config(id_config)
 		},
 		success: function (data)
 		{
-			console.log(data);
+			
 			$('#modal_add_config').modal('show');
 
 			$('#modal_add_config').find('#exampleModalLabel').html('Edit Konfigurasi');

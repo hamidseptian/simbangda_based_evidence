@@ -12,12 +12,12 @@
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Leaflet -->
 
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/datatables.js"></script>	
 
-    <script type="text/javascript" src="<?php echo base_url() ?>assets/jquery/jquery.js"></script>	
+    <script type="text/javascript" src="<?php echo base_url() ?>assets/jquery/jquery.4.0.0.js"></script>	
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/leaflet/leaflet.js"></script>
 <script>
@@ -922,7 +922,7 @@ function get_target(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tah
             },
             success : function(data)
             {
-            	console.log(data);
+            	
 				$('#modal-target').find('.kode_sub_kegiatan').html(data.kode_sub_kegiatan);
 		    	$('#modal-target').find('#pagu_sub_kegiatan').html(convert_to_rupiah(pagu==''? 0 : pagu));
             	$('#modal-target').find('#exampleModalLabel').html("Setting Target APBD");
@@ -1762,7 +1762,7 @@ function show_sub_kegiatan_apbd_instansi(id_table)
 								}
 							},
 							error : function(){
-								console.log('error');
+								
 							}
 						});
 			
@@ -2077,7 +2077,7 @@ function copy_sub_kegiatan_apbd_awal()
 							},
 							success : function(data)
 							{
-								console.log(data);
+								
 								if(data.status == true)
 								{
 									$('#tombol_copy_apbd_awal').hide();
@@ -2149,7 +2149,7 @@ function copy_sub_kegiatan_data_apbd(tahap, tahun, nama_tahap,tot_program,tot_ke
 							},
 							success : function(data)
 							{
-								console.log(data);
+								
 								if(data.status == true)
 								{
 									window.location.href=baseUrl('data_apbd/sub_kegiatan/all');				
@@ -2220,7 +2220,7 @@ function copy_data_apbd_sub_kegiatan(kode_rekening_sub_kegiatan, kode_kegiatan, 
 				            },
 				            success : function(data)
 				            {
-				            	console.log(data);
+				            	
 								Swal.fire(
 						      'Sukses!',
 						       'Copy Pagu, target, sumber dana pada APBD Awal sub kegiatan ' + nama_sub_kegiatan +' ke APBD Perubahan berhasil',
@@ -2230,7 +2230,7 @@ function copy_data_apbd_sub_kegiatan(kode_rekening_sub_kegiatan, kode_kegiatan, 
 					        },
 					        error : function(){
 
-								console.log('eror');
+								
 								$('#table-sub-kegiatan-instansi-gabungan').DataTable().ajax.reload(null, false);
 					        }
 				        });

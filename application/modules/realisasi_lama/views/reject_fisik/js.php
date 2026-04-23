@@ -10,7 +10,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <script>
 	let status_show_pptk = 'collapse';
 	$(document).ready(function() {
@@ -375,10 +375,7 @@
 			xhr: function() {
 				var xhr = new window.XMLHttpRequest();
 				xhr.upload.addEventListener('progress', function(e) {
-					if (e.lengthComputable) {
-						// console.log('Bytes Loaded : ' + e.loaded);
-						// console.log('Total Size : ' + e.total);
-						// console.log('Persen : ' + (e.loaded / e.total));
+					if (e.lengthComputable) { 
 						var percent = Math.round((e.loaded / e.total) * 100);
 
 						$('#progress').attr('aria-valuenow', percent).css('width', percent + '%').text(percent + '%');

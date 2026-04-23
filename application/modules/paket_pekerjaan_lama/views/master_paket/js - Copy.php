@@ -9,7 +9,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Leaflet -->
 <script src="<?php echo base_url(); ?>assets/leaflet/leaflet.js"></script>
 <script>
@@ -621,7 +621,7 @@
 	function list_kecamatan(id_kab_kota)
 	{
 		var id_paket = $('#modal-lokasi-paket').find('#id_paket').val();
-		console.log(id_paket);
+		
 		$.ajax(
         {
             url     : baseUrl('paket_pekerjaan/list_kecamatan/'),
@@ -630,7 +630,7 @@
             data    : { id_kab_kota : id_kab_kota , id_paket : id_paket},
             success : function(data)
             {
-            	console.log(data)
+            	
                 if(data.status == true)
                 {
                 	$('#id_kecamatan').html('');
@@ -779,7 +779,7 @@
 			data: $('#formMasterPaket').serialize(),
 			success: function (data)
 			{
-				console.log(data);
+				
 				if(data.success == true)
 				{
 					if(data.messages == "Anggaran paket melebihi pagu kegiatan"){
@@ -935,7 +935,7 @@
 				},
 				success : function(data)
 				{
-					console.log(data);
+					
 					if(data.status == true)
 					{
 						let id_table 	= data.rekening.split('.').join('-');
@@ -1011,7 +1011,7 @@
 		let id_paket = $('#id_paket_volume').val();
 		let nama_pel = $('#nama_pelaksanaan').val();
 		let tipe_input = $('#modal-volume-paket').find('#input_type').val();
-		console.log(tipe_input);
+		
 		$.ajax(
 		{
 			url     : baseUrl('paket_pekerjaan/save_vol/'),
@@ -1020,7 +1020,7 @@
 			data    : { id_paket : id_paket, nama_pelaksanaan : nama_pel, tipe_input : tipe_input },
 			success : function(data)
 			{
-				console.log(data)
+				
 				if(data.status == true)
 				{
 					let id_table 	= data.rekening.split('.').join('-');

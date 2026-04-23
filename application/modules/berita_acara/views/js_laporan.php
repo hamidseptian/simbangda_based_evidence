@@ -1,5 +1,5 @@
 
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <script>
 	$('#id_opd').select2({
 			placeholder: "Pilih OPD",
@@ -50,7 +50,6 @@ function cek_synchronize(){
 				periode : periode	
 			},
 			success: function(data) {
-				// console.log(data.status);
 				if (data.status==1) {
 					synchronize()
 				}else{

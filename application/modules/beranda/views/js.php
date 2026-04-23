@@ -496,7 +496,6 @@ function requestData(kategori) {
     var rf = [];
     var rk = [];
     var ba = <?php echo bulan_aktif(); ?>;
-    // console.log($('#id_instansi_grafik').val());
     $.ajax({
         url: '<?php echo base_url('beranda/show_chart'); ?>',
         type: "GET",
@@ -509,7 +508,6 @@ function requestData(kategori) {
 
         async: false,
         success: function(data) {
-            // console.log(data);
             result = data;
 
         },
@@ -542,14 +540,12 @@ function sync(id_instansi) {
                 tahapan_apbd: tahapan_apbd
             },
             success: function(data) {
-                console.log(data);
                 if (data.status == true) {
                     window.location.href = "<?php echo base_url(); ?>dashboard";
                 }
                 stop_loading();
             },
             error: function() {
-                console.log('error');
                 stop_loading();
                 $('#tombol_sync').text('Reload Page').attr('disabled', false);
                 $('#tombol_sync').attr('onclick', "reload()");
@@ -565,7 +561,6 @@ function sync(id_instansi) {
 
             },
             success: function(data) {
-                console.log(data);
                 $('#tahap-2' + '-' + id_instansi).find('i').attr('class', 'ion ion-checkmark');
 
                 $('#tahap-2' + '-' + id_instansi).attr('class', 'btn btn-sm btn-success selesai_sinkron');
@@ -679,7 +674,6 @@ function data_kab_kota_detail(id_kota, nama_kota, logo) {
 
             $.each(data.data, function(k, v) {
 
-                console.log(v.pagu.bm.aset);
                 $('#modal_per_kab_kota').find('#list_opd').append(`<tr>
                 <td>` + no + `</td>
                 <td>` + v.skpd + `</td>
@@ -702,7 +696,6 @@ function data_kab_kota_detail(id_kota, nama_kota, logo) {
                 <td> - </td>                               
                 <td>` + id_kota + `</td>                
                 </tr>`);
-                console.log(v.nama_instansi);
                 no++;
             });
 

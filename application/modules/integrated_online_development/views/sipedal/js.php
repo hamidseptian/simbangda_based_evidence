@@ -2,7 +2,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Leaflet -->
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
@@ -84,7 +84,6 @@
 							Swal.fire(data.instruksi, data.message,data.swal_code);
 							get_data_integrasi_sipedal();
 							$('#progres_import').modal('hide');
-							console.log(data);
 						},
 						error: function(jqXHR, textStatus, errorThrown) {
 							alert('e');

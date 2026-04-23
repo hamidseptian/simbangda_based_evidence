@@ -11,7 +11,7 @@
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Function -->
 <script>
 	/* Global Variable */
@@ -105,7 +105,7 @@ function showMastersub_kegiatan() {
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 			}
 		 });
 		// if (status == 'save') {
@@ -158,7 +158,7 @@ function showMastersub_kegiatan() {
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 			}
 		 });
 
@@ -175,7 +175,7 @@ function showMastersub_kegiatan() {
 		$('.form-control').removeClass('is-valid')
 						  .removeClass('is-invalid');
         $('.text-danger').remove();
-        console.log(id_sub_kegiatan);
+        
 		$.ajax(
         {
             url     : baseUrl('management_master_data_apbd/get_sub_kegiatan/'),
@@ -184,7 +184,7 @@ function showMastersub_kegiatan() {
             data    : { id_sub_kegiatan : id_sub_kegiatan },
             success : function(data)
             {
-            	console.log(data);
+            	
                 if(data.status == true)
                 {
                 	$('#id').val(data.data.id);
@@ -197,7 +197,7 @@ function showMastersub_kegiatan() {
                 }
             },
             error : function(){
-            	console.log('error')
+            	
             }
         });
 

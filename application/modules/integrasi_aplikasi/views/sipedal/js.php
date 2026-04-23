@@ -2,7 +2,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Leaflet -->
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
@@ -185,7 +185,7 @@
             },
             success : function(data)
             {
-				console.log(data);
+				
 				$('#edit_sub_kegiatan_import_sipedal').find('#nama_paket').html(data.data.nama_paket);
 				$('#edit_sub_kegiatan_import_sipedal').find('#jenis_paket').html(data.data.jenis_paket);
 				$('#edit_sub_kegiatan_import_sipedal').find('#pagu_paket').html(data.data.pagu);
@@ -216,7 +216,7 @@
             },
             success : function(data)
             {
-				console.log(data.data);
+				
 				$('#edit_kategori_import_sipedal').find('#nama_paket').html(data.data.nama_paket);
 				$('#edit_kategori_import_sipedal').find('#jenis_paket').html(data.data.jenis_paket);
 				$('#edit_kategori_import_sipedal').find('#pagu_paket').html(data.data.pagu);
@@ -231,7 +231,7 @@
 	{
 		var id_paket_pekerjaan = $('#edit_sub_kegiatan_import_sipedal').find('#id_paket_pekerjaan').val();
 
-		console.log(id_paket_pekerjaan);
+		
 
 
 		$.ajax({
@@ -247,7 +247,7 @@
 			},
 			success: function (data)
 			{
-				console.log(data);
+				
 
 		$('#edit_sub_kegiatan_import_sipedal').modal('hide');
 				$('#list_paket_import_sipedal').DataTable().ajax.reload(null, false);
@@ -263,7 +263,7 @@
 		var id_paket_pekerjaan = $('#edit_kategori_import_sipedal').find('#id_paket_pekerjaan').val();
 		var kategori = $('#edit_kategori_import_sipedal').find('#option_kategori').val();
 
-		console.log(kategori);
+		
 
 		$.ajax({
 			url: baseUrl('integrasi_aplikasi/simpanedit_kategori_import_sipedal'),
@@ -276,13 +276,13 @@
 			},
 			success: function (data)
 			{
-				console.log(data);
+				
 
 		$('#edit_kategori_import_sipedal').modal('hide');
 				$('#list_paket_import_sipedal').DataTable().ajax.reload(null, false);
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 
 			}
 		});
@@ -318,7 +318,7 @@
 
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 
 			}
 		});

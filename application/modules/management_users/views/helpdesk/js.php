@@ -1,6 +1,6 @@
 
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>		
-<script src="<?php echo base_url() ?>assets/select2/select2.min.js"></script>
+<script src="<?php echo base_url() ?>assets/select2/dist/js/select2.min.js"></script>
 <!-- Function -->
 <script>
 	/* Global Variable */
@@ -138,7 +138,7 @@ function data_helpdesk_penyedia() {
 	    	success  : function(data)
 	    	{
 				$.each(data.data, function(k, v){
-				console.log(v.jml_data);
+				
 						$('#helpdesk_' + v.id_group).html(v.jml_data);
 					});
 	    	}
@@ -188,14 +188,14 @@ function data_helpdesk_penyedia() {
 				}
 			},
 			error : function(){
-				console.log('e')
+				
 			}
 		});
 	}
 
 	function tampil_opd(id_user,prop)
 	{
-		console.log(id_user);
+		
 		let parent  = $(prop).closest('.list-group-item').attr('id');
 		
 		$('.lg-item').removeClass('list-group-item-info');
@@ -234,7 +234,7 @@ function data_helpdesk_penyedia() {
 
 	function show_opd(id_user)
 	{
-		console.log(id_user);
+		
 		$('#modal_helpdesk_skpd').modal('show');
 		$('#modal_helpdesk_skpd').find('#id_user').val(id_user);
 
@@ -247,7 +247,7 @@ function data_helpdesk_penyedia() {
 	    	{
 				$('#modal_helpdesk_skpd').find('.nama_helpdesk').html(data.data.full_name);
 				$('#modal_helpdesk_skpd').find('.username').html(data.data.username);
-	    		console	.log(data.data.full_name);
+	    		
 				if(data.status == true)
 				{
 					data_opd();
@@ -288,7 +288,7 @@ function data_helpdesk_penyedia() {
 
 	function show_helpdesk(id_instansi, nama_instansi)
 	{
-		console.log(id_instansi);
+		
 		$('#modal_skpd_helpdesk').modal('show');
 		$('#modal_skpd_helpdesk').find('#id_instansi').val(id_instansi);
 				$('#modal_skpd_helpdesk').find('.nama_skpd').html(nama_instansi	);
@@ -384,7 +384,7 @@ function data_helpdesk_penyedia() {
 		    	{
 					if(data.status == true)
 					{
-						console.log(data);
+						
 						data_helpdesk_skpd(id_instansi);
 						// statistika_helpdesk();
 						$('#table-skpd-helpdesk').DataTable().ajax.reload(null, false);

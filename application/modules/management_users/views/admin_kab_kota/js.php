@@ -11,7 +11,7 @@
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Function -->
 <script>
 	/* Global Variable */
@@ -206,7 +206,7 @@ function showMasterUser_kab_kota() {
 			dataType: 'JSON',
 			data :$('#formMasterUser').serialize(),
 			success : function(data){
-				console.log('sukses')
+				
 				if(data.success == true)
 				{
 					$('#btnSaveMasterUser').html('Save changes');
@@ -217,7 +217,7 @@ function showMasterUser_kab_kota() {
 						    );
 					$('#formMasterUser')[0].reset();
 					$('#clodemodalmodalMasterUser').click();
-					console.log('sukses cuy');
+					
 					showMasterUser_kab_kota();
 				}else{
 					$.each(data.messages, function (key, value)
@@ -233,7 +233,7 @@ function showMasterUser_kab_kota() {
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 			}
 		 });
 		// if (status == 'save') {
@@ -281,7 +281,7 @@ function showMasterUser_kab_kota() {
                 }
             },
             error : function(){
-            	console.log('error')
+            	
             }
         });
 
@@ -327,7 +327,7 @@ function showMasterUser_kab_kota() {
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 			}
 		 });
 		// if (status == 'save') {
@@ -350,7 +350,7 @@ function showMasterUser_kab_kota() {
 	}
 	/* Fungsi untuk menghapus master user */
 	function deleteUser(id_user) {
-		console.log(id_user	);
+		
 		Swal.fire({
 			  title: 'Hapus ?',
 			  text: 'Hapus User.?',

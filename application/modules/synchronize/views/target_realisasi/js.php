@@ -29,7 +29,7 @@
 			dataType: 'JSON',
 			data: {},
 			success: function(data) {
-				console.log(data)
+				
 				if (data.status == true) {
 					$('#aliran-kas-opd').html('');
 					$.each(data.data, function(k, v) {
@@ -240,7 +240,7 @@
   //                                      <button type="button" class="btn-icon btn-shadow btn-outline-2x btn btn-outline-primary"  onclick="perbandingan_grafik_2_tahun_terakhir('Bulanan','`+id_instansi+`')"><i class="fa fa-signal"> </i> Grafik Bulanan</button>`);
 
 		var sumber_data = requestData_2_tahun_terakhir_asisten(kategori, asisten);
-		// console.log(sumber_data);
+		
 		Highcharts.chart('grafik_realisasi_skpd_2_tahun_terakhir', {
 		  chart: {
 		    zoomType: 'xy'
@@ -427,7 +427,7 @@
                                        <button type="button" class="btn-icon btn-shadow btn-outline-2x btn btn-outline-primary"  onclick="perbandingan_grafik_2_tahun_terakhir('Bulanan','`+id_instansi+`','`+nama_instansi+`')"><i class="fa fa-signal"> </i> Grafik Bulanan</button>`);
 
 		var sumber_data = requestData_2_tahun_terakhir(kategori, id_instansi);
-		// console.log(sumber_data);
+		
 		Highcharts.chart('grafik_realisasi_skpd_2_tahun_terakhir', {
 		  chart: {
 		    zoomType: 'xy'
@@ -611,7 +611,7 @@ function requestData(kategori, id_instansi) {
 		var rf = [];
 		var rk = [];
 		var ba = <?php echo bulan_aktif(); ?>;
-				// console.log($('#id_instansi_grafik').val());
+				
 		$.ajax({
 			url: '<?php echo base_url('dashboard/show_chart'); ?>',
 			type: "GET",
@@ -624,7 +624,7 @@ function requestData(kategori, id_instansi) {
 
             async: false,
 			success: function(data) {
-				// console.log(data);
+				
 				result = data;
 				
 			},
@@ -639,7 +639,7 @@ function requestData_2_tahun_terakhir(kategori, id_instansi) {
 		var rf = [];
 		var rk = [];
 		var ba = <?php echo bulan_aktif(); ?>;
-				// console.log($('#id_instansi_grafik').val());
+				
 		$.ajax({
 			url: '<?php echo base_url('dashboard/show_chart_2_tahun_terakhir'); ?>',
 			type: "GET",
@@ -652,7 +652,7 @@ function requestData_2_tahun_terakhir(kategori, id_instansi) {
 
             async: false,
 			success: function(data) {
-				// console.log(data);
+				
 				result = data;
 				
 			},
@@ -665,7 +665,7 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 		var rf = [];
 		var rk = [];
 		var ba = <?php echo bulan_aktif(); ?>;
-				// console.log($('#asisten_grafik').val());
+				
 		$.ajax({
 			url: '<?php echo base_url('dashboard/show_chart_2_tahun_terakhir_asisten'); ?>',
 			type: "GET",
@@ -678,7 +678,7 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 
             async: false,
 			success: function(data) {
-				// console.log(data);
+				
 				result = data;
 				
 			},
@@ -710,7 +710,7 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 		berhasil_synch = 0;
 		$('#cek_status_progress_' + id_instansi).html('<span class="badge badge-info">Loading</span>');
 
-		console.log(id_instansi);
+		
 		$('#tahap-2'+ '-' + id_instansi).html('<i class="fa fa-cog fa-w-3 fa-spin"></i>').attr('disabled', true);
 
 
@@ -764,7 +764,7 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 					// tahun : tahun
 				},
 				success: function(data) {
-					console.log(data);
+					
 						$('#tahap-2'+ '-' + id_instansi).find('i').attr('class', 'ion ion-checkmark');
 
 						$('#tahap-2'+ '-' + id_instansi).attr('class', 'btn btn-sm btn-success selesai_sinkron');
@@ -803,7 +803,7 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 
 				},
 				error : function(){
-					console.log('ada error');
+					
 					$('#tahap-2'+ '-' + id_instansi).attr('class', 'btn btn-sm btn-success selesai_sinkron');
 					$('#tahap-2'+ '-' + id_instansi).find('i').attr('class', 'ion ion-checkmark');
 					
@@ -899,7 +899,7 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 
 
 	function tess(){
-		console.log('mencoba');
+		
 	}
 
 

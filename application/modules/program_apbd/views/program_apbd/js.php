@@ -63,7 +63,7 @@
 			data: form_data,
 			type: 'POST',
 			success: function(data) {
-				console.log(data);
+				
 				if (data.status == true) {
 			
 					window.location.href = baseUrl('program_apbd');
@@ -86,15 +86,15 @@
 		// 		data: {},
 		// 		type: 'POST',
 		// 		success: function(data) {
-		// 			console.log(data);
+		
 		// 			if (data.status == true) {
-		// 				console.log('harusnya berhasil')
+		
 				
 		// 				window.location.href = baseUrl('program_apbd');
 		// 			}
 		// 		},
 		// 		error : function(){
-		// 			console.log('error');
+		
 		// 		}
 		// 	});	
 	}

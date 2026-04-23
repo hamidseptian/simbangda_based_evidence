@@ -10,7 +10,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Bootstrap Datepicker -->
 <script src="<?php echo base_url(); ?>assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <!-- Leaflet -->
@@ -175,7 +175,7 @@ $(document).on('click','#clearmap',clearmap);
 			type: 'POST',
 			data: {},
 			success: function(data) {
-				console.log(data);
+				
 				if (data.status == true) {
 					$('#id_paket_pekerjaan').html('');
 					$('#id_paket_pekerjaan').append('<option></option>');
@@ -196,7 +196,7 @@ $(document).on('click','#clearmap',clearmap);
 			type: 'POST',
 			data: {},
 			success: function(data) {
-				console.log(data);
+				
 				if (data.status == true) {
 					$.each(data.data, function(k, v) {
 						$('#kab_kota').append('<option value="' + v.id_kota + '">' + v.nama_kota + '</option>');
@@ -218,7 +218,7 @@ $(document).on('click','#clearmap',clearmap);
 				id_kota: id_kota
 			},
 			success: function(data) {
-				console.log(data);
+				
 				if (data.status == true) {
 					$.each(data.data, function(k, v) {
 						$('#kecamatan').append('<option value="' + v.id_kecamatan + '">' + v.nama_kecamatan + '</option>');
@@ -341,7 +341,7 @@ $(document).on('click','#clearmap',clearmap);
 					id_paket_pekerjaan: id_paket_pekerjaan
 				},
 				success: function(data) {
-					console.log(data);
+					
 					if (data.status == true) {
 						$('#preview_maps').hide();
 						$('#id_pptk').val(data.data.id_pptk);
@@ -368,7 +368,7 @@ $(document).on('click','#clearmap',clearmap);
 					}
 				},
 				error : function (){
-					console.log('err');
+					
 				}
 			});
 		}

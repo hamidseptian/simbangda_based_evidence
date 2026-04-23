@@ -10,13 +10,13 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <script>
 	$(document).ready(function() {
 		$('.btn-open-options').hide();
 		list_instansi();
 		var id_instansi = $('#id_instansi_terpilih').val();
-		console.log(id_instansi);
+		
 		show_table_swakelola(id_instansi);
 		show_table_penyedia(id_instansi);
 		show_table_belum_validasi(id_instansi);
@@ -109,7 +109,7 @@
 				id_instansi: id_instansi
 			},
 			success: function(data) {
-				console.log(data);
+				
 				$('#nama_skpd').html(data.data.nama_instansi);
 				$('#nama_helpdesk').html(data.data.helpdesk +'<br>'+ data.data.nohp);
 				$('#total_evidence_swakelola').html(data.data.total_paket_swakelola);
@@ -152,7 +152,7 @@
 				id_paket: id_paket
 			},
 			success: function(data) {
-				console.log(data);
+				
 				$('#modal-identitas-paket').find('#nama_program').html(data.data.nama_program);
 				$('#modal-identitas-paket').find('#nama_kegiatan').html(data.data.nama_kegiatan);
 				$('#modal-identitas-paket').find('#kode_sub_kegiatan').html(data.data.kode_sub_kegiatan);
@@ -207,13 +207,13 @@
 				}
 			},
 			error : function(){
-				console.log('error');
+				
 			}
 		});
 	}
 
 	function tampil_paket(id_instansi, nama_instansi, swa, pen, prop) {
-		console.log(id_instansi);
+		
 		
 		let parent = $(prop).closest('.list-group-item').attr('id');
 		$('.lg-item').removeClass('list-group-item-info');
@@ -596,7 +596,7 @@
 					nilai: status != 'Ditolak' && dokumen == 'PELAKSANAAN' ? $('#nilai').val() : ''
 				},
 				success: function(data) {
-					console.log(data);
+					
 					if (data.status == true) {
 						$('#form-keterangan').html('');
 						$('#modal-dokumen-realisasi').modal('hide');
@@ -613,7 +613,7 @@
 					}
 				},
 				error: function(){
-					console.log('error');
+					
 				}
 			});
 		} else {

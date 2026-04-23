@@ -996,7 +996,7 @@ public function sync_eplanning()
 
 
             $output = [
-                "draw"              => '',//$_POST['draw'],
+                "draw"              => $_POST['draw'],
                 "recordsTotal"      => 0,//$this->datatables_model->count_all($tabel, $where),
                 "recordsFiltered"   => 0,//$this->datatables_model->count_filtered($tabel, $column_order, $column_search, $order, $where),
                 "data"              => $data,

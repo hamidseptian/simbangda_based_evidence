@@ -213,7 +213,7 @@ function showMasterUser() {
 			dataType: 'JSON',
 			data :$('#formMasterUser').serialize(),
 			success : function(data){
-				console.log('sukses')
+				
 				if(data.success == true)
 				{
 					$('#btnSaveMasterUser').html('Save changes');
@@ -224,7 +224,7 @@ function showMasterUser() {
 						    );
 					$('#formMasterUser')[0].reset();
 					$('#clodemodalmodalMasterUser').click();
-					console.log('sukses cuy');
+					
 						$('#table-master-user').DataTable().ajax.reload(null, false);
 				}else{
 					$.each(data.messages, function (key, value)
@@ -240,7 +240,7 @@ function showMasterUser() {
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 			}
 		 });
 		// if (status == 'save') {
@@ -289,7 +289,7 @@ function showMasterUser() {
                 }
             },
             error : function(){
-            	console.log('error')
+            	
             }
         });
 
@@ -304,14 +304,14 @@ function showMasterUser() {
         $('.text-danger').remove();
 
         formdata = $('#formMasterUser').serialize();
-        console.log(formdata);
+        
 		$.ajax({
 			url: baseUrl('management_users/saveedit_master_user'),
 			type : "POST",
 			dataType: 'JSON',
 			data : formdata,
 			success : function(data){
-				console.log(data);
+				
 				if(data.success == true)
 				{
 					Swal.fire(
@@ -337,7 +337,7 @@ function showMasterUser() {
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 			}
 		 });
 		// if (status == 'save') {
@@ -360,7 +360,7 @@ function showMasterUser() {
 	}
 	/* Fungsi untuk menghapus master user */
 	function deleteUser(id_user) {
-		console.log(id_user	);
+		
 		Swal.fire({
 			  title: 'Hapus ?',
 			  text: 'Hapus User.?',

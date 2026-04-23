@@ -10,7 +10,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <script>
 	let status_show_pptk = 'collapse';
 	$(document).ready(function() {
@@ -65,7 +65,7 @@
 							},
 							success : function(data)
 							{
-								console.log(data);
+								
 								$('#modal-edit-pengumuman').find('#id_pengumuman').val(data.data.id_pengumuman);
 								$('#modal-edit-pengumuman').find('#judul').val(data.data.judul);
 								$('#modal-edit-pengumuman').find('#keterangan').html(data.data.edit_keterangan);
@@ -98,7 +98,7 @@
 							},
 							success : function(data)
 							{
-								console.log(data);
+								
 								$('#modal-detail-pengumuman').find('#judul').html(data.data.judul);
 								$('#modal-detail-pengumuman').find('#keterangan').html(data.data.keterangan);
 								$('#modal-detail-pengumuman').find('#waktu').html(data.data.tgl_pelaksanaan + "<br>"+ data.data.jam_pelaksanaan);
@@ -195,7 +195,7 @@
 							},
 							success : function(data)
 							{
-								console.log(data);
+								
 								if(data.success == true)
 								{
 									Swal.fire(

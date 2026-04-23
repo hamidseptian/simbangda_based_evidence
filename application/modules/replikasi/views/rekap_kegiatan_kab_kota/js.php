@@ -8,7 +8,7 @@
  */
 ?>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Script -->
 <script>
   $(document).ready(function() {
@@ -51,7 +51,6 @@
             data    : { id_provinsi : id_provinsi},
             success : function(data)
             {
-              console.log(data);
                 if(data.status == true)
                 {
                   $('#kota').html('');

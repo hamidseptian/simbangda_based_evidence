@@ -8,7 +8,7 @@
  */
 ?>
 
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <script>
 	$(document).ready(function() {
 		statistika(<?php echo tahun_anggaran() ?>,<?php echo tahapan_apbd() ?>);

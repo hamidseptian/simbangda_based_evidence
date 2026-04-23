@@ -944,7 +944,7 @@
 		var rf = [];
 		var rk = [];
 		var ba = <?php echo bulan_aktif(); ?>;
-				console.log($('#id_instansi_grafik').val());
+				
 		$.ajax({
 			url: '<?php echo base_url('dashboard/show_chart'); ?>',
 			type: "GET",
@@ -1088,13 +1088,13 @@
 				id_instansi: id_instansi
 			},
 			success: function(data) {
-				console.log(data);
+				
 				if (data.status == true) {
 					window.location.href = "<?php echo base_url(); ?>dashboard";
 				}
 			},
 			error : function(){
-				console.log('error');
+				
 				// $('#tombol_sync').text('Reload Page').attr('disabled', false);
 				// $('#tombol_sync').attr('onclick', "reload()");
 			}

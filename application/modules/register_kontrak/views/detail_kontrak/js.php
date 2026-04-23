@@ -10,7 +10,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Bootstrap Datepicker -->
 <script src="<?php echo base_url(); ?>assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <!-- Leaflet -->
@@ -146,7 +146,7 @@ function data_progress_pekerjaan(id_paket_pekerjaan)
 				id_kota: id_kota
 			},
 			success: function(data) {
-				console.log(data);
+				
 				if (data.status == true) {
 					$.each(data.data, function(k, v) { 
 						selected = v.id_kecamatan==id_kecamatan ? 'selected': ''
@@ -183,7 +183,7 @@ $('#kab_kota').change(function(){
 				id_kota: id_kota
 			},
 			success: function(data) {
-				console.log(data);
+				
 				if (data.status == true) {
 					$.each(data.data, function(k, v) {
 						$('#kecamatan').append('<option value="' + v.id_kecamatan + '">' + v.nama_kecamatan + '</option>');
@@ -213,7 +213,7 @@ $('#kab_kota').change(function(){
 					id_kontrak: id_kontrak
 				},
 				success: function(data) {
-					console.log(data);
+					
 					if (data.status == true) {
 						$('#id_kontrak').html(data.data.id_kontrak);
 						$('#nama_pptk').html(data.data.nama_pptk);
@@ -246,7 +246,7 @@ $('#kab_kota').change(function(){
 					}
 				},
 				error : function(){
-					console.log('e');
+					
 				}
 			});
 	}
@@ -400,7 +400,7 @@ $('#kab_kota').change(function(){
 	// 		},
 	// 		type: 'POST',
 	// 		success: function(data) {
-	// 	    	console.log(data);
+	
 	// 			if (data.status == true) {
 	// 				$.each(data.data, function(k, v) {
 	// 					var gambar = '<img src="'+ v.gambar+'" width="400px">';

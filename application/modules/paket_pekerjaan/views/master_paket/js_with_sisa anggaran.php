@@ -9,7 +9,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Leaflet -->
 <script src="<?php echo base_url(); ?>assets/leaflet/leaflet.js"></script>
 <script>
@@ -308,7 +308,7 @@
 
 	function groupClick(event)
 	{
-		console.log("Clicked on marker" + event.layer.id);
+		
 		getLocation();
 	}
 
@@ -321,8 +321,8 @@
 	   var latitude = position.coords.latitude;
 	   var longitude = position.coords.longitude;
 
-	   console.log(latitude);
-	   console.log(longitude);
+	   
+	   
 	}
 
 	function errorHandler( err )

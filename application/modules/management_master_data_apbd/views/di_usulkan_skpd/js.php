@@ -87,7 +87,6 @@
 					
 				},
 				// success: function(data){
-				// 	console.log(data);
 				// }
 			},
 			columnDefs: [{

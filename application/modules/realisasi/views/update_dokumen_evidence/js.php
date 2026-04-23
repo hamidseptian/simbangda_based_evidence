@@ -37,7 +37,6 @@
 			data: form_data,
 			type: 'POST',
 			success: function(data) {
-				console.log(data);
 				if (data.success == true) {
 					get_paket_ditolak();
 					window.location.href = baseUrl('dashboard');
@@ -46,7 +45,6 @@
 				}
 			},
 			error : function(){
-				console.log('error');
 			}
 		});
 	}

@@ -10,7 +10,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- X-editable -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 <script>
@@ -39,7 +39,7 @@ function data_opd_kb_kota()
 				            type 	: "POST",
 				          	data 	: {},
                             // success : function(data){
-                            //     console.log(data);
+                            
                             // }
 	        			  },
 	        columnDefs  : [
@@ -668,7 +668,7 @@ function input_lra(jenis,id_instansi,pagu)
                         $.each(data.data, function(k, v) {
                 
                             var bulan_realisasi = k+1;
-                            console.log(v);
+                            
 
                                 var total = parseInt(v.lra) ;
                                 if (izin_input==0) {
@@ -718,7 +718,7 @@ function input_lra(jenis,id_instansi,pagu)
                     }
             },
             error : function(){
-                console.log('error');
+                
             }
         });
 

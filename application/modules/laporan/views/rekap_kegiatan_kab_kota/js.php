@@ -8,7 +8,7 @@
  */
 ?>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Script -->
 <script>
   $(document).ready(function() {
@@ -93,7 +93,7 @@
             data    : { id_provinsi : id_provinsi},
             success : function(data)
             {
-              console.log(data);
+              
                 if(data.status == true)
                 {
                   $('#kota').html('<option value="<?php echo sbe_crypt('semua') ?>">Semua Kab/ Kota</option>');
@@ -116,7 +116,7 @@
             data    : { id_kota : id_kota},
             success : function(data)
             {
-              console.log(data);
+              
                 if(data.status == true)
                 {
                   $('#kecamatan').html('<option value="<?php echo sbe_crypt('semua') ?>">Semua Kecamatan</option>');

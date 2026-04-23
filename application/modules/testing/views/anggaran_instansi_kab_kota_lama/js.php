@@ -9,7 +9,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Leaflet -->
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
@@ -121,7 +121,7 @@ function anggaran_instansi_kab_kota()
             },
             success : function(data)
             {
-            	console.log(data);
+            	
             	
             	$('#modal_input_anggaran').find('.instansi').html(data.data.nama_instansi);
             
@@ -151,7 +151,7 @@ function anggaran_instansi_kab_kota()
                 	data.data.rea_bt ==1 ? $('#rea_bt').attr('checked','checked') : $('#rea_bt').removeAttr('checked');
             },
             error : function(){
-            	console.log('error');
+            	
             }
         });
 
@@ -194,7 +194,7 @@ function anggaran_instansi_kab_kota()
 			            },
 			            success : function(data)
 			            {
-			            	console.log(data);
+			            	
 			            	if (data.status==true) {
 				            	Swal.fire('Di Copy',data.messages, 'success');
 			            	}else{
@@ -206,7 +206,7 @@ function anggaran_instansi_kab_kota()
 			            	
 			            },
 			            error : function(){
-			            	console.log('error');
+			            	
 			            }
 			        });
 			
@@ -246,7 +246,7 @@ function anggaran_instansi_kab_kota()
 			data: $('#form_anggaran_sub_kegiatan').serialize(),
 			success: function (datanya)
 			{
-				console.log(datanya);
+				
 				if(datanya.success == true)
 				{
 					
@@ -268,7 +268,7 @@ function anggaran_instansi_kab_kota()
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('errort');
+				
 			}
 		});
 	}

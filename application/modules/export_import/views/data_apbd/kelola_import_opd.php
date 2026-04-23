@@ -934,7 +934,7 @@ $data_insert_all = [
                     },
                     success : function(data)
                     {
-                        // console.log(data.id_export_import);
+                       
 
                         // window.location.href=baseUrl('export_import/list_opd/' + data.id_export_import)  
                         

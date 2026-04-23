@@ -9,7 +9,7 @@
 <!-- Datatables -->
 
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>		
-<script src="<?php echo base_url() ?>assets/select2/select2.min.js"></script>
+<script src="<?php echo base_url() ?>assets/select2/dist/js/select2.min.js"></script>
 
 
 <script>
@@ -304,7 +304,7 @@ function pptk_kegiatan(tahun, kode_tahap, fetch_method)
             {
 
 
-            	console.log(data);
+            	
                 if(data.status == true)
                 {
                 	if (data.data.is_active==0) {
@@ -447,7 +447,7 @@ function pptk_kegiatan(tahun, kode_tahap, fetch_method)
             		  },
             success : function(data)
             {
-				console.log(data);
+				
 				$('#modal-ganti-struktur').find('#nama_kedudukan').val(data.data.kedudukan);
 				$('#modal-ganti-struktur').find('#full_name').val(data.data.nama_lengkap);
 				$('#modal-ganti-struktur').find('#nama_sub_instansi').val(data.data.sub_instansi);
@@ -482,7 +482,7 @@ function pptk_kegiatan(tahun, kode_tahap, fetch_method)
             		  },
             success : function(data)
             {
-				console.log(data);
+				
 				$('#modal-akses-user').find('.nama_lengkap').html(data.data.nama_lengkap);
 				$('#modal-akses-user').find('.nama_kedudukan').html(data.data.kedudukan);
 				$('#modal-akses-user').find('.nama_jabatan').html(data.data.sub_instansi);
@@ -510,7 +510,7 @@ function pptk_kegiatan(tahun, kode_tahap, fetch_method)
             		  },
             success : function(data)
             {
-				console.log(data);
+				
 				$('#modal-akses-user').find('.nama_lengkap').html(data.data.nama_lengkap);
 				$('#modal-akses-user').find('.nama_kedudukan').html(data.data.kedudukan);
 				$('#modal-akses-user').find('.nama_jabatan').html(data.data.sub_instansi);
@@ -539,7 +539,7 @@ function pptk_kegiatan(tahun, kode_tahap, fetch_method)
 					{
 						// $('#btnSaveMasterUser').html('Save changes');
 						$('#modal-akses-user').modal('hide');
-						console.log('sukses cuy');
+						
 						Swal.fire(
 							      'Sukses!',
 							      'Master User Disimpan..!',
@@ -1207,7 +1207,7 @@ function hapus_sub_instansi(id_user, id_sub_instansi, id_kedudukan){
 
 
 	function set_pptk_kegiatan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan) {
-		console.log(kode_rekening_sub_kegiatan);
+		
 
 		$('#modal_set_pptk').modal('show');
 		// $('.form-control').removeClass('is-valid')
@@ -1255,7 +1255,7 @@ function hapus_sub_instansi(id_user, id_sub_instansi, id_kedudukan){
             	$('#modal_set_pptk').find('#nama_tahapan').html(data.nama_tahapan);
 
             	$.each(data.data_pptk, function(k,v){
-            		console.log(v);
+            		
             		$('#list_pptk_kegiatan').append(`
             			<tr>
             			<td>`+ (k+1)+`</td>
@@ -1269,16 +1269,16 @@ function hapus_sub_instansi(id_user, id_sub_instansi, id_kedudukan){
             			`)	
 
             	});
-        //     	console.log(data.count_pptk_nganggur);
-        //     	// data.count_pptk_nanggur == 0 ? console.log(0) : console.log(0);
+        
+        
         //     	if(data.count_pptk_nanggur === 0) {
-			    	// console.log(0);
+			    	
         //     	} //else{
 			    	// // $('#f_pilih_pptk').hide();
-			    	// // console.log(1);
+			    	
 
         // //     	}
-        //     	console.log(data);
+        
             	$.each(data.data_pptk_nganggur, function(k,v){
             		$('#id_user_pptk').append(`
             			<option value="`+v.id_user+`">`+v.full_name+`</option>
@@ -1301,10 +1301,10 @@ function hapus_sub_instansi(id_user, id_sub_instansi, id_kedudukan){
 
 	function hapus_usk(id_usk, kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan)
 	{
-		console.log(kode_rekening_sub_kegiatan);
-		console.log(kode_kegiatan);
-		console.log(kode_program);
-		console.log(tahap);
+		
+		
+		
+		
 
 
 				$.ajax(

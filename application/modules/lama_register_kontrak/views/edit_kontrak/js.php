@@ -8,7 +8,7 @@
  */
 ?>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Bootstrap Datepicker -->
 <script src="<?php echo base_url(); ?>assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <!-- Leaflet -->
@@ -211,7 +211,7 @@ $(document).on('click','#clearmap',clearmap);
 	});
 
 	function tampil_register_kontrak(id_kontrak) {
-					console.log(id_kontrak);
+					
 		$('.register-kontrak').show();
 
 		$.ajax({
@@ -222,7 +222,7 @@ $(document).on('click','#clearmap',clearmap);
 					id_kontrak: id_kontrak
 				},
 				success: function(data) {
-					console.log(data);
+					
 					if (data.status == true) {
 						$('#id_kontrak').val(data.data.id_kontrak);
 						$('#nama_pptk').val(data.data.nama_pptk);
@@ -242,7 +242,7 @@ $(document).on('click','#clearmap',clearmap);
 					}
 				},
 				error : function(){
-					console.log('error');
+					
 				}
 			});
 	}
@@ -259,7 +259,7 @@ $(document).on('click','#clearmap',clearmap);
 				button_loading('btn-register-kontrak', true);
 			},
 			success: function(data) {
-				console.log(data);
+				
 				$('#preview_maps').attr('style', 'display:none');
 				if (data.status == true) {
 					window.location.href= baseUrl('register_kontrak/daftar_kontrak/');
@@ -268,7 +268,7 @@ $(document).on('click','#clearmap',clearmap);
 				}
 			},
 			error : function(){
-				console.log('error');
+				
 			}
 		});
 	}

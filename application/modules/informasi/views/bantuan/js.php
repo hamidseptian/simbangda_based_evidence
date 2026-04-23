@@ -10,7 +10,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <script>
 	let status_show_pptk = 'collapse';
 	$(document).ready(function() {
@@ -115,7 +115,7 @@
             },
             success : function(data)
             {
-            	console.log(data);
+            	
             	show_tracking(id_bantuan);
 
 
@@ -211,7 +211,7 @@
 			
 	        },
 	        error : function(){
-	        	console.log('error');
+	        	
 	        }
         });
 	}
@@ -242,7 +242,7 @@
             },
             success : function(data)
             {
-            	console.log(data);
+            	
             	show_tracking(id_bantuan);
 
 
@@ -338,7 +338,7 @@
 			
 	        },
 	        error : function(){
-	        	console.log('error');
+	        	
 	        }
         });
 	}
@@ -446,7 +446,7 @@
 
 	function proses_bantuan_kab_kota(id_bantuan)
 	{
-		console.log(id_bantuan);
+		
 		Swal.fire({
 			  title: 'Warning',
 			  text: 'Proses bantuan..?.?',
@@ -470,7 +470,7 @@
 					data: { id_bantuan : id_bantuan},
 					success: function (data)
 					{
-						console.log(data);
+						
 							
 							Swal.fire(
 						      'Processing!',
@@ -503,7 +503,7 @@
 
 	function close_bantuan(id_bantuan)
 	{
-		console.log(id_bantuan)
+		
 	$('#modal-detail-bantuan').find('#penyebab').val('');
 	$('#modal-detail-bantuan').find('#solusi').val('');
 	$('#modal-detail-bantuan').find('#penyelesaian').val('');

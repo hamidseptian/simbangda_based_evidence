@@ -171,7 +171,7 @@ function edit_instansi(id_instansi)
 			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 }
@@ -192,7 +192,7 @@ function simpanedit_instansi()
 		data: formdata,
 		success: function (datanya)
 		{
-			console.log(datanya);
+			
 			if(datanya.success == true)
 			{
 				
@@ -215,7 +215,7 @@ function simpanedit_instansi()
 			}
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 }

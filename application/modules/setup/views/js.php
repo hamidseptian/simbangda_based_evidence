@@ -49,8 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					});
 				},
 				error: function(jqXHR, textStatus, errorThrown)
-				{
-					console.log('Error adding / update data');
+				{ 
 					$('#btn-register').text('Register');
 					$('#btn-register').attr('disabled',false);
 				}

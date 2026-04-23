@@ -142,13 +142,13 @@
 				token : token
 			},
 			success: function(data) {
-				console.log(data)
+				
 				$('#' + req).attr('class', 'mb-2 mr-2 btn-icon btn-icon-only btn btn-success');
 				$('#' + req).html('<i class="pe-7s-science btn-icon-wrapper"> </i>');
 				$('#' + req).attr('disabled', false);
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 			}
 		});
 	}

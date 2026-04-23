@@ -24,7 +24,7 @@
 			dataType: 'JSON',
 			data: {},
 			success: function(data) {
-				console.log(data)
+				
 				if (data.status == true) {
 					$('#aliran-kas-opd').html('');
 					$.each(data.data, function(k, v) {
@@ -57,7 +57,7 @@
 	}
 
 	function sync(id_instansi) {
-		console.log(id_instansi);
+		
 		$('#tahap-2'+ '-' + id_instansi).html('<i class="fa fa-cog fa-w-3 fa-spin"></i>').attr('disabled', true);
 		$.ajax({
 			url: baseUrl('synchronize/sync'),
@@ -258,7 +258,7 @@
 			},
 			dataType: "json",
 			success: function(data) {
-				console.log(data);
+				
 				$.each(data.r_fis, function(x, y) {
 					if (x < parseInt(ba)) {
 						rf[x] = y;

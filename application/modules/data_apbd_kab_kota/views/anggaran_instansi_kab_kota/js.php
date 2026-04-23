@@ -9,7 +9,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Leaflet -->
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
@@ -75,12 +75,12 @@ function convert_to_rupiah(angka) {
 	        	$('#total_bt').html(convert_to_rupiah(data.data.bt));
 	        	$('#total_pagu').html(convert_to_rupiah(data.data.total));
 	        	$('#periode').html(data.data.periode);
-            	console.log(data.data.bo);
+            	
             	
            
             },
             error : function(){
-            	console.log('error');
+            	
             }
         });
 
@@ -170,7 +170,7 @@ function anggaran_instansi_kab_kota()
             },
             success : function(data)
             {
-            	console.log(data);
+            	
             	
             	$('#modal_input_anggaran').find('.instansi').html(data.data.nama_instansi);
             
@@ -203,7 +203,7 @@ function anggaran_instansi_kab_kota()
                 	data.data.rea_bt ==1 ? $('#rea_bt').attr('checked','checked') : $('#rea_bt').removeAttr('checked');
             },
             error : function(){
-            	console.log('error');
+            	
             }
         });
 
@@ -227,7 +227,7 @@ function lakukan_pergeseran(id_aikk){
             },
             success : function(data)
             {
-            	console.log(data.data.id_instansi);
+            	
             	if (data.status==true) {
             	Swal.fire('Digeser',data.data.swal_caption,'success');
             	// input_anggaran(kode_rekening_sub_kegiatan,tahap, tahun, pengelompokan)
@@ -281,7 +281,7 @@ function get_target_kab_kota(nama_instansi, id_instansi, id_kota, tahap, tahun, 
             },
             success : function(data)
             {
-            	console.log(data);
+            	
 				$('#modal-target').find('.kode_sub_kegiatan').html(data.kode_sub_kegiatan);
 		    	$('#modal-target').find('#pagu_sub_kegiatan').html(convert_to_rupiah(pagu==''? 0 : pagu));
             	$('#modal-target').find('#exampleModalLabel').html("Setting Target APBD");
@@ -314,7 +314,7 @@ function get_target_kab_kota(nama_instansi, id_instansi, id_kota, tahap, tahun, 
 	            }
 	        },
 	        error : function (){
-	        	console.log('error');
+	        	
 	        }
         });
 
@@ -354,15 +354,15 @@ function edit_target_keuangan(x) {
 		let pagu = $(x).attr('pagu');
 		let tahap = $(x).attr('tahap');
 		let tahun = $(x).attr('tahun');
-		console.log(id);
-		console.log(pagu);
+		
+		
 		$(x).editable({
 			mode: 'inline',
 			pk: id,
 			savenochange: true,
 			url: baseUrl('data_apbd_kab_kota/update_target_keuangan/' + id_instansi +'/'+ pagu),
 			success: function(c) {
-				console.log(c);
+				
 				get_target_kab_kota(nama_instansi,id_instansi, id_kota, tahap, tahun, pagu);
 			},
 		});
@@ -405,7 +405,7 @@ function edit_target_keuangan(x) {
 			            },
 			            success : function(data)
 			            {
-			            	console.log(data);
+			            	
 			            	if (data.status==true) {
 				            	Swal.fire('Di Copy',data.messages, 'success');
 			            	}else{
@@ -417,7 +417,7 @@ function edit_target_keuangan(x) {
 			            	
 			            },
 			            error : function(){
-			            	console.log('error');
+			            	
 			            }
 			        });
 			
@@ -457,7 +457,7 @@ function edit_target_keuangan(x) {
 			data: $('#form_anggaran_sub_kegiatan').serialize(),
 			success: function (datanya)
 			{
-				console.log(datanya);
+				
 				if(datanya.success == true)
 				{
 					
@@ -480,7 +480,7 @@ function edit_target_keuangan(x) {
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('errort');
+				
 			}
 		});
 	}

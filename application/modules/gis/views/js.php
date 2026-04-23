@@ -35,7 +35,7 @@
 
 	function groupClick(event)
 	{
-		console.log("Clicked on marker" + event.layer.id);
+		
 		getLocation();
 	}
 
@@ -48,8 +48,8 @@
 	   var latitude = position.coords.latitude;
 	   var longitude = position.coords.longitude;
 
-	   console.log(latitude);
-	   console.log(longitude);
+	   
+	   
 	}
 
 	function errorHandler( err )

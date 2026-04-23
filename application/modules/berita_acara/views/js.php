@@ -21,7 +21,6 @@ function simpan_setting_ba()
 		success: function (data)
 		{
 			
-			console.log(data);
 			if(data.success == true)
 			{
 				
@@ -44,7 +43,7 @@ function simpan_setting_ba()
 			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 	
@@ -74,7 +73,7 @@ function edit_berita_acara(id_ba)
 			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 }
@@ -98,7 +97,7 @@ function catatan_helpdesk(id_isi_ba, nama_instansi, helpdesk, catatan, solusi)
 	$('#modal_catatan_helpdesk').find('#opd').html('<b>'+nama_instansi+'</b>');
 	$('#modal_catatan_helpdesk').find('#id_isi_ba').val(id_isi_ba);
 	$('#modal_catatan_helpdesk').find('#helpdesk').html(helpdesk);
-	console.log(catatan);
+	
 	
 }
 
@@ -119,7 +118,7 @@ function simpandit_setting_ba()
 		success: function (data)
 		{
 			
-			console.log(data);
+			
 			if(data.success == true)
 			{
 				
@@ -142,7 +141,7 @@ function simpandit_setting_ba()
 			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 	
@@ -167,7 +166,7 @@ function simpandit_jadwal_instansi()
 			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 	
@@ -194,7 +193,7 @@ function simpandit_catatan_helpdesk()
 			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 	
@@ -216,12 +215,12 @@ function simpandit_jadwal_asisten()
 			
 		   	$('#table-instansi').DataTable().ajax.reload(null, false);
 		   	$('#modal_ganti_jadwal_ba_asisten').modal('hide');
-			console.log(data);
+			
 			
 			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 	
@@ -300,7 +299,7 @@ function data_instansi()
 							},
 							success : function(data)
 							{
-								console.log(data);
+								
 								Swal.fire(
 								      'Diselesaikan!',
 								      data.messages,
@@ -345,7 +344,7 @@ function data_instansi()
 							},
 							success : function(data)
 							{
-								console.log(data);
+								
 								Swal.fire(
 								      'Diselesaikan!',
 								      data.messages,

@@ -9,7 +9,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Leaflet -->
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
@@ -129,7 +129,7 @@ function lihat_tutorial(id_tutorial)
 			iframe_yt =`<iframe width="100%" height="600" src="https://www.youtube.com/embed/`+data.data.embed+`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
 			$('#modal_lihat_video_tutorial').find('.judul').html(data.data.judul);
 			$('#modal_lihat_video_tutorial').find('.video_yt').html(iframe_yt);
-			console.log(iframe_yt);
+			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
 			
@@ -151,7 +151,7 @@ function edit_tutorial(id_tutorial)
 		data: {id_tutorial : id_tutorial},
 		success: function (data)
 		{
-			console.log(data);
+			
 		$('#modal_tambah_tutorial').find('#id_tutorial').val(data.data.id_tutorial);
 		$('#modal_tambah_tutorial').find('#akses').val(data.data.akses).change();
 		$('#modal_tambah_tutorial').find('#urutan').val(data.data.urutan);
@@ -185,7 +185,7 @@ function simpan_tutorial()
 		data: formdata,
 		success: function (datanya)
 		{
-			console.log(datanya);
+			
 			
 			if(datanya.success == true)
 			{
@@ -230,7 +230,7 @@ function simpanedit_tutorial()
 		data: formdata,
 		success: function (datanya)
 		{
-			console.log(datanya);
+			
 			
 			if(datanya.success == true)
 			{
@@ -256,7 +256,7 @@ function simpanedit_tutorial()
 			}
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('e');	
+			
 		}
 	});
 }
@@ -290,7 +290,7 @@ function edit_instansi(id_instansi)
 			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 }
@@ -311,7 +311,7 @@ function simpanedit_instansi()
 		data: formdata,
 		success: function (datanya)
 		{
-			console.log(datanya);
+			
 			if(datanya.success == true)
 			{
 				
@@ -334,7 +334,7 @@ function simpanedit_instansi()
 			}
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 }

@@ -9,7 +9,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Leaflet -->
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
@@ -128,7 +128,7 @@ function master_instansi_kab_kota()
 			data: formdata,
 			success: function (datanya)
 			{
-				console.log(datanya);
+				
 				if(datanya.success == true)
 				{
 					
@@ -151,7 +151,7 @@ function master_instansi_kab_kota()
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 			}
 		});
 	}
@@ -161,7 +161,7 @@ function master_instansi_kab_kota()
 
 	function edit_permasalahan(id_permasalahan)
 	{
-		console.log(id_permasalahan);
+		
 		$('#modal_input_permasalahan').find('#simpan_permasalahan').hide();
 
 		$('#modal_input_permasalahan').find('#simpanedit_permasalahan').show();
@@ -190,7 +190,7 @@ function master_instansi_kab_kota()
             },
             success : function(data)
             {
-            	console.log(data);
+            	
             	$('#modal_input_permasalahan').find('#simpanedit_permasalahan').show();
             	$('#modal_input_permasalahan').find('#hapus_permasalahan').show();
             	$('#modal_input_permasalahan').find('#id_permasalahan').val(data.data.id_permasalahan);
@@ -210,7 +210,7 @@ function master_instansi_kab_kota()
             
             },
             error : function(){
-            	console.log('error');
+            	
             }
         });
 
@@ -233,7 +233,7 @@ function master_instansi_kab_kota()
 			data: formdata,
 			success: function (datanya)
 			{
-				console.log(datanya);
+				
 				if(datanya.success == true)
 				{
 					
@@ -256,7 +256,7 @@ function master_instansi_kab_kota()
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 			}
 		});
 	}
@@ -354,7 +354,7 @@ function master_instansi_kab_kota()
 						});
             },
             error : function(){
-            	console.log('error');
+            	
             }
         });
 
@@ -404,7 +404,7 @@ function master_instansi_kab_kota()
 						});
             },
             error : function(){
-            	console.log('error');
+            	
             }
         });
     	// $('#rea_bo').removeAttr('checked');
@@ -422,7 +422,7 @@ function master_instansi_kab_kota()
             },
             success : function(data)
             {
-            	console.log(data);
+            	
             	$('#modal_input_solusi_permasalahan').find('#simpanedit_permasalahan').show();
             	$('#modal_input_solusi_permasalahan').find('#hapus_permasalahan').show();
             	$('#modal_input_solusi_permasalahan').find('#id_permasalahan').val(data.data.id_permasalahan);
@@ -442,7 +442,7 @@ function master_instansi_kab_kota()
             
             },
             error : function(){
-            	console.log('error');
+            	
             }
         });
 

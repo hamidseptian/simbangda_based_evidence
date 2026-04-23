@@ -1074,7 +1074,7 @@ foreach ($q_pengunjungonline->row_array() as $k => $v) {
 
         <!--CORE-->
 
-    <script type="text/javascript" src="<?php echo base_url() ?>assets/jquery/jquery.js"></script>
+    <script type="text/javascript" src="<?php echo base_url() ?>assets/jquery/jquery.4.0.0.js"></script>
 
 
         <script>

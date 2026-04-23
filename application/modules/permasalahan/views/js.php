@@ -9,7 +9,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Leaflet -->
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
@@ -174,7 +174,7 @@ function edit_instansi(id_instansi)
 			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 }
@@ -195,7 +195,7 @@ function simpanedit_instansi()
 		data: formdata,
 		success: function (datanya)
 		{
-			console.log(datanya);
+			
 			if(datanya.success == true)
 			{
 				
@@ -218,7 +218,7 @@ function simpanedit_instansi()
 			}
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 }

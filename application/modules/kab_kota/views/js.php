@@ -9,7 +9,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Leaflet -->
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
@@ -100,7 +100,7 @@ function edit_config_kab_kota(id_config)
 		},
 		success: function (data)
 		{
-			console.log(data);
+			
 			$('#modal_edit_ckk').modal('show');
 			$('#form_edit_ckk')[0].reset();
 			$('#modal_edit_ckk').find('#id_config').val(data.data.id_config);
@@ -138,7 +138,7 @@ function edit_config_kab_kota(id_config)
 
 			$('#modal_edit_ckk').find('#integrasi').change(function(){
 				var integrasi = $('#modal_edit_ckk').find('#integrasi').val();
-				console.log(integrasi);
+				
 				if (integrasi==1) {
 					$('#modal_edit_ckk').find('#form_token_integrasi').show();
 
@@ -150,14 +150,14 @@ function edit_config_kab_kota(id_config)
 			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 }
 
 $('#modal_edit_ckk').find('#replikasi').change(function(){
 var replikasi = $('#modal_edit_ckk').find('#replikasi').val();
-console.log(replikasi);
+
 });
 function simpanedit_ckk()
 {
@@ -174,7 +174,7 @@ function simpanedit_ckk()
 		data: formdata,
 		success: function (datanya)
 		{
-			console.log(datanya);
+			
 		
 				
 					$('#form_edit_ckk')[0].reset();
@@ -189,7 +189,7 @@ function simpanedit_ckk()
 			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
-			console.log('error');
+			
 		}
 	});
 }

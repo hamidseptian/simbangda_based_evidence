@@ -130,7 +130,6 @@
 	            },
 	            error: function (jqXHR, textStatus, errorThrown)
 	            {
-	                console.log('Error deleting data');
 	            }
 	        });
 	 

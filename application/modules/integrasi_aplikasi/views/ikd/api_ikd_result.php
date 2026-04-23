@@ -93,7 +93,7 @@
    		var ski = $('#data_import_ski').val();
    		var ask = $('#data_import_ask').val();
 
-   		console.log(JSON.parse(ski));
+   		
 		$.ajax({
 			url: baseUrl('integrasi_aplikasi/import_ikd_ski'),
 			type: 'POST',
@@ -106,7 +106,7 @@
 				ski : ski,
 			}	,
 			success: function(data) {
-				console.log(data);
+				
 				if (data.success==200) {
 					window.location.href="<?php echo base_url('integrasi_aplikasi/cek_import_ikd/?id_opd='.sbe_crypt($id_instansi)) ?>"
 				}else{
@@ -136,7 +136,7 @@
 				target : target,
 			}	,
 			success: function(data) {
-				console.log(data);
+				
 				if (data.success==200) {
 					window.location.href="<?php echo base_url('integrasi_aplikasi/cek_import_ikd/?id_opd='.sbe_crypt($id_instansi)) ?>";
 				}else{
@@ -168,7 +168,7 @@
                 realisasi : realisasi,
             }   ,
             success: function(data) {
-                console.log(data);
+                
                 if (data.success==200) {
                     window.location.href="<?php echo base_url('integrasi_aplikasi/cek_import_ikd/?id_opd='.sbe_crypt($id_instansi)) ?>";
                 }else{

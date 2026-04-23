@@ -126,7 +126,7 @@ function showMasterbidang_urusan() {
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 			}
 		 });
 		// if (status == 'save') {
@@ -179,7 +179,7 @@ function showMasterbidang_urusan() {
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 			}
 		 });
 
@@ -196,7 +196,7 @@ function showMasterbidang_urusan() {
 		$('.form-control').removeClass('is-valid')
 						  .removeClass('is-invalid');
         $('.text-danger').remove();
-        console.log(id_bidang_urusan);
+        
 		$.ajax(
         {
             url     : baseUrl('management_master_data_apbd/get_bidang_urusan/'),
@@ -205,7 +205,7 @@ function showMasterbidang_urusan() {
             data    : { id_bidang_urusan : id_bidang_urusan },
             success : function(data)
             {
-            	console.log(data);
+            	
                 if(data.status == true)
                 {
                 	$('#id').val(data.data.id);
@@ -214,7 +214,7 @@ function showMasterbidang_urusan() {
                 }
             },
             error : function(){
-            	console.log('error')
+            	
             }
         });
 

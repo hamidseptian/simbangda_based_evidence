@@ -10,8 +10,8 @@
 
 <!-- Datatables -->
 
-<script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/datatables_lama.js"></script>		
-<script src="<?php echo base_url() ?>assets/select2/select2.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>		
+<script src="<?php echo base_url() ?>assets/select2/dist/js/select2.min.js"></script>
 
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
@@ -391,7 +391,6 @@ function lakukan_pergeseran(ke, id_ski, kode_rekening_sub_kegiatan, tahap, tahun
             },
             success : function(data)
             {
-            	console.log(data.data.swal_caption);
             	if (data.status==true) {
             	Swal.fire('Digeser',data.data.swal_caption,'success');
             	input_anggaran(kode_rekening_sub_kegiatan,tahap, tahun, pengelompokan)
@@ -2268,7 +2267,6 @@ function show_kegiatan_apbd_instansi(id_table)
 		
 	    let csrf = get_token();
 	    
-    console.log('csrf:', csrf); // debug
 		$('#table-kegiatan-'+ id_table).DataTable(
 		{
 	        processing	: true,

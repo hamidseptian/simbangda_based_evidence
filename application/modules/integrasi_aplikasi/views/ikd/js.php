@@ -2,7 +2,7 @@
 <!-- Datatables -->
 <script type="text/javascript" src="<?php echo base_url() ?>assets/datatables/dataTables.min.js"></script>
 <!-- Select2 -->
-<script src="<?php echo base_url('assets/select2/select2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- Leaflet -->
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
@@ -57,7 +57,7 @@ showAutoCurrency();
 
 							var pagu_total = parseInt(data.bo_bp) + parseInt(data.bm_bmt) + parseInt(data.btt) + parseInt(data.bt_bbh) + parseInt(data.bo_bbj) + parseInt(data.bm_bmpm) + parseInt(data.bt_bbk) + parseInt(data.bo_bs) + parseInt(data.bm_bmgb) + parseInt(data.bo_bh) + parseInt(data.bm_bmjji) +parseInt( data.bm_bmatl) ; 
 							$('#view_anggaran_ski').find('.pagu_tahapan_apbd').html(number_format(pagu_total));
-							console.log(data);
+							
 						},
 						error: function(jqXHR, textStatus, errorThrown) {
 							alert('e');
@@ -246,7 +246,7 @@ showAutoCurrency();
             },
             success : function(data)
             {
-				console.log(data);
+				
 				$('#edit_sub_kegiatan_import_ikd').find('#nama_paket').html(data.data.nama_paket);
 				$('#edit_sub_kegiatan_import_ikd').find('#jenis_paket').html(data.data.jenis_paket);
 				$('#edit_sub_kegiatan_import_ikd').find('#pagu_paket').html(data.data.pagu);
@@ -277,7 +277,7 @@ showAutoCurrency();
             },
             success : function(data)
             {
-				console.log(data.data);
+				
 				$('#edit_kategori_import_ikd').find('#nama_paket').html(data.data.nama_paket);
 				$('#edit_kategori_import_ikd').find('#jenis_paket').html(data.data.jenis_paket);
 				$('#edit_kategori_import_ikd').find('#pagu_paket').html(data.data.pagu);
@@ -292,7 +292,7 @@ showAutoCurrency();
 	{
 		var id_paket_pekerjaan = $('#edit_sub_kegiatan_import_ikd').find('#id_paket_pekerjaan').val();
 
-		console.log(id_paket_pekerjaan);
+		
 
 
 		$.ajax({
@@ -308,7 +308,7 @@ showAutoCurrency();
 			},
 			success: function (data)
 			{
-				console.log(data);
+				
 
 		$('#edit_sub_kegiatan_import_ikd').modal('hide');
 				$('#list_paket_import_ikd').DataTable().ajax.reload(null, false);
@@ -324,7 +324,7 @@ showAutoCurrency();
 		var id_paket_pekerjaan = $('#edit_kategori_import_ikd').find('#id_paket_pekerjaan').val();
 		var kategori = $('#edit_kategori_import_ikd').find('#option_kategori').val();
 
-		console.log(kategori);
+		
 
 		$.ajax({
 			url: baseUrl('integrasi_aplikasi/simpanedit_kategori_import_ikd'),
@@ -337,13 +337,13 @@ showAutoCurrency();
 			},
 			success: function (data)
 			{
-				console.log(data);
+				
 
 		$('#edit_kategori_import_ikd').modal('hide');
 				$('#list_paket_import_ikd').DataTable().ajax.reload(null, false);
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 
 			}
 		});
@@ -379,7 +379,7 @@ showAutoCurrency();
 
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('error');
+				
 
 			}
 		});
@@ -424,7 +424,7 @@ function ambil_data_target(x){
 	$('#view_target').find('#nama_sub_kegiatan').html(parse.nama_sub_kegiatan);
 	$('#view_target').find('#pagu_sub_kegiatan').html(parse.pagu_sub_kegiatan);
 	$('#view_target').find('#target-apbd').html('');
-	console.log(parse);
+	
 	$.each(parse.data, function(k,v){
 		$('#view_target').find('#target-apbd').append(`
 			<tr>
