@@ -390,6 +390,7 @@
 		});
 
 
+		// menu syncronize
 		$('#modal_grafik_skpd_2_tahun_terakhir').find('#tfisik').html('<td rowspan="2" align="center">Realisasi Fisik</td>');
 		$('#modal_grafik_skpd_2_tahun_terakhir').find('#rfisik').html('');
 		$('#modal_grafik_skpd_2_tahun_terakhir').find('#dfisik').html('');
@@ -414,6 +415,35 @@
 			$('#modal_grafik_skpd_2_tahun_terakhir').find('#rkeu').append('<td>' + sumber_data.r_keu[i] + '</td>');
 			// $('#modal_grafik_skpd_2_tahun_terakhir').find('#dkeu').append('<td>' + sumber_data.d_keu[i] + '</td>');
 		}
+		// menu syncronize
+
+		// bahan paparan
+
+		$('#perbandingan').find('#tfisik').html('<td rowspan="2" align="center">Realisasi Fisik</td>');
+		$('#perbandingan').find('#rfisik').html('');
+		$('#perbandingan').find('#dfisik').html('');
+		$('#perbandingan').find('#tkeu').html('<td rowspan="2" align="center">Realisasi Keuangan</td>');
+		$('#perbandingan').find('#rkeu').html('');
+		$('#perbandingan').find('#dkeu').html('');
+
+		$('#perbandingan').find('#tfisik').append('<td>' + sumber_data.tahun_sebelumnya+'</td>');
+		$('#perbandingan').find('#rfisik').append('<td>' + sumber_data.tahun_ini+'</td>');
+		// $('#perbandingan').find('#dfisik').append('<td>Deviasi</td>');
+		$('#perbandingan').find('#tkeu').append('<td>' + sumber_data.tahun_sebelumnya+'</td>');
+		$('#perbandingan').find('#rkeu').append('<td>' + sumber_data.tahun_ini+'</td>');
+		// $('#perbandingan').find('#dkeu').append('<td>Deviasi</td>');
+		for (var i = 0; i < 12; i++) {
+			// var deviasi_fisik = sumber_data.r_fis[i] - sumber_data.fisik[i];
+			$('#perbandingan').find('#tfisik').append('<td>' + sumber_data.r_fis_sebelumnya[i] + '</td>');
+			$('#perbandingan').find('#rfisik').append('<td>' + sumber_data.r_fis[i] + '</td>');
+			// $('#perbandingan').find('#dfisik').append('<td>' + sumber_data.d_fisik[i] + '</td>');
+
+			// var deviasi_keuangan = sumber_data.r_keu[i] - sumber_data.keu[i];
+			$('#perbandingan').find('#tkeu').append('<td>' + sumber_data.r_keu_sebelumnya[i] + '</td>');
+			$('#perbandingan').find('#rkeu').append('<td>' + sumber_data.r_keu[i] + '</td>');
+			// $('#modal_grafik_skpd_2_tahun_terakhir').find('#dkeu').append('<td>' + sumber_data.d_keu[i] + '</td>');
+		}
+		// bahan paparan
 	
 	}
 

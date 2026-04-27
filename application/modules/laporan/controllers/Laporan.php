@@ -4338,7 +4338,8 @@ $data['identitas']=$identitas;
         $data['link']                       = $this->router->fetch_method();
         $data['menu']                       = $this->load->view('layout/menu', $data, true);
         // $data['extra_css']                  = $this->load->view('laporan/tabel/bahan_paparan/css', $data, true);
-        // $data['extra_js']                   = $this->load->view('laporan/tabel/bahan_paparan/js', $data, true);
+        
+        $data['extra_js']                    = $this->load->view('synchronize/target_realisasi/js', $data, true);
         $data['modal']                      = $this->load->view('laporan/tabel/bahan_paparan/modal', $data, true);
         $this->load->view($page, $data);
     }
