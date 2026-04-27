@@ -32,3 +32,9 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 2019/
 sbe_files_data/
 .env
+
+
+database/sbe.sql
+database/sbe(5).sql
+database/sbe(3).sql
+database/sbe_data/6/Lampiran-6-*.sql
