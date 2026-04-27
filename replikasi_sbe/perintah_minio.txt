@@ -1,3 +1,6 @@
+download dulu aplikasi minio di 
+https://drive.google.com/file/d/1G7rcPHGWhN6HEdA7yLrXynks_TU4fr2H/view?usp=sharing
+
 buka folder aplikasi minio
 kemudian jalankan ini di CMD
 
