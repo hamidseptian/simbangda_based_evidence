@@ -12,7 +12,7 @@
 <!-- Select2 -->
 <script src="<?php echo base_url('assets/select2/dist/js/select2.min.js') ?>"></script>
 <!-- X-editable -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 <script>
     $(document).ready(function() {
         show_sub_kegiatan_apbd_instansi_gabungan();

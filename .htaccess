@@ -17,7 +17,8 @@ RewriteRule ^(.*)$ index.php/$1 [L]
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
 
     # Tambahan opsional (bagus untuk security scan)
-    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    #Strict-Transport-Security Header Not Set
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains;"
 
     #untuk menghilangan laporan di console
     #Header unset Report-To
@@ -27,8 +28,6 @@ RewriteRule ^(.*)$ index.php/$1 [L]
     #Server Leaks Information via “X-Powered-By” HTTP Respons
     Header unset X-Powered-By
 
-    #Strict-Transport-Security Header Not Set
-    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 
 
 </IfModule>

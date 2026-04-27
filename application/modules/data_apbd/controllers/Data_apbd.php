@@ -55,7 +55,7 @@ class Data_apbd extends MY_Controller
                       // ['tipe'=>'link', 'caption'=>'Import Target APBD', 'fa'=>'fa fa-download', 'onclick'=>'export_import/sipd/target_apbd', 'elemen_tambahan'=>'data-toggle="tooltip" title="Mengimport data target sub kegiatan dengan template dan data dari SIPD"'], 
                       ['tipe'=>'button', 'caption'=>'Pilih Data APBD', 'fa'=>'fa fa-cog fa-w-16 fa-spin', 'onclick'=>'pilih_dan_alihkan_data_apbd()', 'elemen_tambahan'=>'data-toggle="tooltip" title="Memilih data program kegiatan dan sub kegiatan SKPD"'], 
                   
-                    ['tipe'=>'onclick', 'caption'=>'Sub Kegiatan APBD SKPD', 'fa'=>'metismenu-icon fas fa-list-ul', 'onclick'=>"sub_kegiatan_instansi_gabungan('all')", 'elemen_tambahan'=>'data-toggle="tooltip" title="Melihat semua data sub kegiatan yang ada pada SKPD"'],
+                    // ['tipe'=>'onclick', 'caption'=>'Sub Kegiatan APBD SKPD', 'fa'=>'metismenu-icon fas fa-list-ul', 'onclick'=>"sub_kegiatan_instansi_gabungan('all')", 'elemen_tambahan'=>'data-toggle="tooltip" title="Melihat semua data sub kegiatan yang ada pada SKPD"'],
                     
                     ['tipe'=>'button', 'caption'=>'Setting Sub Kegiatan Teknis', 'fa'=>'fas fa-bezier-curve', 'onclick'=>'setting_apbd_teknis()', 'elemen_tambahan'=>'data-toggle="tooltip" title="Menambah sub kegiatan unit pelaksana"'],
                     ['tipe'=>'button', 'caption'=>'Permasalahan Sub Kegiatan', 'fa'=>'fas fa-exclamation', 'onclick'=>'permasalahan_sub_kegiatan()', 'elemen_tambahan'=>'data-toggle="tooltip" title="Permasalahan Sub Kegiatan"'],
@@ -78,7 +78,7 @@ class Data_apbd extends MY_Controller
                     // ['tipe'=>'link', 'caption'=>'APBD PERGESERAN', 'fa'=>'fa fa-money-bill', 'onclick'=>'data_apbd/pergeseran', 'elemen_tambahan'=>'data-toggle="tooltip" title="Memilih data program kegiatan dan sub kegiatan SKPD"'], 
                 // ['tipe'=>'link', 'caption'=>'Lihat Target Per Bulan', 'fa'=>'fas fa-crosshairs', 'onclick'=>'data_apbd/target_data_apbd?tahun='.$tahun.'&tahap='.$tahap, 'elemen_tambahan'=>'data-toggle="tooltip" title="Lihat Target Per Bulan"'],
 
-                    ['tipe'=>'onclick', 'caption'=>'Sub Kegiatan APBD SKPD', 'fa'=>'metismenu-icon fas fa-list-ul', 'onclick'=>"sub_kegiatan_instansi_gabungan('all')", 'elemen_tambahan'=>'data-toggle="tooltip" title="Melihat semua data sub kegiatan yang ada pada SKPD"'],
+                    // ['tipe'=>'onclick', 'caption'=>'Sub Kegiatan APBD SKPD', 'fa'=>'metismenu-icon fas fa-list-ul', 'onclick'=>"sub_kegiatan_instansi_gabungan('all')", 'elemen_tambahan'=>'data-toggle="tooltip" title="Melihat semua data sub kegiatan yang ada pada SKPD"'],
                     ['tipe'=>'button', 'caption'=>'Setting Sub Kegiatan Teknis', 'fa'=>'fas fa-bezier-curve', 'onclick'=>'setting_apbd_teknis()', 'elemen_tambahan'=>'data-toggle="tooltip" title="Menambah sub kegiatan unit pelaksana"'],
                     ['tipe'=>'button', 'caption'=>'Permasalahan Sub Kegiatan', 'fa'=>'fas fa-exclamation', 'onclick'=>'permasalahan_sub_kegiatan()', 'elemen_tambahan'=>'data-toggle="tooltip" title="Permasalahan Sub Kegiatan"'],
                     // ['tipe'=>'link', 'caption'=>'Tagging Kegiatan Unggulan', 'fa'=>'fas fa-check', 'onclick'=>'data_apbd/tagging', 'elemen_tambahan'=>'data-toggle="tooltip" title="Kegiatan Unggulan"'],
