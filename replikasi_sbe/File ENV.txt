@@ -1,0 +1,23 @@
+#buat file '.env' di folder utama CI
+#kemudian ini dengan dibawah ini
+
+
+APP_ENV=development
+APP_DEBUG=true
+BASE_URL=http://localhost/sbe_2024
+
+DB_HOST=localhost
+DB_NAME=sbe
+DB_USER=root
+DB_PASS=
+DB_PORT=3306
+
+#install minio nya dulu baru jalankan kode ini sesuai dengan apa yang ada di CMD nya
+MINIO_ENDPOINT=http://127.0.0.1:9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin
+MINIO_BUCKET=sbe
+MINIO_REGION=us-east-1
+MINIO_USE_SSL=false
+
+

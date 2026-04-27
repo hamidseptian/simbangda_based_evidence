@@ -1,0 +1,4 @@
+buka folder aplikasi minio
+kemudian jalankan ini di CMD
+
+minio.exe server F:\server-minio-local --console-address ":9001" --address ":9000"
