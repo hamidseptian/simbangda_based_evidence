@@ -373,7 +373,7 @@
        <?php } //akhir foreach  ($asisten_1_belum_terekap as $satu) {
 
           @$ratarata_t_fisik_satu    =round($total_t_fisik_satu / $jml_skpd_satu, 2); 
-          @$ratarata_r_fisik_satu   =  $rf_ttb_1;//round($total_r_fisik_satu / $jml_skpd_satu, 2); 
+          @$ratarata_r_fisik_satu   = round($total_r_fisik_satu / $jml_skpd_satu, 2); // $rf_ttb_1
           @$total_dev_fisik_satu = $ratarata_r_fisik_satu - $ratarata_t_fisik_satu ;
 
 
@@ -759,8 +759,8 @@
 
 
        <?php } //akhir foreach  ($asisten_1_belum_terekap as $satu) {
-          @$ratarata_t_fisik_dua    =  $tf_ttb_2 ;//round($total_t_fisik_dua / $jml_skpd_dua, 2); 
-          @$ratarata_r_fisik_dua   =  $rf_ttb_2 ;//round($total_r_fisik_dua / $jml_skpd_dua, 2); 
+          @$ratarata_t_fisik_dua    =  round($total_t_fisik_dua / $jml_skpd_dua, 2);  // $tf_ttb_2 ;//
+          @$ratarata_r_fisik_dua   =  round($total_r_fisik_dua / $jml_skpd_dua, 2);  // $rf_ttb_2 ;//
           @$total_dev_fisik_dua = $ratarata_r_fisik_dua - $ratarata_t_fisik_dua ;
           @$ratarata_t_keu_dua   =  $total_pagu_dua == 0 ? 0 :round((($total_rp_t_keu_dua / $total_pagu_dua) * 100),2);//round($total_t_keu_dua / $jml_skpd_dua, 2); 
           @$ratarata_r_keu_dua   =  $total_pagu_dua == 0 ? 0 :round((($total_rp_r_keu_dua / $total_pagu_dua) * 100),2);// round($total_r_keu_dua / $jml_skpd_dua, 2);
@@ -1142,8 +1142,8 @@
 
        <?php } 
 
-          @$ratarata_t_fisik_tiga    =  $tf_ttb_3 ;//round($total_t_fisik_tiga / $jml_skpd_tiga, 2); 
-          @$ratarata_r_fisik_tiga   =  $rf_ttb_3 ;//round($total_r_fisik_tiga / $jml_skpd_tiga, 2); 
+          @$ratarata_t_fisik_tiga    = round($total_t_fisik_tiga / $jml_skpd_tiga, 2);  // $tf_ttb_3 ;//
+          @$ratarata_r_fisik_tiga   = round($total_r_fisik_tiga / $jml_skpd_tiga, 2);  // $rf_ttb_3 ;//
           @$total_dev_fisik_tiga = $ratarata_r_fisik_tiga - $ratarata_t_fisik_tiga ;
           @$ratarata_t_keu_tiga   = $total_pagu_tiga == 0 ? 0 : round(($total_rp_t_keu_tiga / $total_pagu_tiga * 100),2);
  ;//round($total_t_keu_tiga / $jml_skpd_tiga, 2); 
