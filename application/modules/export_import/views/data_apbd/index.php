@@ -50,6 +50,7 @@
                                         <a href="<?php echo base_url('export_import/kelola_import/'.sbe_crypt($v['id_export_import']).'/'.sbe_crypt($id_instansi)) ?>" class="btn btn-outline-info btn-sm">Detail</a>
                                     <?php }else{ ?>
                                         <a href="<?php echo base_url('export_import/list_opd/'.sbe_crypt($v['id_export_import'])) ?>" class="btn btn-outline-info btn-sm">List OPD</a>
+                                        <a href="<?php echo base_url('export_import/target_apbd/?tahun='.$v['tahun'].'&tahap='.$v['kode_tahap']) ?>" class="btn btn-outline-info btn-sm">Import Target SKPD</a>
 
                                     <?php } ?>
                                 </td>

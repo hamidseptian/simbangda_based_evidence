@@ -680,6 +680,7 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 			success: function(data) {
 				
 				result = data;
+				console.log(data);
 				
 			},
 			// cache: false

@@ -121,8 +121,8 @@ class Export_import extends MY_Controller
         $data['description']    = "Menampilkan Pengelolaan Import Data Excel pada SIPD";
         $data['breadcrumbs']    = $breadcrumbs->render();
         $page                   = 'export_import/data_apbd/target_apbd'; 
-        $data['tahun']           = 2026;// tahun_anggaran();
-        $data['kode_tahap']           = 2;//tahapan_apbd();
+        $data['tahun']           = $this->input->get('tahun');
+        $data['kode_tahap']           =  $this->input->get('tahap');
         $data['instansi']           = $this->db->query("SELECT id_instansi, nama_instansi from master_instansi where kategori ='OPD' and is_active='1'")->result_array();
         $data['link']           = $this->router->fetch_method();
         $data['menu']           = $this->load->view('layout/menu', $data, true);

@@ -1,5 +1,5 @@
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnoGc_rhJUXXKFMx7jKcYmNzr0wUmDW3k&callback=initialize" async defer></script>
+<script src="" async defer></script>
     <div class="container">
         <div class="row">
             <div class="col-md-12">

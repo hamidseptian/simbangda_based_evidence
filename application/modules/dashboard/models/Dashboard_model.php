@@ -38,23 +38,63 @@ class Dashboard_model extends CI_Model
 			left join master_instansi mi on mu.id_instansi = mi.id_instansi
 			where mu.id_instansi = '$id_instansi' and mu.id_user='$id_user'");
 	}
-	public function get_grafik_total_akumulasi($tahun_anggaran, $tahap)
+	public function get_grafik_total_akumulasi($tahun_anggaran, $tahap, $asisten)
 	{
-		
-		$instansi_aktiv = $this->db->query("SELECT id_instansi from master_instansi where is_active=1 and kategori='OPD'")->num_rows();
-		$query = $this->db->query("SELECT
-																g.bulan AS bulan,
-																round(( sum( g.target_fisik_akumulasi ) / $instansi_aktiv ), 2 ) AS target_fisik,
-																round(( sum( g.realisasi_fisik_akumulasi ) / $instansi_aktiv ), 2 ) AS realisasi_fisik,
-																(sum(g.rp_target_keuangan_akumulasi) / sum(g.pagu_total)  * 100)  AS target_keuangan,
-																(sum(g.rp_realisasi_keuangan_akumulasi) / sum(g.pagu_total)  * 100)  AS realisasi_keuangan 
-															FROM
-																grafik g 
-                                                                left join master_instansi mi 
-                                                                on g.id_instansi=mi.id_instansi
-                                                                where mi.is_active=1 and g.tahun='$tahun_anggaran'and g.kode_tahap='$tahap'
-															GROUP BY
-																g.bulan");
+		if ($asisten==1) {
+			$q_instansi = $this->db->query("SELECT id_instansi from master_instansi where is_active=1 and kategori='OPD' and id_parent = '204'");
+			$jumlah_instansi = $q_instansi->num_rows(); 
+		}
+		elseif ($asisten==2) {
+			$q_instansi = $this->db->query("SELECT id_instansi from master_instansi where is_active=1 and kategori='OPD' and id_parent = '205'");
+			$jumlah_instansi = $q_instansi->num_rows(); 
+		}
+		elseif ($asisten==3) {
+			$q_instansi = $this->db->query("SELECT id_instansi from master_instansi where is_active=1 and kategori='OPD' and id_parent = '206'");
+			$jumlah_instansi = $q_instansi->num_rows(); 
+		}else{
+			$q_instansi = $this->db->query("SELECT id_instansi from master_instansi where is_active=1 and kategori='OPD'");
+			$jumlah_instansi = $q_instansi->num_rows(); 
+		}
+
+		$kumpul_id_instansi = [];
+		foreach ($q_instansi->result_array() as $k => $v) {
+			array_push($kumpul_id_instansi, $v['id_instansi']);
+		}
+
+		$instansi_aktif = $jumlah_instansi;
+		$id_instansi_grafik = join($kumpul_id_instansi, ',');
+
+		if ($asisten=='Semua') {
+			$query = $this->db->query("SELECT
+																	g.bulan AS bulan,
+																	round(( sum( g.target_fisik_akumulasi ) / $instansi_aktif ), 2 ) AS target_fisik,
+																	round(( sum( g.realisasi_fisik_akumulasi ) / $instansi_aktif ), 2 ) AS realisasi_fisik,
+																	(sum(g.rp_target_keuangan_akumulasi) / sum(g.pagu_total)  * 100)  AS target_keuangan,
+																	(sum(g.rp_realisasi_keuangan_akumulasi) / sum(g.pagu_total)  * 100)  AS realisasi_keuangan 
+																FROM
+																	grafik g 
+	                                                                left join master_instansi mi 
+	                                                                on g.id_instansi=mi.id_instansi
+	                                                                where mi.is_active=1 and g.tahun='$tahun_anggaran'and g.kode_tahap='$tahap'  
+																GROUP BY
+																	g.bulan");
+			
+		}else{
+			$query = $this->db->query("SELECT
+																	g.bulan AS bulan,
+																	round(( sum( g.target_fisik_akumulasi ) / $instansi_aktif ), 2 ) AS target_fisik,
+																	round(( sum( g.realisasi_fisik_akumulasi ) / $instansi_aktif ), 2 ) AS realisasi_fisik,
+																	(sum(g.rp_target_keuangan_akumulasi) / sum(g.pagu_total)  * 100)  AS target_keuangan,
+																	(sum(g.rp_realisasi_keuangan_akumulasi) / sum(g.pagu_total)  * 100)  AS realisasi_keuangan 
+																FROM
+																	grafik g 
+	                                                                left join master_instansi mi 
+	                                                                on g.id_instansi=mi.id_instansi
+	                                                                where mi.is_active=1 and g.tahun='$tahun_anggaran'and g.kode_tahap='$tahap' and g.id_instansi in ($id_instansi_grafik)
+																GROUP BY
+																	g.bulan");
+
+		}
 		return $query;
 	}
 	public function get_grafik_total_akumulasi_asisten($tahun_anggaran, $tahap, $asisten)

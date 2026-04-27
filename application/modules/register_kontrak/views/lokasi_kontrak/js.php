@@ -1,6 +1,4 @@
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnoGc_rhJUXXKFMx7jKcYmNzr0wUmDW3k&callback=initialize" async defer></script>
-   
 
 <script type="text/javascript">   
     var marker;

@@ -34,9 +34,6 @@
                             <th>KODE SUMBER DANA</th>
                             <th>NAMA SUMBER DANA</th>
                             <th>PAGU</th>
-                            <th>PAGU VALIDASI</th>
-                            <th>RINCIAN</th>
-                            <th>LABEL SUB KEGIATAN</th>
 
 							
                         </tr>
@@ -64,13 +61,11 @@
                                 <td><?php echo $v['kode_sumber_dana'] ?></td>
                                 <td><?php echo $v['nama_sumber_dana'] ?></td>
                                 <td><?php echo $v['pagu'] ?></td>
-                                <td><?php echo $v['pagu_validasi'] ?></td>
-                                <td><?php echo $v['rincian'] ?></td>
-                                <td><?php echo $v['label_sub_kegiatan'] ?></td>
                             </tr>
                         <?php } ?>
                     </tbody>
-                </table>
+                </table> <br>
+                <a href="<?php echo base_url('export_import/list_opd/'.sbe_crypt($id_import)) ?>" class="btn btn-block btn-info">Lihat Per OPD</a>
             </div>
         </div>
     </div>
