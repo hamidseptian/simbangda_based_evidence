@@ -164,6 +164,129 @@ class Rekap_asisten_model extends CI_Model
       
   }
 
+  public function get_opd_inspektorat($bulan, $cara_hitung)
+  {
+    $kategori = 'Akumulasi';
+    $tahap        = $this->input->get('tahap');
+    $tahun        = $this->input->get('tahun');
+
+    // if ($cara_hitung=='Akuntansi') {
+      if ($kategori=='Akumulasi') {
+         $query_sql = 'g.target_fisik_akumulasi as target_fisik,
+                   g.realisasi_fisik_akumulasi as realisasi_fisik,
+                   g.target_keuangan_akumulasi as target_keuangan,
+                   g.realisasi_keuangan_akumulasi as realisasi_keuangan,
+                   g.pagu_total,
+                   g.rp_target_keuangan_akumulasi as rp_target_keuangan,
+                   g.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan
+                   ';
+      }else{
+         $query_sql = 'g.target_fisik_bulanan as target_fisik,
+                   g.realisasi_fisik_bulanan as realisasi_fisik,
+                   g.target_keuangan_bulanan as target_keuangan,
+                   g.realisasi_keuangan_bulanan as realisasi_keuangan,
+                   
+                   g.pagu_total,
+                   g.rp_target_keuangan_bulanan as rp_target_keuangan,
+                   g.rp_realisasi_keuangan_bulanan as rp_realisasi_keuangan
+                   ';
+        
+
+      }
+    // }else{ 
+    //   if ($kategori=='Akumulasi') {
+    //      $query_sql = 'g.target_fisik_akumulasi_ratarata as target_fisik,
+    //                g.realisasi_fisik_akumulasi_ratarata as realisasi_fisik,
+    //                g.target_keuangan_akumulasi_ratarata as target_keuangan,
+    //                g.realisasi_keuangan_akumulasi_ratarata as realisasi_keuangan
+    //                ';
+       
+    //   }else{
+    //      $query_sql = 'g.target_fisik_bulanan_ratarata as target_fisik,
+    //                g.realisasi_fisik_bulanan_ratarata as realisasi_fisik,
+    //                g.target_keuangan_bulanan_ratarata as target_keuangan,
+    //                g.realisasi_keuangan_bulanan_ratarata as realisasi_keuangan
+    //                ';
+
+    //   }  
+    // }
+
+    $query  = $this->db->query("SELECT
+                                  mi.id_instansi,
+                                  mi.kode_opd,
+                                  mi.nama_instansi,
+                                  mi.singkatan_nama_instansi,
+                                  $query_sql,
+                                   g.id_grafik,
+                                    g.id_instansi,
+                                    g.kode_opd,
+                                    g.bulan,
+                                    g.pagu_bo_bp,
+                                    g.pagu_bo_bbj,
+                                    g.pagu_bo_bs,
+                                    g.pagu_bo_bh,
+                                    g.pagu_bo_bbs,
+                                    g.pagu_bm_bmt,
+                                    g.pagu_bm_bmpm,
+                                    g.pagu_bm_bmgb,
+                                    g.pagu_bm_bmjji,
+                                    g.pagu_bm_bmatl,
+                                    g.pagu_bm_bmatb,
+                                    g.pagu_btt,
+                                    g.pagu_bt_bbh,
+                                    g.pagu_bt_bbk,
+                                    g.pagu_total,
+                                    g.rp_target_keuangan_akumulasi,
+                                    g.rp_target_keuangan_bulanan,
+                                    g.rp_realisasi_keuangan_akumulasi,
+                                    g.rp_realisasi_keuangan_akumulasi_bo_bp,
+                                    g.rp_realisasi_keuangan_akumulasi_bo_bbj,
+                                    g.rp_realisasi_keuangan_akumulasi_bo_bs,
+                                    g.rp_realisasi_keuangan_akumulasi_bo_bh,
+                                    g.rp_realisasi_keuangan_akumulasi_bo_bbs,
+                                    g.rp_realisasi_keuangan_akumulasi_bm_bmt,
+                                    g.rp_realisasi_keuangan_akumulasi_bm_bmpm,
+                                    g.rp_realisasi_keuangan_akumulasi_bm_bmgb,
+                                    g.rp_realisasi_keuangan_akumulasi_bm_bmjji,
+                                    g.rp_realisasi_keuangan_akumulasi_bm_bmatl,
+                                    g.rp_realisasi_keuangan_akumulasi_bm_bmatb,
+                                    g.rp_realisasi_keuangan_akumulasi_btt,
+                                    g.rp_realisasi_keuangan_akumulasi_bt_bbh,
+                                    g.rp_realisasi_keuangan_akumulasi_bt_bbk,
+                                    g.rp_realisasi_keuangan_bulanan,
+                                    g.rp_realisasi_keuangan_bulanan_bo_bp,
+                                    g.rp_realisasi_keuangan_bulanan_bo_bbj,
+                                    g.rp_realisasi_keuangan_bulanan_bo_bs,
+                                    g.rp_realisasi_keuangan_bulanan_bo_bh,
+                                    g.rp_realisasi_keuangan_bulanan_bo_bbs,
+                                    g.rp_realisasi_keuangan_bulanan_bm_bmt,
+                                    g.rp_realisasi_keuangan_bulanan_bm_bmpm,
+                                    g.rp_realisasi_keuangan_bulanan_bm_bmgb,
+                                    g.rp_realisasi_keuangan_bulanan_bm_bmjji,
+                                    g.rp_realisasi_keuangan_bulanan_bm_bmatl,
+                                    g.rp_realisasi_keuangan_bulanan_bm_bmatb,
+                                    g.rp_realisasi_keuangan_bulanan_btt,
+                                    g.rp_realisasi_keuangan_bulanan_bt_bbh,
+                                    g.rp_realisasi_keuangan_bulanan_bt_bbk,
+                                    g.last_update
+
+                                FROM
+                                  master_instansi mi
+                                  LEFT JOIN grafik g ON mi.id_instansi = g.id_instansi 
+                                WHERE
+                                  g.id_instansi = '70'
+                                  AND mi.is_active='1'
+                                  AND g.kode_tahap = '$tahap'
+                                  and g.tahun = '$tahun'
+                                  AND g.bulan = {$bulan}
+                                GROUP BY
+                                  mi.id_instansi 
+                                ORDER BY
+                                  mi.nama_instansi");
+    return $query;
+      
+  }
+
 
 
 

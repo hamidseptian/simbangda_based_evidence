@@ -7,7 +7,17 @@ class My_Controller extends MX_Controller
 	{
 		parent::__construct();
 		$class = $this->router->fetch_class();
-		if (!$this->session->userdata('session_name') && $class != 'auth' && $class != 'public_dashboard' && $class != 'tutorial' && $class != 'android' && $class != 'sumbarsiap' && $class != 'beranda' && $class != 'replikasi' && $class != 'api_replikasi_sbe' && $class != 'integrasi_sakatoplan' && $class != 'dashboard_pembangunan' && $class != 'synchronize' && $class != 'web_services') {
+
+		  $public_modules = $this->db->query("SELECT modules from modules_public where status = '1'")->result_array();
+		  $result = [];
+        foreach ($public_modules as $key => $value) {
+            $result[] = $value['modules'];
+            # code...
+        }
+
+        array_push($result,"auth","beranda");
+
+		if (!$this->session->userdata('session_name') && !in_array($class, $result) ) {
 			redirect('auth');
 		}
 

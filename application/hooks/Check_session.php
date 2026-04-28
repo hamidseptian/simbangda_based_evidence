@@ -21,8 +21,14 @@ class Check_session
         endforeach;
 
 
+        $public_modules = $this->db->query("SELECT modules from modules_public where status = '1'")->result_array();
+        foreach ($public_modules as $key => $value) {
+            $result[] = $value['modules'];
+            # code...
+        }
+
         // $module_integrasi = $this->db->query()-
-        array_push($result,"auth","public_dashboard","tutorial","android","sumbarsiap","beranda","replikasi","api_replikasi_sbe","integrasi_sakatoplan",'dashboard_pembangunan','synchronize','web_services');
+        array_push($result,"auth","beranda");
         if(in_array($this->router->fetch_class(), $result))
         {
             return;

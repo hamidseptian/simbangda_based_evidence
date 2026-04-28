@@ -3561,6 +3561,7 @@ $data['identitas']=$identitas;
         $asisten_1 = $this->rekap_asisten_model->get_opd_asisten(204, $bulan, $cara_hitung, $kategori)->result();
 		$asisten_2 = $this->rekap_asisten_model->get_opd_asisten(205, $bulan, $cara_hitung, $kategori)->result();
 		$asisten_3 = $this->rekap_asisten_model->get_opd_asisten(206, $bulan, $cara_hitung, $kategori)->result();
+		$inspektorat = $this->rekap_asisten_model->get_opd_inspektorat($bulan, $cara_hitung, $kategori)->result();
 
         $get_sum_data =$this->rekap_asisten_model->get_sum_data($bulan)->row_array();
         // $get_sum_data = $get_sum_data['realisasi_fisik'] / $total_opd;
@@ -3947,6 +3948,112 @@ $data['identitas']=$identitas;
 
 
 
+		 foreach ($inspektorat as $inspektorat) { 
+
+			$total_target_fisik +=$inspektorat->target_fisik;
+			$total_target_keuangan +=$inspektorat->target_keuangan;
+
+			$total_realisasi_fisik +=$inspektorat->realisasi_fisik;
+
+			$total_pagu +=($inspektorat->pagu_total == '' ? 0 : $inspektorat->pagu_total);
+			$total_rp_target_keuangan +=($inspektorat->rp_target_keuangan == '' ? 0 : $inspektorat->rp_target_keuangan);
+			$total_rp_realisasi_keuangan +=($inspektorat->rp_realisasi_keuangan == '' ? 0 :  $inspektorat->rp_realisasi_keuangan);
+
+
+		  $dev_fisik = round($inspektorat->realisasi_fisik -$inspektorat->target_fisik ,2);
+          $dev_keu = round($inspektorat->realisasi_keuangan - $inspektorat->target_keuangan,2);
+          $data = [
+          	'skpd'=>$inspektorat->nama_instansi,
+          	'tf'=>$inspektorat->target_fisik,
+          	'rf'=>$inspektorat->realisasi_fisik == '' ? 0 : $inspektorat->realisasi_fisik,
+          	'df'=>$dev_fisik,
+          	'tk'=>$inspektorat->target_keuangan,
+          	'rk'=>$inspektorat->realisasi_keuangan == '' ? 0 :  $inspektorat->realisasi_keuangan,
+          	'dk'=>$dev_keu,
+          ];
+
+
+
+
+
+         $sort_rk = [
+          	'rk'=>$inspektorat->realisasi_keuangan == '' ? 0 :  $inspektorat->realisasi_keuangan,
+          	'skpd'=>$inspektorat->nama_instansi,
+          	'singkatan_skpd'=>$inspektorat->singkatan_nama_instansi,
+      		'tk'=>$inspektorat->target_keuangan,
+          	'dk'=>$dev_keu,
+          ];
+         $sort_rf = [
+          	'rf'=>$inspektorat->realisasi_fisik == '' ? 0 : $inspektorat->realisasi_fisik,
+          	'skpd'=>$inspektorat->nama_instansi,
+          	'singkatan_skpd'=>$inspektorat->singkatan_nama_instansi,
+      			'tf'=>$inspektorat->target_fisik,
+          	'df'=>$dev_fisik,
+          ];
+
+          if ($ratarata_realisasi_keuangan>$inspektorat->realisasi_keuangan) {
+             array_push($rk_dibawah_ratarata, $sort_rk	);
+             array_push($rk_dibawah_ratarata_asisten_3, $sort_rk	);
+          }else{
+             array_push($rk_diatas_ratarata, $sort_rk);
+             array_push($rk_diatas_ratarata_asisten_3, $sort_rk	);
+          }
+
+          if ($ratarata_realisasi_fisik>$inspektorat->realisasi_fisik) {
+             array_push($rf_dibawah_ratarata, $sort_rf	);
+             array_push($rf_dibawah_ratarata_asisten_3, $sort_rf	);
+          }else{
+             array_push($rf_diatas_ratarata, $sort_rf);
+             array_push($rf_diatas_ratarata_asisten_3, $sort_rf	);
+          }
+
+    	
+    		$sort_df = [
+          	'df'=>$dev_fisik,
+          	'skpd'=>$inspektorat->nama_instansi,
+
+          	'singkatan_skpd'=>$inspektorat->singkatan_nama_instansi,
+          	'tf'=>$inspektorat->target_fisik,
+          	'rf'=>$inspektorat->realisasi_fisik == '' ? 0 : $inspektorat->realisasi_fisik,
+          
+          ];
+    		$sort_dk = [
+          	'dk'=>$dev_keu,
+          	'skpd'=>$inspektorat->nama_instansi,
+          	'singkatan_skpd'=>$inspektorat->singkatan_nama_instansi,
+          	'tk'=>$inspektorat->target_keuangan,
+          	'rk'=>$inspektorat->realisasi_keuangan == '' ? 0 :  $inspektorat->realisasi_keuangan,
+          ];
+
+
+          if ($dev_fisik <-10) {
+             array_push($opd_dev_f_merah, $sort_df);
+            }
+            elseif ($dev_fisik <=-5  && $dev_fisik >=-10) {
+             array_push($opd_dev_f_kuning, $sort_df);
+              
+            }
+            elseif ($dev_fisik <=0  && $dev_fisik >=-5) {
+             array_push($opd_dev_f_hijau, $sort_df);
+              
+            }else{
+             array_push($opd_dev_f_ungu, $sort_df);
+              
+            }
+
+            if ($dev_keu < -10) {
+            	array_push($opd_dev_k_merah, $sort_dk);
+            }
+            elseif ($dev_keu <=-5  && $dev_keu >=-10) {
+            	array_push($opd_dev_k_kuning, $sort_dk);
+            }
+            elseif ($dev_keu <=0  && $dev_keu >=-5) {
+            	array_push($opd_dev_k_hijau, $sort_dk);
+            }else{
+            	array_push($opd_dev_k_ungu, $sort_dk);
+            }
+		 }
+
 		 $persentasi_rf_semua_diatas_ratarata = (count($rf_diatas_ratarata) / $total_opd) * 100;
 		 $persentasi_rf_semua_dibawah_ratarata = (count($rf_dibawah_ratarata) / $total_opd) * 100;
 
@@ -4174,7 +4281,7 @@ $data['identitas']=$identitas;
 		  }
 
 		  $ratarata_realisasi_fisik = ($total_nilai_fisik_1+$total_nilai_fisik_2+$total_nilai_fisik_3) / count($realisasi_fisik_opd);
-
+		  $data['cek'] = $total_opd;
 
           $total_rp_r_keu = 0;
           $total_pagu = 0;
@@ -4320,7 +4427,7 @@ $data['identitas']=$identitas;
         $data['perengkingan_fisik_terendah']    = $perengkingan_fisik_opd_terendah;
         $data['perengkingan_keuangan_tertinggi']    = $perengkingan_keuangan_opd_tertinggi;
         $data['perengkingan_keuangan_terendah']    = $perengkingan_keuangan_opd_terendah;
-        $data['cek']                      = $realisasi_keuangan_opd;
+        // $data['cek']                      = $realisasi_keuangan_opd;
         $data['grafik_deviasi']                      = $grafik_deviasi;
         $data['tahun']                      = $tahun;
         $data['bulan']                      = $bulan;
@@ -4337,8 +4444,27 @@ $data['identitas']=$identitas;
         $page                               = 'laporan/tabel/bahan_paparan/tabel_bahan_paparan';
         $data['link']                       = $this->router->fetch_method();
         $data['menu']                       = $this->load->view('layout/menu', $data, true);
+
+        $tahun_sebelumnya = $tahun - 1;
+        $dua_tahun_sebelumnya = $tahun - 2;
+
+        $pendapatan = [
+        	'tahun_ini' => [
+        		'tahun'=>$tahun, 
+        		'data'=>$this->api_pendapatan($tahun)
+        	],
+        	'tahun_sebelumnya' => [
+        		'tahun'=>$tahun, 
+        		'data'=>$this->api_pendapatan($tahun_sebelumnya)
+        	],
+        	'dua_tahun_sebelumnya' => [
+        		'tahun'=>$tahun, 
+        		'data'=>$this->api_pendapatan($dua_tahun_sebelumnya)
+        	],
+        ];
         // $data['extra_css']                  = $this->load->view('laporan/tabel/bahan_paparan/css', $data, true);
         
+        $data['pendapatan']                    = $pendapatan;
         $data['extra_js']                    = $this->load->view('synchronize/target_realisasi/js', $data, true);
         $data['modal']                      = $this->load->view('laporan/tabel/bahan_paparan/modal', $data, true);
         $this->load->view($page, $data);
@@ -8676,5 +8802,47 @@ $excel->getActiveSheet()->getStyle('E'.$row_statistika_d_10.':J'.$row_statistika
             echo json_encode($output);
         }
     }
+
+
+
+        public function api_pendapatan( $tahun){
+		        	$token = 'Hamid@01#2026';
+                    $curl = curl_init();
+                    $url = 'http://182.253.192.84:8556/API/2/GetPerBulan/'.$tahun;
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => $url,// your preferred link
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => "",
+                        CURLOPT_SSL_VERIFYHOST => 0,
+                        CURLOPT_SSL_VERIFYPEER => 0,
+                        CURLOPT_TIMEOUT => 30000,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_HTTPHEADER => array(
+                            // Set Here Your Requesred Headers
+                            'Content-Type: application/json',
+                           "Bapenda-Key: ".$token,
+                          
+                        ),
+                        // CURLOPT_POST => true,
+                        // CURLOPT_POSTFIELDS => http_build_query($a_params)
+                    ));
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+                    curl_close($curl);
+                    $result = null;
+                    if ($err) {
+                        $result = "cURL Error #:" . $err;
+                        $responcode = 500;
+                    } else {
+                        $result = json_decode($response);
+                        $responcode = 200;
+                    }
+                        
+                        return ['responcode'=>$responcode, 'result'=>$result];
+
+
+            }
+
+
 
 }

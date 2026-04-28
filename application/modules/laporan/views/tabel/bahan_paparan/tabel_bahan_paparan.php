@@ -45,7 +45,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a data-toggle="tab" href="#perbandingan" class="nav-link show">
+                            <a data-toggle="tab" href="#perbandingan" class="nav-link  show">
                                 <h5 class="card-title">Perbandingan</h5>
                             </a>
                         </li>
@@ -417,16 +417,96 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="mb-3 card">
                                     <div class="card-header">
                                         <label>Perengkingan Pendapatan 3 Tahun Terakhir</label>
                                     </div>
                                     <div class="card-body">
-                                      Konten Pendapatan <br>(Coming Soon)                                      
+                                      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="grafik_realisasi_skpd"></div>
+
+
+                <table class="table table-striped table-bordered" style="font-size:14px">
+                    <thead>
+                        <th colspan="2"><center>Tahun / Keterangan</center></th>
+                        <th>Jan</th>
+                        <th>Feb</th>
+                        <th>Mar</th>
+                        <th>Apr</th>
+                        <th>Mei</th>
+                        <th>Jun</th>
+                        <th>Jul</th>
+                        <th>Agu</th>
+                        <th>Sep</th>
+                        <th>Okt</th>
+                        <th>Nov</th>
+                        <th>Des</th>
+                    </thead>
+                    <tbody>
+                      
+                       
+                        <tr id="2024">
+                            <td rowspan="3" align="center"><?php echo $pendapatan['tahun_ini'] ?></td>
+                        </tr>
+                        <tr id="t_2024">
+                        </tr>
+                        <tr id="r_2024">
+                        </tr>
+                          <tr id="2025">
+                            <td rowspan="3" align="center">2025</td>
+                        </tr>
+                        <tr id="t_2025">
+                        </tr>
+                        <tr id="r_2025">
+                        </tr>
+                          <tr id="2026">
+                            <td rowspan="3" align="center">2026</td>
+                        </tr>
+                        <tr id="t_2026">
+                        </tr>
+                        <tr id="r_2026">
+                        </tr>
+                    </tbody>
+
+                </table>
+
+
+
+
+
+
+
+
+
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
 
@@ -436,6 +516,67 @@
     </div>
 </div>
 
+
+<?php 
+
+$target_tahun_ini = [];
+$angka_target_tahun_ini = 0;
+$realisasi_tahun_ini = [];
+$angka_realisasi_tahun_ini = 0;
+
+$target_tahun_sebelumnya = [];
+$realisasi_tahun_sebelumnya = [];
+$angka_target_tahun_sebelumnya = 0;
+$angka_realisasi_tahun_sebelumnya = 0;
+
+
+$target_dua_tahun_sebelumnya = [];
+$realisasi_dua_tahun_sebelumnya = [];
+$angka_target_dua_tahun_sebelumnya = 0;
+$angka_realisasi_dua_tahun_sebelumnya = 0;
+
+$pendapatan_tahun_ini = $pendapatan['tahun_ini']['data']['result']->response[0];
+$pendapatan_tahun_sebelumnya = $pendapatan['tahun_sebelumnya']['data']['result']->response[0];
+$pendapatan_dua_tahun_sebelumnya = $pendapatan['dua_tahun_sebelumnya']['data']['result']->response[0];
+for ($i=0; $i < 12 ; $i++) { 
+    $angka_target_tahun_ini += $pendapatan_tahun_ini[$i]->target;
+    $target_tahun_ini[] = $angka_target_tahun_ini;
+    $angka_realisasi_tahun_ini += $pendapatan_tahun_ini[$i]->jumlah;
+    $realisasi_tahun_ini[] = $angka_realisasi_tahun_ini;
+
+
+    $angka_target_tahun_sebelumnya += $pendapatan_tahun_sebelumnya[$i]->target;
+    $target_tahun_sebelumnya[] = $angka_target_tahun_sebelumnya;
+    $angka_realisasi_tahun_sebelumnya += $pendapatan_tahun_sebelumnya[$i]->jumlah;
+    $realisasi_tahun_sebelumnya[] = $angka_realisasi_tahun_sebelumnya;
+
+
+   
+
+    $angka_target_dua_tahun_sebelumnya += $pendapatan_dua_tahun_sebelumnya[$i]->target;
+    $target_dua_tahun_sebelumnya[] = $angka_target_dua_tahun_sebelumnya;
+    $angka_realisasi_dua_tahun_sebelumnya += $pendapatan_dua_tahun_sebelumnya[$i]->jumlah;
+    $realisasi_dua_tahun_sebelumnya[] = $angka_realisasi_dua_tahun_sebelumnya;
+    ?>
+<?php } 
+$float_target_tahun_ini = array_map('floatval', $target_tahun_ini);
+$json_target_tahun_ini = json_encode($float_target_tahun_ini);
+$float_realisasi_tahun_ini = array_map('floatval', $realisasi_tahun_ini);
+$json_realisasi_tahun_ini = json_encode($float_realisasi_tahun_ini);
+
+$float_target_tahun_sebelumnya = array_map('floatval', $target_tahun_sebelumnya);
+$json_target_tahun_sebelumnya = json_encode($float_target_tahun_sebelumnya);
+$float_realisasi_tahun_sebelumnya = array_map('floatval', $realisasi_tahun_sebelumnya);
+$json_realisasi_tahun_sebelumnya = json_encode($float_realisasi_tahun_sebelumnya);
+
+
+$float_target_dua_tahun_sebelumnya = array_map('floatval', $target_dua_tahun_sebelumnya);
+$json_target_dua_tahun_sebelumnya = json_encode($float_target_dua_tahun_sebelumnya);
+$float_realisasi_dua_tahun_sebelumnya = array_map('floatval', $realisasi_dua_tahun_sebelumnya);
+$json_realisasi_dua_tahun_sebelumnya = json_encode($float_realisasi_dua_tahun_sebelumnya);
+
+
+?>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
@@ -1085,3 +1226,212 @@ Highcharts.chart('grafik_realisasi_keuangan_<?php echo $asisten ?>', {
 <?php } ?>
 perbandingan_grafik_2_tahun_terakhir_asisten('Akumulasi', 'Semua');
 </script>
+
+<script type="text/javascript">
+    
+
+
+    grafik('Akumulasi');
+    function grafik(kategori){
+        // var sumber_data = requestData(kategori);
+        var target_2_tahun_sebelumnya = <?php echo $json_target_dua_tahun_sebelumnya; ?> ; 
+        var realisasi_2_tahun_sebelumnya =<?php echo $json_realisasi_dua_tahun_sebelumnya; ?> ; 
+        var target_tahun_sebelumnya =  <?php echo $json_target_tahun_sebelumnya; ?> ;
+        var realisasi_tahun_sebelumnya = <?php echo $json_realisasi_tahun_sebelumnya; ?> ;
+        var target_tahun_ini = <?php echo $json_target_tahun_ini; ?> ; 
+        var realisasi_tahun_ini = <?php echo $json_realisasi_tahun_ini; ?> ; 
+
+
+
+        Highcharts.chart('grafik_realisasi_skpd', {
+          chart: {
+            zoomType: 'xy'
+          },
+          title: {
+            text: 'Perbandingan Pendapatan'
+          },
+          subtitle: {
+            text: '3 Tahun Terakhir '
+          },
+          xAxis: [{
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            crosshair: true
+          }],
+          yAxis: [{ // Primary yAxis
+
+            labels: {
+            formatter:  function () {
+                // Format ribuan (dengan titik)
+                return 'Rp. ' + Highcharts.numberFormat(this.value, 0, ',', '.');
+            },
+              style: {
+                color: Highcharts.getOptions().colors[1]
+              }
+            },
+            title: {
+              text: '2024',
+              style: {
+                color: Highcharts.getOptions().colors[1]
+              }
+            }
+          }, { 
+            // Secondary yAxis
+
+            opposite: true,
+            title: {
+              text: '2025       ',
+              style: {
+                color: Highcharts.getOptions().colors[0]
+              }
+            },
+            labels: {
+            formatter:  function () {
+                // Format ribuan (dengan titik)
+                return 'Rp. ' + Highcharts.numberFormat(this.value, 0, ',', '.');
+            },
+              style: {
+                color: Highcharts.getOptions().colors[0]
+              }
+            },
+          }],
+          tooltip: {
+            shared: true
+          },
+          legend: {
+            layout: 'vertical',
+            align: 'left',
+            x: 200,
+            verticalAlign: 'top',
+            y: 100,
+            floating: true,
+            backgroundColor:
+              Highcharts.defaultOptions.legend.backgroundColor || // theme
+              'rgba(255,255,255,0.25)'
+          },
+          series: [
+              {
+                name: 'Target Pendapatan 2024',
+                type: 'column',
+                yAxis: 0,
+                color: 'pink',
+                data: target_2_tahun_sebelumnya,
+                tooltip: {
+                  valueSuffix: ''
+                }
+              }, 
+              {
+                name: 'Target Pendapatan 2025',
+                type: 'column',
+                yAxis: 1,
+                color: 'aqua',
+                data: target_tahun_sebelumnya,
+                tooltip: {
+                  valueSuffix: ''
+                }
+              }, 
+              {
+                name: 'Target Pendapatan 2026',
+                type: 'column',
+                yAxis: 1,
+                color: 'grey',
+                data: target_tahun_ini,
+                tooltip: {
+                  valueSuffix: ''
+                }
+              }, 
+              {
+                name: 'Realisasi Pendapatan 2024',
+                type: 'line',
+
+                color: 'red',
+                yAxis: 0,
+                data:realisasi_2_tahun_sebelumnya,
+                // color: '#caf3d5',
+                tooltip: {
+                  valueSuffix: ''
+                }
+              },
+              {
+                name: 'Realisasi Pendapatan 2025',
+                type: 'line',
+
+                 color: 'blue',
+
+                yAxis: 1,
+                data: realisasi_tahun_sebelumnya,
+                // color: '#caf3d5',
+                tooltip: {
+                  valueSuffix: ''
+                }
+              },
+              {
+                name: 'Realisasi Pendapatan 2026',
+                type: 'line',
+
+                 color: 'black',
+
+                yAxis: 1,
+                data: realisasi_tahun_ini,
+                // color: '#caf3d5',
+                tooltip: {
+                  valueSuffix: ''
+                }
+              }
+          ]
+        });
+
+
+        $('#2024').html('<td rowspan="3" align="center">2024</td>');
+        $('#t_2024').html('');
+        $('#r_2024').html('');
+        $('#2025').html('<td rowspan="3" align="center">2025</td>');
+        $('#t_2025').html('');
+        $('#r_2025').html('');
+
+        $('#t_2024').append('<td>Target</td>');
+        $('#r_2024').append('<td>Realisasi</td>');
+        $('#t_2025').append('<td>Target</td>');
+        $('#r_2025').append('<td>Realisasi</td>');
+        $('#t_2026').append('<td>Target</td>');
+        $('#r_2026').append('<td>Realisasi</td>');
+        for (var i = 0; i < 12; i++) {
+            var text = 1234.332;
+            $('#t_2024').append('<td>' + formatRupiahSingkat(target_2_tahun_sebelumnya[i]) + '</td>');
+            $('#r_2024').append('<td>' + formatRupiahSingkat(realisasi_2_tahun_sebelumnya[i]) + '</td>');
+            $('#t_2025').append('<td>' + formatRupiahSingkat(target_tahun_sebelumnya[i]) + '</td>');
+            $('#r_2025').append('<td>' + formatRupiahSingkat(realisasi_tahun_sebelumnya[i]) + '</td>');
+            $('#t_2026').append('<td>' + formatRupiahSingkat(target_tahun_ini[i]) + '</td>');
+
+            if (realisasi_tahun_ini[i]) {
+                $('#r_2026').append('<td>' + formatRupiahSingkat(realisasi_tahun_ini[i]) + '</td>');
+
+            }else{
+                $('#r_2026').append('<td>-</td>');
+
+            }
+        }
+    
+    }
+
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+
+function formatRupiahSingkat(value) {
+  if (value >= 1000000000000) {
+    return 'Rp. ' + (value / 1000000000000).toFixed(3).replace('.', ',') + ' T';
+  }
+  else if (value >= 1000000000) {
+    return 'Rp. ' + (value / 1000000000).toFixed(3).replace('.', ',') + ' M';
+  } else if (value >= 1000000) {
+    return 'Rp. ' + (value / 1000000).toFixed(3).replace('.', ',') + ' Jt';
+  } else if (value >= 1000) {
+    return 'Rp. ' + (value / 1000).toFixed(0).replace('.', ',') + ' Rb';
+  } else {
+    return 'Rp. ' + value;
+  }
+}
+</script>           

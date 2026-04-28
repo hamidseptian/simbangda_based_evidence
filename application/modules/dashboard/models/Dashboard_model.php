@@ -38,7 +38,7 @@ class Dashboard_model extends CI_Model
 			left join master_instansi mi on mu.id_instansi = mi.id_instansi
 			where mu.id_instansi = '$id_instansi' and mu.id_user='$id_user'");
 	}
-	public function get_grafik_total_akumulasi($tahun_anggaran, $tahap, $asisten)
+	public function get_grafik_total_akumulasi($tahun_anggaran, $tahap, $asisten='Semua')
 	{
 		if ($asisten==1) {
 			$q_instansi = $this->db->query("SELECT id_instansi from master_instansi where is_active=1 and kategori='OPD' and id_parent = '204'");
