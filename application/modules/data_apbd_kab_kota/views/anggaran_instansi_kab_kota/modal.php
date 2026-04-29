@@ -67,6 +67,7 @@ $pilihan_bulan = [
                     <input type="hidden" name="id_instansi" id="id_instansi">
 
                     <input type="hidden" name="tahap" id="tahap">
+                    <input type="hidden" name="tahun" id="tahun">
                     <input type="hidden" name="pergeseran_ke" id="pergeseran_ke">
                         
                     <div class="form-group">

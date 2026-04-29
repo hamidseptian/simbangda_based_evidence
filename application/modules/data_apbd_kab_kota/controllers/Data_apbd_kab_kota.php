@@ -178,7 +178,7 @@ class Data_apbd_kab_kota extends MY_Controller
 
 
 
-                $tombol_edit = '<button class="btn btn-outline-info btn-xs"  title="Input / Edit Pagu Instansi '.$v['nama_instansi'].'"  onclick="input_pagu_instansi('."'".sbe_crypt($v['id_instansi'], 'E')."'".','.$tahap.','.$pergeseran_ke.')"><i class="fas fa-money-bill"></i></button>';
+                $tombol_edit = '<button class="btn btn-outline-info btn-xs"  title="Input / Edit Pagu Instansi '.$v['nama_instansi'].'"  onclick="input_pagu_instansi('."'".sbe_crypt($v['id_instansi'], 'E')."'".','.$tahap.','.$tahun_anggaran.','.$pergeseran_ke.')"><i class="fas fa-money-bill"></i></button>';
 
                 $tombol_copy = ' <button class="btn btn-outline-info btn-xs"  title="Copu Pagu  APBD AWAL Instansi '.$v['nama_instansi'].'"  onclick="copy_pagu_instansi('."'".sbe_crypt($v['id_instansi'], 'E')."'".','.$tahap.', '."'".$v['nama_instansi']."'".')"><i class="fas fa-copy"></i></button>';
 
@@ -241,7 +241,7 @@ class Data_apbd_kab_kota extends MY_Controller
                 $where = [ 'kode_tahap'=>$tahap,'tahun'=>$tahun,'id_instansi' =>$id_instansi ,'pergeseran_ke' =>$pergeseran_ke];
                 $pagu    = $this->db->get_where('anggaran_instansi_kab_kota', $where);
                 $value = $pagu->row(); 
-                $caption_apbd =  "APBD AWAL".'<br>Pergeseran Ke-'.$pergeseran_ke.'<br><button type="button" class="btn btn-outline-info btn-sm" onclick="edit_pergeseran('."'1'".','."'".$value->id_anggaran_instansi_kab_kota ."'".')">Edit Pergeseran Ke</button>';
+                $caption_apbd =   "APBD AWAL<br>Pergeseran Ke-".$pergeseran_ke.'<br>'.'<div id="edit_pergeseran_ke"><button type="button" class="btn btn-outline-info btn-sm" onclick="edit_pergeseran_ke('."'".$pergeseran_ke."'".')">Edit Pergeseran Ke</button></div>';    
                 # code...
             }else{
                 $where = ['kode_tahap'=>$tahap,'tahun'=>$tahun,   'id_instansi' =>$id_instansi ];
@@ -294,6 +294,45 @@ class Data_apbd_kab_kota extends MY_Controller
     }
 
 
+
+    public function simpanedit_pergeseran_ke()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        } else {
+            $output    = [
+                'success' => false,
+                'messages' => []
+            ];
+
+            $this->db->trans_start();
+            $pergeseran_ke_sebelumnya = $this->input->post('pergeseran_ke_sebelumnya');
+            $id_instansi = sbe_crypt($this->input->post('id_instansi'),'D');
+            $input_pergeseran_ke = $this->input->post('input_pergeseran_ke');
+            $nama_skpd = $this->input->post('nama_skpd');
+            $tahap = $this->input->post('tahap');
+            $tahun = $this->input->post('tahun');
+             $where = ['id_instansi' => $id_instansi, 'pergeseran_ke'=>$pergeseran_ke_sebelumnya,'kode_tahap'=>$tahap,  'tahun'=>$tahun];
+             $where_target = ['pergeseran_ke'=>$pergeseran_ke_sebelumnya,'kode_tahap'=>$tahap,  'tahun'=>$tahun,   'id_instansi' => $id_instansi];
+             $data = ['pergeseran_ke' =>$input_pergeseran_ke];
+             // $this->db->update('sub_kegiatan_instansi', $data, $where);
+             $this->db->update('anggaran_instansi_kab_kota', $data, $where);
+             $this->db->update('target_apbd_kab_kota', $data, $where_target);
+
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $output['success'] = false;
+                $output['swal_caption'] = 'Data Pergeseran gagal disimpan';
+            } else {
+                $this->db->trans_commit();
+                $output['swal_caption'] = 'Tahapan APBD pada sub kegiatan '.$nama_skpd.' diperbaharui ke pergeseran ke-'.$input_pergeseran_ke;
+                $output['success'] = true;
+            }
+
+        echo json_encode($output);     
+        }
+    }
 
 
 
@@ -414,6 +453,7 @@ class Data_apbd_kab_kota extends MY_Controller
                 $output['status'] = false;
             } else {
                 $this->db->trans_commit();
+                $output['data']['tahun'] = $tahun;
                 $output['data']['tahap'] = $kode_tahap;
                 $output['data']['id_instansi'] = sbe_crypt($id_instansi);
                 $output['data']['swal_caption'] = $skpd.' sudah dialihkan ke APBD pergeseran ke-1<br>Silahkan sesuaikan kembali Pagu dan target pada SKPD  ini';

@@ -141,7 +141,7 @@ function anggaran_instansi_kab_kota()
 
 
 
-	function input_pagu_instansi(id_instansi, tahap, pergeseran_ke)
+	function input_pagu_instansi(id_instansi, tahap, tahun, pergeseran_ke)
 	{
 		$('#modal_input_anggaran').modal('show');
 		$('.form-control').removeClass('is-valid')
@@ -193,6 +193,7 @@ function anggaran_instansi_kab_kota()
                 	$('#bt_bbh').val(data.data.bt_bbh);
                 	$('#bt_bbk').val(data.data.bt_bbk);
                 	$('#pergeseran_ke').val(pergeseran_ke);
+                	$('#tahun').val(tahun);
                 	$('.tahapan').html(data.data.caption_apbd);
                 	$('.show_pagu').html(data.data.pagu_total);
                 }
@@ -231,7 +232,7 @@ function lakukan_pergeseran(id_aikk){
             	if (data.status==true) {
             	Swal.fire('Digeser',data.data.swal_caption,'success');
             	// input_anggaran(kode_rekening_sub_kegiatan,tahap, tahun, pengelompokan)
-            	 input_pagu_instansi(data.data.id_instansi, data.data.tahap, 1)
+            	 input_pagu_instansi(data.data.id_instansi, data.tahun, data.data.tahap, 1)
 				$('#table-instansi').DataTable().ajax.reload(null, false);
             	}else{
             	Swal.fire('Error','Terjadi kesalahan','error');
@@ -241,6 +242,80 @@ function lakukan_pergeseran(id_aikk){
             	Swal.fire('Error','error','error');
             }
         });
+}
+
+
+function edit_pergeseran_ke(ke){
+	$('#modal_input_anggaran').find('#edit_pergeseran_ke').html(`
+		<input type="" name="" class="form-control mb-1 currency" id="input_pergeseran_ke" onblur="if(value==''){value='0'}" >        
+		<button class="btn btn-info btn-sm" onclick="cancel_edit_pergeseran_ke('`+ke+`')"  type="button">Cancel</button> 
+		<button class="btn btn-info btn-sm" onclick="simpanedit_pergeseran_ke()" type="button">Simpan Perubahan Pergeseran</button> 
+
+`);
+}
+
+
+function cancel_edit_pergeseran_ke(ke){
+	$('#modal_input_anggaran').find('#edit_pergeseran_ke').html(`<button type="button" class="btn btn-outline-info btn-sm" onclick="edit_pergeseran_ke('`+ke+`')">Edit Pergeseran Ke</button></div>
+
+`);
+}
+
+
+
+function simpanedit_pergeseran_ke(){
+	var pergeseran_ke_sebelumnya = $('#modal_input_anggaran').find('#pergeseran_ke').val();
+	var input_pergeseran_ke = $('#modal_input_anggaran').find('#input_pergeseran_ke').val();
+	var id_instansi = $('#modal_input_anggaran').find('#id_instansi').val();
+	var tahap = $('#modal_input_anggaran').find('#tahap').val();
+	var tahun = $('#modal_input_anggaran').find('#tahun').val();
+	var pengelompokan = $('#modal_input_anggaran').find('#pengelompokan').val();
+            	console.log(tahun);
+
+	var nama_sub_kegiatan = $('#modal_input_anggaran').find('.nama_sub_kegiatan').html();
+
+
+	if (input_pergeseran_ke=='') {
+		Swal.fire('Error','Harap mengisi pergeseran ke','error');
+	}else{
+
+	
+		$.ajax(
+        {
+            url     : baseUrl('data_apbd_kab_kota/simpanedit_pergeseran_ke/'),
+            dataType: 'JSON',
+            type    : 'POST',
+            data    : { 
+				pergeseran_ke_sebelumnya : pergeseran_ke_sebelumnya , 
+				id_instansi : id_instansi , 
+				input_pergeseran_ke : input_pergeseran_ke , 
+				nama_sub_kegiatan : nama_sub_kegiatan , 
+				tahap : tahap , 
+				tahun : tahun , 
+            },
+            success : function(data)
+            {
+            	if (data.success==true) {
+	            	input_pagu_instansi(id_instansi,tahap, tahun, input_pergeseran_ke);
+					$('#table-instansi').DataTable().ajax.reload(null, false);
+					
+
+            		Swal.fire('Disimpan',data.swal_caption,'success');
+	            }else{
+            		Swal.fire('Error','Error','error');
+
+	            }
+            	
+            }, 
+            error : function(){
+            	alert('ee');
+            }
+        });
+
+	}
+
+
+
 }
 
 
