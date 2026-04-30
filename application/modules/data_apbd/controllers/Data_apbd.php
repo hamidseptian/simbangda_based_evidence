@@ -125,48 +125,72 @@ class Data_apbd extends MY_Controller
             }
             $data['bidang_urusan']        = $kumpul_bu;
             $data['master_program']        = $kumpul_master_program;
-            if ($tahap==4) {
-                $data['program']        = $this->db->query("SELECT  kode_program, id_instansi, tahun, kode_bidang_urusan from sub_kegiatan_instansi where id_instansi='$id_instansi' and tahun='$tahun' and status='1' group by kode_program");
-                # code...
-            }else{
-         $q_program = $this->db->query("SELECT * from v_sub_kegiatan_apbd where tahun ='$tahun' and kode_tahap = '2' and id_instansi = '$id_instansi'");
-         $no =0;
 
-        
-            $program = [];
 
-            foreach ($q_program->result_array() as $item) {
 
-                $kode = $item['kode_rekening_program'];
-                $pagu = $item['pagu'];
 
-                if (!isset($program[$kode])) {
-                    $program[$kode] = [
-                        'kode_bidang_urusan' => $item['kode_bidang_urusan'],
-                        'kode_program' => $item['kode_rekening_program'],
-                        'kode_program' => $kode,
-                        'nama_program' => $kumpul_master_program[$kode],
-                        'pagu_program' => 0
-                    ];
+
+            if ($tahap == 4) {
+
+                $q_program = $this->db->query("
+                    SELECT *
+                    FROM v_sub_kegiatan_apbd
+                    WHERE tahun = '$tahun'
+                      AND status = '1'
+                      AND id_instansi = '$id_instansi'
+                ");
+
+                $program = [];
+                foreach ($q_program->result_array() as $item) {
+                    $kode = $item['kode_rekening_program'];
+                    $pagu = $item['pagu'];
+
+                    if (!isset($program[$kode])) {
+                        $program[$kode] = [
+                            'kode_bidang_urusan' => $item['kode_bidang_urusan'],
+                            'kode_program'       => $kode,
+                            'nama_program'       => $kumpul_master_program[$kode],
+                            'pagu_program'       => 0,
+                        ];
+                    }
+
+                    $program[$kode]['pagu_program'] += $pagu;
                 }
 
-                $program[$kode]['pagu_program'] += $pagu;
+                $data['program'] = array_values($program);
+            } else {
+                $q_program = $this->db->query("
+                    SELECT *
+                    FROM v_sub_kegiatan_apbd
+                    WHERE tahun = '$tahun'
+                      AND kode_tahap = '2'
+                      AND id_instansi = '$id_instansi'
+                ");
+
+                $program = [];
+                foreach ($q_program->result_array() as $item) {
+                    $kode = $item['kode_rekening_program'];
+                    $pagu = $item['pagu'];
+
+                    if (!isset($program[$kode])) {
+                        $program[$kode] = [
+                            'kode_bidang_urusan' => $item['kode_bidang_urusan'],
+                            'kode_program'       => $kode,
+                            'nama_program'       => $kumpul_master_program[$kode],
+                            'pagu_program'       => 0,
+                        ];
+                    }
+
+                    $program[$kode]['pagu_program'] += $pagu;
+                }
+
+                $data['program'] = array_values($program);
             }
 
-            $program = array_values($program);
 
 
 
 
-
-
-
-
-
-
-                $data['program']        = $program ;//$this->db->query("SELECT  kode_program, id_instansi, tahun, kode_bidang_urusan from sub_kegiatan_instansi where id_instansi='$id_instansi' and tahun='$tahun' and kode_tahap ='2' group by kode_program");
-
-            }
 
 
         $data['icon']                       = "metismenu-icon fa fa-list-ul";
@@ -1263,221 +1287,179 @@ public function sync_eplanning()
             $persen_keuangan_akumulasi = ($nilai / $pagu ) * 100 ; 
             $this->db->update('target_apbd', ['target_keuangan' => $nilai,'persen_target_keuangan_bulanan' => $persen_keuangan,'persen_target_keuangan' => $persen_keuangan_akumulasi, 'target_keuangan_bulanan' => $target_keu, 'updated_on' => timestamp(),  'input_by' => 'Manual Input'], ['id_target_apbd' => $id_target_apbd ,'id_instansi'=>id_instansi()]);
         }
-    }
-
-    public function sub_kegiatan_apbd_instansi()
-    {
-        if (!$this->input->is_ajax_request()) {
-            show_404();
-        } else {            
-            $tahun = tahun_anggaran();
-            $tahap_aktif = tahapan_apbd();
-            $id_instansi = id_instansi();
-
-            $fetch_method = $this->input->post('fetch_method');
-            $kode_kegiatan  = $this->input->post('kode_kegiatan');
-            if ($tahap_aktif==4) {
-                $where          = ['id_instansi' => id_instansi(), 'kode_rekening_kegiatan' => $kode_kegiatan, 'status'=>1,'tahun'=>$tahun];
-            	$where_pptk = "kode_rekening_sub_kegiatan in (SELECT kode_sub_kegiatan from sub_kegiatan_instansi where tahun='$tahun' and status='1' and id_instansi='$id_instansi')";
-
-                # code...
-            }else{
-                $where          = ['id_instansi' => id_instansi(), 'kode_rekening_kegiatan' => $kode_kegiatan, 'kode_tahap'=>$tahap_aktif,'tahun'=>$tahun];
-
-            	$where_pptk = "kode_rekening_sub_kegiatan in (SELECT kode_sub_kegiatan from sub_kegiatan_instansi where tahun='$tahun' and kode_tahap='$tahap_aktif' and id_instansi='$id_instansi')";
-
-            }
-            $column_order   = ['', 'nama_sub_kegiatan'];
-            $column_search  = ['nama_sub_kegiatan','kode_rekening_sub_kegiatan','keterangan'];
-            $caption_status = [2=>'Melanjutkan data APBD AWAL pada APBD PERUBAHAN', '','APBD PERUBAHAN'];
-            $order          = ['nama_sub_kegiatan' => 'ASC'];
-            $list           = $this->datatables_model->get_datatables('v_sub_kegiatan_apbd', $column_order, $column_search, $order, $where);
-            $data           = [];
-            $no             = $_POST['start'];
-
-
-
-
-            $id_kedudukan = $this->session->userdata('id_kedudukan');
-            $id_user_pptk = $this->session->userdata('id_user');
-            if ($id_kedudukan==3) {
-            	$warning_bukan_kegiatan_anda = "Swal.fire('Terkunci','Sub Kegiatan ini milik PPTK lain','warning')";
-	            $q_usk_pptk = $this->db->query("SELECT kode_rekening_sub_kegiatan from users_sub_kegiatan where id_user='$id_user_pptk' and tahun_anggaran='$tahun' and $where_pptk and status='1'")->result_array();
-            }else{
-            	$warning_bukan_kegiatan_anda = "Swal.fire('Terkunci','Sub Kegiatan ini milik PPTK dari KPA lain','warning')";
-            	$q_user_kpa = $this->db->query("SELECT id_sub_instansi from master_users where id_user='$id_user_pptk'")->row_array();
-            	$id_sub_instansi = $q_user_kpa['id_sub_instansi'];
-
-	            $q_usk_pptk = $this->db->query("SELECT kode_rekening_sub_kegiatan from users_sub_kegiatan where id_user in (SELECT mu.id_user from master_users mu join sub_instansi si on mu.id_sub_instansi=si.id_sub_instansi where si.id_kpa='$id_sub_instansi') and tahun_anggaran='$tahun' and $where_pptk and status='1'")->result_array();
-
-            }
-            $kumpul_usk_pptk = [];
-            foreach ($q_usk_pptk as $k => $v) {
-                $krsk = $v['kode_rekening_sub_kegiatan'];
-                array_push($kumpul_usk_pptk, $krsk);
-            }
-
-
-
-            foreach ($list as $lists) {
-                $pecah = explode('.', $lists->kode_rekening_sub_kegiatan);
-                $krsk = $lists->kode_rekening_sub_kegiatan;
-                $tahap = $lists->kode_tahap;
-                $pecah = explode('.', $lists->kode_rekening_sub_kegiatan);
-                $kode_sub_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
-                $kategori = $lists->kategori;
-                $sub_organisasi = '<br>'.$lists->jenis_sub_kegiatan.' - '.$lists->keterangan;
-                $keterangan = $kategori =='Sub Kegiatan SKPD' ? '' : $sub_organisasi;
-                // upel = unit pelaksana
-                 $onclick_update_upel = "edit_ski_teknis('".$lists->kode_rekening_sub_kegiatan."','".$kode_sub_kegiatan."', '".$lists->nama_sub_kegiatan."', '".$lists->id_sub_kegiatan_instansi."', '".$lists->jenis_sub_kegiatan."', '".$lists->keterangan."')";
-                 if ($fetch_method=='lihat_data_apbd') {
-                    $tbl_update_upel ="";
-                 }else{
-                    $tbl_update_upel = $kategori =='Sub Kegiatan SKPD' ? '' : '<br><button class="btn btn-info btn-xs"  title="Edit Unit Pelaksana"  onclick="'.$onclick_update_upel.'"><i class="fas fa-edit"></i></button> ';
-                 }
-                 $nama_sub_kegiatan = $lists->nama_sub_kegiatan. $keterangan;
-
-                $no++;
-                $row    = [];
-                $row[]     = $no;
-                $row[]  = $krsk;//$pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
-                $row[]  = $nama_sub_kegiatan;
-                 $pagu   = $lists->pagu =='' ? 0 : $lists->pagu;
-                $row[]  =  '<span style="float:right">'.number_format($pagu,0,'','.').'</span>';
-
-                if ($tahap_aktif==4) {
-                	$caption_tahapan = $caption_status[$lists->kode_tahap];
-                }else{
-                    if ($lists->pergeseran_ke== null || $lists->pergeseran_ke== ''  ) {
-                    	$caption_tahapan = "APBD AWAL".$lists->pergeseran_ke ;//pilihan_nama_tahapan($lists->kode_tahap);
-                       $onclick3 = "get_target('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."')";
-                    }else{
-                        $caption_tahapan = "APBD AWAL<br>Pergeseran ke-".$lists->pergeseran_ke ;//pilihan_nama_tahapan($lists->kode_tahap);
-                       $onclick3 = "get_target_pergeseran('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->pergeseran_ke."')";
-
-                    }
-
-                }
-                $row[]  = $caption_tahapan;
-                $onclick = "hapus_sub_kegiatan_instansi('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."', '".$lists->kode_tahap."', '".$lists->tahun."','instansi')";
-                $onclick2 = "input_anggaran('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_tahap."','".tahun_anggaran()."','instansi')";
-
-
-             $onclick4 = "get_sumber_dana('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."')";
-             
-
-
-
-
-
-
-
-
-                $onclick_copy = "copy_data_apbd_sub_kegiatan('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".tahapan_apbd()."','".$lists->kode_bidang_urusan."','".$nama_sub_kegiatan."')";
-
-
-                $tombolcopy = '<button class="btn btn-outline-info btn-xs"  title="Input target sub   kegiatan '.$lists->nama_sub_kegiatan.'"  onclick="'.$onclick_copy.'"><i class="fas fa-copy"></i></button> ';
-
-                $cek_count_data_pagu = $this->db->query("SELECT id_anggaran_sub_kegiatan from anggaran_sub_kegiatan where id_instansi='$id_instansi' and kode_tahap='$tahap' and kode_sub_kegiatan='$krsk' and tahun='$tahun'")->num_rows();
-
-
-
-
-
-              
-
-
-
-
-   
-             
-                   $tomboltarget = '<button class="btn btn-outline-info btn-xs"  title="Input target sub   kegiatan '.$lists->nama_sub_kegiatan.'"  onclick="'.$onclick3.'"><i class="fas fa-crosshairs"></i></button> ';
-                  $tombolsumber_dana = '<button class="btn btn-outline-info btn-xs"  title="Input Sumberdana sub   kegiatan '.$lists->nama_sub_kegiatan.'"  onclick="'.$onclick4.'"><i class="fas fa-money-bill"></i></button> ';
-
-             
-
-
-
-                        if ($lists->kode_tahap==4 && $pagu==0 && $cek_count_data_pagu==0) {
-                        $tombol_copy = $tombolcopy;
-                        }else{
-
-                        $tombol_copy = "";
-                        }
-
-
-
-
-                    // if (jadwal_input_data_dasar()['aktif']==0) {
-                    //     $alert_kunci_input = "Swal.fire('Terkunci','".jadwal_input_data_dasar()['pesan']."','error')";
-                    //     $row[]     =  '<button class="btn btn-outline-danger btn-sm" onclick="'.$alert_kunci_input.'">'.jadwal_input_data_dasar()['pesan_action'].'</button> ' ;
-                    // }else{
-
-
-
-
-
-                        if ($id_kedudukan=='') {
-
-                            if (jadwal_input_data_dasar()['aktif']==0) {
-                                $alert_kunci_input = "Swal.fire('Terkunci','Mohon maaf<br>Anda tidak bisa menghapus sub kegiatan karena terkunci<br>".jadwal_input_data_dasar()['pesan']."','error')";
-                                $tombol_hapus =  '<button class="btn btn-danger btn-xs" onclick="'.$alert_kunci_input.'"  title="Hapus sub  kegiatan '.$lists->nama_sub_kegiatan.'" ><i class="fa fa-trash"></i></button>
-                                </div> ' ;
-                            }else{
-                                $tombol_hapus =  '<button class="btn btn-danger btn-xs" onclick="'.$onclick.'"  title="Hapus sub  kegiatan '.$lists->nama_sub_kegiatan.'" ><i class="fa fa-trash"></i></button>
-                                </div> ' ;
-                            }
-
-
-
-                              $row[]     =  '<div class="btn-group">'.$tombol_copy.$tombolsumber_dana.$tomboltarget.
-                                '
-                                <button class="btn btn-info btn-xs"  title="Input anggaran belanja sub  kegiatan '.$lists->nama_sub_kegiatan.'"  onclick="'.$onclick2.'"><i class="fas fa-money-bill"></i></button> '.
-                                 // '<button class="btn btn-info btn-xs"  title="Input indikator sub kegiatan '.$lists->nama_sub_kegiatan.'"><i class="metismenu-icon fas fa-file-signature"></i></button> ' .
-                                 $tombol_hapus;
-                        }else{
-                            if (in_array($krsk, $kumpul_usk_pptk)) {
-                                    # code...
-                                $row[]     =  '<div class="btn-group">'.$tombol_copy.$tombolsumber_dana.$tomboltarget.
-                                '
-                                <button class="btn btn-info btn-xs"  title="Input anggaran belanja sub  kegiatan '.$lists->nama_sub_kegiatan.'"  onclick="'.$onclick2.'"><i class="fas fa-money-bill"></i></button> '.
-                                 // '<button class="btn btn-info btn-xs"  title="Input indikator sub kegiatan '.$lists->nama_sub_kegiatan.'"><i class="metismenu-icon fas fa-file-signature"></i></button> ' .
-                                 '<button class="btn btn-danger btn-xs" onclick="'."Swal.fire('Terkunci','Sub kegiatan hanya bisa dihapus pada Operator Utama.','error')".'"  title="Hapus sub  kegiatan '.$lists->nama_sub_kegiatan.'" ><i class="fa fa-trash"></i></button>' ;
-                            }else{
-                                $row[]     = ' <div class="btn-group">
-                        <button class="btn btn-outline-danger btn-sm" onclick="'.$warning_bukan_kegiatan_anda.'">Terkunci</button>
-                        </div> ';
-
-                            }
-                        }
-
-
-
-
-                        // $row[]     = $tombol_copy.$tombolsumber_dana.$tomboltarget .
-
-                        // '<button class="btn btn-info btn-xs"  title="Input anggaran belanja sub  kegiatan '.$lists->nama_sub_kegiatan.'"  onclick="'.$onclick2.'"><i class="fas fa-money-bill"></i></button> '.
-
-                        //  // '<button class="btn btn-info btn-xs"  title="Input indikator sub kegiatan '.$lists->nama_sub_kegiatan.'"><i class="metismenu-icon fas fa-file-signature"></i></button> ' .
-                        //  '<button class="btn btn-danger btn-xs" onclick="'.$onclick.'"><i class="fa fa-trash"></i></button>' . '';
-                    // }
-
-
-           
-               
-                $data[] = $row;
-            }
-
-            $output = [
-                "draw"              => $_POST['draw'],
-                "recordsTotal"      => $this->datatables_model->count_all('v_sub_kegiatan_apbd', $where),
-                "recordsFiltered"   => $this->datatables_model->count_filtered('v_sub_kegiatan_apbd', $column_order, $column_search, $order, $where),
-                "data"              => $data,
+    }public function sub_kegiatan_apbd_instansi()
+{
+    if (!$this->input->is_ajax_request()) {
+        show_404();
+    } else {
+        $tahun       = tahun_anggaran();
+        $tahap_aktif = tahapan_apbd();
+        $id_instansi = id_instansi();
+
+        $fetch_method   = $this->input->post('fetch_method');
+        $kode_kegiatan  = $this->input->post('kode_kegiatan');
+
+        if ($tahap_aktif == 4) {
+            $where = [
+                'id_instansi'           => id_instansi(),
+                'kode_rekening_kegiatan' => $kode_kegiatan,
+                'status'                => 1,
+                'tahun'                 => $tahun,
             ];
-
-            echo json_encode($output);
+            $where_pptk = "kode_rekening_sub_kegiatan in (
+                SELECT kode_sub_kegiatan FROM sub_kegiatan_instansi
+                WHERE tahun='$tahun' AND status='1' AND id_instansi='$id_instansi'
+            )";
+        } else {
+            $where = [
+                'id_instansi'           => id_instansi(),
+                'kode_rekening_kegiatan' => $kode_kegiatan,
+                'kode_tahap'            => $tahap_aktif,
+                'tahun'                 => $tahun,
+            ];
+            $where_pptk = "kode_rekening_sub_kegiatan in (
+                SELECT kode_sub_kegiatan FROM sub_kegiatan_instansi
+                WHERE tahun='$tahun' AND kode_tahap='$tahap_aktif' AND id_instansi='$id_instansi'
+            )";
         }
+
+        $column_order   = ['', 'nama_sub_kegiatan'];
+        $column_search  = ['nama_sub_kegiatan', 'kode_rekening_sub_kegiatan', 'keterangan'];
+        $caption_status = [2 => 'Melanjutkan data APBD AWAL pada APBD PERUBAHAN', '', 'APBD PERUBAHAN'];
+        $order          = ['nama_sub_kegiatan' => 'ASC'];
+        $list           = $this->datatables_model->get_datatables('v_sub_kegiatan_apbd', $column_order, $column_search, $order, $where);
+        $data           = [];
+        $no             = $_POST['start'];
+
+        $id_kedudukan = $this->session->userdata('id_kedudukan');
+        $id_user_pptk = $this->session->userdata('id_user');
+
+        if ($id_kedudukan == 3) {
+            $warning_bukan_kegiatan_anda = "Swal.fire('Terkunci','Sub Kegiatan ini milik PPTK lain','warning')";
+            $q_usk_pptk = $this->db->query("
+                SELECT kode_rekening_sub_kegiatan FROM users_sub_kegiatan
+                WHERE id_user='$id_user_pptk'
+                  AND tahun_anggaran='$tahun'
+                  AND $where_pptk
+                  AND status='1'
+            ")->result_array();
+        } else {
+            $warning_bukan_kegiatan_anda = "Swal.fire('Terkunci','Sub Kegiatan ini milik PPTK dari KPA lain','warning')";
+            $q_user_kpa      = $this->db->query("SELECT id_sub_instansi FROM master_users WHERE id_user='$id_user_pptk'")->row_array();
+            $id_sub_instansi = $q_user_kpa['id_sub_instansi'];
+            $q_usk_pptk      = $this->db->query("
+                SELECT kode_rekening_sub_kegiatan FROM users_sub_kegiatan
+                WHERE id_user IN (
+                    SELECT mu.id_user FROM master_users mu
+                    JOIN sub_instansi si ON mu.id_sub_instansi = si.id_sub_instansi
+                    WHERE si.id_kpa = '$id_sub_instansi'
+                )
+                  AND tahun_anggaran='$tahun'
+                  AND $where_pptk
+                  AND status='1'
+            ")->result_array();
+        }
+
+        $kumpul_usk_pptk = [];
+        foreach ($q_usk_pptk as $k => $v) {
+            array_push($kumpul_usk_pptk, $v['kode_rekening_sub_kegiatan']);
+        }
+
+        foreach ($list as $lists) {
+            $krsk  = $lists->kode_rekening_sub_kegiatan;
+            $tahap = $lists->kode_tahap;
+            $pagu  = $lists->pagu == '' ? 0 : $lists->pagu;
+
+            $pecah             = explode('.', $krsk);
+            $kode_sub_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
+
+            $kategori       = $lists->kategori;
+            $sub_organisasi = '<br>'.$lists->jenis_sub_kegiatan.' - '.$lists->keterangan;
+            $keterangan     = $kategori == 'Sub Kegiatan SKPD' ? '' : $sub_organisasi;
+
+            $onclick_update_upel = "edit_ski_teknis('".$lists->kode_rekening_sub_kegiatan."','".$kode_sub_kegiatan."', '".$lists->nama_sub_kegiatan."', '".$lists->id_sub_kegiatan_instansi."', '".$lists->jenis_sub_kegiatan."', '".$lists->keterangan."')";
+            $tbl_update_upel     = ($fetch_method == 'lihat_data_apbd')
+                ? ''
+                : ($kategori == 'Sub Kegiatan SKPD' ? '' : '<br><button class="btn btn-info btn-xs" title="Edit Unit Pelaksana" onclick="'.$onclick_update_upel.'"><i class="fas fa-edit"></i></button> ');
+
+            $nama_sub_kegiatan = $lists->nama_sub_kegiatan.$keterangan;
+
+            // Tentukan caption tahapan dan onclick target
+            if ($tahap_aktif == 4) {
+                $caption_tahapan = $caption_status[$lists->kode_tahap];
+                $onclick3 = "get_target('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."')";
+            } else {
+                if ($lists->pergeseran_ke == null || $lists->pergeseran_ke == '') {
+                    $caption_tahapan = "APBD AWAL".$lists->pergeseran_ke;
+                    $onclick3 = "get_target('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."')";
+                } else {
+                    $caption_tahapan = "APBD AWAL<br>Pergeseran ke-".$lists->pergeseran_ke;
+                    $onclick3 = "get_target_pergeseran('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->pergeseran_ke."')";
+                }
+            }
+
+            $onclick  = "hapus_sub_kegiatan_instansi('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."', '".$lists->kode_tahap."', '".$lists->tahun."','instansi')";
+            $onclick2 = "input_anggaran('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_tahap."','".tahun_anggaran()."','instansi')";
+            $onclick4 = "get_sumber_dana('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."')";
+
+            $onclick_copy = "copy_data_apbd_sub_kegiatan('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".tahapan_apbd()."','".$lists->kode_bidang_urusan."','".$nama_sub_kegiatan."')";
+
+            $cek_count_data_pagu = $this->db->query("
+                SELECT id_anggaran_sub_kegiatan FROM anggaran_sub_kegiatan
+                WHERE id_instansi='$id_instansi'
+                  AND kode_tahap='$tahap'
+                  AND kode_sub_kegiatan='$krsk'
+                  AND tahun='$tahun'
+            ")->num_rows();
+
+            $tombolcopy = '<button class="btn btn-outline-info btn-xs" title="Input target sub kegiatan '.$lists->nama_sub_kegiatan.'" onclick="'.$onclick_copy.'"><i class="fas fa-copy"></i></button> ';
+            $tomboltarget = '<button class="btn btn-outline-info btn-xs" title="Input target sub kegiatan '.$lists->nama_sub_kegiatan.'" onclick="'.$onclick3.'"><i class="fas fa-crosshairs"></i></button> ';
+            $tombolsumber_dana = '<button class="btn btn-outline-info btn-xs" title="Input Sumberdana sub kegiatan '.$lists->nama_sub_kegiatan.'" onclick="'.$onclick4.'"><i class="fas fa-money-bill"></i></button> ';
+
+            $tombol_copy = ($lists->kode_tahap == 4 && $pagu == 0 && $cek_count_data_pagu == 0) ? $tombolcopy : '';
+
+            $no++;
+            $row   = [];
+            $row[] = $no;
+            $row[] = $krsk;
+            $row[] = $nama_sub_kegiatan;
+            $row[] = '<span style="float:right">'.number_format($pagu, 0, '', '.').'</span>';
+            $row[] = $caption_tahapan;
+
+            $tombol_anggaran = '<button class="btn btn-info btn-xs" title="Input anggaran belanja sub kegiatan '.$lists->nama_sub_kegiatan.'" onclick="'.$onclick2.'"><i class="fas fa-money-bill"></i></button> ';
+
+            if ($id_kedudukan == '') {
+                if (jadwal_input_data_dasar()['aktif'] == 0) {
+                    $alert_kunci_input = "Swal.fire('Terkunci','Mohon maaf<br>Anda tidak bisa menghapus sub kegiatan karena terkunci<br>".jadwal_input_data_dasar()['pesan']."','error')";
+                    $tombol_hapus = '<button class="btn btn-danger btn-xs" onclick="'.$alert_kunci_input.'" title="Hapus sub kegiatan '.$lists->nama_sub_kegiatan.'"><i class="fa fa-trash"></i></button></div>';
+                } else {
+                    $tombol_hapus = '<button class="btn btn-danger btn-xs" onclick="'.$onclick.'" title="Hapus sub kegiatan '.$lists->nama_sub_kegiatan.'"><i class="fa fa-trash"></i></button></div>';
+                }
+                $row[] = '<div class="btn-group">'.$tombol_copy.$tombolsumber_dana.$tomboltarget.$tombol_anggaran.$tombol_hapus;
+            } else {
+                if (in_array($krsk, $kumpul_usk_pptk)) {
+                    $tombol_hapus_terkunci = '<button class="btn btn-danger btn-xs" onclick="'."Swal.fire('Terkunci','Sub kegiatan hanya bisa dihapus pada Operator Utama.','error')".'" title="Hapus sub kegiatan '.$lists->nama_sub_kegiatan.'"><i class="fa fa-trash"></i></button>';
+                    $row[] = '<div class="btn-group">'.$tombol_copy.$tombolsumber_dana.$tomboltarget.$tombol_anggaran.$tombol_hapus_terkunci;
+                } else {
+                    $row[] = '<div class="btn-group">
+                        <button class="btn btn-outline-danger btn-sm" onclick="'.$warning_bukan_kegiatan_anda.'">Terkunci</button>
+                    </div>';
+                }
+            }
+
+            $data[] = $row;
+        }
+
+        $output = [
+            "draw"            => $_POST['draw'],
+            "recordsTotal"    => $this->datatables_model->count_all('v_sub_kegiatan_apbd', $where),
+            "recordsFiltered" => $this->datatables_model->count_filtered('v_sub_kegiatan_apbd', $column_order, $column_search, $order, $where),
+            "data"            => $data,
+        ];
+
+        echo json_encode($output);
     }
+}
 
 
     public function sub_kegiatan_apbd_instansi_gabungan($input_by)

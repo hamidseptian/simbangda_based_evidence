@@ -2955,12 +2955,12 @@ ini_set("pcre.backtrack_limit", "5000000");
 
 
 		if ($kategori=='Bulanan') {
-			$deskripsi_bulan = 'Realisasi bulan '.bulan_global($bulan) . ' ' . tahun_anggaran();
+			$deskripsi_bulan = 'Realisasi bulan '.bulan_global($bulan) . ' ' . $tahun;
 		}else{
 	       if ($bulan==date('n') && tahun_anggaran()==date('Y')) {
-			   $deskripsi_bulan = 'kondisi realisasi sampai ' . (date('d')). ' ' . bulan_global($bulan) . ' ' . tahun_anggaran();
+			   $deskripsi_bulan = 'kondisi realisasi sampai ' . (date('d')). ' ' . bulan_global($bulan) . ' ' . $tahun;
 	       }else{
-		       $deskripsi_bulan = 'kondisi realisasi sampai ' . jml_hari_dalam_bulan($bulan, tahun_anggaran()) . ' ' . bulan_global($bulan) . ' ' . tahun_anggaran();
+		       $deskripsi_bulan = 'kondisi realisasi sampai ' . jml_hari_dalam_bulan($bulan, tahun_anggaran()) . ' ' . bulan_global($bulan) . ' ' . $tahun;
 	       }
 		}
 	    

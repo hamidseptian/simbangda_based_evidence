@@ -33,4 +33,5 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 sbe_files_data/
 .env
 
-
+deploy/.env.dev
+deploy/.env.prod

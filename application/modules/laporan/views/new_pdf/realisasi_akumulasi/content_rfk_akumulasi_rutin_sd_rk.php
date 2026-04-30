@@ -114,8 +114,22 @@ foreach ($sub_kegiatan as $row) {
           $nama_tahap = "APBD AWAL<br>Pergeseran ke-" . $row['pergeseran_ke'];
       }
     }else{
+
+          $target = $this->realisasi_akumulasi_model->get_target($row['id_instansi'], $sub, $bulan, $row['kode_tahap'], $row['tahun'])->row_array();
       $where_paket = "AND pp.status = 1";
-      $nama_tahap = "APBD PERUBAHAN<br>Maintenance";
+      if ($row['kode_tahap']==4) {
+        $nama_tahap = "APBD PERUBAHAN";
+        # code...
+      }else{
+        if ($row['pergeseran_ke']=='') {
+          $nama_tahap = "APBD AWAL";
+          # code...
+        }else{
+          $nama_tahap = "APBD AWAL<br>Pergeseran ke-".$row['pergeseran_ke'];
+
+        }
+
+      }
     }
 
     $realisasi_keuangan =$q_realisasi_keuangan['total_realisasi'];
