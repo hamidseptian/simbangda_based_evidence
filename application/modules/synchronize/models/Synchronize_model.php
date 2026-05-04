@@ -132,25 +132,22 @@ class Synchronize_model extends CI_Model
 		// $tahun 				= $this->input->get('tahun');
 		// $tahap 				= $this->input->get('tahap');
 
-		if ($pergeseran_ke!=='' || $pergeseran_ke!=null) {
-			# code...
-			$where =  [
-				'id_instansi' => $id_instansi,
-				'kode_tahap' => $tahap,
-				'pergeseran_ke' => $pergeseran_ke,
-				'tahun' => $tahun,
-				'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan
-			];
-		}else{
-			$where =  [
-				'id_instansi' => $id_instansi,
-				'kode_tahap' => $tahap,
-				'tahun' => $tahun,
-				'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan
-			];
-
-		}
-
+	if (!empty($pergeseran_ke)) {
+	    $where = [
+	        'id_instansi'                 => $id_instansi,
+	        'kode_tahap'                  => $tahap,
+	        'pergeseran_ke'               => $pergeseran_ke,
+	        'tahun'                       => $tahun,
+	        'kode_rekening_sub_kegiatan'  => $kode_rekening_sub_kegiatan,
+	    ];
+	} else {
+	    $where = [
+	        'id_instansi'                => $id_instansi,
+	        'kode_tahap'                 => $tahap,
+	        'tahun'                      => $tahun,
+	        'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan,
+	    ];
+	}
 
 			$this->db->select('kode_rekening_sub_kegiatan,target_fisik,target_keuangan,target_fisik_bulanan,target_keuangan_bulanan ');
 			$this->db->order_by('bulan', 'asc');
@@ -271,7 +268,12 @@ class Synchronize_model extends CI_Model
 
 	public function get_realisasi_fisik($id_instansi, $kode_rekening_sub_kegiatan, $jenis_paket, $tahun, $tahap, $bulan)
 	{
+		if ($tahap==2) {
+			$where_tahap = "AND pp.kode_tahap='2'";
+		}else{
+			$where_tahap = "AND pp.status='1'";
 
+		}
 				$query_akumulasi  = $this->db->query("SELECT
 										rk.kode_rekening_sub_kegiatan,
 										rk.bulan,
@@ -284,7 +286,8 @@ class Synchronize_model extends CI_Model
 										AND rk.kode_rekening_sub_kegiatan = '$kode_rekening_sub_kegiatan' 
 										AND pp.jenis_paket = '{$jenis_paket}' 
 										AND rk.bulan <= {$bulan}
-										AND rk.tahun='$tahun'")->row_array();
+										AND rk.tahun='$tahun'
+										$where_tahap")->row_array();
 										
 				$query_bulanan  = $this->db->query("SELECT
 						rk.kode_rekening_sub_kegiatan,
@@ -298,7 +301,8 @@ class Synchronize_model extends CI_Model
 						AND rk.kode_rekening_sub_kegiatan = '$kode_rekening_sub_kegiatan' 
 						AND pp.jenis_paket = '{$jenis_paket}' 
 						AND rk.bulan = {$bulan}
-						AND rk.tahun='$tahun'")->row_array();
+						AND rk.tahun='$tahun'
+						$where_tahap")->row_array();
 
 
 		$realisasi = [

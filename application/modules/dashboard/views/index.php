@@ -45,39 +45,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="p-0 list-group-item">
-                                            <div class="widget-content">
-                                                <div class="row">
-                                                    <div class="col-md-6 col-xl-3">
-                                                    </div>
-                                                    <div class="col-md-6 col-xl-3">
-                                                    </div>
-                                                    <div class="col-md-6 col-xl-3">
-                                                    </div>
-                                                    <div class="col-md-6 col-xl-3">
-                                                    </div>
-                                                    <div class="d-xl-none d-lg-block col-md-6 col-xl-4">
-                                                        <div class="card mb-3 widget-content bg-premium-dark">
-                                                            <div class="widget-content-wrapper text-white">
-                                                                <div class="widget-content-left">
-                                                                    <div class="widget-heading">Products Sold</div>
-                                                                    <div class="widget-subheading">Revenue streams</div>
-                                                                </div>
-                                                                <div class="widget-content-right">
-                                                                    <div class="widget-numbers text-warning"><span>$14M</span></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </li>
-
-                                     
-                                        
-                                    </ul>
+                              
                                 </div>
 
 
