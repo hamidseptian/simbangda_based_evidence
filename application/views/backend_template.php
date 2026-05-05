@@ -40,7 +40,6 @@ if ($q_kuisioner->num_rows()>0) {
     <link href="<?php echo base_url() ?>assets/architectui-html-pro/main.87c0748b313a1dda75f5.css" rel="stylesheet">
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
     <!-- Architectui HTML FREE -->
-    <link href="<?php echo base_url() ?>assets/architectui-html-pro/main.87c0748b313a1dda75f5.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="<?php echo base_url() ?>assets/fontawesome/css/all.css" rel="stylesheet">
     <!-- token -->
@@ -120,146 +119,7 @@ if ($q_kuisioner->num_rows()>0) {
                                 Restore Default
                             </button>
                         </h3>
-                        <div class="p-3">
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <div class="widget-content p-0">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left mr-3">
-                                                <div class="switch has-switch" data-on-label="ON" data-off-label="OFF">
-                                                    <div class="switch-animate switch-off">
-                                                        <input type="checkbox" data-toggle="toggle" data-onstyle="success">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading">
-                                                    Sidebar Background Image
-                                                </div>
-                                                <div class="widget-subheading">
-                                                    Enable background images for sidebar!
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <h5 class="pb-2">Choose Color Scheme</h5>
-                                    <div class="theme-settings-swatches">
-                                        <div class="swatch-holder bg-primary switch-sidebar-cs-class" data-class="bg-primary sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-secondary switch-sidebar-cs-class" data-class="bg-secondary sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-success switch-sidebar-cs-class" data-class="bg-success sidebar-text-dark"></div>
-                                        <div class="swatch-holder bg-info switch-sidebar-cs-class" data-class="bg-info sidebar-text-dark"></div>
-                                        <div class="swatch-holder bg-warning switch-sidebar-cs-class" data-class="bg-warning sidebar-text-dark"></div>
-                                        <div class="swatch-holder bg-danger switch-sidebar-cs-class" data-class="bg-danger sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-light switch-sidebar-cs-class" data-class="bg-light sidebar-text-dark"></div>
-                                        <div class="swatch-holder bg-dark switch-sidebar-cs-class" data-class="bg-dark sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-focus switch-sidebar-cs-class" data-class="bg-focus sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-alternate switch-sidebar-cs-class" data-class="bg-alternate sidebar-text-light"></div>
-                                        <div class="divider"></div>
-                                        <div class="swatch-holder bg-vicious-stance switch-sidebar-cs-class" data-class="bg-vicious-stance sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-midnight-bloom switch-sidebar-cs-class" data-class="bg-midnight-bloom sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-night-sky switch-sidebar-cs-class" data-class="bg-night-sky sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-slick-carbon switch-sidebar-cs-class" data-class="bg-slick-carbon sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-asteroid switch-sidebar-cs-class" data-class="bg-asteroid sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-royal switch-sidebar-cs-class" data-class="bg-royal sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-warm-flame switch-sidebar-cs-class" data-class="bg-warm-flame sidebar-text-dark"></div>
-                                        <div class="swatch-holder bg-night-fade switch-sidebar-cs-class" data-class="bg-night-fade sidebar-text-dark"></div>
-                                        <div class="swatch-holder bg-sunny-morning switch-sidebar-cs-class" data-class="bg-sunny-morning sidebar-text-dark"></div>
-                                        <div class="swatch-holder bg-tempting-azure switch-sidebar-cs-class" data-class="bg-tempting-azure sidebar-text-dark"></div>
-                                        <div class="swatch-holder bg-amy-crisp switch-sidebar-cs-class" data-class="bg-amy-crisp sidebar-text-dark"></div>
-                                        <div class="swatch-holder bg-heavy-rain switch-sidebar-cs-class" data-class="bg-heavy-rain sidebar-text-dark"></div>
-                                        <div class="swatch-holder bg-mean-fruit switch-sidebar-cs-class" data-class="bg-mean-fruit sidebar-text-dark"></div>
-                                        <div class="swatch-holder bg-malibu-beach switch-sidebar-cs-class" data-class="bg-malibu-beach sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-deep-blue switch-sidebar-cs-class" data-class="bg-deep-blue sidebar-text-dark"></div>
-                                        <div class="swatch-holder bg-ripe-malin switch-sidebar-cs-class" data-class="bg-ripe-malin sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-arielle-smile switch-sidebar-cs-class" data-class="bg-arielle-smile sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-plum-plate switch-sidebar-cs-class" data-class="bg-plum-plate sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-happy-fisher switch-sidebar-cs-class" data-class="bg-happy-fisher sidebar-text-dark"></div>
-                                        <div class="swatch-holder bg-happy-itmeo switch-sidebar-cs-class" data-class="bg-happy-itmeo sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-mixed-hopes switch-sidebar-cs-class" data-class="bg-mixed-hopes sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-strong-bliss switch-sidebar-cs-class" data-class="bg-strong-bliss sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-grow-early switch-sidebar-cs-class" data-class="bg-grow-early sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-love-kiss switch-sidebar-cs-class" data-class="bg-love-kiss sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-premium-dark switch-sidebar-cs-class" data-class="bg-premium-dark sidebar-text-light"></div>
-                                        <div class="swatch-holder bg-happy-green switch-sidebar-cs-class" data-class="bg-happy-green sidebar-text-light"></div>
-                                    </div>
-                                </li>
-                                <li class="theme-settings-swatches d-none list-group-item">
-                                    <div class="widget-content p-0">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading">Background Opacity</div>
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div role="group" class="btn-group-sm btn-group">
-                                                    <button type="button" class="btn-shadow opacity-3 active btn btn-primary">4%</button>
-                                                    <button type="button" class="btn-shadow opacity-4 btn btn-primary">6%</button>
-                                                    <button type="button" class="btn-shadow opacity-5 btn btn-primary">8%</button>
-                                                    <button type="button" class="btn-shadow opacity-6 btn btn-primary">10%</button>
-                                                    <button type="button" class="btn-shadow opacity-7 btn btn-primary">15%</button>
-                                                    <button type="button" class="btn-shadow opacity-8 btn btn-primary">20%</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="theme-settings-swatches d-none list-group-item">
-                                    <h5>Sidebar Image Background</h5>
-                                    <div class="divider"></div>
-                                    <div class="swatch-holder swatch-holder-img active">
-                                        <a class="img-holder switch-trigger">
-                                            <img alt="" src="<?php echo base_url(); ?>assets/images/sidebar/city1.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="swatch-holder swatch-holder-img">
-                                        <a class="img-holder switch-trigger">
-                                            <img alt="" src="<?php echo base_url(); ?>assets/images/sidebar/city2.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="swatch-holder swatch-holder-img">
-                                        <a class="img-holder switch-trigger">
-                                            <img alt="" src="<?php echo base_url(); ?>assets/images/sidebar/city3.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="swatch-holder swatch-holder-img">
-                                        <a class="img-holder switch-trigger">
-                                            <img alt="" src="<?php echo base_url(); ?>assets/images/sidebar/city4.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="swatch-holder swatch-holder-img">
-                                        <a class="img-holder switch-trigger">
-                                            <img alt="" src="<?php echo base_url(); ?>assets/images/sidebar/city5.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="swatch-holder swatch-holder-img">
-                                        <a class="img-holder switch-trigger">
-                                            <img alt="" src="<?php echo base_url(); ?>assets/images/sidebar/abstract1.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="swatch-holder swatch-holder-img">
-                                        <a class="img-holder switch-trigger">
-                                            <img alt="" src="<?php echo base_url(); ?>assets/images/sidebar/abstract2.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="swatch-holder swatch-holder-img">
-                                        <a class="img-holder switch-trigger">
-                                            <img alt="" src="<?php echo base_url(); ?>assets/images/sidebar/abstract3.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="swatch-holder swatch-holder-img">
-                                        <a class="img-holder switch-trigger">
-                                            <img alt="" src="<?php echo base_url(); ?>assets/images/sidebar/abstract4.jpg">
-                                        </a>
-                                    </div>
-                                    <div class="swatch-holder swatch-holder-img">
-                                        <a class="img-holder switch-trigger">
-                                            <img alt="" src="<?php echo base_url(); ?>assets/images/sidebar/abstract5.jpg">
-                                        </a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                       
                         <h3 class="themeoptions-heading">
                             <div>Main Content Options</div>
                             <button type="button" class="btn-pill btn-shadow btn-wide ml-auto active btn btn-focus btn-sm">Restore Default</button>
@@ -687,7 +547,7 @@ if ($q_kuisioner->num_rows()>0) {
                                                 <label class="custom-control-label" for="exampleCustomCheckbox2444">&nbsp;</label></div>
                                         </div>
                                         <div class="widget-content-left mr-3">
-                                            <div class="widget-content-left"><img width="42" class="rounded" src="<?php echo base_url(); ?>assets/images/avatars/1.jpg" alt="" /></div>
+                                           
                                         </div>
                                         <div class="widget-content-left">
                                             <div class="widget-heading">Go grocery shopping</div>
@@ -759,44 +619,6 @@ if ($q_kuisioner->num_rows()>0) {
                                     <div class="vertical-timeline-element-content bounce-in">
                                         <h4 class="timeline-title">Build the production release
                                             <div class="badge badge-danger ml-2">NEW</div>
-                                        </h4>
-                                        <span class="vertical-timeline-element-date"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="vertical-timeline-item dot-primary vertical-timeline-element">
-                                <div><span class="vertical-timeline-element-icon bounce-in"></span>
-                                    <div class="vertical-timeline-element-content bounce-in">
-                                        <h4 class="timeline-title">Something not important
-                                            <div class="avatar-wrapper mt-2 avatar-wrapper-overlap">
-                                                <div class="avatar-icon-wrapper avatar-icon-sm">
-                                                    <div class="avatar-icon"><img src="<?php echo base_url(); ?>assets/images/avatars/1.jpg" alt=""></div>
-                                                </div>
-                                                <div class="avatar-icon-wrapper avatar-icon-sm">
-                                                    <div class="avatar-icon"><img src="<?php echo base_url(); ?>assets/images/avatars/2.jpg" alt=""></div>
-                                                </div>
-                                                <div class="avatar-icon-wrapper avatar-icon-sm">
-                                                    <div class="avatar-icon"><img src="<?php echo base_url(); ?>assets/images/avatars/3.jpg" alt=""></div>
-                                                </div>
-                                                <div class="avatar-icon-wrapper avatar-icon-sm">
-                                                    <div class="avatar-icon"><img src="<?php echo base_url(); ?>assets/images/avatars/4.jpg" alt=""></div>
-                                                </div>
-                                                <div class="avatar-icon-wrapper avatar-icon-sm">
-                                                    <div class="avatar-icon"><img src="<?php echo base_url(); ?>assets/images/avatars/5.jpg" alt=""></div>
-                                                </div>
-                                                <div class="avatar-icon-wrapper avatar-icon-sm">
-                                                    <div class="avatar-icon"><img src="<?php echo base_url(); ?>assets/images/avatars/6.jpg" alt=""></div>
-                                                </div>
-                                                <div class="avatar-icon-wrapper avatar-icon-sm">
-                                                    <div class="avatar-icon"><img src="<?php echo base_url(); ?>assets/images/avatars/7.jpg" alt=""></div>
-                                                </div>
-                                                <div class="avatar-icon-wrapper avatar-icon-sm">
-                                                    <div class="avatar-icon"><img src="<?php echo base_url(); ?>assets/images/avatars/8.jpg" alt=""></div>
-                                                </div>
-                                                <div class="avatar-icon-wrapper avatar-icon-sm avatar-icon-add">
-                                                    <div class="avatar-icon"><i>+</i></div>
-                                                </div>
-                                            </div>
                                         </h4>
                                         <span class="vertical-timeline-element-date"></span>
                                     </div>
