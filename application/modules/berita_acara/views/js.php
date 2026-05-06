@@ -323,7 +323,7 @@ function data_instansi()
 	{
 		Swal.fire({
 			  title: 'Warning',
-			  text: 'Apakah anda ingin menyelesaikan berita acara : '+ nama_instansi+'.?',
+			  text: 'Reset synchronize berita acara : '+ nama_instansi+'.?',
 			  icon: 'warning',
 			  showCancelButton: true,
 			  confirmButtonColor: '#3085d6',
@@ -346,7 +346,7 @@ function data_instansi()
 							{
 								
 								Swal.fire(
-								      'Diselesaikan!',
+								      'Direset!',
 								      data.messages,
 								      'success'
 								    );

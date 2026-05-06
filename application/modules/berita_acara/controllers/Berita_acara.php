@@ -525,7 +525,7 @@ class Berita_acara extends MY_Controller
         }else{
             $this->db->trans_commit();
              $output['success'] = true;
-            $output['messages'] = "Synchronize gagal direset.";
+            $output['messages'] = "Synchronize direset.";
         }
 
 
