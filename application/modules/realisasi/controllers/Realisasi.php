@@ -1441,9 +1441,40 @@ class Realisasi extends MY_Controller
             foreach ($list as $lists) {
                 $no++;
                 $id_instansi  = $lists->id_instansi;
-                $q_pagu = $this->db->query("SELECT pagu_bo,pagu_bm,pagu_btt,pagu_bt from v_instansi_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun='$tahun_anggaran'");
-                $d_pagu = $q_pagu->row();
-                $j_pagu = $q_pagu->num_rows();
+
+
+
+                $q_pagu = $this->db->query("SELECT  pergeseran_ke, 
+                (bo_bp + bo_bbj + bo_bs + bo_bh + bo_bbs ) as pagu_bo, 
+                (bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl + bm_bmatb) as pagu_bm, 
+                btt  as pagu_btt, 
+                (bt_bbh + bt_bbk) as pagu_bt
+                from anggaran_instansi_kab_kota where id_instansi = '$id_instansi' and pergeseran_ke !='' and tahun = '$tahun_anggaran' and kode_tahap = '$tahap'");
+                if ($q_pagu->num_rows()>0 ) {
+                    $d_pagu = $q_pagu->row();
+                    $caption_apbd = pilihan_nama_tahapan($tahap).'<br>Pergeseran ke-'.$d_pagu->pergeseran_ke;
+                    $pergeseran_ke = $d_pagu->pergeseran_ke;
+                    $j_pagu = $q_pagu->num_rows();
+
+                }else{
+                    $q_pagu_pergeseran = $this->db->query("SELECT  pergeseran_ke, 
+                        (bo_bp + bo_bbj + bo_bs + bo_bh + bo_bbs ) as pagu_bo, 
+                        (bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl + bm_bmatb) as pagu_bm, 
+                        btt  as pagu_btt, 
+                        (bt_bbh + bt_bbk) as pagu_bt
+                        from anggaran_instansi_kab_kota where id_instansi = '$id_instansi' and tahun = '$tahun_anggaran' and kode_tahap = '$tahap'");
+                    $d_pagu = $q_pagu_pergeseran->row();
+                    $caption_apbd = pilihan_nama_tahapan($tahap);
+                    $pergeseran_ke = '';
+                    $j_pagu = $q_pagu_pergeseran->num_rows();
+
+                }
+
+                // $q_pagu = $this->db->query("SELECT pagu_bo,pagu_bm,pagu_btt,pagu_bt from v_instansi_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun='$tahun_anggaran'");
+
+
+
+                // $d_pagu = $q_pagu->row();
                 $pagu_bo = $j_pagu == 0 ? 0 : $d_pagu->pagu_bo ;
                 $pagu_bm = $j_pagu == 0 ? 0 : $d_pagu->pagu_bm ;
                 $pagu_btt = $j_pagu == 0 ? 0 : $d_pagu->pagu_btt ;
@@ -1485,17 +1516,17 @@ class Realisasi extends MY_Controller
 
 
 
-                $set_realisasi_bo = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'bo','".$lists->id_instansi."','".$pagu_total."'".')">'.number_format($jumlah_realisasi_bo).'</button> ';
-                $set_realisasi_bm = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'bm','".$lists->id_instansi."','".$pagu_total."'".')">'.number_format($jumlah_realisasi_bm).'</button> ';
-                $set_realisasi_btt = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'btt','".$lists->id_instansi."','".$pagu_total."'".')">'.number_format($jumlah_realisasi_btt).'</button> ';
-                $set_realisasi_bt = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'bt','".$lists->id_instansi."','".$pagu_total."'".')">'.number_format($jumlah_realisasi_bt).'</button> ';
+                $set_realisasi_bo = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'bo','".$lists->id_instansi."','".$pagu_total."','".$pergeseran_ke."'".')">'.number_format($jumlah_realisasi_bo).'</button> ';
+                $set_realisasi_bm = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'bm','".$lists->id_instansi."','".$pagu_total."','".$pergeseran_ke."'".')">'.number_format($jumlah_realisasi_bm).'</button> ';
+                $set_realisasi_btt = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'btt','".$lists->id_instansi."','".$pagu_total."','".$pergeseran_ke."'".')">'.number_format($jumlah_realisasi_btt).'</button> ';
+                $set_realisasi_bt = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'bt','".$lists->id_instansi."','".$pagu_total."','".$pergeseran_ke."'".')">'.number_format($jumlah_realisasi_bt).'</button> ';
 
-                 $set_realisasi_bo_rf = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'bo','".$lists->id_instansi."','".$pagu_total."'".')">'.$jumlah_realisasi_bo_rf.'</button> ';
-                 $set_realisasi_bm_rf = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'bm','".$lists->id_instansi."','".$pagu_total."'".')">'.$jumlah_realisasi_bm_rf.'</button> ';
-                 $set_realisasi_btt_rf = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'btt','".$lists->id_instansi."','".$pagu_total."'".')">'.$jumlah_realisasi_btt_rf.'</button> ';
-                 $set_realisasi_bt_rf = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'bt','".$lists->id_instansi."','".$pagu_total."'".')">'.$jumlah_realisasi_bt_rf.'</button> ';
+                 $set_realisasi_bo_rf = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'bo','".$lists->id_instansi."','".$pagu_total."','".$pergeseran_ke."'".')">'.$jumlah_realisasi_bo_rf.'</button> ';
+                 $set_realisasi_bm_rf = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'bm','".$lists->id_instansi."','".$pagu_total."','".$pergeseran_ke."'".')">'.$jumlah_realisasi_bm_rf.'</button> ';
+                 $set_realisasi_btt_rf = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'btt','".$lists->id_instansi."','".$pagu_total."','".$pergeseran_ke."'".')">'.$jumlah_realisasi_btt_rf.'</button> ';
+                 $set_realisasi_bt_rf = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'bt','".$lists->id_instansi."','".$pagu_total."','".$pergeseran_ke."'".')">'.$jumlah_realisasi_bt_rf.'</button> ';
 
-                 $set_realisasi_rf_total = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'fisik','".$lists->id_instansi."','".$pagu_total."'".')">'.$jumlah_realisasi_rf_total.'</button> ';
+                 $set_realisasi_rf_total = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'fisik','".$lists->id_instansi."','".$pagu_total."','".$pergeseran_ke."'".')">'.$jumlah_realisasi_rf_total.'</button> ';
 
                
                $nilai_rk_instansi_bo  =  $realisasi_dipilih['realisasikan_bo']==0 ? 0 : $jumlah_realisasi_bo;
@@ -1550,7 +1581,7 @@ class Realisasi extends MY_Controller
                 $row[]  = $tampil_nilai_rk_instansi_bt;
                 $row[]  = $realisasi_dipilih['realisasikan_bt']==0 ? '-' :  ( $pagu_bo > 0 ? round($persen_rk_instansi_bt,2) : 0 );
 
-                $set_realisasi_semua = '<button type="button" class="tombol" title="Input Realisasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'semua','".$lists->id_instansi."','".$pagu_total."'".')">'.number_format($nilai_rk_instansi_total).'</button> ';
+                $set_realisasi_semua = '<button type="button" class="tombol" title="Input Realisasi Sub  Kegiatan '.$lists->nama_instansi.'"  onclick="input_realisasi('."'semua','".$lists->id_instansi."','".$pagu_total."','".$pergeseran_ke."'".')">'.number_format($nilai_rk_instansi_total).'</button> ';
 
                 $row[]  = $set_realisasi_semua;
                 $row[]  = $pagu_total > 0 ? ($persen_rk_instansi_total >0 ? round($persen_rk_instansi_total,2) : 0) : 0;
@@ -2171,6 +2202,7 @@ class Realisasi extends MY_Controller
             // $kode_bidang_urusan = '1.01';
             // $jenis_realisasi = 'bo';
 
+            $pergeseran_ke =  $this->input->post('pergeseran_ke');
             $jenis_realisasi =  $this->input->post('jenis');
             $id_instansi = $this->input->post('id_instansi');
             $nama_tahap = [2=>'APBD AWAL','APBD PERGESERAN','APBD PERUBAHAN'];
@@ -2197,13 +2229,25 @@ class Realisasi extends MY_Controller
                     ";
                     $realisasi = $fisik_keuangan->realisasi($where, $jenis_realisasi)->row_array();
                     $realisasi_lra = $fisik_keuangan->realisasi_lra($where, $jenis_realisasi)->row_array();
-                    $anggaran = $this->db->query("SELECT 
-                         bo_bp, bo_bbj, bo_bs, bo_bh, bo_bbs, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatb, bm_bmatl, btt, bt_bbh, bt_bbk 
-                     from anggaran_instansi_kab_kota
-                        where
-                        id_instansi = '$id_instansi' and 
-                        kode_tahap  = '$tahap' and tahun='$tahun_anggaran'
-                        ");
+                    if ($pergeseran_ke=='') {
+                        $anggaran = $this->db->query("SELECT 
+                             bo_bp, bo_bbj, bo_bs, bo_bh, bo_bbs, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatb, bm_bmatl, btt, bt_bbh, bt_bbk 
+                         from anggaran_instansi_kab_kota
+                            where
+                            id_instansi = '$id_instansi' and 
+                            kode_tahap  = '$tahap' and tahun='$tahun_anggaran' and (pergeseran_ke ='' or pergeseran_ke is null)
+                            ");
+                        # code...
+                    }else{
+                        $anggaran = $this->db->query("SELECT 
+                             bo_bp, bo_bbj, bo_bs, bo_bh, bo_bbs, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatb, bm_bmatl, btt, bt_bbh, bt_bbk 
+                         from anggaran_instansi_kab_kota
+                            where
+                            id_instansi = '$id_instansi' and 
+                            kode_tahap  = '$tahap' and tahun='$tahun_anggaran' and pergeseran_ke ='$pergeseran_ke'
+                            ");
+
+                    }
                     $pagu = $anggaran->row_array();
 
 
@@ -2471,8 +2515,41 @@ class Realisasi extends MY_Controller
             $tahap = tahapan_apbd() ;//config_kab_kota()->tahapan_apbd;
             $tahun = tahun_anggaran() ;//config_kab_kota()->tahapan_apbd;
             $id_instansi = $this->input->post('id_instansi');
+            $pergeseran_ke = $this->input->post('pergeseran_ke');
             
-            $pagu = $this->db->query("SELECT * from v_instansi_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun='$tahun'")->row();
+
+                $q_pagu = $this->db->query("SELECT  pergeseran_ke, 
+                (bo_bp + bo_bbj + bo_bs + bo_bh + bo_bbs ) as pagu_bo, 
+                (bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl + bm_bmatb) as pagu_bm, 
+                btt  as pagu_btt, 
+                (bt_bbh + bt_bbk) as pagu_bt
+                from anggaran_instansi_kab_kota where id_instansi = '$id_instansi' and pergeseran_ke !='' and tahun = '$tahun_anggaran' and kode_tahap = '$tahap'");
+                if ($q_pagu->num_rows()>0 ) {
+                    $d_pagu = $q_pagu->row();
+                    $caption_apbd = pilihan_nama_tahapan($tahap).'<br>Pergeseran ke-'.$d_pagu->pergeseran_ke;
+                    $pergeseran_ke = $d_pagu->pergeseran_ke;
+                    $j_pagu = $q_pagu->num_rows();
+
+                }else{
+                    $q_pagu_pergeseran = $this->db->query("SELECT  pergeseran_ke, 
+                        (bo_bp + bo_bbj + bo_bs + bo_bh + bo_bbs ) as pagu_bo, 
+                        (bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl + bm_bmatb) as pagu_bm, 
+                        btt  as pagu_btt, 
+                        (bt_bbh + bt_bbk) as pagu_bt
+                        from anggaran_instansi_kab_kota where id_instansi = '$id_instansi' and tahun = '$tahun_anggaran' and kode_tahap = '$tahap'");
+                    $d_pagu = $q_pagu_pergeseran->row();
+                    $caption_apbd = pilihan_nama_tahapan($tahap);
+                    $pergeseran_ke = '';
+                    $j_pagu = $q_pagu_pergeseran->num_rows();
+
+                }   
+
+
+
+
+
+
+            $pagu = $d_pagu ;//$this->db->query("SELECT * from v_instansi_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun='$tahun'")->row();
             $direalisasikan = $this->db->query("SELECT * from realisasi_fisik_keuangan_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun='$tahun'")->num_rows();
 
 

@@ -68,8 +68,9 @@ function data_opd_kb_kota()
 
 
 
-function input_realisasi(jenis,id_instansi,pagu)
+function input_realisasi(jenis,id_instansi,pagu, pergeseran_ke)
 	{	
+        // console.log(pergeseran_ke);
         var izin_input = <?php echo jadwal_rfk_kab_kota()['aktif'] ?>;
         var bulan_realisasi_config = <?php echo jadwal_rfk_kab_kota()['bulan_aktif'] ?>;
         $('#modal-realisasi-keuangan').find('#id_instansi').val(id_instansi);
@@ -151,6 +152,7 @@ function input_realisasi(jenis,id_instansi,pagu)
             type    : 'POST',
             data    : { 
                 id_instansi : id_instansi,
+                pergeseran_ke : pergeseran_ke,
                 jenis : jenis
             },
             success : function(data)
@@ -193,6 +195,7 @@ function input_realisasi(jenis,id_instansi,pagu)
             data    : { 
             	pagu : pagu,
             	id_instansi : id_instansi,
+                pergeseran_ke : pergeseran_ke,
                 jenis : jenis
             },
             success : function(data)
