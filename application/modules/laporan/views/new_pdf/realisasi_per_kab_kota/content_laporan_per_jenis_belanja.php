@@ -248,7 +248,7 @@ table td, th {
     $q_pagu = $this->db->query("SELECT   pergeseran_ke, bo_bp, bo_bbj, bo_bs, bo_bh, bo_bbs, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatl, bm_bmatb, btt, bt_bbh, bt_bbk,
     realisasikan_bo, realisasikan_bm, realisasikan_btt, realisasikan_bt  from anggaran_instansi_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun = $tahun");
     $j_pagu = $q_pagu->num_rows();
-    $d_pagu = $q_pagu_awal->row();
+    $d_pagu = $q_pagu->row();
 
 
     }
@@ -307,7 +307,7 @@ table td, th {
     $q_pagu = $this->db->query("SELECT   pergeseran_ke, bo_bp, bo_bbj, bo_bs, bo_bh, bo_bbs, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatl, bm_bmatb, btt, bt_bbh, bt_bbk,
     realisasikan_bo, realisasikan_bm, realisasikan_btt, realisasikan_bt  from anggaran_instansi_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun = $tahun");
     $j_pagu = $q_pagu->num_rows();
-    $d_pagu = $q_pagu_awal->row();
+    $d_pagu = $q_pagu->row();
 
 
     }

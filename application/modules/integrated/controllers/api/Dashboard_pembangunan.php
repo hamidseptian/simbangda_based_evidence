@@ -915,7 +915,7 @@ public function get_token_csrf()
         }
 
 		$pencapaian_opd = [
-			'skpd'=> $skpd,
+			'id_instansi'=> $id_instansi,
             'skpd'=> $skpd,
 			'pagu'=> $pagu_total,
 			'rp_target_keuangan'=>$rp_target_keuangan_akumulasi,

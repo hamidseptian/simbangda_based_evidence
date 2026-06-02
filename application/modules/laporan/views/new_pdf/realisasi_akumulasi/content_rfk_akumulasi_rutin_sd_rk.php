@@ -531,7 +531,7 @@ foreach ($hasil as $k_p => $v_p) {
 	$capaian_f_program = ($total_rf_ttb_program / $total_tf_ttb_program) * 100 ; 
 	$dk_program = $persen_rk_program - $persen_tk_program ; 
 	$capaian_k_program = ($persen_rk_program / $persen_tk_program) * 100 ; 
-	$sisa_anggaran_program =$v_k['total_pagu'] - $total_rp_rk_program;
+	$sisa_anggaran_program =$v_p['total_pagu'] - $total_rp_rk_program;
 
 
 
