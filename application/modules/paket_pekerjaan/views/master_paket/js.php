@@ -427,19 +427,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 					$('#id_kedudukan').val(id_kedudukan);
 
 
-					if (pemaketan=='wajib_evidence') {
-						$('#modalMasterPaket').find('#jenis_paket').html(
-							`<option value=""></option>
-			                            <option value="SWAKELOLA">SWAKELOLA</option>
-			                            <option value="PENYEDIA">PENYEDIA</option>`);
-						if (data.data.jenis_paket=='RUTIN') {
-
-	                	$('#jenis_paket').val('').trigger('change');
-						}else{
-							
-	                	$('#jenis_paket').val(data.data.jenis_paket).trigger('change');
-						}
-					}else{
+					
 						$('#modalMasterPaket').find('#jenis_paket').html(
 							`<option value=""></option>
 			                            
@@ -447,7 +435,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 			                            <option value="PENYEDIA">PENYEDIA</option>`);
 
 	                	$('#jenis_paket').val(data.data.jenis_paket).trigger('change');
-					}
+					
 
                 	
                 	$('#anggaran_tersedia').val(pagu_tersedia);

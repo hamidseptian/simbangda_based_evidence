@@ -1149,15 +1149,14 @@ class Paket_pekerjaan extends MY_Controller
                     $output['data']['nama_tahapan_paket']   = pilihan_nama_tahapan($value->kode_tahap);
                     $output['data']['kode_rekening_sub_kegiatan']   = $krsk ;
                     if (tahapan_apbd()==4) {
-                        $cek_pemaketan = $this->db->query("SELECT pemaketan, nama_sub_kegiatan, kategori, jenis_sub_kegiatan, keterangan from v_sub_kegiatan_apbd where kode_rekening_sub_kegiatan='$krsk' and tahun = '$tahun' and status = 1")->row();
+                        $cek_pemaketan = $this->db->query("SELECT nama_sub_kegiatan, kategori, jenis_sub_kegiatan, keterangan from v_sub_kegiatan_apbd where kode_rekening_sub_kegiatan='$krsk' and tahun = '$tahun' and status = 1")->row();
                     }else{
 
-                        $cek_pemaketan = $this->db->query("SELECT pemaketan, nama_sub_kegiatan, kategori, jenis_sub_kegiatan, keterangan from v_sub_kegiatan_apbd where kode_rekening_sub_kegiatan='$krsk' and tahun = '$tahun' and kode_tahap =2")->row();
+                        $cek_pemaketan = $this->db->query("SELECT nama_sub_kegiatan, kategori, jenis_sub_kegiatan, keterangan from v_sub_kegiatan_apbd where kode_rekening_sub_kegiatan='$krsk' and tahun = '$tahun' and kode_tahap =2")->row();
                     }
 
                      $nama_sub_kegiatan = $cek_pemaketan->kategori =='Sub Kegiatan SKPD' ? $cek_pemaketan->nama_sub_kegiatan : $cek_pemaketan->nama_sub_kegiatan.'<br>'.$cek_pemaketan->jenis_sub_kegiatan.' - '.$cek_pemaketan->keterangan; 
                     $output['data']['nama_sub_kegiatan']               = $nama_sub_kegiatan;
-                    $output['data']['pemaketan']               = $cek_pemaketan->pemaketan;
                     $output['data']['nama_paket']               = $value->nama_paket;
                     $output['data']['jenis_paket']              = $value->jenis_paket;
                     $output['data']['kategori']                 = $value->kategori;
