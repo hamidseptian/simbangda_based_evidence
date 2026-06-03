@@ -1394,7 +1394,7 @@ public function sync_eplanning()
                     $onclick3 = "get_target('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."')";
                 } else {
                     $caption_tahapan = "APBD AWAL<br>Pergeseran ke-".$lists->pergeseran_ke;
-                    $onclick3 = "get_target_pergeseran('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->pergeseran_ke."')";
+                    $onclick3 = "get_target_pergeseran('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->pergeseran_ke."')"; 
                 }
             }
 
@@ -2344,7 +2344,7 @@ public function sync_eplanning()
             $output['totaldata']             = $target->num_rows();
             $output['kategori']              = $subkeg->kategori;
             $output['nama_sub_kegiatan']     = $nama_sub_kegiatan;
-            $output['kode_sub_kegiatan']     = $kode_sub_kegiatan;
+            $output['kode_sub_kegiatan']     = $kode_rekening_sub_kegiatan;
             $output['nama_tahapan']  = "APBD PERGESERAN <br>Pergeseran Ke ".$pergeseran_ke;
             if ($target->num_rows() > 0) {
                 foreach ($target->result() as $key => $value) {
@@ -3595,7 +3595,7 @@ public function sync_eplanning()
 
                $data_sumber_dana = [
                 'id_instansi'=>$sumber_dana_awal['id_instansi'],
-                'kode_rekening_sub_kegiatan'=>$sumber_dana_awal['kode_rekening_sub_kegiatan'],
+                'kode_rekening_sub_kegiatan'=>$kode_sub_kegiatan,
                 'kode_rekening_kegiatan'=>$sumber_dana_awal['kode_rekening_kegiatan'],
                 'kode_rekening_program'=>$sumber_dana_awal['kode_rekening_program'],
                 'kode_bidang_urusan'=>$sumber_dana_awal['kode_bidang_urusan'],
@@ -3615,7 +3615,9 @@ public function sync_eplanning()
 
                 $this->db->insert('anggaran_sub_kegiatan', $data_pagu);
                 $this->db->insert_batch('target_apbd', $kumpul_target_baru);
-                $this->db->insert('sumber_dana', $data_sumber_dana);
+                if ($sumber_dana->num_rows()>0) {
+                    $this->db->insert('sumber_dana', $data_sumber_dana);
+                }
                 $this->db->update('sub_kegiatan_instansi', ['pergeseran_ke'=>$ke], ['id_sub_kegiatan_instansi'=>$id_ski]);
 
 
