@@ -593,13 +593,13 @@ class Paket_pekerjaan extends MY_Controller
 
 
                 if ($id_kedudukan=='') {
-                    $row[]  = '<button id="list-paket" status="collapse" id-pptk="'."???".'" kode-sub-kegiatan="'.$lists->kode_rekening_sub_kegiatan.'" kode-kegiatan="'.$lists->kode_rekening_kegiatan.'" kode-program="'.$lists->kode_rekening_program.'" kode-bidang-urusan="'.$lists->kode_bidang_urusan.'"  pemaketan="'.$lists->pemaketan.'"   kode_tahap="'.$lists->kode_tahap.'" izin_input_pptk="1" id_kedudukan="'.$id_kedudukan.'" alert_input_pptk="" class="btn btn-info btn-xs">+</button>'; 
+                    $row[]  = '<button id="list-paket" status="collapse" id-pptk="'."???".'" kode-sub-kegiatan="'.$lists->kode_rekening_sub_kegiatan.'" kode-kegiatan="'.$lists->kode_rekening_kegiatan.'" kode-program="'.$lists->kode_rekening_program.'" kode-bidang-urusan="'.$lists->kode_bidang_urusan.'" kode_tahap="'.$lists->kode_tahap.'" izin_input_pptk="1" id_kedudukan="'.$id_kedudukan.'" alert_input_pptk="" class="btn btn-info btn-xs">+</button>'; 
                 }else{
                     if (in_array($krsk, $kumpul_usk_pptk)) {
-                        $row[]  = '<button id="list-paket" status="collapse" id-pptk="'."???".'" kode-sub-kegiatan="'.$lists->kode_rekening_sub_kegiatan.'" kode-kegiatan="'.$lists->kode_rekening_kegiatan.'" kode-program="'.$lists->kode_rekening_program.'" kode-bidang-urusan="'.$lists->kode_bidang_urusan.'"  pemaketan="'.$lists->pemaketan.'"   kode_tahap="'.$lists->kode_tahap.'" izin_input_pptk="1" id_kedudukan="'.$id_kedudukan.'" alert_input_pptk="" class="btn btn-info btn-xs">+</button>'; 
+                        $row[]  = '<button id="list-paket" status="collapse" id-pptk="'."???".'" kode-sub-kegiatan="'.$lists->kode_rekening_sub_kegiatan.'" kode-kegiatan="'.$lists->kode_rekening_kegiatan.'" kode-program="'.$lists->kode_rekening_program.'" kode-bidang-urusan="'.$lists->kode_bidang_urusan.'" kode_tahap="'.$lists->kode_tahap.'" izin_input_pptk="1" id_kedudukan="'.$id_kedudukan.'" alert_input_pptk="" class="btn btn-info btn-xs">+</button>'; 
                     }else{
 
-                        $row[]  = '<button id="list-paket" status="collapse" id-pptk="'."???".'" kode-sub-kegiatan="'.$lists->kode_rekening_sub_kegiatan.'" kode-kegiatan="'.$lists->kode_rekening_kegiatan.'" kode-program="'.$lists->kode_rekening_program.'" kode-bidang-urusan="'.$lists->kode_bidang_urusan.'"  pemaketan="'.$lists->pemaketan.'"   kode_tahap="'.$lists->kode_tahap.'" izin_input_pptk="0" id_kedudukan="'.$id_kedudukan.'" alert_input_pptk="'.$warning_bukan_kegiatan_anda.'" class="btn btn-outline-info btn-xs">+</button>'; 
+                        $row[]  = '<button id="list-paket" status="collapse" id-pptk="'."???".'" kode-sub-kegiatan="'.$lists->kode_rekening_sub_kegiatan.'" kode-kegiatan="'.$lists->kode_rekening_kegiatan.'" kode-program="'.$lists->kode_rekening_program.'" kode-bidang-urusan="'.$lists->kode_bidang_urusan.'" kode_tahap="'.$lists->kode_tahap.'" izin_input_pptk="0" id_kedudukan="'.$id_kedudukan.'" alert_input_pptk="'.$warning_bukan_kegiatan_anda.'" class="btn btn-outline-info btn-xs">+</button>'; 
                     }
 
                 }

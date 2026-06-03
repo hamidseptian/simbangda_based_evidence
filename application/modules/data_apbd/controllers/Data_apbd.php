@@ -2388,9 +2388,10 @@ public function sync_eplanning()
                             'tahun'=>$tahun,
                             'pergeseran_ke'=>$pergeseran_ke,
                             'created_on'=> timestamp(), 
-                            'created_by'=>id_user()
+                            'created_by'=>id_user(),
+                            'input_by'=>'Create New'
                         ];
-                        // $this->db->insert('target_apbd_pergeseran', $insert);
+                        $this->db->insert('target_apbd', $insert);
                     }
                 }
             }
