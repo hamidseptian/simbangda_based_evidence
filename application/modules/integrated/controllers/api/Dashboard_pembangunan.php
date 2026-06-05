@@ -204,7 +204,7 @@ public function get_token_csrf()
                 'tahun'=>$tahun,
                 'tahun_aktif'=>$tahun_aktif,
                 'tahap'=>$tahap,
-                'pagu_total'=>7050694967828,//$q_total['total_pagu'],
+                'pagu_total'=>$q_total['total_pagu'],
                 'rp_target_keuangan_total'=>$total_target_keuangan,
                 'rp_realisasi_keuangan_total'=>$total_realisasi_keuangan,
                 // 'persen_target_keuangan_total'=>round($persen_target_keuangan_total,2),
