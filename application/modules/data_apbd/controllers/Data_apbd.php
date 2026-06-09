@@ -3190,7 +3190,8 @@ public function sync_eplanning()
 
                 $output['status'] = true;
             }else{
-                  
+                  $output['data']['tahapan']                  = "APBD AWAL".'<br>'.'<button type="button" class="btn btn-outline-info btn-sm" onclick="Swal.fire(`Error`,`Mohon maaf, data pagu APBD Awal tidak terdeteksi<br>Kemungkinan ii adalah penambahan sub kegiatan baru. Mohon simpan anggaran terlebih dahulu langsung klik simpan tanpa menginputkan), baru lakukan pergeseran `,`error`)">Lakukan Pergeseran</button>';
+                    $output['data']['pagu_aktif']                  = 0;
                     $output['data']['rea_bo']                  = 0;
                     $output['data']['rea_bm']                  = 0;
                     $output['data']['rea_btt']                  = 0;

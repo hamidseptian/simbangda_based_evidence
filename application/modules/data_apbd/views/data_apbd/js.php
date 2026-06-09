@@ -332,6 +332,7 @@
             },
             success : function(data)
             {
+            	console.log(data);
             	$('#modal_input_anggaran').find('.kategori').html(data.data.kategori);
             	$('#modal_input_anggaran').find('.nama_sub_kegiatan').html(data.data.nama_sub_kegiatan);
             	$('#modal_input_anggaran').find('.kode_sub_kegiatan').html(kode_rekening_sub_kegiatan);
@@ -413,6 +414,7 @@ function edit_pergeseran_ke(ke){
 		<button class="btn btn-info btn-sm" onclick="simpanedit_pergeseran_ke()" type="button">Simpan Perubahan Pergeseran</button> 
 
 `);
+	showAutoCurrency();
 }
 function cancel_edit_pergeseran_ke(ke){
 	$('#modal_input_anggaran').find('#edit_pergeseran_ke').html(`<button type="button" class="btn btn-outline-info btn-sm" onclick="edit_pergeseran_ke('`+ke+`')">Edit Pergeseran Ke</button></div>

@@ -132,7 +132,7 @@ class Synchronize_model extends CI_Model
 		// $tahun 				= $this->input->get('tahun');
 		// $tahap 				= $this->input->get('tahap');
 
-	if (!empty($pergeseran_ke)) {
+	if (!empty($pergeseran_ke) || $pergeseran_ke=='') {
 	    $where = [
 	        'id_instansi'                 => $id_instansi,
 	        'kode_tahap'                  => $tahap,
@@ -149,7 +149,7 @@ class Synchronize_model extends CI_Model
 	    ];
 	}
 
-			$this->db->select('kode_rekening_sub_kegiatan,target_fisik,target_keuangan,target_fisik_bulanan,target_keuangan_bulanan ');
+			$this->db->select('kode_rekening_sub_kegiatan,target_fisik,target_keuangan,target_fisik_bulanan,target_keuangan_bulanan');
 			$this->db->order_by('bulan', 'asc');
 		return $this->db->get_where('target_apbd', $where);
 	}

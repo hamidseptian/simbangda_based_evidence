@@ -178,8 +178,8 @@ foreach ($sub_kegiatan as $row) {
        		}
        	}
 
-		$swa = $this->realisasi_akumulasi_model->get_realisasi_fisik($id_instansi, $sub, $bulan, 'SWAKELOLA', $ope, $tahun, $tahap)->row_array();
-		$pen = $this->realisasi_akumulasi_model->get_realisasi_fisik($id_instansi, $sub, $bulan, 'PENYEDIA', $ope, $tahun, $tahap)->row_array();
+		$swa = $this->realisasi_akumulasi_model->get_realisasi_fisik($id_instansi, $sub, $bulan, 'SWAKELOLA', $ope, $tahun,$row['kode_tahap'])->row_array();
+		$pen = $this->realisasi_akumulasi_model->get_realisasi_fisik($id_instansi, $sub, $bulan, 'PENYEDIA', $ope, $tahun,$row['kode_tahap'])->row_array();
 		$swa_tot  = !empty($swa['total']) ? $swa['total'] : 0;
 		$pen_tot  = !empty($pen['total']) ? $pen['total'] : 0;
 		$jumlah_fisik_per_sub_kegiatan = $total_paket > 0 ? ($swa_tot + $pen_tot ) / $total_paket : 0 ;
