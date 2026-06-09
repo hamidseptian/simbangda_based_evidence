@@ -2518,12 +2518,12 @@ class Realisasi extends MY_Controller
             $pergeseran_ke = $this->input->post('pergeseran_ke');
             
 
-                $q_pagu = $this->db->query("SELECT  pergeseran_ke, 
+                $q_pagu = $this->db->query("SELECT mikk.nama_instansi, pergeseran_ke, 
                 (bo_bp + bo_bbj + bo_bs + bo_bh + bo_bbs ) as pagu_bo, 
                 (bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl + bm_bmatb) as pagu_bm, 
                 btt  as pagu_btt, 
                 (bt_bbh + bt_bbk) as pagu_bt
-                from anggaran_instansi_kab_kota where id_instansi = '$id_instansi' and pergeseran_ke !='' and tahun = '$tahun_anggaran' and kode_tahap = '$tahap'");
+                from anggaran_instansi_kab_kota aikk left join master_instansi_kab_kota mikk on aikk.id_instansi = mikk.id_instansi where aikk.id_instansi = '$id_instansi' and aikk.pergeseran_ke !='' and aikk.tahun = '$tahun' and aikk.kode_tahap = '$tahap'");
                 if ($q_pagu->num_rows()>0 ) {
                     $d_pagu = $q_pagu->row();
                     $caption_apbd = pilihan_nama_tahapan($tahap).'<br>Pergeseran ke-'.$d_pagu->pergeseran_ke;
@@ -2531,12 +2531,12 @@ class Realisasi extends MY_Controller
                     $j_pagu = $q_pagu->num_rows();
 
                 }else{
-                    $q_pagu_pergeseran = $this->db->query("SELECT  pergeseran_ke, 
+                    $q_pagu_pergeseran = $this->db->query("SELECT  mikk.nama_instansi, pergeseran_ke, 
                         (bo_bp + bo_bbj + bo_bs + bo_bh + bo_bbs ) as pagu_bo, 
                         (bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl + bm_bmatb) as pagu_bm, 
                         btt  as pagu_btt, 
                         (bt_bbh + bt_bbk) as pagu_bt
-                        from anggaran_instansi_kab_kota where id_instansi = '$id_instansi' and tahun = '$tahun_anggaran' and kode_tahap = '$tahap'");
+                        from anggaran_instansi_kab_kota aikk left join master_instansi_kab_kota mikk on aikk.id_instansi = mikk.id_instansi where aikk.id_instansi = '$id_instansi' and aikk.tahun = '$tahun' and aikk.kode_tahap = '$tahap'");
                     $d_pagu = $q_pagu_pergeseran->row();
                     $caption_apbd = pilihan_nama_tahapan($tahap);
                     $pergeseran_ke = '';
@@ -2551,7 +2551,7 @@ class Realisasi extends MY_Controller
 
             $pagu = $d_pagu ;//$this->db->query("SELECT * from v_instansi_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun='$tahun'")->row();
             $direalisasikan = $this->db->query("SELECT * from realisasi_fisik_keuangan_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun='$tahun'")->num_rows();
-
+            $pagu_total = $pagu->pagu_bo + $pagu->pagu_bm + $pagu->pagu_btt + $pagu->pagu_bt;
 
                 $output['nama_instansi']  = $pagu->nama_instansi;
                 $output['j_direalisasikan']  = $direalisasikan;
@@ -2560,7 +2560,7 @@ class Realisasi extends MY_Controller
                 $output['bm']  = number_format($pagu->pagu_bm);
                 $output['btt']  = number_format($pagu->pagu_btt);
                 $output['bt']  = number_format($pagu->pagu_bt);
-                $output['total']  = number_format($pagu->pagu_total);
+                $output['total']  = number_format($pagu_total);
                 $output['status']  = true;
            
             echo json_encode($output);
