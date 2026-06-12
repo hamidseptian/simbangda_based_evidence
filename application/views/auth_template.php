@@ -149,6 +149,7 @@
     });
   </script>
   <?php echo $extra_js; ?>
+  <?php echo $modalse; ?>
 </body>
 
 </html>

@@ -295,7 +295,7 @@
 
 		  series: [
 			  // {
-			  //   name: 'Target Fisik 2024',
+			  //   name: 'Target Fisik 2025',
 			  //   type: 'column',
 			  //   yAxis: 0,
 			  //   color: '#FCCCEB',
@@ -305,7 +305,7 @@
 			  //   }
 			  // }, 
 			  // {
-			  //   name: 'Target Fisik 2025',
+			  //   name: 'Target Fisik 2026',
 			  //   type: 'column',
 			  //   yAxis: 0,
 			  //   color: '#FF42B6',
@@ -315,7 +315,7 @@
 			  //   }
 			  // }, 
 			  // {
-			  //   name: 'Target Keuangan 2024',
+			  //   name: 'Target Keuangan 2025',
 			  //   type: 'column',
 			  //   yAxis: 1,
 			  //   color: '#C7C2FF',
@@ -325,7 +325,7 @@
 			  //   }
 			  // }, 
 			  // {
-			  //   name: 'Target Keuangan 2025',
+			  //   name: 'Target Keuangan 2026',
 			  //   type: 'column',
 			  //   yAxis: 1,
 			  //   color: '#3E30FF',
@@ -335,7 +335,7 @@
 			  //   }
 			  // }, 
 			  {
-			    name: 'Realisasi Fisik 2024',
+			    name: 'Realisasi Fisik 2025',
 			    type: 'line',
 			      dashStyle: 'ShortDash',
 			    color: '#F0C9C9',
@@ -347,7 +347,7 @@
 			    }
 			  },
 			  {
-			    name: 'Realisasi Keuangan 2024',
+			    name: 'Realisasi Keuangan 2025',
 			    type: 'line',
 
 			    color: '#D0C9F0',
@@ -361,7 +361,7 @@
 			    }
 			  },
 			  {
-			    name: 'Realisasi Fisik 2025',
+			    name: 'Realisasi Fisik 2026',
 			    type: 'line',
 
 			    color: '#F70000',
@@ -373,7 +373,7 @@
 			    }
 			  },
 			  {
-			    name: 'Realisasi Keuangan 2025',
+			    name: 'Realisasi Keuangan 2026',
 			    type: 'line',
 
 
@@ -512,7 +512,7 @@
 
 		  series: [
 			  // {
-			  //   name: 'Target Fisik 2024',
+			  //   name: 'Target Fisik 2025',
 			  //   type: 'column',
 			  //   yAxis: 0,
 			  //   color: '#FCCCEB',
@@ -522,7 +522,7 @@
 			  //   }
 			  // }, 
 			  // {
-			  //   name: 'Target Fisik 2025',
+			  //   name: 'Target Fisik 2026',
 			  //   type: 'column',
 			  //   yAxis: 0,
 			  //   color: '#FF42B6',
@@ -532,7 +532,7 @@
 			  //   }
 			  // }, 
 			  // {
-			  //   name: 'Target Keuangan 2024',
+			  //   name: 'Target Keuangan 2025',
 			  //   type: 'column',
 			  //   yAxis: 1,
 			  //   color: '#C7C2FF',
@@ -542,7 +542,7 @@
 			  //   }
 			  // }, 
 			  // {
-			  //   name: 'Target Keuangan 2025',
+			  //   name: 'Target Keuangan 2026',
 			  //   type: 'column',
 			  //   yAxis: 1,
 			  //   color: '#3E30FF',
@@ -552,7 +552,7 @@
 			  //   }
 			  // }, 
 			  {
-			    name: 'Realisasi Fisik 2024',
+			    name: 'Realisasi Fisik 2025',
 			    type: 'line',
 			      dashStyle: 'ShortDash',
 			    color: '#F0C9C9',
@@ -564,7 +564,7 @@
 			    }
 			  },
 			  {
-			    name: 'Realisasi Keuangan 2024',
+			    name: 'Realisasi Keuangan 2025',
 			    type: 'line',
 
 			    color: '#D0C9F0',
@@ -578,7 +578,7 @@
 			    }
 			  },
 			  {
-			    name: 'Realisasi Fisik 2025',
+			    name: 'Realisasi Fisik 2026',
 			    type: 'line',
 
 			    color: '#F70000',
@@ -590,7 +590,7 @@
 			    }
 			  },
 			  {
-			    name: 'Realisasi Keuangan 2025',
+			    name: 'Realisasi Keuangan 2026',
 			    type: 'line',
 
 

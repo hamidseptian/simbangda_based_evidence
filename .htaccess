@@ -22,7 +22,7 @@ RewriteRule ^(.*)$ index.php/$1 [L]
 
     #untuk menghilangan laporan di console
     #Header unset Report-To
-	#Header unset Content-Security-Policy-Report-Only
+    #Header unset Content-Security-Policy-Report-Only
 
 
     #Server Leaks Information via “X-Powered-By” HTTP Respons

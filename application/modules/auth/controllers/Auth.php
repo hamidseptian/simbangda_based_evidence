@@ -34,6 +34,7 @@ class Auth extends MY_Controller
             $data['title']        = "Login";
             $page                 = 'auth/auth_new';
             $data['extra_css']    = $this->load->view('auth/css', $data, true);
+            $data['modal']                      = $this->load->view('auth/survei/index', $data, true);
             $data['extra_js']    = $this->load->view('auth/js', $data, true);
             $this->template->load('homepage', $page, $data);
         } else {

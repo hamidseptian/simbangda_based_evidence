@@ -1481,7 +1481,7 @@ class Realisasi extends MY_Controller
                 $pagu_bt = $j_pagu == 0 ? 0 : $d_pagu->pagu_bt ;
                 $pagu_total = $pagu_bo + $pagu_bm + $pagu_btt + $pagu_bt;
                
-                $q_direalisasikan = $this->db->query("SELECT * from realisasi_fisik_keuangan_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun = '$tahun_anggaran'")->num_rows();
+                $q_direalisasikan = $this->db->query("SELECT id_realisasi_fisik_keuangan_kab_kota from realisasi_fisik_keuangan_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun = '$tahun_anggaran'")->num_rows();
                 $row    = [];
                 $row[]     = $no;
                 $row[]  = $lists->nama_instansi;

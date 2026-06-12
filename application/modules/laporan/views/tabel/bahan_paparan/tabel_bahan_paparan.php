@@ -1268,7 +1268,7 @@ perbandingan_grafik_2_tahun_terakhir_asisten('Akumulasi', 'Semua');
               }
             },
             title: {
-              text: '2024',
+              text: '2025',
               style: {
                 color: Highcharts.getOptions().colors[1]
               }
@@ -1278,7 +1278,7 @@ perbandingan_grafik_2_tahun_terakhir_asisten('Akumulasi', 'Semua');
 
             opposite: true,
             title: {
-              text: '2025       ',
+              text: '2026',
               style: {
                 color: Highcharts.getOptions().colors[0]
               }

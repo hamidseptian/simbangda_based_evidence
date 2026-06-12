@@ -759,9 +759,12 @@ $show_total_rf_semuanya = $total_rf_semua / $jumlah_kab_kota;
 
         <?php  
 echo $modal; }
-else if ($class=='auth' && $method=='index') {?>
+else if ($class=='auth' && $method=='index') { ?>
 
-        <?php echo $contents; ?>
+        <?php 
+        echo $contents; 
+        echo $modal; 
+        ?>
 
         <?php   }else{ ?>
 
