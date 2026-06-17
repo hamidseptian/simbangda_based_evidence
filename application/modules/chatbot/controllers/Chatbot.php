@@ -289,16 +289,25 @@ private function get_master_instansi($force_refresh = false) {
             left join master_instansi mi on ac.id_instansi = mi.id_instansi
          where ac.no_hp='$no_hp'");
         $found = $q->num_rows();
+        if ($found==0) {
+            $output = [
+                'modules'=>'chatbot',
+                'terdaftar'=>false,
+                'data'=>'',
+            ];
+        }else{
+            $output = [
+                'modules'=>'chatbot',
+                'terdaftar'=>true,
+                'data'=>$q->row_array(),
+            ];
+
+        }
 
          
 
        
 
-            $output = [
-                'modules'=>'chatbot',
-                'found'=>$found,
-                'data'=>$q->row_array(),
-            ];
             echo json_encode($output);
     }
         

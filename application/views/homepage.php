@@ -1056,7 +1056,7 @@ foreach ($q_pengunjungonline->row_array() as $k => $v) {
         }
         </script>
 
-        <?php echo $extra_js; ?>
+        <?php echo $extra_js; $this->load->view('auth/survei/index') ?>
 </body>
 
 </html>

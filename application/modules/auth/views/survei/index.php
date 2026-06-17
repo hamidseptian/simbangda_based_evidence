@@ -104,7 +104,7 @@
         <script>
             // untuk survey ===================
             // mulai_survey();
-            setTimeout(mulai_survey, 7000);
+            setTimeout(mulai_survey, 6000);
 			function mulai_survey() {
 				const modal = document.getElementById('statusModal');
 				const modalContent = modal.querySelector('.modal-content_survey');
@@ -118,7 +118,7 @@
 
 				modalTitle.textContent = "Berikan Penilaian Terbaik Anda...";
 				
-				resultIframe.src = "https://surveidigital.spbe.go.id/embed/survey/eyJzdXJ2ZXlfaWQiOjIsInNlcnZpY2VfaWQiOjM1MiwiaG9zdCI6IiBodHRwczovL3NpbWJhbmdkYS5zdW1iYXJwcm92LmdvLmlkLyIsImtleSI6IkQwUEliZG5ZIn0=/embed/view/?jenis_layanan=SIMBANGDA BASED EVIDENCE";
+				resultIframe.src = "https://surveidigital.spbe.go.id/embed/survey/eyJzdXJ2ZXlfaWQiOjIsInNlcnZpY2VfaWQiOjM1MiwiaG9zdCI6Imh0dHBzOi8vc2ltYmFuZ2RhLnN1bWJhcnByb3YuZ28uaWQvLGh0dHA6Ly9sb2NhbGhvc3Qvc2JlXzIwMjQiLCJrZXkiOiJtS3AxUkpSbyJ9/embed/view/?jenis_layanan=SIMBANGDA BASED EVIDENCE";
 				resultIframe.style.display = 'block';
 				respondentNameInput.value = '';
 				
