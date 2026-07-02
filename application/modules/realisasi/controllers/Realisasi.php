@@ -1449,7 +1449,7 @@ class Realisasi extends MY_Controller
                 (bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl + bm_bmatb) as pagu_bm, 
                 btt  as pagu_btt, 
                 (bt_bbh + bt_bbk) as pagu_bt
-                from anggaran_instansi_kab_kota where id_instansi = '$id_instansi' and pergeseran_ke !='' and tahun = '$tahun_anggaran' and kode_tahap = '$tahap'");
+                from anggaran_instansi_kab_kota where id_instansi = '$id_instansi' and pergeseran_ke !='' and tahun = '$tahun_anggaran' and kode_tahap = '$tahap' and id_kota = '$id_kota'");
                 if ($q_pagu->num_rows()>0 ) {
                     $d_pagu = $q_pagu->row();
                     $caption_apbd = pilihan_nama_tahapan($tahap).'<br>Pergeseran ke-'.$d_pagu->pergeseran_ke;
@@ -1486,7 +1486,7 @@ class Realisasi extends MY_Controller
                 $row[]     = $no;
                 $row[]  = $lists->nama_instansi;
 
-                 $realisasi_dipilih = $fisik_keuangan->cek_realisasi_dipilih($tahun_anggaran, $tahap, $id_instansi)->row_array();
+                 $realisasi_dipilih = $fisik_keuangan->cek_realisasi_dipilih($tahun_anggaran, $tahap, $id_instansi, $pergeseran_ke)->row_array();
 
                 $realisasi_bo = $fisik_keuangan->total_realisasi_perjenis($bulan_aktif, $tahun_anggaran, $tahap, $id_instansi, 'realisasikan_bo')->row_array()['realisasi_bo'];
                 $realisasi_bm = $fisik_keuangan->total_realisasi_perjenis($bulan_aktif, $tahun_anggaran, $tahap, $id_instansi, 'realisasikan_bm')->row_array()['realisasi_bm'];
@@ -1595,9 +1595,9 @@ class Realisasi extends MY_Controller
                  $set_lra = '<button type="button" class="tombol" title="Input LRA '.$lists->nama_instansi.'"  onclick="input_lra('."'lra','".$lists->id_instansi."','".$pagu_total."'".')">'.number_format($lra == '' ? 0 : $lra ).'</button> ';
                  @$persen_lra = $pagu_total > 0 ? $lra / $pagu_total * 100 : 0;
 
-                $row[]  = $set_lra;
-                $row[]  = round($persen_lra,2);
-                $row[]  = $pagu_total > 0 && $q_direalisasikan == 0 && $tahap==4 ? $tombol_copy : $tombol_hapus;
+                $row[]  = '';//$set_lra;
+                $row[]  = '';//round($persen_lra,2);
+                $row[]  = '';//$pagu_total > 0 && $q_direalisasikan == 0 && $tahap==4 ? $tombol_copy : $tombol_hapus;
               
                
             

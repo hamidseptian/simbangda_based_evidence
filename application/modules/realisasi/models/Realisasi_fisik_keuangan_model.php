@@ -94,9 +94,11 @@ sum(btt) as realisasi_btt,
 
 
 
-    public function cek_realisasi_dipilih($tahun_anggaran, $tahap, $id_instansi)
+    public function cek_realisasi_dipilih($tahun_anggaran, $tahap, $id_instansi, $pergeseran_ke)
     {
         $bulan  = date('n');
+        if ($pergeseran_ke=='') {
+            # code...
         $query  = $this->db->query("SELECT
                                          realisasikan_bo, realisasikan_bm,realisasikan_btt,realisasikan_bt
                                     FROM
@@ -104,6 +106,16 @@ sum(btt) as realisasi_btt,
                                     WHERE
                                     id_instansi = '$id_instansi' and kode_tahap='$tahap' and tahun ='$tahun_anggaran'
                                         ");
+        }else{
+        $query  = $this->db->query("SELECT
+                                         realisasikan_bo, realisasikan_bm,realisasikan_btt,realisasikan_bt
+                                    FROM
+                                        anggaran_instansi_kab_kota 
+                                    WHERE
+                                    id_instansi = '$id_instansi' and kode_tahap='$tahap' and tahun ='$tahun_anggaran' and pergeseran_ke ='$pergeseran_ke'
+                                        ");
+
+        }
         return $query;
     }
     

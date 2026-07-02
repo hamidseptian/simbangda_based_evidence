@@ -64,7 +64,7 @@
     $onclick_forbidden = "Swal.fire('Error','Fitur ini hanya bisa di gunakan developer','error')";
 
     $onclick_akses_khusus = 'edit_config('."'".sbe_crypt($v['id_config'], 'E')."'".')';
-    if ($id_group==0) {
+    if ($id_group==2) {
         $izin_input   = '<a href="#izin_input_'.$v['id_config'].'" data-toggle="tab" class="btn btn-focus mr-1"><i class="fas fa-key"></i></a>';
         $edit   = '<button class="btn btn-focus mr-1"  title="Edit konfigurasi aplikasi '.$v['tahun_anggaran'].'"  onclick="'.$onclick_edit.'"><i class="fas fa-edit"></i></button>';
         
