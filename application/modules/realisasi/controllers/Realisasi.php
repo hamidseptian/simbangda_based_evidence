@@ -1595,9 +1595,9 @@ class Realisasi extends MY_Controller
                  $set_lra = '<button type="button" class="tombol" title="Input LRA '.$lists->nama_instansi.'"  onclick="input_lra('."'lra','".$lists->id_instansi."','".$pagu_total."'".')">'.number_format($lra == '' ? 0 : $lra ).'</button> ';
                  @$persen_lra = $pagu_total > 0 ? $lra / $pagu_total * 100 : 0;
 
-                $row[]  = '';//$set_lra;
-                $row[]  = '';//round($persen_lra,2);
-                $row[]  = '';//$pagu_total > 0 && $q_direalisasikan == 0 && $tahap==4 ? $tombol_copy : $tombol_hapus;
+                $row[]  = $set_lra;
+                $row[]  = round($persen_lra,2);
+                $row[]  = $pagu_total > 0 && $q_direalisasikan == 0 && $tahap==4 ? $tombol_copy : $tombol_hapus;
               
                
             
