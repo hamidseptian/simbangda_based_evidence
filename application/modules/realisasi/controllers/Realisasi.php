@@ -2078,7 +2078,7 @@ class Realisasi extends MY_Controller
             }
 
 
-            $subkeg                 = $this->db->query("SELECT nama_sub_kegiatan, pergeseran_ke from sub_kegiatan_instansi where kode_sub_kegiatan='$kode_rekening_sub_kegiatan'")->row();
+            $subkeg                 = $this->db->query("SELECT nama_sub_kegiatan from sub_kegiatan_instansi where kode_sub_kegiatan='$kode_rekening_sub_kegiatan'")->row();
             if (!$subkeg) {
                 $nama_sub_kegiatan  ='<span class="text-danger">Sub kegiatan belum terdaftar di master. harap hubungi admin untuk ditambahkan</span>' ; 
                 # code...
@@ -2104,7 +2104,7 @@ class Realisasi extends MY_Controller
                 bulan = '$bulan'
                     ";
                     $realisasi = $keuangan->realisasi($where, $jenis_realisasi)->row_array();
-                    $anggaran = $this->db->query("SELECT 
+                    if ($pergeseran_ke=='') {$anggaran = $this->db->query("SELECT 
                          bo_bp, bo_bbj, bo_bs, bo_bh, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatl, btt, bt_bbh, bt_bbk 
                      from anggaran_sub_kegiatan
                         where
@@ -2115,6 +2115,22 @@ class Realisasi extends MY_Controller
                         id_instansi = '$id_instansi' and 
                         kode_tahap  = '$tahap' and tahun='$tahun' 
                         ");
+                        # code...
+                    }else{
+                        $anggaran = $this->db->query("SELECT 
+                         bo_bp, bo_bbj, bo_bs, bo_bh, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatl, btt, bt_bbh, bt_bbk 
+                     from anggaran_sub_kegiatan
+                        where
+                        kode_sub_kegiatan = '$kode_rekening_sub_kegiatan' and 
+                        kode_kegiatan = '$kode_kegiatan' and 
+                        kode_program = '$kode_program' and 
+                        kode_bidang_urusan = '$kode_bidang_urusan' and 
+                        id_instansi = '$id_instansi' and 
+                        kode_tahap  = '$tahap' and tahun='$tahun' and pergeseran_ke='$pergeseran_ke'
+                        ");
+
+                    }
+                    
                     $pagu = $anggaran->row_array();
 
                     $cek_data  =$this->db->query("SELECT 
