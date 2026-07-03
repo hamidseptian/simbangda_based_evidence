@@ -3134,6 +3134,10 @@ public function sync_eplanning()
             $identitas_ski        = $this->db->query("SELECT ski.id_sub_kegiatan_instansi, ski.nama_sub_kegiatan, ski.kode_sub_kegiatan, ski.kategori,  ski.kode_kegiatan,  ski.kode_program,  ski.kode_bidang_urusan, ski.kategori, ski.keterangan, ski.pergeseran_ke, ski.jenis_sub_kegiatan from sub_kegiatan_instansi ski 
             where ski.id_instansi='$id_instansi' and ski.kode_sub_kegiatan='$kode_rekening_sub_kegiatan' and ski.kode_tahap='$tahap' and ski.tahun='$tahun'")->row();
 
+            $output['data']['pergeseran_ke']                  = $identitas_ski->pergeseran_ke ;
+            $output['data']['kode_program']                  = $identitas_ski->kode_program ;
+            $output['data']['kode_kegiatan']                  = $identitas_ski->kode_kegiatan ;
+            $output['data']['kode_bidang_urusan']                  = $identitas_ski->kode_bidang_urusan ;
             $output['data']['nama_sub_kegiatan']                  = $identitas_ski->kategori =='Sub Kegiatan SKPD' ? $identitas_ski->nama_sub_kegiatan : $identitas_ski->nama_sub_kegiatan.'<br>'.$identitas_ski ->jenis_sub_kegiatan.' - '.$identitas_ski->keterangan;
             $output['data']['kategori']                  = $identitas_ski->kategori;
 
@@ -3166,10 +3170,6 @@ public function sync_eplanning()
                     $output['data']['tahapan']                  = pilihan_nama_tahapan($tahap);
                 }
 
-                    $output['data']['pergeseran_ke']                  = $identitas_ski->pergeseran_ke ;
-                    $output['data']['kode_program']                  = $identitas_ski->kode_program ;
-                    $output['data']['kode_kegiatan']                  = $identitas_ski->kode_kegiatan ;
-                    $output['data']['kode_bidang_urusan']                  = $identitas_ski->kode_bidang_urusan ;
                     $output['data']['bo_bp']                  = $value->bo_bp;
                     $output['data']['bo_bbj']                  = $value->bo_bbj;
                     $output['data']['bo_bs']                  = $value->bo_bs;
@@ -3616,7 +3616,9 @@ public function sync_eplanning()
                ];
 
                 $this->db->insert('anggaran_sub_kegiatan', $data_pagu);
-                $this->db->insert_batch('target_apbd', $kumpul_target_baru);
+                if ($target->num_rows()>0) {
+                    $this->db->insert_batch('target_apbd', $kumpul_target_baru);
+                }
                 if ($sumber_dana->num_rows()>0) {
                     $this->db->insert('sumber_dana', $data_sumber_dana);
                 }

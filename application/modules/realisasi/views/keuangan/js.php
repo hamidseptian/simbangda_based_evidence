@@ -142,10 +142,11 @@ function input_realisasi(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_
             },
             success : function(data)
             {
+                var caption_pergeseran = pergeseran_ke == '' ? '' : '<br>Pergeseran ke-'+pergeseran_ke;
                 $('#modal-realisasi-keuangan').find('#pagu_sub_kegiatan').html(convert_to_rupiah(pagu==''? 0: pagu));
                 // $('#modal-realisasi-keuangan').find('#exampleModalLabel').html("Setting Target APBD");
                 $('#modal-realisasi-keuangan').find('#nama_sub_kegiatan').html(data.nama_sub_kegiatan);
-                $('#modal-realisasi-keuangan').find('#nama_tahapan').html(data.nama_tahapan);
+                $('#modal-realisasi-keuangan').find('#nama_tahapan').html(data.nama_tahapan + caption_pergeseran);
 
 
                 

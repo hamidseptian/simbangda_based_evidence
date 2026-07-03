@@ -964,6 +964,14 @@ foreach ($q_pengunjungonline->row_array() as $k => $v) {
                                                     </div>
                                                 </div>
                                             </li>
+                                            <li class="list-group-item">
+                                                <div class="widget-content p-0">
+                                                    <div class="widget-content-wrapper">
+                                                       <img src="<?php echo base_url('assets/sbe/bagde_pse.png') ?>" width="100%">
+
+                                                    </div>
+                                                </div>
+                                            </li>
 
                                         </ul>
 

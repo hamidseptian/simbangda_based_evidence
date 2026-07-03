@@ -1679,12 +1679,14 @@ class Realisasi extends MY_Controller
                 $upel = $lists->kategori == 'Unit Pelaksana' ? '<br>'.$lists->jenis_sub_kegiatan .' - '.$lists->keterangan : '';
                 $pecah = explode('.', $lists->kode_rekening_sub_kegiatan);
             
-                $row[]  = '<b>'.pilihan_nama_tahapan($lists->kode_tahap).'</b>';
                 $kode_tahap_kegiatan = $lists->kode_tahap;
+                $pergeseran_ke = $lists->pergeseran_ke;
+                $caption_pergeseran = $pergeseran_ke == '' ? '' : '<br>Pergeseran ke-'.$pergeseran_ke;
+                $row[]  = '<b>'.pilihan_nama_tahapan($lists->kode_tahap).$caption_pergeseran.'</b>';
                 $row[]  = '<b>'.$lists->kode_rekening_sub_kegiatan.'</b><br>'.$lists->nama_sub_kegiatan.$upel;
                 $kode_tahap = $lists->kode_tahap;
 
-                $realisasi_dipilih = $keuangan->cek_realisasi_dipilih($lists->kode_rekening_sub_kegiatan,$kode_tahap_kegiatan, $id_instansi)->row_array();
+                $realisasi_dipilih = $keuangan->cek_realisasi_dipilih($lists->kode_rekening_sub_kegiatan,$kode_tahap_kegiatan, $id_instansi, $pergeseran_ke)->row_array();
 
 
 
@@ -2076,7 +2078,7 @@ class Realisasi extends MY_Controller
             }
 
 
-            $subkeg                 = $this->db->query("SELECT nama_sub_kegiatan from sub_kegiatan_instansi where kode_sub_kegiatan='$kode_rekening_sub_kegiatan'")->row();
+            $subkeg                 = $this->db->query("SELECT nama_sub_kegiatan, pergeseran_ke from sub_kegiatan_instansi where kode_sub_kegiatan='$kode_rekening_sub_kegiatan'")->row();
             if (!$subkeg) {
                 $nama_sub_kegiatan  ='<span class="text-danger">Sub kegiatan belum terdaftar di master. harap hubungi admin untuk ditambahkan</span>' ; 
                 # code...

@@ -82,9 +82,7 @@
 
     <body>
         <div style="text-align: center; margin-top: 50px;">
-            <button style="padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; background-color: #007BFF; color: white; border: none;">
-                <a style="color: white" href="#" onclick='return mulai_survey()'>Mulai Survei</a>
-            </button>
+           
         </div>
         <!-- modal popup untuk survey -->
         <div class='container'>

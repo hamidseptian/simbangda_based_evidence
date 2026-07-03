@@ -135,7 +135,7 @@ rk.kode_sub_kegiatan=ski.kode_sub_kegiatan and rk.id_instansi=ski.id_instansi an
 
 
 
-    public function cek_realisasi_dipilih($kode_sub_kegiatan, $tahap, $id_instansi)
+    public function cek_realisasi_dipilih($kode_sub_kegiatan, $tahap, $id_instansi, $pergeseran_ke)
     {
         $bulan  = date('n');
         $tahun = tahun_anggaran();
@@ -144,7 +144,12 @@ rk.kode_sub_kegiatan=ski.kode_sub_kegiatan and rk.id_instansi=ski.id_instansi an
             and ski.status=1 and ski.kode_sub_kegiatan='$kode_sub_kegiatan'
             ";
         }else{
-            $where = "WHERE ski.id_instansi = '{$id_instansi}' and ski.kode_tahap='$tahap' and ski.tahun='$tahun' and ski.kode_sub_kegiatan='$kode_sub_kegiatan'";
+            if ($pergeseran_ke=='') {
+                $where = "WHERE ski.id_instansi = '{$id_instansi}' and ski.kode_tahap='$tahap' and ski.tahun='$tahun' and ski.kode_sub_kegiatan='$kode_sub_kegiatan'";
+            }else{
+                $where = "WHERE ski.id_instansi = '{$id_instansi}' and ski.kode_tahap='$tahap' and ski.tahun='$tahun' and ski.kode_sub_kegiatan='$kode_sub_kegiatan' and ask.pergeseran_ke = '$pergeseran_ke'";
+
+            }
 
         }
 
