@@ -32,7 +32,8 @@
                                 <th style="text-align: center;" width="1%">No</th>
                                 <th style="text-align: center;">Kode OPD</th>
                                 <th style="text-align: center;">SKPD</th>
-                                <th style="text-align: center;">Kategori</th>
+                                <th style="text-align: center;">Pimpinan</th>
+                                <!-- <th style="text-align: center;">Kategori</th> -->
                                 <th style="text-align: center;">Asisten</th>
                                 <th style="text-align: center;">Mulai Realisasi</th>
                                 <th style="text-align: center;">Akhir Realisasi</th>

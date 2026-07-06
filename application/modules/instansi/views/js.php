@@ -152,6 +152,7 @@ function edit_instansi(id_instansi)
 		},
 		success: function (data)
 		{
+			console.log(data);
 			$('#modal_edit_instansi').modal('show');
 			$('#form_edit_instansi')[0].reset();
 			$('#modal_edit_instansi').find('#id_instansi').val(data.data.id_instansi);
@@ -161,7 +162,8 @@ function edit_instansi(id_instansi)
 			$('#modal_edit_instansi').find('#email').val(data.data.email_instansi);
 			$('#modal_edit_instansi').find('#telp').val(data.data.telepon);
 			$('#modal_edit_instansi').find('#web').val(data.data.website);
-
+			$('#modal_edit_instansi').find('#pimpinan').val(data.data.pimpinan);
+			$('#modal_edit_instansi').find('#jenis_pimpinan').val(data.data.jenis_pimpinan).change();
 			$('#modal_edit_instansi').find('#asisten').val(data.data.id_parent).change();
 			$('#modal_edit_instansi').find('#status').val(data.data.is_active).change();
 

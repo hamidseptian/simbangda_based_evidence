@@ -1485,8 +1485,9 @@ class Realisasi extends MY_Controller
                 $row    = [];
                 $row[]     = $no;
                 $row[]  = $lists->nama_instansi;
+                $row[]  = $caption_apbd;
 
-                 $realisasi_dipilih = $fisik_keuangan->cek_realisasi_dipilih($tahun_anggaran, $tahap, $id_instansi, $pergeseran_ke)->row_array();
+                 $realisasi_dipilih = $fisik_keuangan->cek_realisasi_dipilih($tahun_anggaran, $tahap, $id_instansi, $pergeseran_ke, 'input_realisasi')->row_array();
 
                 $realisasi_bo = $fisik_keuangan->total_realisasi_perjenis($bulan_aktif, $tahun_anggaran, $tahap, $id_instansi, 'realisasikan_bo')->row_array()['realisasi_bo'];
                 $realisasi_bm = $fisik_keuangan->total_realisasi_perjenis($bulan_aktif, $tahun_anggaran, $tahap, $id_instansi, 'realisasikan_bm')->row_array()['realisasi_bm'];
@@ -2092,6 +2093,7 @@ class Realisasi extends MY_Controller
             $output['totaldata']  = $target->num_rows();
             $output['nama_sub_kegiatan']  = $kategori == "Sub Kegiatan SKPD" ? $nama_sub_kegiatan : $nama_sub_kegiatan.'<br>'.$upel->jenis_sub_kegiatan .' - '. $upel->keterangan ;
             $output['nama_tahapan']  = pilihan_nama_tahapan($tahap);
+            $output['pergeseran_ke']  = $pergeseran_ke;
             if ($target->num_rows() > 0) {
                 foreach ($target->result()  as $key => $value) {
                     $bulan = $value->bulan;

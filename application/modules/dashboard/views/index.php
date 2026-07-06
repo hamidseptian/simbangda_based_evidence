@@ -39,7 +39,7 @@
                                                 </div>
                                                 <div class="menu-header-btn-pane">
                                                     
-                                                    <a href="<?php echo base_url() ?>tutorial" class="btn-wide btn-hover-shine  btn btn-info">Lihat Tutorial Penggunaan Aplikasi</a>  
+                                                    <a href="https://www.youtube.com/watch?v=oCn5w8mXkso&list=PLvwi65vqBASYmZitwkq8ffCIYcWaZtmHt" target="_blank" class="btn-wide btn-hover-shine  btn btn-info">Lihat Tutorial Penggunaan Aplikasi</a>  
 
                                                 </div>
                                             </div>

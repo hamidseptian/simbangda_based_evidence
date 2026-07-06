@@ -954,7 +954,7 @@ class Berita_acara extends MY_Controller
 		                 $tgl = $this->input->post('tgl');
 		            
 
-		            $instansi = $this->db->query("SELECT mi.id_instansi, mi.nama_pimpinan, hi.id_user, mu.full_name as helpdesk from master_instansi mi 
+		            $instansi = $this->db->query("SELECT mi.id_instansi, mi.pimpinan, hi.id_user, mu.full_name as helpdesk from master_instansi mi 
 		            	left join helpdesk_instansi hi on mi.id_instansi = hi.id_instansi
 		            	left join master_users mu on hi.id_user = mu.id_user
 		             where mi.kategori='OPD' and mi.is_active='1' and mi.id_parent='$asisten'")->result_array();
@@ -967,7 +967,7 @@ class Berita_acara extends MY_Controller
  							'id_instansi'=>$v['id_instansi'],
  							'id_helpdesk'=>$v['id_user'],
  							'helpdesk'=>$v['helpdesk'],
- 							'pimpinan'=>$v['nama_pimpinan'],
+ 							'pimpinan'=>$v['pimpinan'],
                             'setting_at'=>'Asisten'
  						];
 
@@ -1067,7 +1067,7 @@ class Berita_acara extends MY_Controller
 
 
          if ($key) {
-         	 $q = $this->db->query("SELECT  mi.nama_instansi, mi.id_instansi, mi.nama_pimpinan, 
+         	 $q = $this->db->query("SELECT  mi.nama_instansi, mi.id_instansi, mi.pimpinan, 
 	            	iba.id_isi_berita_acara, iba.tgl_berita_acara, iba.id_setting_berita_acara, iba.pimpinan, iba.catatan, iba.solusi, iba.status, iba.synchronize,
 	            	hi.id_user, mu.full_name as helpdesk
 	            	from master_instansi mi left join isi_berita_acara iba on mi.id_instansi = iba.id_instansi
@@ -1077,7 +1077,7 @@ class Berita_acara extends MY_Controller
 	             $order_by limit $start, $length ")->result_array();
          }else{
          	
-         		 $q = $this->db->query("SELECT  mi.nama_instansi, mi.id_instansi, mi.nama_pimpinan, 
+         		 $q = $this->db->query("SELECT  mi.nama_instansi, mi.id_instansi, mi.pimpinan, 
 	            	iba.id_isi_berita_acara, iba.tgl_berita_acara, iba.id_setting_berita_acara, iba.pimpinan, iba.catatan, iba.solusi, iba.status, iba.synchronize,
 	            	hi.id_user, mu.full_name as helpdesk
 	            	from isi_berita_acara iba  
@@ -1102,7 +1102,7 @@ class Berita_acara extends MY_Controller
             $row[]  = $v['helpdesk'];
             $jadwal = $v['tgl_berita_acara'] =='' ? 'Belum Ditentukan' : $nama_hari.', '.balikkan_tanggal($v['tgl_berita_acara']);
             if ($id_group==2) {
-            $row[]  = '<a href="javascript:void(0)" onclick="ganti_jadwal_ba('."'".$v['id_instansi']."', '".$v['nama_instansi']."', '".$v['id_setting_berita_acara']."', '".$v['id_user']."', '".$v['nama_pimpinan']."', '".$v['helpdesk']."'".')">'.$jadwal.'</a>';
+            $row[]  = '<a href="javascript:void(0)" onclick="ganti_jadwal_ba('."'".$v['id_instansi']."', '".$v['nama_instansi']."', '".$v['id_setting_berita_acara']."', '".$v['id_user']."', '".$v['pimpinan']."', '".$v['helpdesk']."'".')">'.$jadwal.'</a>';
             	# code...
             }else{
             $row[]  = $jadwal;

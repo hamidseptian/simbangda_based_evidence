@@ -278,6 +278,8 @@ table td, th {
     $j_pagu = $q_pagu->num_rows();
                   $d_pagu = $q_pagu->row();
                   $caption_apbd = "APBD AWAL";
+
+                  $pergeseran_ke = '';
     }else if($tahap==3){
       $tahap_realisasi = 2; 
     
@@ -308,6 +310,7 @@ table td, th {
     realisasikan_bo, realisasikan_bm, realisasikan_btt, realisasikan_bt  from anggaran_instansi_kab_kota where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun = $tahun");
     $j_pagu = $q_pagu->num_rows();
     $d_pagu = $q_pagu->row();
+    $pergeseran_ke = '';
 
 
     }
@@ -327,7 +330,7 @@ table td, th {
 
 
 
-              $realisasi_dipilih = $fisik_keuangan->cek_realisasi_dipilih($tahun, $tahap_realisasi, $id_instansi)->row_array();
+              $realisasi_dipilih = $fisik_keuangan->cek_realisasi_dipilih($tahun, $tahap_realisasi, $id_instansi, $pergeseran_ke,'laporan')->row_array();
 
               if ($realisasi_dipilih['realisasikan_bo']==1) {
                 $hitung_realisasi_bo +=1;

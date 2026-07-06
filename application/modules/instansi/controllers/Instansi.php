@@ -151,6 +151,8 @@ class Instansi extends MY_Controller
             $output['data']['alamat_instansi']                  = $instansi->alamat_instansi;
             $output['data']['email_instansi']                  = $instansi->email_instansi;
             $output['data']['telepon']                  = $instansi->telpon;
+            $output['data']['pimpinan']                  = $instansi->pimpinan;
+            $output['data']['jenis_pimpinan']                  = $instansi->jenis_pimpinan;
             $output['data']['website']                  = $instansi->website;
             $output['data']['bulan_mulai_realisasi']                  = $instansi->bulan_mulai_realisasi;
             $output['data']['bulan_akhir_realisasi']                  = $instansi->bulan_akhir_realisasi;
@@ -250,15 +252,16 @@ class Instansi extends MY_Controller
             $status = ['Tidak Aktif','Aktif'];
             foreach ($list as $lists) {
                 $no++;
-               
+                $jenis_pimpinan = $lists->jenis_pimpinan == '' ? '' : ' ('.$lists->jenis_pimpinan.')';
                 $row    = [];
                 $row[]     = $no;
                 $row[]  = $lists->kode_opd;
                 $row[]  = $lists->nama_instansi;
-                $row[]  = $lists->kategori;
+                $row[]  = $lists->pimpinan .''.$jenis_pimpinan;
+                // $row[]  = $lists->kategori;
                 $row[]  = $lists->asisten;
-                $row[]  = bulan_global($lists->bulan_mulai_realisasi);
-                $row[]  = bulan_global($lists->bulan_akhir_realisasi);
+                $row[]  = $lists->bulan_mulai_realisasi;
+                $row[]  = $lists->bulan_akhir_realisasi;
                 $row[]  = $status[$lists->is_active];
                 $tombol_edit = '<button class="btn btn-outline-info btn-xs"  title="Edit Instansi'.$lists->nama_instansi.'"  onclick="edit_instansi('."'".sbe_crypt($lists->id_instansi, 'E')."'".')"><i class="fas fa-edit"></i></button>';
                 $tombol_hapus = '<button class="btn btn-outline-danger btn-xs"  title="Edit Instansi'.$lists->nama_instansi.'"  onclick="hapus_instansi('."'".sbe_crypt($lists->id_instansi, 'E')."'".' , '."'".$lists->nama_instansi."'".')"><i class="fas fa-trash"></i></button>';

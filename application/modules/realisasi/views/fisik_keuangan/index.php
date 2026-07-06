@@ -200,6 +200,7 @@
                                <!--  <th valign="midle" rowspan="3" style="text-align: center;">Bidang Urusan</th>
                                 <th valign="midle" rowspan="3" style="text-align: center;">Kode Program</th> -->
                                 <th valign="midle" rowspan="3" style="text-align: center;">Instansi</th>
+                                <th valign="midle" rowspan="3" style="text-align: center;">Tahapan APBD</th>
                                 <th valign="midle" style="text-align: center;" colspan="8">Realisasi</th>
                                 <th valign="midle" style="text-align: center;" colspan="3">Total Realisasi</th>
                                 <th valign="midle" style="text-align: center;" colspan="2">LRA</th>

@@ -35,6 +35,8 @@ class Instansi_model extends CI_Model
 			'kode_tahap'				=> tahapan_apbd(),
 			'bulan_mulai_realisasi'				=> $post['bulan_mulai'],
 			'bulan_akhir_realisasi'				=> $post['bulan_selesai'],
+			'nama_pimpinan'				=> $post['pimpinan'],
+			'pimpinan'				=> $post['pimpinan'],
 
 			'created_on'				=> timestamp(),
 			'created_by'				=> id_user(),

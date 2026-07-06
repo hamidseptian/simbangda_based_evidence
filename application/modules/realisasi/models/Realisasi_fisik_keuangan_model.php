@@ -94,27 +94,68 @@ sum(btt) as realisasi_btt,
 
 
 
-    public function cek_realisasi_dipilih($tahun_anggaran, $tahap, $id_instansi, $pergeseran_ke)
+    public function cek_realisasi_dipilih($tahun_anggaran, $tahap, $id_instansi, $pergeseran_ke, $module)
     {
-        $bulan  = date('n');
-        if ($pergeseran_ke=='') {
-            # code...
-        $query  = $this->db->query("SELECT
-                                         realisasikan_bo, realisasikan_bm,realisasikan_btt,realisasikan_bt
-                                    FROM
-                                        anggaran_instansi_kab_kota 
-                                    WHERE
-                                    id_instansi = '$id_instansi' and kode_tahap='$tahap' and tahun ='$tahun_anggaran'
-                                        ");
-        }else{
-        $query  = $this->db->query("SELECT
-                                         realisasikan_bo, realisasikan_bm,realisasikan_btt,realisasikan_bt
-                                    FROM
-                                        anggaran_instansi_kab_kota 
-                                    WHERE
-                                    id_instansi = '$id_instansi' and kode_tahap='$tahap' and tahun ='$tahun_anggaran' and pergeseran_ke ='$pergeseran_ke'
-                                        ");
 
+        if ($module=='laporan') {
+
+            if ($tahap==3) {
+                if ($pergeseran_ke=='') {
+                $query  = $this->db->query("SELECT
+                                                 realisasikan_bo, realisasikan_bm,realisasikan_btt,realisasikan_bt
+                                            FROM
+                                                anggaran_instansi_kab_kota 
+                                            WHERE
+                                            id_instansi = '$id_instansi' and kode_tahap='$tahap' and tahun ='$tahun_anggaran'
+                                                ");
+                }else{
+                $query  = $this->db->query("SELECT
+                                                 realisasikan_bo, realisasikan_bm,realisasikan_btt,realisasikan_bt
+                                            FROM
+                                                anggaran_instansi_kab_kota 
+                                            WHERE
+                                            id_instansi = '$id_instansi' and kode_tahap='$tahap' and tahun ='$tahun_anggaran' and pergeseran_ke ='$pergeseran_ke'
+                                                ");
+
+                }
+            }else{
+                $query  = $this->db->query("SELECT
+                                                 realisasikan_bo, realisasikan_bm,realisasikan_btt,realisasikan_bt
+                                            FROM
+                                                anggaran_instansi_kab_kota 
+                                            WHERE
+                                            id_instansi = '$id_instansi' and kode_tahap='$tahap' and tahun ='$tahun_anggaran'
+                                                ");
+
+            }
+        }else{
+            if ($tahap==2) {
+                if ($pergeseran_ke=='') {
+                $query  = $this->db->query("SELECT
+                                                 realisasikan_bo, realisasikan_bm,realisasikan_btt,realisasikan_bt
+                                            FROM
+                                                anggaran_instansi_kab_kota 
+                                            WHERE
+                                            id_instansi = '$id_instansi' and kode_tahap='$tahap' and tahun ='$tahun_anggaran'
+                                                ");
+                }else{
+                $query  = $this->db->query("SELECT
+                                                 realisasikan_bo, realisasikan_bm,realisasikan_btt,realisasikan_bt
+                                            FROM
+                                                anggaran_instansi_kab_kota 
+                                            WHERE
+                                            id_instansi = '$id_instansi' and kode_tahap='$tahap' and tahun ='$tahun_anggaran' and pergeseran_ke ='$pergeseran_ke'
+                                                ");
+                }
+            }else{
+                $query  = $this->db->query("SELECT
+                                                 realisasikan_bo, realisasikan_bm,realisasikan_btt,realisasikan_bt
+                                            FROM
+                                                anggaran_instansi_kab_kota 
+                                            WHERE
+                                            id_instansi = '$id_instansi' and kode_tahap='$tahap' and tahun ='$tahun_anggaran'
+                                                ");
+            }
         }
         return $query;
     }

@@ -58,6 +58,23 @@ $pilihan_bulan = [
                         <input type="text" class="form-control" id="nama" name="nama">
                     </div>
                     <div class="form-group" >
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="pimpinan">Pimpinan Instansi</label>
+                                <input type="text" class="form-control" id="pimpinan" name="pimpinan">
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <label for="pimpinan">Kategori Pimpinan</label>
+                                <select class="form-control" id="jenis_pimpinan" name="jenis_pimpinan">
+                                    <option value="">Kepala OPD</option>
+                                    <option value="Plh. ">Plh. Kepala OPD</option>
+                                </select>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" >
                         <label for="kode">Alamat</label>
                         <input type="text" class="form-control" id="alamat" name="alamat">
                     </div>
@@ -74,19 +91,24 @@ $pilihan_bulan = [
                         <input type="text" class="form-control" id="web" name="web">
                     </div>
 
-                    <div class="form-group">
-                        <label for="kode">TMT Mulai Realisasi</label>
-                        <input  type="date" name="bulan_mulai" id="bulan_mulai" class="form-control">
-                        
-                    </div>
                     <div class="form-group" >
-                        <label for="kode">TMT Akhir Realisasi</label>
-                        <input  type="date" name="bulan_selesai" id="bulan_selesai" class="form-control">
-                           
+                        <div class="row">
+                            <div class="col-md-6">
+                                 <label for="kode">TMT Mulai Realisasi</label>
+                                <input  type="date" name="bulan_mulai" id="bulan_mulai" class="form-control">
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <label for="kode">TMT Akhir Realisasi</label>
+                                <input  type="date" name="bulan_selesai" id="bulan_selesai" class="form-control">
+                                
+                            </div>
+                        </div>
                     </div>
+
                     <div class="form-group" >
                         <label for="kode">Status</label>
-                        <input  type="date" class="form-control" id="status" name="status">
+                        <select class="form-control" id="status" name="status">
                             <option value=""></option>
                              <?php $status = ['Tidak Aktif','Aktif'];
                             foreach ($status as $k => $v) { ?>
@@ -145,6 +167,23 @@ $pilihan_bulan = [
                         <input type="text" class="form-control" id="nama" name="nama">
                     </div>
                     <div class="form-group" >
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="pimpinan">Pimpinan Instansi</label>
+                                <input type="text" class="form-control" id="pimpinan" name="pimpinan">
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <label for="pimpinan">Kategori Pimpinan</label>
+                                <select class="form-control" id="jenis_pimpinan" name="jenis_pimpinan">
+                                    <option value="">Kepala OPD</option>
+                                    <option value="Plh. ">Plh. Kepala OPD</option>
+                                </select>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" >
                         <label for="kode">Alamat</label>
                         <input type="text" class="form-control" id="alamat" name="alamat">
                     </div>
@@ -161,23 +200,22 @@ $pilihan_bulan = [
                         <input type="text" class="form-control" id="web" name="web">
                     </div>
 
-                    
-                    <div class="form-group">
-                        <label for="kode">Bulan Mulai Realisasi</label>
-                        <select name="bulan_mulai" id="bulan_mulai" class="form-control">
-                            <?php foreach ($pilihan_bulan as $k => $v) { ?>
-                                <option value="<?php echo $k ?>"><?php echo $v ?></option>
-                            <?php } ?> ?>
-                        </select>
-                    </div>
+
                     <div class="form-group" >
-                        <label for="kode">Bulan Akhir Realisasi</label>
-                        <select name="bulan_selesai" id="bulan_selesai" class="form-control">
-                            <?php foreach ($pilihan_bulan as $k => $v) { ?>
-                                <option value="<?php echo $k ?>"><?php echo $v ?></option>
-                            <?php } ?> ?>
-                        </select>
+                        <div class="row">
+                            <div class="col-md-6">
+                                 <label for="kode">TMT Mulai Realisasi</label>
+                                <input  type="date" name="bulan_mulai" id="bulan_mulai" class="form-control">
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <label for="kode">TMT Akhir Realisasi</label>
+                                <input  type="date" name="bulan_selesai" id="bulan_selesai" class="form-control">
+                                
+                            </div>
+                        </div>
                     </div>
+
                     <div class="form-group" >
                         <label for="kode">Status</label>
                         <select class="form-control" id="status" name="status">
