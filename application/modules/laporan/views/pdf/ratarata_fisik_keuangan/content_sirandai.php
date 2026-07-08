@@ -99,8 +99,8 @@
           <th rowspan="4" style="width:90px"> Pagu</th>
           <th colspan="4"> Fisik</th>
           <th colspan="6"> Keuangan</th>
-          <th  rowspan="4">Capaian Fisik dan Keuangan</th>
-          <th  rowspan="4" style="width:110px">Kategori Capaian</th>
+          <th  rowspan="4" style="width:50px">Capaian Fisik dan Keuangan</th>
+          <th  rowspan="4" style="width:50px">Kategori <br> Capaian</th>
       
 
          
@@ -145,7 +145,7 @@
           <th>11=(10/3)*100</th>
           <th>12=(11/9)*100</th>
           <th>13=12-10</th>
-          <th>14=(0.6*6)+(0.4*12)</th>
+          <th>14=(0.6*6) <br> +(0.4*12)</th>
           <th>15</th>
         </tr>
 
@@ -196,34 +196,30 @@
 
               $persen_sirandai = (0.6 * $v['cf']) + (0.4 * $v['ck']);
 
-
-
-        if ($persen_sirandai>91) {
+if ($persen_sirandai>91) {
             $hitung_ketcap_k_ST++;
             $ketcap_k = 'ST';
-            $warcap_k = 'background: #7BF1A8';
+            $warcap_k = 'background: #00A651; color: #FFFFFF';
           }
           else if ($persen_sirandai<=91 && $persen_sirandai>76) {
             $hitung_ketcap_k_T++;
             $ketcap_k = 'T';
-            $warcap_k = 'background:#DCFCE7';
+            $warcap_k = 'background: #0071BC; color: #FFFFFF';
           }
           else if ($persen_sirandai<=76 && $persen_sirandai>66) {
             $hitung_ketcap_k_S++;
             $ketcap_k = 'S';
-            $warcap_k = 'background:#FEF9C2';
+            $warcap_k = 'background: #FFFF00; color: #000000';
           }
           else if ($persen_sirandai<=66 && $persen_sirandai>51) {
             $hitung_ketcap_k_R++;
             $ketcap_k = 'R';
-            $warcap_k = 'background:#FFE2E2';
+            $warcap_k = 'background: #FF0000; color: #FFFFFF';
           }else{
             $hitung_ketcap_k_SR++;
             $ketcap_k = 'SR';
-            $warcap_k = 'background:#FFA2A2';
+            $warcap_k = 'background: #BFBFBF; color: #000000';
           }
-
-
 
           $no++;
           ?>
