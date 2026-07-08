@@ -99,7 +99,7 @@ sum(btt) as realisasi_btt,
 
         if ($module=='laporan') {
 
-            if ($tahap==3) {
+            if ($tahap==2) {
                 if ($pergeseran_ke=='') {
                 $query  = $this->db->query("SELECT
                                                  realisasikan_bo, realisasikan_bm,realisasikan_btt,realisasikan_bt
