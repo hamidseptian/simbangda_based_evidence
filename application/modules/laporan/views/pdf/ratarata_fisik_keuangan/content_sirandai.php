@@ -99,8 +99,8 @@
           <th rowspan="4" style="width:90px"> Pagu</th>
           <th colspan="4"> Fisik</th>
           <th colspan="6"> Keuangan</th>
-          <th  rowspan="4">Sirandai</th>
-          <th  rowspan="4" style="width:110px">Last Update</th>
+          <th  rowspan="4">Capaian Fisik dan Keuangan</th>
+          <th  rowspan="4" style="width:110px">Kategori Capaian</th>
       
 
          
@@ -195,6 +195,36 @@
 
 
               $persen_sirandai = (0.6 * $v['cf']) + (0.4 * $v['ck']);
+
+
+
+        if ($persen_sirandai>91) {
+            $hitung_ketcap_k_ST++;
+            $ketcap_k = 'ST';
+            $warcap_k = 'background: #7BF1A8';
+          }
+          else if ($persen_sirandai<=91 && $persen_sirandai>76) {
+            $hitung_ketcap_k_T++;
+            $ketcap_k = 'T';
+            $warcap_k = 'background:#DCFCE7';
+          }
+          else if ($persen_sirandai<=76 && $persen_sirandai>66) {
+            $hitung_ketcap_k_S++;
+            $ketcap_k = 'S';
+            $warcap_k = 'background:#FEF9C2';
+          }
+          else if ($persen_sirandai<=66 && $persen_sirandai>51) {
+            $hitung_ketcap_k_R++;
+            $ketcap_k = 'R';
+            $warcap_k = 'background:#FFE2E2';
+          }else{
+            $hitung_ketcap_k_SR++;
+            $ketcap_k = 'SR';
+            $warcap_k = 'background:#FFA2A2';
+          }
+
+
+
           $no++;
           ?>
            <tr <?php echo $warning ?>>
@@ -214,10 +244,11 @@
               <td align="center"><?php echo $v['ck'] ?></td>
             <td align="center" style="<?php echo $v['wk'] ?>"><?php echo round($v['dk'],2) ?></td>
             <td align=" center"><?php echo $persen_sirandai ?></td>
+
+          <td align="center" style="<?php  echo $warcap_k ?>"> <?php echo $ketcap_k ?> </td>
       
             
            
-            <td><?php echo $v['last_update'] ?></td>
           </tr>
          <?php }
 
