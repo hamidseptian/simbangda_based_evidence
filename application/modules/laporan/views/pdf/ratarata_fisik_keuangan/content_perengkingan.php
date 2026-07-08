@@ -441,22 +441,22 @@
 
 
 
-        if ($pencapaian_fisik_satu>90) {
+        if ($pencapaian_fisik_satu>=91) {
             
             $ketcap_f = 'ST';
             $warcap_f = 'background: #7BF1A8';
           }
-          else if ($pencapaian_fisik_satu<=90 && $pencapaian_fisik_satu>80) {
+          else if ($pencapaian_fisik_satu<91 && $pencapaian_fisik_satu>76) {
             
             $ketcap_f = 'T';
             $warcap_f = 'background:#DCFCE7';
           }
-          else if ($pencapaian_fisik_satu<=80 && $pencapaian_fisik_satu>60) {
+          else if ($pencapaian_fisik_satu<=76 && $pencapaian_fisik_satu>66) {
             
             $ketcap_f = 'S';
             $warcap_f = 'background:#FEF9C2';
           }
-          else if ($pencapaian_fisik_satu<=60 && $pencapaian_fisik_satu>50) {
+          else if ($pencapaian_fisik_satu<=66 && $pencapaian_fisik_satu>51) {
             
             $ketcap_f = 'R';
             $warcap_f = 'background:#FFE2E2';
@@ -468,22 +468,22 @@
 
 
 
-        if ($pencapaian_keu_satu>90) {
+        if ($pencapaian_keu_satu>91) {
             $hitung_ketcap_k_ST++;
             $ketcap_k = 'ST';
             $warcap_k = 'background: #7BF1A8';
           }
-          else if ($pencapaian_keu_satu<=90 && $pencapaian_keu_satu>80) {
+          else if ($pencapaian_keu_satu<=91 && $pencapaian_keu_satu>76) {
             $hitung_ketcap_k_T++;
             $ketcap_k = 'T';
             $warcap_k = 'background:#DCFCE7';
           }
-          else if ($pencapaian_keu_satu<=80 && $pencapaian_keu_satu>60) {
+          else if ($pencapaian_keu_satu<=76 && $pencapaian_keu_satu>66) {
             $hitung_ketcap_k_S++;
             $ketcap_k = 'S';
             $warcap_k = 'background:#FEF9C2';
           }
-          else if ($pencapaian_keu_satu<=60 && $pencapaian_keu_satu>50) {
+          else if ($pencapaian_keu_satu<=66 && $pencapaian_keu_satu>51) {
             $hitung_ketcap_k_R++;
             $ketcap_k = 'R';
             $warcap_k = 'background:#FFE2E2';
