@@ -192,6 +192,64 @@ private function get_master_instansi($force_refresh = false) {
 
     }
 
+    public function perengkingan_opd()
+    {
+        $tahap = tahapan_apbd();
+        $tahun = tahun_anggaran();
+     
+        $bulan = bulan_aktif();//$this->input->get('bulan');
+        $kolom = $this->input->get('kolom');
+        $sort = $this->input->get('sort');
+
+        if ($kolom=='fisik') {
+                $query_grafik = 'g.realisasi_fisik_akumulasi';
+               
+        }
+        else if ($kolom=='keuangan') {
+                $query_grafik = ' g.realisasi_keuangan_akumulasi'; 
+        }else{
+                $query_grafik = '(g.realisasi_keuangan_akumulasi - g.target_keuangan_akumulasi)';
+        }
+       
+
+      $where_nomenklatur = "and mi.is_active='1'";
+
+      $order = "ORDER BY ".$query_grafik." ".$sort;
+      $where = "";
+
+         $query  = $this->db->query("SELECT
+                                  -- mi.id_instansi,
+                                  mi.nama_instansi,
+                              
+                                  $query_grafik as nilai
+                                
+
+                                FROM
+                                  master_instansi mi
+                                  LEFT JOIN grafik g ON mi.id_instansi = g.id_instansi 
+                                WHERE
+                                 mi.id_instansi not in (164,165,200,201,202,203,204,205,206)
+                                   
+                                    AND g.bulan = {$bulan}
+                                    AND g.kode_tahap='$tahap'
+                                    AND tahun = '$tahun'
+                                   $where $where_nomenklatur
+                                   $order
+
+                                 ");
+
+
+
+     
+        $output = [
+            'modules' =>'chatbot',
+            'data' =>$query->result_array(),
+            // 'result' =>$get_data['data']->pencapaian_opd,
+        ];
+        echo json_encode($output);
+
+    }
+
 
 
     public function api_dashboard_pembangunan(){

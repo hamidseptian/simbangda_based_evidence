@@ -33,4 +33,4 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 sbe_files_data/
 .env
 deploy/
-/application/config/config.php
+application/config/*

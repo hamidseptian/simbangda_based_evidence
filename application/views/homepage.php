@@ -805,44 +805,119 @@ else if ($class=='auth' && $method=='index') { ?>
 
                         <div class="row  justify-content-center">
                             <div class="col-lg-3 col-md-6 mb-5">
-                               <!--  <a href="index.html" class="navbar-brand">
 
+
+
+                                <a href="https://biroadmpemb.sumbarprov.go.id/" class="navbar-brand">
                                     <img class="img-fluid"
-                                        src="https://biroadmpembangunan.sumbarprov.go.id/assets/gambar/logo_biro.png"
-                                        alt="">
-                                </a> --> <br><br>
+                                        src="<?php echo base_url('assets/sbe/') ?>logo_biro.png"
+                                        alt="" width="100%">
+                                </a> <br><br>
+                               <img class="img-fluid" src="<?php echo base_url('assets/sbe/bagde_pse.png') ?>" width="100%">
                               
-
-                                <p>Jl. Jend. Sudirman No.51, Padang Pasir, Kec. Padang Barat, Kota Padang, Sumatera
-                                    Barat 25129</p>
-                              <!--   <div class="d-flex justify-content-start mt-4">
-                                    <a class="btn btn-outline-secondary text-center mr-2 px-0"
-                                        style="width: 38px; height: 38px;"
-                                        href="https://biroadmpembangunan.sumbarprov.go.id/" target="_blank"><i
-                                            class="fa fa-globe"></i></a>
-                                    <a class="btn btn-outline-secondary text-center mr-2 px-0"
-                                        style="width: 38px; height: 38px;"
-                                        href="https://www.facebook.com/biroadmpembangunan.sumbarprov" target="_blank"><i
-                                            class="fab fa-facebook-f"></i></a>
-                                    <a class="btn btn-outline-secondary text-center mr-2 px-0"
-                                        style="width: 38px; height: 38px;"
-                                        href="mailto:biroadmpembangunan.sumbarprov@gmail.com" target="_blank"><i
-                                            class="fa fa-envelope"></i></a>
-                                    <a class="btn btn-outline-secondary text-center mr-2 px-0"
-                                        style="width: 38px; height: 38px;"
-                                        href="https://www.instagram.com/biroadpemb_prov.sumbar/" target="_blank"><i
-                                            class="fab fa-instagram"></i></a>
-                                    <a class="btn btn-outline-secondary text-center mr-2 px-0"
-                                        style="width: 38px; height: 38px;" href="#" target="_blank"><i
-                                            class="fab fa-youtube"></i></a>
-                                </div> -->
+                              
                             </div>
 
+                           
+                            
+
+
                             <div class="col-lg-3 col-md-6 mb-5">
-                                <!-- <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.2840949598635!2d100.35777017560198!3d-0.9376228353457584!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2fd4b950c9c87f35%3A0x203f97613e262574!2sBiro%20Administrasi%20Pembangunan!5e0!3m2!1sid!2sid!4v1713859623223!5m2!1sid!2sid"
-                                    width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"
-                                    referrerpolicy="no-referrer-when-downgrade"></iframe> -->
+                                <h4 class="font-weight-bold mb-4">Integrasi Dengan</h4>
+                                <div class="d-flex flex-wrap m-n1">
+                                    <div class="grid-menu grid-menu-2col">
+
+
+
+
+
+                                        <ul class="list-group list-group-flush">
+
+                                            <li class="list-group-item">
+                                                <div class="widget-content p-0">
+                                                    <div class="widget-content-wrapper">
+                                                        <div class="widget-content-left">
+                                                            <div class="widget-heading">Dashboard Pembangunan</div>
+                                                            <div class="widget-subheading"><a
+                                                                    href="https://dashboard.sumbarprov.go.id/"
+                                                                    target="_blank">https://dashboard.sumbarprov.go.id/</a>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                            <li class="list-group-item">
+                                                <div class="widget-content p-0">
+                                                    <div class="widget-content-wrapper">
+                                                        <div class="widget-content-left">
+                                                            <div class="widget-heading">Sipedal</div>
+                                                            <div class="widget-subheading"><a
+                                                                    href="https://sipedal.sumbarprov.go.id/"
+                                                                    target="_blank">https://sipedal.sumbarprov.go.id/</a>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                        </ul>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-5">
+                                <h4 class="font-weight-bold mb-4">Link Terkait</h4>
+                                <div class="d-flex flex-wrap m-n1">
+                                    <div class="grid-menu grid-menu-2col">
+
+
+
+
+
+                                        <ul class="list-group list-group-flush">
+
+                                            <li class="list-group-item">
+                                                <div class="widget-content p-0">
+                                                    <div class="widget-content-wrapper">
+                                                        <div class="widget-content-left">
+                                                            <div class="widget-heading">SP4N Lapor</div>
+                                                            <div class="widget-subheading"><a
+                                                                    href="https://lapor.go.id/"
+                                                                    target="_blank">https://lapor.go.id/</a>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                            <li class="list-group-item">
+                                                <div class="widget-content p-0">
+                                                    <div class="widget-content-wrapper">
+                                                        <div class="widget-content-left">
+                                                            <div class="widget-heading">SIRANDAI SUMBAR</div>
+                                                            <div class="widget-subheading"><a
+                                                                    href="https://sirandai-dev.sumbarprov.go.id/"
+                                                                    target="_blank">https://sirandai-dev.sumbarprov.go.id//</a>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </li>
+                                          
+
+                                        </ul>
+
+
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="col-lg-3 col-md-6 mb-5">
                                 <h4 class="font-weight-bold mb-4">Statistika User</h4>
@@ -915,65 +990,6 @@ foreach ($q_pengunjungonline->row_array() as $k => $v) {
                                             </div>
                                         </div>
 
-
-
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-
-                            <div class="col-lg-3 col-md-6 mb-5">
-                                <h4 class="font-weight-bold mb-4">Integrasi Dengan</h4>
-                                <div class="d-flex flex-wrap m-n1">
-                                    <div class="grid-menu grid-menu-2col">
-
-
-
-
-
-                                        <ul class="list-group list-group-flush">
-
-                                            <li class="list-group-item">
-                                                <div class="widget-content p-0">
-                                                    <div class="widget-content-wrapper">
-                                                        <div class="widget-content-left">
-                                                            <div class="widget-heading">Dashboard Pembangunan</div>
-                                                            <div class="widget-subheading"><a
-                                                                    href="https://dashboard.sumbarprov.go.id/"
-                                                                    target="_blank">https://dashboard.sumbarprov.go.id/</a>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </li>
-
-                                            <li class="list-group-item">
-                                                <div class="widget-content p-0">
-                                                    <div class="widget-content-wrapper">
-                                                        <div class="widget-content-left">
-                                                            <div class="widget-heading">Sipedal</div>
-                                                            <div class="widget-subheading"><a
-                                                                    href="https://sipedal.sumbarprov.go.id/"
-                                                                    target="_blank">https://sipedal.sumbarprov.go.id/</a>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="list-group-item">
-                                                <div class="widget-content p-0">
-                                                    <div class="widget-content-wrapper">
-                                                       <img src="<?php echo base_url('assets/sbe/bagde_pse.png') ?>" width="100%">
-
-                                                    </div>
-                                                </div>
-                                            </li>
-
-                                        </ul>
 
 
                                     </div>
