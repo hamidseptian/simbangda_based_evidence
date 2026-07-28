@@ -541,8 +541,10 @@ $pendapatan_dua_tahun_sebelumnya = $pendapatan['dua_tahun_sebelumnya']['data']['
 for ($i=0; $i < 12 ; $i++) { 
     $angka_target_tahun_ini += $pendapatan_tahun_ini[$i]->target;
     $target_tahun_ini[] = $angka_target_tahun_ini;
-    $angka_realisasi_tahun_ini += $pendapatan_tahun_ini[$i]->jumlah;
-    $realisasi_tahun_ini[] = $angka_realisasi_tahun_ini;
+    if (date('n')<=$i) {
+	    $angka_realisasi_tahun_ini += $pendapatan_tahun_ini[$i]->jumlah;
+	    $realisasi_tahun_ini[] = $angka_realisasi_tahun_ini;
+    }
 
 
     $angka_target_tahun_sebelumnya += $pendapatan_tahun_sebelumnya[$i]->target;

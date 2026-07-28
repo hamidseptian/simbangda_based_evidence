@@ -997,7 +997,7 @@ function pptk_kegiatan(tahun, kode_tahap, fetch_method)
                 	if (id_kedudukan==3) {
                 		var peringatan = full_name_lama + ' Sebagai ' +nama_sub_instansi_lama +' <br><br>Menjadi<br><br>'+ full_name_baru + ' Sebagai ' + nama_sub_instansi;
                 	}else{
-                		var peringatan = 'Struktur ' + data.data.nama_struktur + ' memiliki ' + data.data.bawahan +' struktur dibawahnya. jika dihapus stuktur di bawah ' + data.data.nama_struktur + ' ikut terhapus. tetap dilanjutkan.?';
+                		var peringatan = 'Struktur ' + data.data.nama_struktur + ' memiliki ' + data.data.bawahan +' struktur dibawahnya. jika diperbaharui stuktur di bawah ' + data.data.nama_struktur + ' ikut trperbaharui. tetap dilanjutkan.?';
                 	}
                 	
 					Swal.fire({

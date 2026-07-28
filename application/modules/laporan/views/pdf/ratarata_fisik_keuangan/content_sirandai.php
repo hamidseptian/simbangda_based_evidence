@@ -427,3 +427,101 @@ if ($persen_sirandai>91) {
 
 
 
+
+    <div style="width:35%; float: left">
+    <span class="font_laporan">
+      <b>
+        <u>Statistika Data Deviasi SKPD :</u>
+      </b>
+    </span>
+    <br><br>
+    <table class="font_laporan table" style="border-collapse: collapse; width:100%;">
+     <thead>
+        
+        <tr>
+          <th rowspan="2">Keterangan</th>
+          <th>Total</th>
+        </tr>
+        <tr>
+          <th style="width:55px">Keuangan</th>
+        </tr>
+        <tr style="background: #f8b2b2;">
+          <td>Deviasi Diatas -10%</td>
+          <td align="center"><?php echo $statistik['hitung_dev_k_merah'] ?></td>
+        </tr>
+        <tr style="background: #fcf3cf;">
+          <td>Deviasi Antara 5% sampai 10%</td>
+          <td align="center"><?php echo $statistik['hitung_dev_k_kuning'] ?></td>
+        </tr>
+        <tr style="background: #d5f5e3;">
+          <td>Deviasi Dibawah -5%</td>
+          <td align="center"><?php echo $statistik['hitung_dev_k_hijau'] ?></td>
+        </tr>
+        <tr style="background:#ff7cfd;">
+          <td>Melebihi Target</td>
+          <td align="center"><?php echo $statistik['hitung_dev_k_ungu'] ?></td>
+        </tr>
+         <tr>
+          <th align="left">Total Data</th>
+          
+          <th><?php echo $no ?></th>
+        </tr>
+     </thead>
+      
+    </table>
+    </div>
+    <div style="width:35%; float: left; margin-left:10px">
+    <span class="font_laporan">
+      <b>
+        <u>Statistika Kategori Capaian Realisasi SKPD :</u>
+      </b>
+    </span>
+    <br><br>
+    <table class="font_laporan table" style="border-collapse: collapse; width:100%;">
+     <thead>
+        
+        <tr>
+          <th>Kode</th>
+          <th>Keterangan</th>
+          <th>Total</th>
+        </tr>
+       
+        <tr style="background: #00A651; color: #FFFFFF">
+          <td style="color: #FFFFFF">ST</td>
+          <td  style="color: #FFFFFF">Sangat Tinggi </td>
+          <td align="center"  style="color: #FFFFFF"><?php echo $hitung_ketcap_k_ST ?></td>
+        </tr>
+        <tr style="background: #0071BC; color: #FFFFFF">
+          <td  style="color: #FFFFFF">T</td>
+          <td  style="color: #FFFFFF">Tinggi</td>
+          <td  style="color: #FFFFFF" align="center"><?php echo $hitung_ketcap_k_T ?></td><
+          
+        </tr>
+        <tr style="background: #FFFF00; color: #000000">
+          <td>S</td>
+          <td>Sedang</td>
+          <td align="center"><?php echo $hitung_ketcap_k_S ?></td><
+          
+        </tr>
+        <tr style="background: #FF0000; color: #FFFFFF">
+          <td  style="color: #FFFFFF">R</td>
+          <td  style="color: #FFFFFF">Rendah</td>
+          <td  style="color: #FFFFFF" align="center"><?php echo $hitung_ketcap_k_R ?></td><
+          
+        </tr>
+        <tr style="background: #BFBFBF; color: #000000">
+          <td>SR</td>
+          <td>Sangat Rendah</td>
+          <td align="center"><?php echo $hitung_ketcap_k_SR ?></td><
+          
+        </tr>
+         <tr>
+          <th colspan="2" align="left">Total Data</th>
+          
+          <th><?php echo $no ?></th>
+        </tr>
+     </thead>
+      
+    </table>
+    </div>
+
