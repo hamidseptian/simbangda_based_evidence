@@ -1669,13 +1669,26 @@ class Realisasi extends MY_Controller
 
 
 
-
+            $tambahan_anggaran = tambahan_anggaran();
+            $id_tambahan_anggaran = $tambahan_anggaran['id_tambahan_anggaran'];
+            $nama_anggaran_tambahan  = $tambahan_anggaran['nama_anggaran'];
             $id_instansi = id_instansi();
             foreach ($list as $lists) {
                 $no++;
                 $row    = [];
                 $row[]     = $no;
-                $pagu_total = $lists->pagu=='' ? 0 : $lists->pagu;
+
+                $pagu_apbd = $lists->pagu=='' ? 0 : $lists->pagu;
+                $pagu_tambahan = $lists->pagu_tambahan=='' ? 0 : $lists->pagu_tambahan;
+                $pagu_ski = $pagu_apbd + $pagu_tambahan;
+
+                if ($pagu_tambahan>0) {
+                    $warna_realisasi = 'style="color:#8C00FF"';
+                }else{
+                    $warna_realisasi = '';
+                }
+
+                $pagu_total = $pagu_ski=='' ? 0 : $pagu_ski;
                 $kategori = $lists->kategori;
                 $upel = $lists->kategori == 'Unit Pelaksana' ? '<br>'.$lists->jenis_sub_kegiatan .' - '.$lists->keterangan : '';
                 $pecah = explode('.', $lists->kode_rekening_sub_kegiatan);
@@ -1688,6 +1701,7 @@ class Realisasi extends MY_Controller
                 $kode_tahap = $lists->kode_tahap;
 
                 $realisasi_dipilih = $keuangan->cek_realisasi_dipilih($lists->kode_rekening_sub_kegiatan,$kode_tahap_kegiatan, $id_instansi, $pergeseran_ke)->row_array();
+                $realisasi_dipilih_tambahan = $keuangan->cek_realisasi_dipilih_tambahan($lists->kode_rekening_sub_kegiatan,$kode_tahap_kegiatan, $id_instansi, $pergeseran_ke, $id_tambahan_anggaran)->row_array();
 
 
 
@@ -1700,24 +1714,51 @@ class Realisasi extends MY_Controller
                 $realisasi_bt = $keuangan->total_realisasi_perjenis($lists->kode_rekening_sub_kegiatan,$kode_tahap_kegiatan, $id_instansi, 'realisasikan_bt')->row_array()['realisasi_bt'];
 
 
+
+                $realisasi_bo_tambahan = $keuangan->total_realisasi_perjenis_tambahan($lists->kode_rekening_sub_kegiatan,$kode_tahap_kegiatan, $id_instansi, 'realisasikan_bo', $id_tambahan_anggaran)->row_array()['realisasi_bo'];
+                $realisasi_bm_tambahan = $keuangan->total_realisasi_perjenis_tambahan($lists->kode_rekening_sub_kegiatan,$kode_tahap_kegiatan, $id_instansi, 'realisasikan_bm', $id_tambahan_anggaran)->row_array()['realisasi_bm'];
+                $realisasi_btt_tambahan = $keuangan->total_realisasi_perjenis_tambahan($lists->kode_rekening_sub_kegiatan,$kode_tahap_kegiatan, $id_instansi, 'realisasikan_btt', $id_tambahan_anggaran)->row_array()['realisasi_btt'];
+                $realisasi_bt_tambahan = $keuangan->total_realisasi_perjenis_tambahan($lists->kode_rekening_sub_kegiatan,$kode_tahap_kegiatan, $id_instansi, 'realisasikan_bt', $id_tambahan_anggaran)->row_array()['realisasi_bt'];
+
+
+
                 
 
-                $jumlah_realisasi_bo = $realisasi_bo =='' ? 0 : $realisasi_bo;
-                $jumlah_realisasi_bm = $realisasi_bm =='' ? 0 : $realisasi_bm;
-                $jumlah_realisasi_btt = $realisasi_btt =='' ? 0 : $realisasi_btt;
-                $jumlah_realisasi_bt = $realisasi_bt =='' ? 0 : $realisasi_bt;
+
+
+                    if ($lists->id_tambahan_anggaran=='') {
+                        $jumlah_realisasi_bo = $realisasi_bo =='' ? 0 : $realisasi_bo;
+                        $jumlah_realisasi_bm = $realisasi_bm =='' ? 0 : $realisasi_bm;
+                        $jumlah_realisasi_btt = $realisasi_btt =='' ? 0 : $realisasi_btt;
+                        $jumlah_realisasi_bt = $realisasi_bt =='' ? 0 : $realisasi_bt;
+                    }else{
+                        $jumlah_realisasi_bo = ($realisasi_bo =='' ? 0 : $realisasi_bo) + ($realisasi_bo_tambahan==''? 0 : $realisasi_bo_tambahan);
+                        $jumlah_realisasi_bm = ($realisasi_bm =='' ? 0 : $realisasi_bm) + ($realisasi_bm_tambahan==''? 0 : $realisasi_bm_tambahan);
+                        $jumlah_realisasi_btt = ($realisasi_btt =='' ? 0 : $realisasi_btt) + ($realisasi_btt_tambahan==''? 0 : $realisasi_btt_tambahan);
+                        $jumlah_realisasi_bt = ($realisasi_bt =='' ? 0 : $realisasi_bt) + ($realisasi_bt_tambahan==''? 0 : $realisasi_bt_tambahan);
+
+
+                    }
 
 
 
 
 
-                $set_realisasi_bo = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"  onclick="input_realisasi('."'bo','".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."','".$lists->kode_rekening_program."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->kategori."','".$lists->kode_tahap."','".$lists->tahun."','".$lists->pergeseran_ke."'".')">'.number_format($jumlah_realisasi_bo).'</button> ';
-                $set_realisasi_bm = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"  onclick="input_realisasi('."'bm','".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."','".$lists->kode_rekening_program."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->kategori."','".$lists->kode_tahap."','".$lists->tahun."','".$lists->pergeseran_ke."'".')">'.number_format($jumlah_realisasi_bm).'</button> ';
-                $set_realisasi_btt = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"  onclick="input_realisasi('."'btt','".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."','".$lists->kode_rekening_program."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->kategori."','".$lists->kode_tahap."','".$lists->tahun."','".$lists->pergeseran_ke."'".')">'.number_format($jumlah_realisasi_btt).'</button> ';
-                $set_realisasi_bt = '<button type="button" class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"  onclick="input_realisasi('."'bt','".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."','".$lists->kode_rekening_program."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->kategori."','".$lists->kode_tahap."','".$lists->tahun."','".$lists->pergeseran_ke."'".')">'.number_format($jumlah_realisasi_bt).'</button> ';
+
+
+
+
+
+
+                $set_realisasi_bo = '<button type="button" '.$warna_realisasi.' class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"  onclick="input_realisasi('."'bo','".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."','".$lists->kode_rekening_program."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->kategori."','".$lists->kode_tahap."','".$lists->tahun."','".$lists->pergeseran_ke."','".$lists->id_tambahan_anggaran."','".$nama_anggaran_tambahan."','".$pagu_tambahan."'".')">'.number_format($jumlah_realisasi_bo).'</button> ';
+                $set_realisasi_bm = '<button type="button" '.$warna_realisasi.' class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"  onclick="input_realisasi('."'bm','".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."','".$lists->kode_rekening_program."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->kategori."','".$lists->kode_tahap."','".$lists->tahun."','".$lists->pergeseran_ke."','".$lists->id_tambahan_anggaran."','".$nama_anggaran_tambahan."','".$pagu_tambahan."'".')">'.number_format($jumlah_realisasi_bm).'</button> ';
+                $set_realisasi_btt = '<button type="button" '.$warna_realisasi.' class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"  onclick="input_realisasi('."'btt','".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."','".$lists->kode_rekening_program."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->kategori."','".$lists->kode_tahap."','".$lists->tahun."','".$lists->pergeseran_ke."','".$lists->id_tambahan_anggaran."','".$nama_anggaran_tambahan."','".$pagu_tambahan."'".')">'.number_format($jumlah_realisasi_btt).'</button> ';
+                $set_realisasi_bt = '<button type="button" '.$warna_realisasi.' class="tombol" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"  onclick="input_realisasi('."'bt','".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."','".$lists->kode_rekening_program."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->kategori."','".$lists->kode_tahap."','".$lists->tahun."','".$lists->pergeseran_ke."','".$lists->id_tambahan_anggaran."','".$nama_anggaran_tambahan."','".$pagu_tambahan."'".')">'.number_format($jumlah_realisasi_bt).'</button> ';
 
                 $total_realisasi = $keuangan->total_realisasi($lists->kode_rekening_sub_kegiatan,$kode_tahap_kegiatan, $id_instansi)->row_array()['total_realisasi'] ;
+                $total_realisasi_tambahan = $keuangan->total_realisasi_tambahan($lists->kode_rekening_sub_kegiatan,$kode_tahap_kegiatan, $id_instansi, $id_tambahan_anggaran)->row_array()['total_realisasi'] ;
                 @$persentasi = ( $total_realisasi =='' ? 0 : $total_realisasi / $lists->pagu) * 100;
+                @$persentasi_tambahan = ( $total_realisasi_tambahan =='' ? 0 : $total_realisasi_tambahan / $pagu_tambahan) * 100;
 
 
                 $sub_organisasi = '<br>'.$lists->jenis_sub_kegiatan.' - '.$lists->keterangan;
@@ -1747,28 +1788,39 @@ class Realisasi extends MY_Controller
 
 
 
+                    if ($id_tambahan_anggaran=='') {
+                        $show_realisasikan_bo  =  $realisasi_dipilih['realisasikan_bo']==0 ? '-' : $set_realisasi_bo;
+                        $show_realisasikan_bm  =  $realisasi_dipilih['realisasikan_bm']==0 ? '-' : $set_realisasi_bm;
+                        $show_realisasikan_btt  =  $realisasi_dipilih['realisasikan_btt']==0 ? '-' : $set_realisasi_btt;
+                        $show_realisasikan_bt  =  $realisasi_dipilih['realisasikan_bt']==0 ? '-' : $set_realisasi_bt;
+                    }else{
+                        $show_realisasikan_bo  =  $realisasi_dipilih['realisasikan_bo']==0 && $realisasi_dipilih_tambahan['realisasikan_bo']==0 ? '-' : $set_realisasi_bo;
+                        $show_realisasikan_bm  =  $realisasi_dipilih['realisasikan_bm']==0 && $realisasi_dipilih_tambahan['realisasikan_bm']==0 ? '-' : $set_realisasi_bm;
+                        $show_realisasikan_btt  =  $realisasi_dipilih['realisasikan_btt']==0 && $realisasi_dipilih_tambahan['realisasikan_btt']==0 ? '-' : $set_realisasi_btt;
+                        $show_realisasikan_bt  =  $realisasi_dipilih['realisasikan_bt']==0 && $realisasi_dipilih_tambahan['realisasikan_bt']==0 ? '-' : $set_realisasi_bt;
+                    }
 
 
                         if ($id_kedudukan=='') {
-                            $row[]  =  $realisasi_dipilih['realisasikan_bo']==0 ? '-' : $set_realisasi_bo;
-                            $row[]  =  $realisasi_dipilih['realisasikan_bm']==0 ? '-' : $set_realisasi_bm;
-                            $row[]  =  $realisasi_dipilih['realisasikan_btt']==0 ? '-' : $set_realisasi_btt;
-                            $row[]  =  $realisasi_dipilih['realisasikan_bt']==0 ? '-' : $set_realisasi_bt;
+                            $row[]  =  $realisasi_dipilih['realisasikan_bo']==0 && $realisasi_dipilih_tambahan['realisasikan_bo']==0 ? '-' : $set_realisasi_bo;
+                            $row[]  =  $realisasi_dipilih['realisasikan_bm']==0 && $realisasi_dipilih_tambahan['realisasikan_bm']==0 ? '-' : $set_realisasi_bm;
+                            $row[]  =  $realisasi_dipilih['realisasikan_btt']==0 && $realisasi_dipilih_tambahan['realisasikan_btt']==0 ? '-' : $set_realisasi_btt;
+                            $row[]  =  $realisasi_dipilih['realisasikan_bt']==0 && $realisasi_dipilih_tambahan['realisasikan_bt']==0 ? '-' : $set_realisasi_bt;
                            
-                            $row[]  = number_format($total_realisasi);
-                            $row[]  = $lists->pagu=='' ? 0 : number_format($lists->pagu);
-                            $row[]  = $pagu_total > 0 ? round($persentasi,2).' %' : '0 %';
+                            $row[]  = "APBD : ".number_format($total_realisasi)."<br>TKD : ".number_format($total_realisasi_tambahan);
+                            $row[]  = $pagu_ski=='' ? 0 : number_format($pagu_ski);
+                            $row[]  = "APBD : ".($pagu_total > 0 ? round($persentasi,2).' %' : '0 %')."<br>TKD : ".($pagu_tambahan  > 0 ? round($persentasi_tambahan,2).' %' : '0 %');
                             $row[]     =  $tombol;
                         }else{
 
                             if (in_array($krsk, $kumpul_usk_pptk)) {
-                                $row[]  =  $realisasi_dipilih['realisasikan_bo']==0 ? '-' : $set_realisasi_bo;
-                                $row[]  =  $realisasi_dipilih['realisasikan_bm']==0 ? '-' : $set_realisasi_bm;
-                                $row[]  =  $realisasi_dipilih['realisasikan_btt']==0 ? '-' : $set_realisasi_btt;
-                                $row[]  =  $realisasi_dipilih['realisasikan_bt']==0 ? '-' : $set_realisasi_bt;
+                            $row[]  =  $realisasi_dipilih['realisasikan_bo']==0 && $realisasi_dipilih_tambahan['realisasikan_bo']==0 ? '-' : $set_realisasi_bo;
+                            $row[]  =  $realisasi_dipilih['realisasikan_bm']==0 && $realisasi_dipilih_tambahan['realisasikan_bm']==0 ? '-' : $set_realisasi_bm;
+                            $row[]  =  $realisasi_dipilih['realisasikan_btt']==0 && $realisasi_dipilih_tambahan['realisasikan_btt']==0 ? '-' : $set_realisasi_btt;
+                            $row[]  =  $realisasi_dipilih['realisasikan_bt']==0 && $realisasi_dipilih_tambahan['realisasikan_bt']==0 ? '-' : $set_realisasi_bt;
                                
                                 $row[]  = number_format($total_realisasi);
-                                $row[]  = $lists->pagu=='' ? 0 : number_format($lists->pagu);
+                                $row[]  = $pagu_ski=='' ? 0 : number_format($pagu_ski);
                                 $row[]  = $pagu_total > 0 ? round($persentasi,2).' %' : '0 %';
                                 $row[]     =  $tombol;
                             }else{
@@ -1777,10 +1829,10 @@ class Realisasi extends MY_Controller
                         // </div> ';
 
 
-                            $forbidden_set_realisasi_bo = '<button type="button" class="tombol" style="color:red" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"   onclick="'.$warning_bukan_kegiatan_anda.'">'.number_format($jumlah_realisasi_bo).'</button> ';
-                            $forbidden_set_realisasi_bm = '<button type="button" class="tombol" style="color:red" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"   onclick="'.$warning_bukan_kegiatan_anda.'">'.number_format($jumlah_realisasi_bm).'</button> ';
-                            $forbidden_set_realisasi_btt = '<button type="button" class="tombol" style="color:red" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"   onclick="'.$warning_bukan_kegiatan_anda.'">'.number_format($jumlah_realisasi_btt).'</button> ';
-                            $forbidden_set_realisasi_bt = '<button type="button" class="tombol" style="color:red" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"   onclick="'.$warning_bukan_kegiatan_anda.'">'.number_format($jumlah_realisasi_bt).'</button> ';
+                            $forbidden_set_realisasi_bo = '<button type="button" class="tombol" style="color:red" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"   onclick="'.$warning_bukan_kegiatan_anda.'">'.number_format($jumlah_realisasi_bo).'</button>';
+                            $forbidden_set_realisasi_bm = '<button type="button" class="tombol" style="color:red" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"   onclick="'.$warning_bukan_kegiatan_anda.'">'.number_format($jumlah_realisasi_bm).'</button>';
+                            $forbidden_set_realisasi_btt = '<button type="button" class="tombol" style="color:red" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"   onclick="'.$warning_bukan_kegiatan_anda.'">'.number_format($jumlah_realisasi_btt).'</button>';
+                            $forbidden_set_realisasi_bt = '<button type="button" class="tombol" style="color:red" title="Input Realisasi Belanja Operasi Sub  Kegiatan '.$lists->nama_sub_kegiatan.'"   onclick="'.$warning_bukan_kegiatan_anda.'">'.number_format($jumlah_realisasi_bt).'</button>';
 
 
 
@@ -1790,8 +1842,8 @@ class Realisasi extends MY_Controller
                                 $row[] =  $realisasi_dipilih['realisasikan_bt']==0 ? '-' : $forbidden_set_realisasi_bt;
                                
                                 $row[] = number_format($total_realisasi);
-                                $row[] = $lists->pagu=='' ? 0 : number_format($lists->pagu);
-                                $row[] = $pagu_total > 0 ? round($persentasi,2).' %' : '0 %';
+                                $row[]  = $pagu_ski=='' ? 0 : number_format($pagu_ski);
+                                $row[] = $pagu_ski > 0 ? round($persentasi,2).' %' : '0 %';
                                 $row[] = '<button class="btn btn-outline-danger btn-sm" onclick="'.$warning_bukan_kegiatan_anda.'">Terkunci</button>';
 
 
@@ -2202,6 +2254,216 @@ class Realisasi extends MY_Controller
             echo json_encode($output);
         }
     }
+
+
+
+
+
+
+ public function get_realisasi_keuangan_tambahan()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        } else {
+            $output = [
+                'status'    => false,
+                'data'      => []
+            ];
+            $keuangan       = $this->realisasi_keuangan_model;
+
+            // $kode_rekening_sub_kegiatan = '1.01.03.1.01.02';
+            // $kode_kegiatan = '1.01.03.1.01';
+            // $kode_program = '1.01.03';
+            // $kode_bidang_urusan = '1.01';
+            // $jenis_realisasi = 'bo';
+            $pagu = $this->input->post('pagu');
+            $kode_rekening_sub_kegiatan = $this->input->post('kode_rekening_sub_kegiatan');
+            $kode_kegiatan = $this->input->post('kode_kegiatan');
+            $kode_program = $this->input->post('kode_program');
+            $kode_bidang_urusan = $this->input->post('kode_bidang_urusan');
+            $jenis_realisasi = $this->input->post('jenis');
+            $kategori = $this->input->post('kategori');
+            $tahap = $this->input->post('tahap');
+            $tahun = $this->input->post('tahun');
+            $id_tambahan_anggaran = $this->input->post('id_tambahan_anggaran');
+            $pergeseran_ke = $this->input->post('pergeseran_ke');
+            $id_instansi = id_instansi();
+            $bulan_aktif = bulan_aktif();
+
+            $pecah = explode('.', $kode_rekening_sub_kegiatan);
+            if ($kategori == "Unit Pelaksana") {
+                $krsk = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
+            }else{
+                $krsk = $kode_rekening_sub_kegiatan;
+            }
+
+
+            $whereask = [
+                'kode_sub_kegiatan' => $kode_rekening_sub_kegiatan ,
+                'kode_kegiatan' => $kode_kegiatan ,
+                'kode_program' => $kode_program ,
+                'kode_bidang_urusan' => $kode_bidang_urusan ,
+                'id_instansi' => $id_instansi ,
+                'kode_tahap' => $tahap,
+                'tahun' => $tahun,
+            ];
+            if ($pergeseran_ke) {
+                $target                 = $this->db->query("SELECT id_target_apbd ,bulan from target_apbd
+                    where 
+                    kode_bidang_urusan ='$kode_bidang_urusan' and 
+                    kode_rekening_program ='$kode_program' and 
+                    kode_rekening_kegiatan ='$kode_kegiatan' and 
+                    kode_rekening_sub_kegiatan ='$kode_rekening_sub_kegiatan' and 
+                    kode_tahap ='$tahap' and 
+                    tahun ='$tahun' and 
+                    id_instansi ='$id_instansi' and 
+                    pergeseran_ke ='$pergeseran_ke' and 
+                    bulan<='$bulan_aktif' ");
+             
+            }else{
+                $target                 = $this->db->query("SELECT id_target_apbd ,bulan from target_apbd
+                    where 
+                    kode_bidang_urusan ='$kode_bidang_urusan' and 
+                    kode_rekening_program ='$kode_program' and 
+                    kode_rekening_kegiatan ='$kode_kegiatan' and 
+                    kode_rekening_sub_kegiatan ='$kode_rekening_sub_kegiatan' and 
+                    kode_tahap ='$tahap' and 
+                    tahun ='$tahun' and 
+                    id_instansi ='$id_instansi' and 
+                    bulan<='$bulan_aktif' ");
+
+            }
+
+
+            $subkeg                 = $this->db->query("SELECT nama_sub_kegiatan from sub_kegiatan_instansi where kode_sub_kegiatan='$kode_rekening_sub_kegiatan'")->row();
+            if (!$subkeg) {
+                $nama_sub_kegiatan  ='<span class="text-danger">Sub kegiatan belum terdaftar di master. harap hubungi admin untuk ditambahkan</span>' ; 
+                # code...
+            }else{
+                $nama_sub_kegiatan  =$subkeg->nama_sub_kegiatan ; 
+            }
+
+            $upel = $this->db->query("SELECT ski.kategori, ski.jenis_sub_kegiatan, ski.keterangan,
+                total_anggaran_sub_kegiatan(ski.kode_sub_kegiatan,ski.kode_tahap,ski.id_instansi,ski.kode_kegiatan,ski.kode_program,ski.tahun) as pagu_sub_kegiatan 
+             from sub_kegiatan_instansi ski where ski.kode_sub_kegiatan='$kode_rekening_sub_kegiatan' and ski.id_instansi='$id_instansi' and ski.kategori='$kategori' and ski.kode_tahap='$tahap' and ski.tahun='$tahun'")->row();
+            $output['totaldata']  = $target->num_rows();
+            $output['nama_sub_kegiatan']  = $kategori == "Sub Kegiatan SKPD" ? $nama_sub_kegiatan : $nama_sub_kegiatan.'<br>'.$upel->jenis_sub_kegiatan .' - '. $upel->keterangan ;
+            $output['nama_tahapan']  = pilihan_nama_tahapan($tahap);
+            $output['pergeseran_ke']  = $pergeseran_ke;
+            if ($target->num_rows() > 0) {
+                foreach ($target->result()  as $key => $value) {
+                    $bulan = $value->bulan;
+                    $where = "
+                    
+                kode_sub_kegiatan='$kode_rekening_sub_kegiatan'  and
+                kode_tahap='$tahap' and
+                tahun='$tahun' and
+                id_instansi='$id_instansi' and
+                bulan = '$bulan'
+                    ";
+                    $realisasi = $keuangan->realisasi_tambahan($where, $jenis_realisasi)->row_array();
+                    if ($pergeseran_ke=='') {$anggaran = $this->db->query("SELECT 
+                         bo_bp, bo_bbj, bo_bs, bo_bh, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatl, btt, bt_bbh, bt_bbk 
+                     from anggaran_sub_kegiatan_tambahan
+                        where
+                        kode_sub_kegiatan = '$kode_rekening_sub_kegiatan' and 
+                        kode_kegiatan = '$kode_kegiatan' and 
+                        kode_program = '$kode_program' and 
+                        kode_bidang_urusan = '$kode_bidang_urusan' and 
+                        id_instansi = '$id_instansi' and
+                        id_tambahan_anggaran='$id_tambahan_anggaran' and 
+                        kode_tahap  = '$tahap' and tahun='$tahun' 
+                        ");
+                        # code...
+                    }else{
+                        $anggaran = $this->db->query("SELECT 
+                         bo_bp, bo_bbj, bo_bs, bo_bh, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatl, btt, bt_bbh, bt_bbk 
+                     from anggaran_sub_kegiatan_tambahan
+                        where
+                        kode_sub_kegiatan = '$kode_rekening_sub_kegiatan' and 
+                        kode_kegiatan = '$kode_kegiatan' and 
+                        kode_program = '$kode_program' and 
+                        kode_bidang_urusan = '$kode_bidang_urusan' and 
+                        id_instansi = '$id_instansi' and 
+                        id_tambahan_anggaran='$id_tambahan_anggaran' and
+                        kode_tahap  = '$tahap' and tahun='$tahun' and pergeseran_ke='$pergeseran_ke'
+                        ");
+
+                    }
+                    
+                    $pagu = $anggaran->row_array();
+
+                    $cek_data  =$this->db->query("SELECT 
+                         id_realisasi_keuangan_tambahan
+                     from realisasi_keuangan_tambahan   
+                        where
+                      
+                        kode_sub_kegiatan='$kode_rekening_sub_kegiatan'  and
+                        kode_tahap='$tahap' and
+                        tahun='$tahun' and
+                        id_instansi='$id_instansi' and
+                        id_tambahan_anggaran='$id_tambahan_anggaran' and
+                        bulan = '$bulan'
+                ")->num_rows();
+
+                    $warna_data = $cek_data > 1 ? 'style="background:#ffe2e2"' : '';
+                    $output['data'][$key]['warna']      = $warna_data ;
+
+
+
+                    $output['data'][$key]['id_target']         = sbe_crypt($value->id_target_apbd, 'E');
+                    $output['data'][$key]['id_realisasi']         = sbe_crypt($realisasi['id_realisasi_keuangan_tambahan']=='' ? '' : $realisasi['id_realisasi_keuangan_tambahan'] , 'E');
+                    $output['data'][$key]['bulan']      = $bulan;
+                    if ($jenis_realisasi=='bo') {
+                        $output['data'][$key]['bo_bp']      = $realisasi['bo_bp']=='' ? 0 : $realisasi['bo_bp'];
+                        $output['data'][$key]['bo_bbj']      = $realisasi['bo_bbj']=='' ? 0 : $realisasi['bo_bbj'];
+                        $output['data'][$key]['bo_bs']      = $realisasi['bo_bs']=='' ? 0 : $realisasi['bo_bs'];
+                        $output['data'][$key]['bo_bh']      = $realisasi['bo_bh']=='' ? 0 : $realisasi['bo_bh'];
+
+                        $output['data'][$key]['pagu_bo_bp']      = $pagu['bo_bp']=='' ? 0 : $pagu['bo_bp'];
+                        $output['data'][$key]['pagu_bo_bbj']      = $pagu['bo_bbj']=='' ? 0 : $pagu['bo_bbj'];
+                        $output['data'][$key]['pagu_bo_bs']      = $pagu['bo_bs']=='' ? 0 : $pagu['bo_bs'];
+                        $output['data'][$key]['pagu_bo_bh']      = $pagu['bo_bh']=='' ? 0 : $pagu['bo_bh'];
+                    }
+                    else if ($jenis_realisasi=='bm') {
+                        $output['data'][$key]['bm_bmt']      = $realisasi['bm_bmt']=='' ? 0 : $realisasi['bm_bmt'];
+                        $output['data'][$key]['bm_bmpm']      = $realisasi['bm_bmpm']=='' ? 0 : $realisasi['bm_bmpm'];
+                        $output['data'][$key]['bm_bmgb']      = $realisasi['bm_bmgb']=='' ? 0 : $realisasi['bm_bmgb'];
+                        $output['data'][$key]['bm_bmjji']      = $realisasi['bm_bmjji']=='' ? 0 : $realisasi['bm_bmjji'];
+                        $output['data'][$key]['bm_bmatl']      = $realisasi['bm_bmatl']=='' ? 0 : $realisasi['bm_bmatl'];
+
+                        $output['data'][$key]['pagu_bm_bmt']      = $pagu['bm_bmt']=='' ? 0 : $pagu['bm_bmt'];
+                        $output['data'][$key]['pagu_bm_bmpm']      = $pagu['bm_bmpm']=='' ? 0 : $pagu['bm_bmpm'];
+                        $output['data'][$key]['pagu_bm_bmgb']      = $pagu['bm_bmgb']=='' ? 0 : $pagu['bm_bmgb'];
+                        $output['data'][$key]['pagu_bm_bmjji']      = $pagu['bm_bmjji']=='' ? 0 : $pagu['bm_bmjji'];
+                        $output['data'][$key]['pagu_bm_bmatl']      = $pagu['bm_bmatl']=='' ? 0 : $pagu['bm_bmatl'];
+                    }
+                    else if ($jenis_realisasi=='btt') {
+                        $output['data'][$key]['btt']      = $realisasi['btt']=='' ? 0 : $realisasi['btt'];
+
+                        $output['data'][$key]['pagu_btt']      = $pagu['btt']=='' ? 0 : $pagu['btt'];
+                    }
+                    else if ($jenis_realisasi=='bt') {
+                        $output['data'][$key]['bt_bbh']      = $realisasi['bt_bbh']=='' ? 0 : $realisasi['bt_bbh'];
+                        $output['data'][$key]['bt_bbk']      = $realisasi['bt_bbk']=='' ? 0 : $realisasi['bt_bbk'];
+
+                        $output['data'][$key]['pagu_bt_bbh']      = $pagu['bt_bbh']=='' ? 0 : $pagu['bt_bbh'];
+                        $output['data'][$key]['pagu_bt_bbk']      = $pagu['bt_bbk']=='' ? 0 : $pagu['bt_bbk'];
+                    }
+                }
+
+                $output['status']  = true;
+            } else {
+                $output['status']  = false;
+                
+            }
+
+            echo json_encode($output);
+        }
+    }
+
+
+
 
 
 
@@ -3056,6 +3318,345 @@ class Realisasi extends MY_Controller
             $this->db->update('realisasi_keuangan', $data_update, ['id_realisasi_keuangan' => $id_realisasi]);
         }
     }
+
+
+
+
+
+    public function update_realisasi_keuangan_tambahan($kode_rekening_sub_kegiatan, $bulan, $pagu, $tahap, $tahun, $id_tambahan_anggaran)
+    {
+        // $pk     = $this->input->post('pk');
+        // $id_realisasi = 6;
+        // $target = 'r-bo_bp';
+        // $value  = 1234;
+        $pk     = $this->input->post('pk');
+        $id_realisasi = sbe_crypt($pk, 'D');
+        $target = $this->input->post('name');
+        $value  = $this->input->post('value');
+
+        $kode = $kode_rekening_sub_kegiatan;
+               
+        $pecah = explode('.', $kode);
+        // $kode_sub_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
+        $kode_sub_kegiatan = $kode_rekening_sub_kegiatan;
+        $kode_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4];
+        $kode_program = $pecah[0].'.'.$pecah[1].'.'.$pecah[2];
+
+        $kd_sub_kegiatan = $pecah[5];
+        $kd_kegiatan = $pecah[3].'.'.$pecah[4];
+        $kd_program = $pecah[2];
+        $kode_bu = $pecah[0].'.'.$pecah[1];
+
+        $cekdata = $this->db->query("SELECT id_realisasi_keuangan_tambahan, 
+            (bo_bp+bo_bbj+bo_bs+bo_bh+bm_bmt+bm_bmpm+bm_bmgb+bm_bmjji+bm_bmatl+btt+bt_bbh+bt_bbk) as total_realisasi
+         from realisasi_keuangan_tambahan where id_realisasi_keuangan_tambahan='$id_realisasi'");
+        $realisasi_total = $cekdata->row_array()['total_realisasi'];
+        $nilai = str_replace('.', '', $value);
+        $persentasi_insert = ($nilai / $pagu) * 100 ; 
+        $persentasi_update = $realisasi_total ;//- $nilai) + $nilai;//(($realisasi_total['total_realisasi'] - $nilai) / $pagu) * 100 ; 
+
+        switch ($target) {
+            case 'r-bo_bp':
+                $data_update = [
+                    'bo_bp' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_update,
+                    'updated_on'=>timestamp(),
+                    'updated_by'=>id_user(),
+                ];
+                $data_insert = [
+                    'kode_sub_kegiatan'  =>$kode_sub_kegiatan ,
+                    'kode_kegiatan'  =>$kode_kegiatan ,
+                    'id_tambahan_anggaran'  =>$id_tambahan_anggaran ,
+                    'kode_program'  =>$kode_program ,
+                    'kode_bidang_urusan'  =>$kode_bu ,
+                    'id_instansi'  => id_instansi() ,
+                    'kode_tahap'  => $tahap,
+                    'bulan'  => $bulan,
+                    'bo_bp' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_insert,
+                    'tahun'  => $tahun,
+                    'created_on'  => timestamp(),
+                    'created_by'  => id_user(),
+                    'input_by '  => 'Manual Input'
+                ];
+                break;
+            case 'r-bo_bbj':
+                $data_update = [
+                    'bo_bbj' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_update,
+                    'updated_on'=>timestamp(),
+                    'updated_by'=>id_user(),
+                ];
+                $data_insert = [
+                    'kode_sub_kegiatan'  =>$kode_sub_kegiatan ,
+                    'kode_kegiatan'  =>$kode_kegiatan ,
+                    'kode_program'  =>$kode_program ,
+                    'kode_bidang_urusan'  =>$kode_bu ,
+                    'id_tambahan_anggaran'  =>$id_tambahan_anggaran ,
+                    'id_instansi'  => id_instansi() ,
+                    'kode_tahap'  => $tahap,
+                    'bulan'  => $bulan,
+                    'bo_bbj' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_insert,
+                    'tahun'  => $tahun,
+                    'created_on'  => timestamp(),
+                    'created_by'  => id_user(),
+                    'input_by '  => 'Manual Input'
+                ];
+                break;
+            case 'r-bo_bs':
+                $data_update = [
+                    'bo_bs' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_update,
+                    'updated_on'=>timestamp(),
+                    'updated_by'=>id_user(),
+                ];
+                $data_insert = [
+                    'kode_sub_kegiatan'  =>$kode_sub_kegiatan ,
+                    'kode_kegiatan'  =>$kode_kegiatan ,
+                    'kode_program'  =>$kode_program ,
+                    'kode_bidang_urusan'  =>$kode_bu ,
+                    'id_tambahan_anggaran'  =>$id_tambahan_anggaran ,
+                    'id_instansi'  => id_instansi() ,
+                    'kode_tahap'  => $tahap,
+                    'bulan'  => $bulan,
+                    'bo_bs' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_insert,
+                    'tahun'  => $tahun,
+                    'created_on'  => timestamp(),
+                    'created_by'  => id_user(),
+                    'input_by '  => 'Manual Input'
+                ];
+                break;
+            case 'r-bo_bh':
+                $data_update = [
+                    'bo_bh' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_update,
+                    'updated_on'=>timestamp(),
+                    'updated_by'=>id_user(),
+                ];
+                $data_insert = [
+                    'kode_sub_kegiatan'  =>$kode_sub_kegiatan ,
+                    'kode_kegiatan'  =>$kode_kegiatan ,
+                    'kode_program'  =>$kode_program ,
+                    'id_tambahan_anggaran'  =>$id_tambahan_anggaran ,
+                    'kode_bidang_urusan'  =>$kode_bu ,
+                    'id_instansi'  => id_instansi() ,
+                    'kode_tahap'  => $tahap,
+                    'bulan'  => $bulan,
+                    'bo_bh' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_insert,
+                    'tahun'  => $tahun,
+                    'created_on'  => timestamp(),
+                    'created_by'  => id_user(),
+                    'input_by '  => 'Manual Input'
+                ];
+                break;
+            case 'r-bm_bmt':
+                $data_update = [
+                    'bm_bmt' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_update,
+                    'updated_on'=>timestamp(),
+                    'updated_by'=>id_user(),
+                ];
+                $data_insert = [
+                    'kode_sub_kegiatan'  =>$kode_sub_kegiatan ,
+                    'kode_kegiatan'  =>$kode_kegiatan ,
+                    'kode_program'  =>$kode_program ,
+                    'kode_bidang_urusan'  =>$kode_bu ,
+                    'id_tambahan_anggaran'  =>$id_tambahan_anggaran ,
+                    'id_instansi'  => id_instansi() ,
+                    'kode_tahap'  => $tahap,
+                    'bulan'  => $bulan,
+                    'bm_bmt' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_insert,
+                    'tahun'  => $tahun,
+                    'created_on'  => timestamp(),
+                    'created_by'  => id_user(),
+                    'input_by '  => 'Manual Input'
+                ];
+                break;
+            case 'r-bm_bmpm':
+                $data_update = [
+                    'bm_bmpm' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_update,
+                    'updated_on'=>timestamp(),
+                    'updated_by'=>id_user(),
+                ];
+                $data_insert = [
+                    'kode_sub_kegiatan'  =>$kode_sub_kegiatan ,
+                    'kode_kegiatan'  =>$kode_kegiatan ,
+                    'kode_program'  =>$kode_program ,
+                    'kode_bidang_urusan'  =>$kode_bu ,
+                    'id_tambahan_anggaran'  =>$id_tambahan_anggaran ,
+                    'id_instansi'  => id_instansi() ,
+                    'kode_tahap'  => $tahap,
+                    'bulan'  => $bulan,
+                    'bm_bmpm' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_insert,
+                    'tahun'  => $tahun,
+                    'created_on'  => timestamp(),
+                    'created_by'  => id_user(),
+                    'input_by '  => 'Manual Input'
+                ];
+                break;
+            case 'r-bm_bmgb':
+                $data_update = [
+                    'bm_bmgb' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_update,
+                    'updated_on'=>timestamp(),
+                    'updated_by'=>id_user(),
+                ];
+                $data_insert = [
+                    'kode_sub_kegiatan'  =>$kode_sub_kegiatan ,
+                    'kode_kegiatan'  =>$kode_kegiatan ,
+                    'kode_program'  =>$kode_program ,
+                    'id_tambahan_anggaran'  =>$id_tambahan_anggaran ,
+                    'kode_bidang_urusan'  =>$kode_bu ,
+                    'id_instansi'  => id_instansi() ,
+                    'kode_tahap'  => $tahap,
+                    'bulan'  => $bulan,
+                    'bm_bmgb' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_insert,
+                    'tahun'  => $tahun,
+                    'created_on'  => timestamp(),
+                    'created_by'  => id_user(),
+                    'input_by '  => 'Manual Input'
+                ];
+                break;
+            case 'r-bm_bmjji':
+                $data_update = [
+                    'bm_bmjji' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_update,
+                    'updated_on'=>timestamp(),
+                    'updated_by'=>id_user(),
+                ];
+                $data_insert = [
+                    'kode_sub_kegiatan'  =>$kode_sub_kegiatan ,
+                    'kode_kegiatan'  =>$kode_kegiatan ,
+                    'kode_program'  =>$kode_program ,
+                    'id_tambahan_anggaran'  =>$id_tambahan_anggaran ,
+                    'kode_bidang_urusan'  =>$kode_bu ,
+                    'id_instansi'  => id_instansi() ,
+                    'kode_tahap'  => $tahap,
+                    'bulan'  => $bulan,
+                    'bm_bmjji' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_insert,
+                    'tahun'  => $tahun,
+                    'created_on'  => timestamp(),
+                    'created_by'  => id_user(),
+                    'input_by '  => 'Manual Input'
+                ];
+                break;
+            case 'r-bm_bmatl':
+                $data_update = [
+                    'bm_bmatl' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_update,
+                    'updated_on'=>timestamp(),
+                    'updated_by'=>id_user(),
+                ];
+                $data_insert = [
+                    'kode_sub_kegiatan'  =>$kode_sub_kegiatan ,
+                    'kode_kegiatan'  =>$kode_kegiatan ,
+                    'id_tambahan_anggaran'  =>$id_tambahan_anggaran ,
+                    'kode_program'  =>$kode_program ,
+                    'kode_bidang_urusan'  =>$kode_bu ,
+                    'id_instansi'  => id_instansi() ,
+                    'kode_tahap'  => $tahap,
+                    'bulan'  => $bulan,
+                    'bm_bmatl' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_insert,
+                    'tahun'  => $tahun,
+                    'created_on'  => timestamp(),
+                    'created_by'  => id_user(),
+                    'input_by '  => 'Manual Input'
+                ];
+                break;
+            case 'r-btt':
+                $data_update = [
+                    'btt' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_update,
+                    'updated_on'=>timestamp(),
+                    'updated_by'=>id_user(),
+                ];
+                $data_insert = [
+                    'kode_sub_kegiatan'  =>$kode_sub_kegiatan ,
+                    'kode_kegiatan'  =>$kode_kegiatan ,
+                    'id_tambahan_anggaran'  =>$id_tambahan_anggaran ,
+                    'kode_program'  =>$kode_program ,
+                    'kode_bidang_urusan'  =>$kode_bu ,
+                    'id_instansi'  => id_instansi() ,
+                    'kode_tahap'  => $tahap,
+                    'bulan'  => $bulan,
+                    'btt' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_insert,
+                    'tahun'  => $tahun,
+                    'created_on'  => timestamp(),
+                    'created_by'  => id_user(),
+                    'input_by '  => 'Manual Input'
+                ];
+                break;
+            case 'r-bt_bbh':
+                $data_update = [
+                    'bt_bbh' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_update,
+                    'updated_on'=>timestamp(),
+                    'updated_by'=>id_user(),
+                ];
+                $data_insert = [
+                    'kode_sub_kegiatan'  =>$kode_sub_kegiatan ,
+                    'kode_kegiatan'  =>$kode_kegiatan ,
+                    'kode_program'  =>$kode_program ,
+                    'id_tambahan_anggaran'  =>$id_tambahan_anggaran ,
+                    'kode_bidang_urusan'  =>$kode_bu ,
+                    'id_instansi'  => id_instansi() ,
+                    'kode_tahap'  => $tahap,
+                    'bulan'  => $bulan,
+                    'bt_bbh' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_insert,
+                    'tahun'  => $tahun,
+                    'created_on'  => timestamp(),
+                    'created_by'  => id_user(),
+                    'input_by '  => 'Manual Input'
+                ];
+                break;
+            case 'r-bt_bbk':
+                $data_update = [
+                    'bt_bbk' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_update,
+                    'updated_on'=>timestamp(),
+                    'updated_by'=>id_user(),
+                ];
+                $data_insert = [
+                    'kode_sub_kegiatan'  =>$kode_sub_kegiatan ,
+                    'kode_kegiatan'  =>$kode_kegiatan ,
+                    'kode_program'  =>$kode_program ,
+                    'id_tambahan_anggaran'  =>$id_tambahan_anggaran ,
+                    'kode_bidang_urusan'  =>$kode_bu ,
+                    'id_instansi'  => id_instansi() ,
+                    'kode_tahap'  => $tahap,
+                    'bulan'  => $bulan,
+                    'bt_bbk' => str_replace('.', '', $value),
+                    'persen_realisasi_keuangan'=>$persentasi_insert,
+                    'tahun'  => $tahun,
+                    'created_on'  => timestamp(),
+                    'created_by'  => id_user(),
+                    'input_by '  => 'Manual Input'
+                ];
+                break;
+          
+        }
+
+
+        if ($cekdata->num_rows()==0) {
+            $this->db->insert('realisasi_keuangan_tambahan', $data_insert);
+        }else{
+            $this->db->update('realisasi_keuangan_tambahan', $data_update, ['id_realisasi_keuangan_tambahan' => $id_realisasi]);
+        }
+    }
+
+
+
 
 
     public function update_realisasi_keuangan_kab_kota($id_instansi, $bulan)

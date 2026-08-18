@@ -51,6 +51,11 @@
                             <input type="hidden" name="kode_bidang_urusan" id="kode_bidang_urusan">
                             <input type="hidden" name="tahun" id="tahun">
                             <input type="hidden" name="tahap" id="tahap">
+
+
+                            <input type="hidden" name="pagu_apbd" id="pagu_apbd">
+                            <input type="hidden" name="pagu_tambahan" id="pagu_tambahan">
+
                         </div>
                         <div id="info_target"></div>
                         <table class="table table-striped table-bordered" id="table-realisasi-keuangan" >
@@ -74,6 +79,37 @@
 
                             </tbody>
                         </table>
+
+
+                        <div class="f_input_rk_tambahan" style="display:none">   
+                            <hr> 
+                            <div id="nama_tambahan_anggaran" style="margin-top:10px"></div>
+                        <table class="table table-striped table-bordered" id="table-realisasi-keuangan-tambahan" >
+                            <thead>
+                                <tr>
+                                    <th rowspan="3" width="1%">No</th>
+                                    <th rowspan="3">Bulan</th>
+                                    <th colspan="1" style="text-align: center;" class="jenis_belanja"></th>
+                                </tr>
+                              
+                                <tr class="rincian_jenis_belanja">
+                                </tr>
+                            </thead>
+                            <tbody class="data-realisasi-keuangan">
+
+                            </tbody>
+                            <tbody>
+                                <tr class="total_realisasi">
+                                    
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        </div>
+
+
+
+
                     </div>
                 </div>
             </div>

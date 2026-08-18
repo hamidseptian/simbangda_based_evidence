@@ -69,15 +69,24 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 
 
 
-function input_realisasi(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, pagu, kategori, tahap, tahun, pergeseran_ke)
+function input_realisasi(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, pagu, kategori, tahap, tahun, pergeseran_ke, id_tambahan_anggaran, nama_anggaran_tambahan, pagu_tambahan)
     {   
-        
+        // var nama_anggaran_tambahan = 2343;
         var izin_input = <?php echo jadwal_rfk()['aktif'] ?>;
 
         var bulan_realisasi_config = <?php echo jadwal_rfk()['bulan_aktif'] ?>;
         $('#modal-realisasi-keuangan').modal('show');
         $('.form-control').removeClass('is-valid')
                           .removeClass('is-invalid');
+        if (id_tambahan_anggaran=='') {
+            $('#modal-realisasi-keuangan').find('.f_input_rk_tambahan').hide();
+
+        }else{
+            $('#modal-realisasi-keuangan').find('.f_input_rk_tambahan').find('#nama_tambahan_anggaran').html('<h5>Realisasi '+ nama_anggaran_tambahan + '</h5>');
+            $('#modal-realisasi-keuangan').find('.f_input_rk_tambahan').show();
+            input_realisasi_tambahan(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, pagu_tambahan, kategori, tahap, tahun, pergeseran_ke, id_tambahan_anggaran);
+
+        }
      
         $('.text-danger').remove();
         
@@ -108,6 +117,8 @@ function input_realisasi(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_
         var colspan_total = colspan + 1; 
         
         $('#modal-realisasi-keuangan').find('#jenis_belanja').html(jenis_belanja);
+
+        $('#modal-realisasi-keuangan').find('#pagu').val(pagu==''? 0: pagu);
         $('#modal-realisasi-keuangan').find('#rincian_jenis_belanja').html(rincian);
         $('#modal-realisasi-keuangan').find('#jenis_belanja').attr('colspan', colspan);
 
@@ -120,7 +131,7 @@ function input_realisasi(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_
         $('#modal-realisasi-keuangan').find('#kode_bidang_urusan').val(kode_bidang_urusan);
         $('#modal-realisasi-keuangan').find('#kode_kegiatan').val(kode_kegiatan);
         $('#modal-realisasi-keuangan').find('#kode_program').val(kode_program);
-        $('#modal-realisasi-keuangan').find('#pagu').val(pagu==''? 0: pagu);
+        $('#modal-realisasi-keuangan').find('#pagu_apbd').val(pagu==''? 0: pagu);
 
 
         $.ajax(
@@ -341,6 +352,301 @@ function input_realisasi(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_
     }
 
 
+
+
+
+
+
+
+function input_realisasi_tambahan(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, pagu, kategori, tahap, tahun, pergeseran_ke, id_tambahan_anggaran)
+    {   
+        var izin_input = <?php echo jadwal_rfk()['aktif'] ?>;
+
+        var bulan_realisasi_config = <?php echo jadwal_rfk()['bulan_aktif'] ?>;
+        $('#modal-realisasi-keuangan').modal('show');
+        $('.form-control').removeClass('is-valid')
+                          .removeClass('is-invalid');
+    
+     
+        $('.text-danger').remove();
+        
+        if (jenis=='bo') {
+            var jenis_belanja = 'Realisasi Belanja Operasi';
+            var colspan =5;
+            var rincian = '<th align="center">Belanja Pegawai</th>' + '<th align="center">Belanja Barang Jasa</th>' + '<th align="center">Belanja Subsidi</th>' + '<th align="center">Belanja Hibah</th>' +'<th>Total</th>';
+
+        }
+        else if (jenis=='bm') {
+            var jenis_belanja = 'Realisasi Belanja Modal';
+            var colspan =6;
+            var rincian = '<th align="center">Belanja Modal Tanah</th>' +'<th align="center">Belanja Modal Peralatan Dan Mesin</th>' +'<th align="center">   Belanja Modal Gedung dan Bangunan</th>' +'<th align="center">Belanja Modal Jalan, Jaringan, dan Irigasi</th>' +'<th align="center">Belanja Modal dan Aset Tetap Lainnya</th>' +'<th>Total</th>';
+            
+        }
+        else if (jenis=='btt') {
+            var jenis_belanja = 'Realisasi Belanja Tidak Terduga';
+            var colspan =2;
+            var rincian = '<th align="center">Belanja Tidak Terduga</th>' +'<th>Total</th>' ;
+            
+        }
+        else if (jenis=='bt') {
+            var jenis_belanja = 'Realisasi Belanja Transfer';
+            var colspan =3;
+            var rincian = '<th align="center">Belanja Bagi Hasil</th>' + '<th align="center">Belanja Bagi Hasil</th>' +'<th>Total</th>' ;
+            
+        }
+        var colspan_total = colspan + 1; 
+        
+        $('#modal-realisasi-keuangan').find('.f_input_rk_tambahan').find('.jenis_belanja').html(jenis_belanja);
+        $('#modal-realisasi-keuangan').find('.f_input_rk_tambahan').find('.rincian_jenis_belanja').html(rincian);
+        $('#modal-realisasi-keuangan').find('.f_input_rk_tambahan').find('.jenis_belanja').attr('colspan', colspan);
+
+        $('#modal-realisasi-keuangan').find('.f_input_rk_tambahan').find('.label_total_realisasi').attr('colspan', colspan );
+
+
+        // $('#modal-realisasi-keuangan').find('#td_kode_sub_kegiatan').html(kode_rekening_sub_kegiatan);
+        // $('#modal-realisasi-keuangan').find('#kode_sub_kegiatan').val(kode_rekening_sub_kegiatan);
+
+        // $('#modal-realisasi-keuangan').find('#kode_bidang_urusan').val(kode_bidang_urusan);
+        // $('#modal-realisasi-keuangan').find('#kode_kegiatan').val(kode_kegiatan);
+        // $('#modal-realisasi-keuangan').find('#kode_program').val(kode_program);
+        // $('#modal-realisasi-keuangan').find('#pagu').val(pagu==''? 0: pagu);
+
+
+        $.ajax(
+        {
+            url     : baseUrl('realisasi/get_realisasi_keuangan_tambahan/'),
+            dataType: 'JSON',
+            type    : 'POST',
+            data    : { 
+                kategori : kategori,
+                pagu : pagu,
+                kode_rekening_sub_kegiatan : kode_rekening_sub_kegiatan,
+                kode_kegiatan : kode_kegiatan,
+                kode_program : kode_program,
+                kode_bidang_urusan : kode_bidang_urusan,
+                jenis : jenis,
+                tahap : tahap,
+                tahun : tahun,
+                pergeseran_ke : pergeseran_ke,
+                id_tambahan_anggaran : id_tambahan_anggaran,
+            },
+            success : function(data)
+            {
+                console.log(data);
+                var caption_pergeseran = pergeseran_ke == '' ? '' : '<br>Pergeseran ke-'+pergeseran_ke;
+
+                $('#modal-realisasi-keuangan').find('#pagu_tambahan').val(pagu==''? 0: pagu);
+                var pagu_apbd = $('#modal-realisasi-keuangan').find('#pagu_apbd').val();
+                var pagu_tambahan   = pagu;
+                var pagu_total = parseInt(pagu_apbd) + parseInt(pagu_tambahan);
+                var caption_pagu = "APBD : "+ convert_to_rupiah(pagu_apbd)+ "<br>TKD : "+ convert_to_rupiah(pagu_tambahan) + "<br>Total : "+ convert_to_rupiah(pagu_total) ;
+                $('#modal-realisasi-keuangan').find('#pagu_sub_kegiatan').html(caption_pagu);
+                // $('#modal-realisasi-keuangan').find('#exampleModalLabel').html("Setting Target APBD");
+                // $('#modal-realisasi-keuangan').find('#nama_sub_kegiatan').html(data.nama_sub_kegiatan);
+                // $('#modal-realisasi-keuangan').find('#nama_tahapan').html(data.nama_tahapan + caption_pergeseran);
+
+
+                
+                
+                    $('.data-realisasi-keuangan').html('');
+                    if (data.status == true) {
+
+                        
+                        $('#info_target').hide();
+                        $('#table-realisasi-keuangan-tambahan').show();
+                        var total_realisasi = 0;
+                        $.each(data.data, function(k, v) {
+                            var bulan_realisasi = k+1;
+                            if (jenis=='bo') {
+
+                                let bo_bp;
+                                let bo_bbj;
+                                let bo_bs;
+                                let bo_bh;
+                                var total = parseInt(v.bo_bp) + parseInt(v.bo_bbj) + parseInt(v.bo_bs) + parseInt(v.bo_bh);
+
+                                   if (izin_input==0) {
+                                    bo_bp = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bo_bp)}</button>`;
+                                    bo_bbj = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bo_bbj)}</button>`;
+                                    bo_bs = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bo_bs)}</button>`;
+                                    bo_bh = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bo_bh)}</button>`;
+                                }
+                                else if (izin_input==2) {
+
+
+
+                                bo_bp = `<button class="tombol"  id="r-bo_bp" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bo_bp)}</button>`;
+                                bo_bbj = `<button class="tombol"  id="r-bo_bbj" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bo_bbj)}</button>`;
+                                bo_bs = `<button class="tombol"  id="r-bo_bs" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bo_bs)}</button>`;
+                                bo_bh = `<button class="tombol"  id="r-bo_bh" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bo_bh)}</button>`;
+                                }else{
+                                    // if (bulan_realisasi == bulan_realisasi_config) {
+                                        bo_bp = `<button class="tombol"  id="r-bo_bp" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bo_bp)}</button>`;
+                                        bo_bbj = `<button class="tombol"  id="r-bo_bbj" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bo_bbj)}</button>`;
+                                        bo_bs = `<button class="tombol"  id="r-bo_bs" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bo_bs)}</button>`;
+                                        bo_bh = `<button class="tombol"  id="r-bo_bh" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bo_bh)}</button>`;
+                                    // }else{
+                                    //     bo_bp = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bo_bp)}</button>`;
+                                    //     bo_bbj = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bo_bbj)}</button>`;
+                                    //     bo_bs = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bo_bs)}</button>`;
+                                    //     bo_bh = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bo_bh)}</button>`;
+                                    // }
+                                }
+
+                                var show_bo_bp = v.pagu_bo_bp > 0 ? bo_bp : convert_to_rupiah(v.bo_bp);
+                                var show_bo_bbj = v.pagu_bo_bbj > 0 ? bo_bbj : convert_to_rupiah(v.bo_bbj);
+                                var show_bo_bs = v.pagu_bo_bs > 0 ? bo_bs : convert_to_rupiah(v.bo_bs);
+                                var show_bo_bh = v.pagu_bo_bh > 0 ? bo_bh : convert_to_rupiah(v.bo_bh);
+                                var realisasi = '<td>' + show_bo_bp + '</td>' + 
+                                                '<td>' + show_bo_bbj + '</td>' + 
+                                                '<td>' + show_bo_bs + '</td>' + 
+                                                '<td>' + show_bo_bh + '</td>' +
+                                                '<td>' + convert_to_rupiah(total) + '</td>' 
+                                                ;
+                            }
+                            else if (jenis=='bm') {
+                                let bm_bmt;
+                                let bm_bmpm;
+                                let bm_bmgb;
+                                let bm_bmjji;
+                                let bm_bmatl;
+                                var total = parseInt(v.bm_bmt) + parseInt(v.bm_bmpm) + parseInt(v.bm_bmgb) + parseInt(v.bm_bmjji) + parseInt(v.bm_bmatl);
+                                if (izin_input==0) {
+                                    bm_bmt = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bm_bmt)}</button>`;
+                                    bm_bmpm = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bm_bmpm)}</button>`;
+                                    bm_bmgb = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bm_bmgb)}</button>`;
+                                    bm_bmjji = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bm_bmjji)}</button>`;
+                                    bm_bmatl = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bm_bmatl)}</button>`;
+                                }
+                                else if (izin_input==2) {
+
+
+                                bm_bmt = `<button class="tombol"  id="r-bm_bmt" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bm_bmt)}</button>`;
+                                bm_bmpm = `<button class="tombol"  id="r-bm_bmpm" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bm_bmpm)}</button>`;
+                                bm_bmgb = `<button class="tombol"  id="r-bm_bmgb" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bm_bmgb)}</button>`;
+                                bm_bmjji = `<button class="tombol"  id="r-bm_bmjji" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bm_bmjji)}</button>`;
+                                bm_bmatl = `<button class="tombol"  id="r-bm_bmatl" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bm_bmatl)}</button>`;
+                                }else{
+                                    // if (bulan_realisasi == bulan_realisasi_config) {
+                                        bm_bmt = `<button class="tombol"  id="r-bm_bmt" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bm_bmt)}</button>`;
+                                        bm_bmpm = `<button class="tombol"  id="r-bm_bmpm" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bm_bmpm)}</button>`;
+                                        bm_bmgb = `<button class="tombol"  id="r-bm_bmgb" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bm_bmgb)}</button>`;
+                                        bm_bmjji = `<button class="tombol"  id="r-bm_bmjji" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bm_bmjji)}</button>`;
+                                        bm_bmatl = `<button class="tombol"  id="r-bm_bmatl" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bm_bmatl)}</button>`;
+                                    // }else{
+                                    //     bm_bmt = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bm_bmt)}</button>`;
+                                    //     bm_bmpm = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bm_bmpm)}</button>`;
+                                    //     bm_bmgb = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bm_bmgb)}</button>`;
+                                    //     bm_bmjji = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bm_bmjji)}</button>`;
+                                    //     bm_bmatl = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bm_bmatl)}</button>`;
+                                    // }
+                                }
+
+                                var show_bm_bmt = v.pagu_bm_bmt > 0 ? bm_bmt : convert_to_rupiah(v.bm_bmt) 
+                                var show_bm_bmpm = v.pagu_bm_bmpm > 0 ? bm_bmpm : convert_to_rupiah(v.bm_bmpm) 
+                                var show_bm_bmgb = v.pagu_bm_bmgb > 0 ? bm_bmgb : convert_to_rupiah(v.bm_bmgb) 
+                                var show_bm_bmjji = v.pagu_bm_bmjji > 0 ? bm_bmjji : convert_to_rupiah(v.bm_bmjji) 
+                                var show_bm_bmatl = v.pagu_bm_bmatl > 0 ? bm_bmatl : convert_to_rupiah(v.bm_bmatl) 
+                                 var realisasi = '<td align="right">' + show_bm_bmt + '</td>' + 
+                                                '<td align="right">' + show_bm_bmpm + '</td>' + 
+                                                '<td align="right">' + show_bm_bmgb + '</td>' + 
+                                                '<td align="right">' + show_bm_bmjji + '</td>' + 
+                                                '<td align="right">' + show_bm_bmatl + '</td>' +
+                                                '<td align="right">' + convert_to_rupiah(total) + '</td>' ;
+                            }
+                            else if (jenis=='btt') {
+                                 let btt;
+                                var total = parseInt(v.btt);
+                                if (izin_input==0) {
+                                    btt = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.btt)}</button>`;
+                                  
+                                }
+                                else if (izin_input==2) {
+                                 btt = `<button class="tombol"  id="r-btt" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.btt)}</button>`;
+                                 }else{
+                                    // if (bulan_realisasi == bulan_realisasi_config) {
+                                       btt = `<button class="tombol"  id="r-btt" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.btt)}</button>`;
+                                    // }else{
+                                    //    btt = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.btt)}</button>`;
+                                    // }
+                                }
+
+
+                                 var show_btt = v.pagu_btt > 0 ? btt : convert_to_rupiah(v.btt);
+                                 var realisasi = '<td>' + show_btt + '</td>' + 
+                                  '<td>' + convert_to_rupiah(total) + '</td>';
+                            }
+                            else if (jenis=='bt') {
+                                let bt_bbh;
+                                let bt_bbk;
+                                var total = parseInt(v.bt_bbh) + parseInt(v.bt_bbk) ;
+                                if (izin_input==0) {
+                                    bt_bbh = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bt_bbh)}</button>`;
+                                    bt_bbk = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bt_bbk)}</button>`;
+                                  
+                                }
+                                else if (izin_input==2) {
+                                 bt_bbh = `<button class="tombol"  id="r-bt_bbh" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bt_bbh)}</button>`;
+                                 bt_bbk = `<button class="tombol"  id="r-bt_bbk" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bt_bbk)}</button>`;
+                                }else{
+                                    // if (bulan_realisasi == bulan_realisasi_config) {
+                                       bt_bbh = `<button class="tombol"  id="r-bt_bbh" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bt_bbh)}</button>`;
+                                 bt_bbk = `<button class="tombol"  id="r-bt_bbk" jenis="${jenis}"  id_tambahan_anggaran="${id_tambahan_anggaran}" kategori="${kategori}" kode_rekening_sub_kegiatan="${kode_rekening_sub_kegiatan}" kode_kegiatan="${kode_kegiatan}" kode_program="${kode_program}" kode_bidang_urusan="${kode_bidang_urusan}" pagu="${pagu}" pk="${v.id_realisasi}" class="edit tombol" data-type="text" pergeseran_ke="${pergeseran_ke}" onclick="edit_realisasi_keuangan_tambahan(this, ${v.bulan}, ${tahap}, ${tahun})"> ${convert_to_rupiah(v.bt_bbk)}</button>`;
+                                    // }else{
+                                    //     bt_bbh = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bt_bbh)}</button>`;
+                                    //     bt_bbk = `<button class="tombol"  onclick="input_rfk_berakhir()" style="color:red"> ${convert_to_rupiah(v.bt_bbk)}</button>`;
+                                    // }
+                                }
+                                 var show_bt_bbh = v.pagu_bt_bbh >0 ? bt_bbh : convert_to_rupiah(v.bt_bbh);    
+                                 var show_bt_bbk = v.pagu_bt_bbk >0 ? bt_bbk : convert_to_rupiah(v.bt_bbk);    
+                                 var realisasi = '<td>' +show_bt_bbh + '</td>' + 
+                                                '<td>' +show_bt_bbk + '</td>' +
+                                                '<td>' + convert_to_rupiah(total) + '</td>' ;
+                            }
+
+                             var onclick_cek_realisasi_bulanan = `
+                             cek_realisasi_k_sub_kegiatan('`+kode_rekening_sub_kegiatan+`','`+kode_kegiatan+`', '`+kode_program+`','<?php echo tahapan_apbd() ?>','`+kode_bidang_urusan+`','`+data.nama_sub_kegiatan+`','`+v.bulan+`','`+v.id_realisasi+`','`+pagu+`','`+jenis+`','`+kategori+`','`+tahun+`')`;
+                             tombol_hapus = '<br><a href="'+baseUrl('realisasi/cek_rk?krsk=')+ kode_rekening_sub_kegiatan + '&tahun='+ tahun + '&kode_tahap=' + tahap + '" class="btn btn-outline-danger btn-xs"  title="Hapus realisasi keuangan sub kegiatan '+data.nama_sub_kegiatan+' pada bulan '+bulan(v.bulan)+'" target="_blank" >Terinput Ganda</a> ';
+                            var hapus_realisasi = v.warna=='' ? '' : tombol_hapus ;
+
+
+                            total_realisasi +=total
+                            $('.data-realisasi-keuangan').append(
+                                '<tr ' +v.warna+'>' +
+                                '<td>' + (k + 1) + '</td>' +
+                                '<td>' + bulan(v.bulan) + hapus_realisasi+ '</td>' +
+                                realisasi + 
+                        
+                                // '<td><button  id="target-fisik" kode_sub_kegiatan="' + kode_rekening_sub_kegiatan + '" kode_bidang_urusan="' + kode_bidang_urusan + '" kode_program="' + kode_program + '" kode_kegiatan="' + kode_kegiatan + '" pagu="' + pagu + '"  tahap="' + tahap + '" pk="' + v.id + '" class="edit tombol" data-type="text" onclick="edit_target_fisik(this)">' + v.t_fisik + '</button></td>' +
+                                // '<td>' + ((v.t_keuangan / pagu) * 100).toFixed(2) + '</td>' +
+                                // '<td style="text-align: right;">' + '<button  id="target-fisik" kode_sub_kegiatan="' + kode_rekening_sub_kegiatan + '" kode_bidang_urusan="' + kode_bidang_urusan + '" kode_program="' + kode_program + '" kode_kegiatan="' + kode_kegiatan + '" pagu="' + pagu + '"  tahap="' + tahap + '" pk="' + v.id + '" class="edit tombol" data-type="text" onclick="edit_target_keuangan(this)">' + convert_to_rupiah(v.t_keuangan) + '</button>'  + '</td>' +
+                                '</tr>'
+                            );
+                        });
+                    $('.total_realisasi').html('<td class="label_total_realisasi" colspan="'+colspan_total +'">Total Realisasi</td>' +
+                                    '<td id="nilai_total_realisasi">'+ convert_to_rupiah(total_realisasi)+'</td>');
+                    }else{
+                        $('#table-realisasi-keuangan-tambahan').hide();
+                        $('#info_target').show();
+                        $('#info_target').html('<div class="alert alert-info">Belum ada  target APBD untuk Sub Kegiatan ini<br>Silahkan setting target dulu sebelum menginput realisasi</div>');
+                    }
+            }, 
+            error : function(){
+                alert('error')
+            }
+        });
+
+
+    }
+
+
+
+
+
+
+
+
+
     function edit_realisasi_keuangan(x, bulan, tahap, tahun) {
         $.fn.editableform.buttons = '<button type="submit" class="btn btn-primary btn-sm editable-submit">OK</button>' +
             '<button type="button" class="btn btn-default btn-sm editable-cancel">Batal</button>';
@@ -361,6 +667,34 @@ function input_realisasi(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_
             url: baseUrl('realisasi/update_realisasi_keuangan/' + kode_rekening_sub_kegiatan + '/' + bulan + '/' + pagu + '/' + tahap + '/' + tahun),
             success: function(c) {
                 input_realisasi(jenis,kode_rekening_sub_kegiatan,kode_kegiatan,kode_program,kode_bidang_urusan,pagu, kategori, tahap, tahun, pergeseran_ke);
+                $('#table-sub-kegiatan-instansi-gabungan').DataTable().ajax.reload(null, false);
+            },
+        });
+    }
+
+
+
+    function edit_realisasi_keuangan_tambahan(x, bulan, tahap, tahun) {
+        $.fn.editableform.buttons = '<button type="submit" class="btn btn-primary btn-sm editable-submit">OK</button>' +
+            '<button type="button" class="btn btn-default btn-sm editable-cancel">Batal</button>';
+
+        let id = $(x).attr('pk');
+        let jenis= $(x).attr('jenis');
+        let id_tambahan_anggaran= $(x).attr('id_tambahan_anggaran');
+        let kategori= $(x).attr('kategori');
+        let kode_rekening_sub_kegiatan= $(x).attr('kode_rekening_sub_kegiatan');
+        let kode_kegiatan= $(x).attr('kode_kegiatan');
+        let kode_program= $(x).attr('kode_program');
+        let kode_bidang_urusan= $(x).attr('kode_bidang_urusan');
+        let pagu= $(x).attr('pagu');
+        let pergeseran_ke= $(x).attr('pergeseran_ke');
+        $(x).editable({
+            mode: 'inline',
+            pk: id,
+            savenochange: true,
+            url: baseUrl('realisasi/update_realisasi_keuangan_tambahan/' + kode_rekening_sub_kegiatan + '/' + bulan + '/' + pagu + '/' + tahap + '/' + tahun + '/' + id_tambahan_anggaran),
+            success: function(c) {
+                input_realisasi(jenis,kode_rekening_sub_kegiatan,kode_kegiatan,kode_program,kode_bidang_urusan,pagu, kategori, tahap, tahun, pergeseran_ke, id_tambahan_anggaran);
                 $('#table-sub-kegiatan-instansi-gabungan').DataTable().ajax.reload(null, false);
             },
         });
@@ -492,54 +826,54 @@ function get_realisasi(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, 
         get_realisasi_keuangan(kode_rekening_kegiatan, pagu);
     });
 
-    function get_realisasi_keuangan(kode_rekening_kegiatan) {
-        $.ajax({
-            url: baseUrl('realisasi/get_realisasi_keuangan/'),
-            type: "POST",
-            dataType: "JSON",
-            data: {
-                kode_rekening_kegiatan: kode_rekening_kegiatan
-            },
-            success: function(data) {
-                if (data.status == true) {
-                    $('#data-realisasi-keuangan').html('');
-                    $.each(data.data, function(k, v) {
-                        let bp;
-                        let bb;
-                        let bm;
+    // function get_realisasi_keuangan(kode_rekening_kegiatan) {
+    //     $.ajax({
+    //         url: baseUrl('realisasi/get_realisasi_keuangan/'),
+    //         type: "POST",
+    //         dataType: "JSON",
+    //         data: {
+    //             kode_rekening_kegiatan: kode_rekening_kegiatan
+    //         },
+    //         success: function(data) {
+    //             if (data.status == true) {
+    //                 $('#data-realisasi-keuangan').html('');
+    //                 $.each(data.data, function(k, v) {
+    //                     let bp;
+    //                     let bb;
+    //                     let bm;
 
-                        // if (data.opd == 'Bagian') {
-                            bp = `<a href="#" id="r-bp" rekening="${kode_rekening_kegiatan}" pk="${v.id}" class="edit" data-type="text" onclick="edit_realisasi_keuangan(this)"> ${convert_to_rupiah(v.belanja_pegawai)}</a>`;
-                            bb = `<a href="#" id="r-bb" rekening="${kode_rekening_kegiatan}" pk="${v.id}" class="edit" data-type="text" onclick="edit_realisasi_keuangan(this)"> ${convert_to_rupiah(v.belanja_barang_jasa)}</a>`;
-                            bm = `<a href="#" id="r-bm" rekening="${kode_rekening_kegiatan}" pk="${v.id}" class="edit" data-type="text" onclick="edit_realisasi_keuangan(this)"> ${convert_to_rupiah(v.belanja_modal)}</a>`;
-                        // } else {
-                        //     bp = convert_to_rupiah(v.belanja_pegawai);
-                        //     bb = convert_to_rupiah(v.belanja_barang_jasa);
-                        //     bm = convert_to_rupiah(v.belanja_modal);
-                        // }
-                        $('#data-realisasi-keuangan').append(
-                            `<tr>
-                                <td>${k+1}</td>
-                                <td>${bulan(v.bulan)}</td>
-                                <td align="right">
-                                    ${bp}
-                                </td>
-                                <td align="right">
-                                    ${bb}
-                                </td>
-                                <td align="right">
-                                    ${bm}
-                                </td>
-                                <td align="right">
-                                    ${convert_to_rupiah(v.total)}
-                                </td>
-                            </tr>`
-                        );
-                    });
-                }
-            }
-        });
-    }
+    //                     // if (data.opd == 'Bagian') {
+    //                         bp = `<a href="#" id="r-bp" rekening="${kode_rekening_kegiatan}" pk="${v.id}" class="edit" data-type="text" onclick="edit_realisasi_keuangan(this)"> ${convert_to_rupiah(v.belanja_pegawai)}</a>`;
+    //                         bb = `<a href="#" id="r-bb" rekening="${kode_rekening_kegiatan}" pk="${v.id}" class="edit" data-type="text" onclick="edit_realisasi_keuangan(this)"> ${convert_to_rupiah(v.belanja_barang_jasa)}</a>`;
+    //                         bm = `<a href="#" id="r-bm" rekening="${kode_rekening_kegiatan}" pk="${v.id}" class="edit" data-type="text" onclick="edit_realisasi_keuangan(this)"> ${convert_to_rupiah(v.belanja_modal)}</a>`;
+    //                     // } else {
+    //                     //     bp = convert_to_rupiah(v.belanja_pegawai);
+    //                     //     bb = convert_to_rupiah(v.belanja_barang_jasa);
+    //                     //     bm = convert_to_rupiah(v.belanja_modal);
+    //                     // }
+    //                     $('#data-realisasi-keuangan').append(
+    //                         `<tr>
+    //                             <td>${k+1}</td>
+    //                             <td>${bulan(v.bulan)}</td>
+    //                             <td align="right">
+    //                                 ${bp}
+    //                             </td>
+    //                             <td align="right">
+    //                                 ${bb}
+    //                             </td>
+    //                             <td align="right">
+    //                                 ${bm}
+    //                             </td>
+    //                             <td align="right">
+    //                                 ${convert_to_rupiah(v.total)}
+    //                             </td>
+    //                         </tr>`
+    //                     );
+    //                 });
+    //             }
+    //         }
+    //     });
+    // }
 
     function convert_to_rupiah(angka) {
         var rupiah = '';

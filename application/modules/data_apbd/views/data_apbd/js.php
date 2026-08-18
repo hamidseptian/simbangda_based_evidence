@@ -332,13 +332,11 @@
             },
             success : function(data)
             {
-            	console.log(data);
             	$('#modal_input_anggaran').find('.kategori').html(data.data.kategori);
             	$('#modal_input_anggaran').find('.nama_sub_kegiatan').html(data.data.nama_sub_kegiatan);
             	$('#modal_input_anggaran').find('.kode_sub_kegiatan').html(kode_rekening_sub_kegiatan);
 
             	$('#modal_input_anggaran').find('.tahapan_apbd').html(data.data.tahapan);
-            	$('#modal_input_anggaran').find('.pagu_tahapan_apbd').html(convert_to_rupiah(data.data.pagu_aktif));
 
 
             	$('#modal_input_anggaran').find('#kode_kegiatan').val(data.data.kode_kegiatan);
@@ -361,6 +359,114 @@
                 	$('#btt').val(data.data.btt);
                 	$('#bt_bbh').val(data.data.bt_bbh);
                 	$('#bt_bbk').val(data.data.bt_bbk);
+
+                		$('.col_md_apbd').attr('class','col-md-12 col_md_apbd');
+                		$('.col_md_tambahan').hide();
+                		$('.bersumber_apbd').hide();
+	            		$('#btn_batal_input_tambahan').hide();
+
+                	if (data.data.tambahan_anggaran=='1') {
+	            		$('#btn_input_tambahan').html("Input anggaran Bersumber dari "+data.data.nama_tambahan_anggaran);
+	            		if (data.data.pagu_total>0) {
+			            	$('#modal_input_anggaran').find('.pagu_tahapan_apbd').html("APBD : "+convert_to_rupiah(data.data.pagu_aktif)+ "<br>"+data.data.nama_tambahan_anggaran+" : "+convert_to_rupiah(data.data.pagu_tambahan)+ "<br>Total : "+convert_to_rupiah(data.data.pagu_total));
+
+	            		}else{
+			            	$('#modal_input_anggaran').find('.pagu_tahapan_apbd').html("APBD :0<br>"+data.data.nama_tambahan_anggaran+" : 0<br>Total : 0 ");
+
+	            		}
+	            		$('#btn_input_tambahan').show();
+	            		$('#btn_batal_input_tambahan').hide();
+
+	            		if (data.data.tambahan.found>0) {
+
+		            			$('#btn_batal_input_tambahan').show();
+			            		$('#btn_input_tambahan').hide();
+
+		                		$('.col_md_apbd').attr('class','col-md-6 col_md_apbd');
+		                		$('.col_md_tambahan').show();
+		                		$('.nama_anggaran_tambahan').html("Bersumber dari "+data.data.nama_tambahan_anggaran);
+		                		$('.bersumber_apbd').show();
+
+
+
+
+							$('#input_penambahan_anggaran').val(1);
+							$('#id_tambahan_anggaran').val(data.data.id_tambahan_anggaran);
+							$('#bo_bp_tambahan').val(data.data.tambahan.bo_bp);
+							$('#bo_bbj_tambahan').val(data.data.tambahan.bo_bbj);
+							$('#bo_bs_tambahan').val(data.data.tambahan.bo_bs);
+							$('#bo_bh_tambahan').val(data.data.tambahan.bo_bh);
+							$('#bm_bmt_tambahan').val(data.data.tambahan.bm_bmt);
+							$('#bm_bmpm_tambahan').val(data.data.tambahan.bm_bmpm);
+							$('#bm_bmgb_tambahan').val(data.data.tambahan.bm_bmgb);
+							$('#bm_bmjji_tambahan').val(data.data.tambahan.bm_bmjji);
+							$('#bm_bmatl_tambahan').val(data.data.tambahan.bm_bmatl);
+							$('#btt_tambahan').val(data.data.tambahan.btt);
+							$('#bt_bbh_tambahan').val(data.data.tambahan.bt_bbh);
+							$('#bt_bbk_tambahan').val(data.data.tambahan.bt_bbk);
+
+
+
+		            		// alert(1);
+	            		}else{
+		            		// alert(0);
+
+							$('#input_penambahan_anggaran').val(0);
+
+							$('#id_tambahan_anggaran').val('');
+	            			$('#btn_batal_input_tambahan').hide();
+		            		$('#btn_input_tambahan').show();
+	                		$('.col_md_tambahan').hide();
+	                		$('.col_md_apbd').attr('class','col-md-12 col_md_apbd');
+	                		$('.nama_anggaran_tambahan').html("Bersumber dari "+data.data.nama_tambahan_anggaran);
+	                		$('.bersumber_apbd').hide();
+			            	$('#modal_input_anggaran').find('.pagu_tahapan_apbd').html(convert_to_rupiah(data.data.pagu_aktif));
+	            		}
+	            	}else{
+		            	
+		            	$('#modal_input_anggaran').find('.pagu_tahapan_apbd').html(convert_to_rupiah(data.data.pagu_aktif));
+	            		$('#btn_input_tambahan').hide();
+	            		$('#btn_batal_input_tambahan').hide();
+
+	            	}
+
+
+                	$('#btn_input_tambahan').click(function(){
+
+						$('#input_penambahan_anggaran').val(1);
+						$('#id_tambahan_anggaran').val(data.data.id_tambahan_anggaran);
+						
+	            		$('#btn_batal_input_tambahan').show();
+	            		$('#btn_input_tambahan').hide();
+
+                		$('.col_md_apbd').attr('class','col-md-6 col_md_apbd');
+                		$('.col_md_tambahan').show();
+                		$('.nama_anggaran_tambahan').html("Bersumber dari "+data.data.nama_tambahan_anggaran);
+                		$('.bersumber_apbd').show();
+                	// }else{
+                	// 	$('.col_md_tambahan').hide();
+                	// 	$('.bersumber_apbd').hide();
+
+                	// }
+                	});
+                	$('#btn_batal_input_tambahan').click(function(){
+
+							$('#input_penambahan_anggaran').val(0);
+
+							$('#id_tambahan_anggaran').val('');
+	            		$('#btn_batal_input_tambahan').hide();
+	            		$('#btn_input_tambahan').show();
+                		$('.col_md_tambahan').hide();
+	            		
+                		$('.col_md_apbd').attr('class','col-md-12 col_md_apbd');
+                		$('.nama_anggaran_tambahan').html("Bersumber dari "+data.data.nama_tambahan_anggaran);
+                		$('.bersumber_apbd').hide();
+                	// }else{
+                	// 	$('.col_md_tambahan').hide();
+                	// 	$('.bersumber_apbd').hide();
+
+                	// }
+                	});
                 }
                 
                 	data.data.rea_bo ==1 ? $('#rea_bo').attr('checked','checked') : $('#rea_bo').removeAttr('checked');
@@ -1192,15 +1298,32 @@ function bulan(x) {
 	}
 
 
-function get_target(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu)
+function get_target(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran)
 	{	
 		var show_pagu = pagu==''? 0: pagu;
+		var nama_anggaran_tambahan = "TKD";
 		$('#modal-target').modal('show');
 		$('.form-control').removeClass('is-valid')
 						  .removeClass('is-invalid');
 	 
         $('.text-danger').remove();
         
+
+
+        if (id_tambahan_anggaran=='') {
+            $('#modal-target').find('.f_input_tk_tambahan').hide();
+
+        }else{
+            $('#modal-target').find('.f_input_tk_tambahan').find('#nama_tambahan_anggaran').html('<h5>Target '+ nama_anggaran_tambahan + '</h5>');
+            $('#modal-target').find('.f_input_tk_tambahan').show();
+             get_target_tambahan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran)
+            // input_realisasi_tambahan(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, pagu_tambahan, kategori, tahap, tahun, pergeseran_ke, id_tambahan_anggaran);
+
+        }
+     
+
+
+
 		
 
 		$('#modal-target').find('#kode_sub_kegiatan').val(kode_rekening_sub_kegiatan);
@@ -1294,6 +1417,149 @@ function get_target(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tah
 
 
 	}
+
+
+
+
+
+
+
+function copy_target_ke_tambahan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran)
+	{	
+		
+		$.ajax(
+        {
+            url     : baseUrl('data_apbd/copy_target_ke_tambahan/'),
+            dataType: 'JSON',
+            type    : 'POST',
+            data    : { 
+            	kode_rekening_sub_kegiatan : kode_rekening_sub_kegiatan,
+            	kode_kegiatan : kode_kegiatan,
+            	kode_program : kode_program,
+            	kode_bidang_urusan : kode_bidang_urusan,
+            	id_tambahan_anggaran : id_tambahan_anggaran,
+            	tahap : tahap,
+            	tahun : tahun,
+            },
+            success : function(data)
+            {	
+            	get_target(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu,id_tambahan_anggaran);
+		    	
+	        }
+        });
+
+
+	}
+
+
+
+
+
+
+
+function get_target_tambahan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran)
+	{	
+		var show_pagu = pagu==''? 0: pagu;
+		var nama_anggaran_tambahan = "TKD";
+		$('#modal-target').modal('show');
+		$('.form-control').removeClass('is-valid')
+						  .removeClass('is-invalid');
+	 
+        $('.text-danger').remove();
+        
+
+
+      
+    	$('#modal-target').find('#pagu').val(show_pagu);
+
+	
+		$.ajax(
+        {
+            url     : baseUrl('data_apbd/get_target_tambahan/'),
+            dataType: 'JSON',
+            type    : 'POST',
+            data    : { 
+            	kode_rekening_sub_kegiatan : kode_rekening_sub_kegiatan,
+            	kode_kegiatan : kode_kegiatan,
+            	kode_program : kode_program,
+            	kode_bidang_urusan : kode_bidang_urusan,
+            	tahap : tahap,
+            	tahun : tahun,
+            	id_tambahan_anggaran : id_tambahan_anggaran,
+            },
+            success : function(data)
+            {
+            	console.log(data.totaldata);
+            	if (data.totaldata == 0) {
+            		var html_kosong  =`
+                            <div class="alert alert-info">
+                                Target TKD Belum Ada <br>
+					 
+                                <button type="button" class="btn btn-info" onclick="copy_target_ke_tambahan('`+kode_rekening_sub_kegiatan+`', '`+kode_kegiatan+`', '`+kode_program+`', '`+tahap+`', '`+tahun+`', '`+kode_bidang_urusan+`', '`+pagu+`', '`+id_tambahan_anggaran+`')">Input Target TKD</button>
+                            </div>`;
+					$('#modal-target').find('.alert_input_tk_tambahan').html(html_kosong);
+					$('#modal-target').find('.f_input_tk_tambahan').hide();
+
+            		// get_target(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu);
+            	}else{
+					$('#modal-target').find('.alert_input_tk_tambahan').html('');
+					$('#modal-target').find('.f_input_tk_tambahan').show();
+            	
+					$('#modal-target').find('#target-apbd-tambahan').html('');
+	                if (data.status == true) {
+						$.each(data.data, function(k, v) {
+							if (data.kunci==0) {
+								$('#modal-target').find('#target-apbd-tambahan').append(
+									'<tr>' +
+									'<td style="text-align: right;">' + (k + 1) + '</td>' +
+									'<td style="text-align: right;">' + bulan(v.bulan) + '</td>' +
+									'<td style="text-align: right;"><a href="javascript:void(0)"  class="text-danger" onclick="'+data.alert_kunci+'">' + v.t_fisik_bulanan + '</a></td>' +
+
+									'<td style="text-align: right;">' + v.t_fisik + '</td>' +
+									'<td style="text-align: right;">' + ((v.t_keuangan_bulanan / pagu) * 100).toFixed(2) + '</td>' +
+									'<td style="text-align: right;">' + ((v.t_keuangan / pagu) * 100).toFixed(2) + '</td>' +
+									'<td style="text-align: right;">' + '<a href="javascript:void(0)"  class="text-danger" onclick="'+data.alert_kunci+'">' + convert_to_rupiah(v.t_keuangan_bulanan) + '</a>'  + '</td>' +
+									'<td>' + convert_to_rupiah(v.t_keuangan) + '</td>' +
+									'<td>' + v.input_by + '</td>' +
+									'</tr>'
+								);
+
+							}else{
+								if (show_pagu==0) {
+									a_href_tk =  '<a href="javascript:void(0)" onclick="Swal.fire('+ "'Tidak Diizinkan','Mohon maaf, anda tidak bisa  mengubah target keuangan karena tidak ada pagu','error'" +')" class="text-danger">' + convert_to_rupiah(v.t_keuangan_bulanan) + '</a>';
+
+									td_persen_keu = '<td style="text-align: right;">0</td><td style="text-align: right;">0</td>' ;
+								}else{
+									a_href_tk =  '<a href="javascript:void(0)" id="target-fisik" kode_sub_kegiatan="' + kode_rekening_sub_kegiatan + '" kode_bidang_urusan="' + kode_bidang_urusan + '" kode_program="' + kode_program + '" kode_kegiatan="' + kode_kegiatan + '" pagu="' + pagu + '" id_tambahan_anggaran="' + id_tambahan_anggaran + '"  tahap="' + tahap + '", tahun="' + tahun + '" pk="' + v.id + '" class="edit" data-type="text" onclick="edit_target_keuangan_tambahan(this)">' + convert_to_rupiah(v.t_keuangan_bulanan) + '</a>';
+
+									td_persen_keu = '<td style="text-align: right;">' + ((v.t_keuangan_bulanan / pagu) * 100).toFixed(2) + '</td>' +
+									'<td style="text-align: right;">' + ((v.t_keuangan / pagu) * 100).toFixed(2) + '</td>' ;
+								}
+								$('#target-apbd-tambahan').append(
+									'<tr>' +
+									'<td style="text-align: right;">' + (k + 1) + '</td>' +
+									'<td style="text-align: right;">' + bulan(v.bulan) + '</td>' +
+									'<td style="text-align: right;"><a href="javascript:void(0)" id="target-fisik" kode_sub_kegiatan="' + kode_rekening_sub_kegiatan + '" kode_bidang_urusan="' + kode_bidang_urusan + '" kode_program="' + kode_program + '" kode_kegiatan="' + kode_kegiatan + '" pagu="' + pagu + '" id_tambahan_anggaran="' + id_tambahan_anggaran + '"  tahap="' + tahap + '", tahun="' + tahun + '" pk="' + v.id + '" class="edit" data-type="text" onclick="edit_target_fisik_tambahan(this)">' + v.t_fisik_bulanan + '</a></td>' +
+
+									'<td style="text-align: right;">' + v.t_fisik + '</td>' +
+									td_persen_keu + 
+									'<td style="text-align: right;">' + a_href_tk + '</td>' +
+									'<td>' + convert_to_rupiah(v.t_keuangan) + '</td>' +
+									'<td>' + v.input_by + '</td>' +
+									'</tr>'
+								);
+							}
+						});
+					}
+	            }
+	        }
+        });
+
+
+	}
+
+
+
 
 
 function get_target_pergeseran(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, pergeseran_ke)
@@ -1740,6 +2006,30 @@ function edit_target_fisik(x) {
 			},
 		});
 	}
+function edit_target_fisik_tambahan(x) {
+		$.fn.editableform.buttons = '<button type="submit" class="btn btn-primary btn-xs editable-submit">OK</button>' +
+			'<button type="button" class="btn btn-default btn-xs editable-cancel">Batal</button>';
+
+		let id = $(x).attr('pk');
+		let kode_sub_kegiatan = $(x).attr('kode_sub_kegiatan');
+		let kode_bidang_urusan = $(x).attr('kode_bidang_urusan');
+		let kode_program = $(x).attr('kode_program');
+		let kode_kegiatan = $(x).attr('kode_kegiatan');
+		let pagu = $(x).attr('pagu');
+		let tahap = $(x).attr('tahap');
+		let tahun = $(x).attr('tahun');
+		let id_tambahan_anggaran = $(x).attr('id_tambahan_anggaran');
+		
+		$(x).editable({
+			mode: 'inline',
+			pk: id,
+			savenochange: true,
+			url: baseUrl('data_apbd/update_target_fisik_tambahan/' + kode_sub_kegiatan + '/' + tahap),
+			success: function(c) {
+				get_target(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran)
+			},
+		});
+	}
 function edit_target_fisik_pergeseran(x) {
 		$.fn.editableform.buttons = '<button type="submit" class="btn btn-primary btn-xs editable-submit">OK</button>' +
 			'<button type="button" class="btn btn-default btn-xs editable-cancel">Batal</button>';
@@ -1783,6 +2073,30 @@ function edit_target_keuangan(x) {
 			url: baseUrl('data_apbd/update_target_keuangan/' + kode_sub_kegiatan + '/' + tahap),
 			success: function(c) {
 				get_target(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu)
+			},
+		});
+	}
+
+function edit_target_keuangan_tambahan(x) {
+		$.fn.editableform.buttons = '<button type="submit" class="btn btn-primary btn-xs editable-submit">OK</button>' +
+			'<button type="button" class="btn btn-default btn-xs editable-cancel">Batal</button>';
+		let id = $(x).attr('pk');
+		let kode_sub_kegiatan = $(x).attr('kode_sub_kegiatan');
+		let kode_bidang_urusan = $(x).attr('kode_bidang_urusan');
+		let kode_program = $(x).attr('kode_program');
+		let kode_kegiatan = $(x).attr('kode_kegiatan');
+		let pagu = $(x).attr('pagu');
+		let tahap = $(x).attr('tahap');
+		let tahun = $(x).attr('tahun');
+		let id_tambahan_anggaran = $(x).attr('id_tambahan_anggaran');
+		
+		$(x).editable({
+			mode: 'inline',
+			pk: id,
+			savenochange: true,
+			url: baseUrl('data_apbd/update_target_keuangan_tambahan/' + kode_sub_kegiatan + '/' + tahap),
+			success: function(c) {
+				get_target(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran)
 			},
 		});
 	}

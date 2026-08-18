@@ -1107,6 +1107,37 @@ public function sync_eplanning()
 
 
 
+    
+    public function update_target_fisik_tambahan($kode_rekening_sub_kegiatan, $tahap)
+    {
+        $id_target_apbd_tambahan = sbe_crypt($this->input->post('pk'), 'D');
+        $target_fisik   = $this->input->post('value');
+        $tahun = tahun_anggaran();
+        $target         = $this->db->get_where('target_apbd_tambahan', ['id_target_apbd_tambahan' => $id_target_apbd_tambahan])->row_array();
+        $target_lalu    = $this->db->get_where('target_apbd_tambahan', ['kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'bulan' => $target['bulan'] - 1, 'kode_tahap' => $tahap,'tahun' => tahun_anggaran(), 'id_instansi'=>id_instansi()])->row_array();
+
+        if ($target['bulan'] == 1) {
+            $nilai = $target_fisik;
+        } elseif ($target['bulan'] > 1 && $target['bulan'] <= 12) {
+            $nilai = $target_fisik + $target_lalu['target_fisik'];
+        }
+
+        if ($nilai >= 100) {
+            for ($i = $target['bulan']; $i <= 12; $i++) {
+                if ($i==$target['bulan']) {
+                    $target_fisik_otomatis = 100 - $target_lalu['target_fisik'];
+                    $this->db->update('target_apbd_tambahan', ['target_fisik' => 100,'target_fisik_bulanan' => $target_fisik_otomatis,  'input_by' => 'Manual Input'], ['kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'bulan' => $i,  'id_instansi'=>id_instansi(),  'kode_tahap'=>$tahap,  'tahun'=>$tahun]);
+                }else{
+                    $this->db->update('target_apbd_tambahan', ['target_fisik' => 100, 'target_fisik_bulanan' => 0,  'input_by' => 'Manual Input'], ['kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'bulan' => $i,'id_instansi'=>id_instansi(),'kode_Tahap'=>$tahap,'tahun'=>$tahun]);
+                }
+            }
+        } else {
+            $this->db->update('target_apbd_tambahan', ['target_fisik' => $nilai,'target_fisik_bulanan' => $target_fisik,  'input_by' => 'Manual Input'], ['id_target_apbd_tambahan' => $id_target_apbd_tambahan]);
+        }
+    }
+
+
+
 
     
     // public function update_target_fisik($kode_rekening_sub_kegiatan, $tahap)
@@ -1244,6 +1275,55 @@ public function sync_eplanning()
         }
     }
 
+
+
+    public function update_target_keuangan_tambahan($kode_rekening_sub_kegiatan, $tahap)
+    {
+        $id_target_apbd_tambahan = sbe_crypt($this->input->post('pk'), 'D');
+        $t_keu   = $this->input->post('value');
+        $tahun = tahun_anggaran();
+        $target_keu      =str_replace(".", "", $t_keu);
+        $target         = $this->db->get_where('target_apbd_tambahan', ['id_target_apbd_tambahan' => $id_target_apbd_tambahan])->row_array();
+        $target_lalu    = $this->db->get_where('target_apbd_tambahan', ['kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'bulan' => $target['bulan'] - 1, 'kode_tahap' => $tahap ,'tahun' => tahun_anggaran(), 'id_instansi'=>id_instansi()])->row_array();
+
+        // qski = query sub kegiatan instansi
+        // $tahap = tahapan_apbd();
+        $tahun = tahun_anggaran();
+        $id_instansi = id_instansi();
+        $qski = $this->db->query("SELECT * from v_sub_kegiatan_apbd where kode_tahap='$tahap' and id_instansi='$id_instansi' and kode_rekening_sub_kegiatan='$kode_rekening_sub_kegiatan' and tahun='$tahun'")->row();
+        $pagu = $qski->pagu =="" ? 0 : $qski->pagu;
+        
+
+        if ($target['bulan'] == 1) {
+            $nilai = $target_keu;
+        } elseif ($target['bulan'] > 1 && $target['bulan'] <= 12) {
+            $nilai = $target_keu + $target_lalu['target_keuangan'];
+        }
+
+        
+        if ($nilai >= $pagu) {
+            for ($i = $target['bulan']; $i <= 12; $i++) {
+                 if ($i==$target['bulan']) {
+                    $target_keuangan_otomatis = $pagu - $target_lalu['target_keuangan'];
+                    $persen_keuangan = ($target_keuangan_otomatis / $pagu ) * 100 ; 
+                    $persen_keuangan_akumulasi = ($nilai / $pagu ) * 100 ; 
+                    $this->db->update('target_apbd_tambahan', ['target_keuangan' => $pagu,'target_keuangan_bulanan' => $target_keuangan_otomatis, 'persen_target_keuangan_bulanan' => $persen_keuangan, 'persen_target_keuangan' => 100, 'input_by' => 'Manual Input'], ['kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'bulan' => $i,  'id_instansi'=>id_instansi(),'kode_tahap'=>$tahap,'tahun'=>$tahun]);
+                }else{
+                    $persen_keuangan = ($target_keu / $pagu ) * 100 ; 
+                    $persen_keuangan_akumulasi = ($nilai / $pagu ) * 100 ; 
+                    $this->db->update('target_apbd_tambahan', ['target_keuangan' => $pagu, 'target_keuangan_bulanan' => 0, 'persen_target_keuangan_bulanan' => 0, 'persen_target_keuangan' => 100,  'input_by' => 'Manual Input'], ['kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'bulan' => $i,  'id_instansi'=>id_instansi(),'kode_tahap'=>$tahap,'tahun'=>$tahun]);
+                }
+
+            }
+        } else {
+            $persen_keuangan = ($target_keu / $pagu ) * 100 ; 
+            $persen_keuangan_akumulasi = ($nilai / $pagu ) * 100 ; 
+            $this->db->update('target_apbd_tambahan', ['target_keuangan' => $nilai,'persen_target_keuangan_bulanan' => $persen_keuangan,'persen_target_keuangan' => $persen_keuangan_akumulasi, 'target_keuangan_bulanan' => $target_keu, 'updated_on' => timestamp(),  'input_by' => 'Manual Input'], ['id_target_apbd_tambahan' => $id_target_apbd_tambahan ,'id_instansi'=>id_instansi()]);
+        }
+    }
+
+
+
     public function update_target_keuangan_pergeseran($kode_rekening_sub_kegiatan, $tahap, $pergeseran_ke)
     {
         $id_target_apbd = sbe_crypt($this->input->post('pk'), 'D');
@@ -1287,7 +1367,8 @@ public function sync_eplanning()
             $persen_keuangan_akumulasi = ($nilai / $pagu ) * 100 ; 
             $this->db->update('target_apbd', ['target_keuangan' => $nilai,'persen_target_keuangan_bulanan' => $persen_keuangan,'persen_target_keuangan' => $persen_keuangan_akumulasi, 'target_keuangan_bulanan' => $target_keu, 'updated_on' => timestamp(),  'input_by' => 'Manual Input'], ['id_target_apbd' => $id_target_apbd ,'id_instansi'=>id_instansi()]);
         }
-    }public function sub_kegiatan_apbd_instansi()
+    }
+public function sub_kegiatan_apbd_instansi()
 {
     if (!$this->input->is_ajax_request()) {
         show_404();
@@ -1368,7 +1449,15 @@ public function sync_eplanning()
         foreach ($list as $lists) {
             $krsk  = $lists->kode_rekening_sub_kegiatan;
             $tahap = $lists->kode_tahap;
-            $pagu  = $lists->pagu == '' ? 0 : $lists->pagu;
+            $tambahan_anggaran = $lists->id_tambahan_anggaran;
+            if($tambahan_anggaran=='' || $tambahan_anggaran==null){
+                $pagu  = $lists->pagu == '' ? 0 : $lists->pagu;
+                $warna_pagu = '';
+            }else{
+                $pagu  = ($lists->pagu == '' ? 0 : $lists->pagu) + ($lists->pagu_tambahan == '' ? 0 : $lists->pagu_tambahan);
+                $warna_pagu = 'color:blue';
+
+            }
 
             $pecah             = explode('.', $krsk);
             $kode_sub_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
@@ -1387,14 +1476,14 @@ public function sync_eplanning()
             // Tentukan caption tahapan dan onclick target
             if ($tahap_aktif == 4) {
                 $caption_tahapan = $caption_status[$lists->kode_tahap];
-                $onclick3 = "get_target('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."')";
+                $onclick3 = "get_target('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->id_tambahan_anggaran."')";
             } else {
                 if ($lists->pergeseran_ke == null || $lists->pergeseran_ke == '') {
                     $caption_tahapan = "APBD AWAL".$lists->pergeseran_ke;
-                    $onclick3 = "get_target('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."')";
+                    $onclick3 = "get_target('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->id_tambahan_anggaran."')";
                 } else {
                     $caption_tahapan = "APBD AWAL<br>Pergeseran ke-".$lists->pergeseran_ke;
-                    $onclick3 = "get_target_pergeseran('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->pergeseran_ke."')"; 
+                    $onclick3 = "get_target_pergeseran('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->pergeseran_ke."','".$lists->id_tambahan_anggaran."')"; 
                 }
             }
 
@@ -1423,7 +1512,7 @@ public function sync_eplanning()
             $row[] = $no;
             $row[] = $krsk;
             $row[] = $nama_sub_kegiatan;
-            $row[] = '<span style="float:right">'.number_format($pagu, 0, '', '.').'</span>';
+            $row[] = '<span style="float:right; '.$warna_pagu.'">'.number_format($pagu, 0, '', '.').'</span>';
             $row[] = $caption_tahapan;
 
             $tombol_anggaran = '<button class="btn btn-info btn-xs" title="Input anggaran belanja sub kegiatan '.$lists->nama_sub_kegiatan.'" onclick="'.$onclick2.'"><i class="fas fa-money-bill"></i></button> ';
@@ -2308,6 +2397,165 @@ public function sync_eplanning()
     }
 
 
+
+
+
+
+ public function copy_target_ke_tambahan()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        } else {
+            $output = [
+                'status'    => false,
+                'data'      => []
+            ];
+            $kode_rekening_sub_kegiatan = $this->input->post('kode_rekening_sub_kegiatan');
+            $kode_kegiatan = $this->input->post('kode_kegiatan');
+            $kode_program = $this->input->post('kode_program');
+            $kode_bidang_urusan = $this->input->post('kode_bidang_urusan');
+            $tahap = $this->input->post('tahap');
+            $tahun = $this->input->post('tahun');
+            $id_tambahan_anggaran = $this->input->post('id_tambahan_anggaran');
+            $id_instansi = id_instansi();
+            $where = [
+                'kode_bidang_urusan' => $kode_bidang_urusan, 
+                'kode_rekening_program' => $kode_program, 
+                'kode_rekening_kegiatan' => $kode_kegiatan, 
+                'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 
+                'kode_tahap' => $tahap,
+                'tahun' => $tahun,
+                'id_instansi' => id_instansi()
+            ];
+            $target                 = $this->db->get_where('target_apbd', $where);
+            $kumpul_target_baru = [];
+            foreach ($target->result_array() as $k => $v) {
+                         $insert = [
+                            'id_instansi'=>id_instansi(),
+                            'kode_bidang_urusan'=>$kode_bidang_urusan,
+                            'id_tambahan_anggaran'=>$id_tambahan_anggaran,
+                            'kode_rekening_program'=>$kode_program,
+                            'kode_rekening_kegiatan'=>$kode_kegiatan,
+                            'kode_rekening_sub_kegiatan'=>$kode_rekening_sub_kegiatan,
+                           'kode_tahap'=>$tahap,
+                            'bulan'=>$v['bulan'],
+                            'target_fisik'=>$v['target_fisik'],
+                            'target_keuangan'=>$v['target_keuangan'],
+                            'target_keuangan_bulanan'=>$v['target_keuangan_bulanan'],
+                            'tahun'=>$tahun,
+                            'created_on'=> timestamp(), 
+                            'created_by'=>id_user(),
+                            'input_by'=>'Copy Target APBD'
+                        ];
+                        array_push($kumpul_target_baru, $insert);
+                # code...
+            }
+            if ($target->num_rows()>0) {
+                $this->db->insert_batch('target_apbd_tambahan', $kumpul_target_baru);
+            }else{
+
+            }
+         
+
+            
+
+            echo json_encode($output);
+        }
+    }
+
+
+
+
+
+ public function get_target_tambahan()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        } else {
+            $output = [
+                'status'    => false,
+                'data'      => []
+            ];
+            $kode_rekening_sub_kegiatan = $this->input->post('kode_rekening_sub_kegiatan');
+            $kode_kegiatan = $this->input->post('kode_kegiatan');
+            $kode_program = $this->input->post('kode_program');
+            $kode_bidang_urusan = $this->input->post('kode_bidang_urusan');
+            $tahap = $this->input->post('tahap');
+            $tahun = $this->input->post('tahun');
+            $id_tambahan_anggaran = $this->input->post('id_tambahan_anggaran');
+            $id_instansi = id_instansi();
+            $where = [
+                'kode_bidang_urusan' => $kode_bidang_urusan, 
+                'kode_rekening_program' => $kode_program, 
+                'kode_rekening_kegiatan' => $kode_kegiatan, 
+                'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 
+                'kode_tahap' => $tahap,
+                'tahun' => $tahun,
+                'id_tambahan_anggaran' => $id_tambahan_anggaran,
+                'id_instansi' => id_instansi()
+            ];
+            $target                 = $this->db->get_where('target_apbd_tambahan', $where);
+          
+            $pecah = explode('.', $kode_rekening_sub_kegiatan);
+            $kode_sub_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
+            $output['totaldata']             = $target->num_rows();
+         
+            if ($target->num_rows() > 0) {
+                foreach ($target->result() as $key => $value) {
+                    $output['data'][$key]['id']         = sbe_crypt($value->id_target_apbd_tambahan, 'E');
+                    $output['data'][$key]['bulan']      = $value->bulan;
+                    $output['data'][$key]['t_fisik']    = $value->target_fisik;
+                    $output['data'][$key]['t_fisik_bulanan']    = $value->target_fisik_bulanan;
+                    $output['data'][$key]['t_keuangan'] = $value->target_keuangan;
+                    $output['data'][$key]['t_keuangan_bulanan'] = $value->target_keuangan_bulanan;
+                    $output['data'][$key]['input_by'] = $value->input_by == '' ? 'Manual Input' : $value->input_by;
+                }
+
+                $output['status']  = true;
+                $alert_kunci_input = "Swal.fire('Terkunci','Mohon maaf, <br>Anda tidak dapat menguah target<br>".jadwal_input_data_dasar()['pesan']."','error')";
+                $output['kunci']  = jadwal_input_data_dasar()['aktif'];
+                $output['alert_kunci']  = $alert_kunci_input;
+
+            } else {
+                for ($i=0; $i < 12; $i++) { 
+                    $bulan = $i+1;
+                    $wherenull = [
+                        'kode_bidang_urusan' => $kode_bidang_urusan, 
+                        'kode_rekening_program' => $kode_program, 
+                        'kode_rekening_kegiatan' => $kode_kegiatan, 
+                        'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 
+                        'kode_tahap' => $tahap,
+                        'tahun' => $tahun,
+                        'bulan' => $bulan,
+                        'id_instansi' => id_instansi()
+                    ];
+                    $cek = $this->db->get_where('target_apbd_tambahan', $wherenull);
+                    if ($cek->num_rows()==0) {
+                        $insert = [
+                            'id_instansi'=>id_instansi(),
+                            'kode_bidang_urusan'=>$kode_bidang_urusan,
+                            'kode_rekening_program'=>$kode_program,
+                            'kode_rekening_kegiatan'=>$kode_kegiatan,
+                            'kode_rekening_sub_kegiatan'=>$kode_rekening_sub_kegiatan,
+                           'kode_tahap'=>$tahap,
+                            'bulan'=>$bulan,
+                            'target_fisik'=>0,
+                            'target_keuangan'=>0,
+                            'target_keuangan_bulanan'=>0,
+                            'tahun'=>$tahun,
+                            'created_on'=> timestamp(), 
+                            'created_by'=>id_user()
+                        ];
+                        // $this->db->insert('target_apbd_tambahan', $insert);
+                    }
+                }
+            }
+
+            echo json_encode($output);
+        }
+    }
+
+
  public function get_target_pergeseran()
     {
         if (!$this->input->is_ajax_request()) {
@@ -3126,6 +3374,14 @@ public function sync_eplanning()
             ];
 
             $kode_rekening_sub_kegiatan = $this->input->post('kode_rekening_sub_kegiatan');
+
+            $cek_anggaran_tambahan= $this->db->query("SELECT id_tambahan_anggaran, nama_anggaran from tambahan_anggaran where status='1'");
+            $j_cek_anggaran_tambahan = $cek_anggaran_tambahan->num_rows();
+            $data_anggaran_tambahan = $cek_anggaran_tambahan->row_array();
+            $output['data']['tambahan_anggaran']                  = $j_cek_anggaran_tambahan;
+            $output['data']['nama_tambahan_anggaran']                  = $data_anggaran_tambahan['nama_anggaran'] ;
+            $output['data']['id_tambahan_anggaran']                  = $data_anggaran_tambahan['id_tambahan_anggaran'] ;
+           
         
             $tahap = $this->input->post('tahap');
             $tahun = $this->input->post('tahun');
@@ -3148,7 +3404,8 @@ public function sync_eplanning()
                 $where = ['kode_sub_kegiatan' => $kode_rekening_sub_kegiatan,'kode_tahap'=>$tahap,'tahun'=>$tahun,'pergeseran_ke'=>$identitas_ski->pergeseran_ke,   'id_instansi' => id_instansi()];
 
             }
-            $pagu_sub_kegiatan    = $this->db->select(" bo_bp, bo_bbj, bo_bs, bo_bh, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatl, btt, bt_bbh, bt_bbk, realisasikan_bo, realisasikan_bm, realisasikan_btt, realisasikan_bt, pergeseran_ke")->get_where('anggaran_sub_kegiatan', $where);
+            $pagu_sub_kegiatan    = $this->db->select(" bo_bp, bo_bbj, bo_bs, bo_bh, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatl, btt, bt_bbh, bt_bbk, id_tambahan_anggaran as ada_tambahan, realisasikan_bo, realisasikan_bm, realisasikan_btt, realisasikan_bt, pergeseran_ke")->get_where('anggaran_sub_kegiatan', $where);
+            // $pagu_sub_kegiatan_tambahan     = $this->db->select(" bo_bp, bo_bbj, bo_bs, bo_bh, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatl, btt, bt_bbh, bt_bbk, realisasikan_bo, realisasikan_bm, realisasikan_btt, realisasikan_bt, pergeseran_ke")->get_where('anggaran_sub_kegiatan_tambahan', $where);
 
 
             if ($pagu_sub_kegiatan->num_rows() > 0) {
@@ -3170,6 +3427,67 @@ public function sync_eplanning()
                     $output['data']['tahapan']                  = pilihan_nama_tahapan($tahap);
                 }
 
+
+                    $output['data']['tambahan']['found']   = $value->ada_tambahan;
+
+                if ($value->ada_tambahan=='1') {
+
+                $where_tambahan      = ['kode_sub_kegiatan' => $kode_rekening_sub_kegiatan,'kode_tahap'=>$tahap,'tahun'=>$tahun,   'id_instansi' => id_instansi()];
+                    $pagu_sub_kegiatan_tambahan     = $this->db->select(" bo_bp, bo_bbj, bo_bs, bo_bh, bm_bmt, bm_bmpm, bm_bmgb, bm_bmjji, bm_bmatl, btt, bt_bbh, bt_bbk, realisasikan_bo, realisasikan_bm, realisasikan_btt, realisasikan_bt, pergeseran_ke")->get_where('anggaran_sub_kegiatan_tambahan', $where_tambahan);
+                    $data_pagu_sub_kegiatan_tambahan = $pagu_sub_kegiatan_tambahan->row_array();
+
+
+
+
+                    $pagu_total_tambahan = 
+                    $data_pagu_sub_kegiatan_tambahan['bo_bp'] + $data_pagu_sub_kegiatan_tambahan['bo_bbj'] + $data_pagu_sub_kegiatan_tambahan['bo_bs'] + $data_pagu_sub_kegiatan_tambahan['bo_bh'] + $data_pagu_sub_kegiatan_tambahan['bm_bmt'] + $data_pagu_sub_kegiatan_tambahan['bm_bmpm'] + $data_pagu_sub_kegiatan_tambahan['bm_bmgb'] + $data_pagu_sub_kegiatan_tambahan['bm_bmjji'] + $data_pagu_sub_kegiatan_tambahan['bm_bmatl'] + $data_pagu_sub_kegiatan_tambahan['btt'] + $data_pagu_sub_kegiatan_tambahan['bt_bbh'] + $data_pagu_sub_kegiatan_tambahan['bt_bbk'];
+                    $output['data']['pagu_tambahan']                  = $pagu_total_tambahan ;
+                    $output['data']['pagu_total']                  = $pagu_total + $pagu_total_tambahan ;
+
+
+
+
+
+                    if ($pagu_sub_kegiatan_tambahan->num_rows()>0) {
+                        
+                        $output['data']['tambahan']['bo_bp']                  = $data_pagu_sub_kegiatan_tambahan['bo_bp'];
+                        $output['data']['tambahan']['bo_bbj']                  = $data_pagu_sub_kegiatan_tambahan['bo_bbj'];
+                        $output['data']['tambahan']['bo_bs']                  = $data_pagu_sub_kegiatan_tambahan['bo_bs'];
+                        $output['data']['tambahan']['bo_bh']                  = $data_pagu_sub_kegiatan_tambahan['bo_bh'];
+                        $output['data']['tambahan']['bm_bmt']                  = $data_pagu_sub_kegiatan_tambahan['bm_bmt'];
+                        $output['data']['tambahan']['bm_bmpm']                  = $data_pagu_sub_kegiatan_tambahan['bm_bmpm'];
+                        $output['data']['tambahan']['bm_bmgb']                  = $data_pagu_sub_kegiatan_tambahan['bm_bmgb'];
+                        $output['data']['tambahan']['bm_bmjji']                  = $data_pagu_sub_kegiatan_tambahan['bm_bmjji'];
+                        $output['data']['tambahan']['bm_bmatl']                  = $data_pagu_sub_kegiatan_tambahan['bm_bmatl'];
+                        $output['data']['tambahan']['btt']                  = $data_pagu_sub_kegiatan_tambahan['btt'];
+                        $output['data']['tambahan']['bt_bbh']                  = $data_pagu_sub_kegiatan_tambahan['bt_bbh'];
+                        $output['data']['tambahan']['bt_bbk']                  = $data_pagu_sub_kegiatan_tambahan['bt_bbk'];
+                        $output['data']['tambahan']['rea_bo']                  = $data_pagu_sub_kegiatan_tambahan['realisasikan_bo'];
+                        $output['data']['tambahan']['rea_bm']                  = $data_pagu_sub_kegiatan_tambahan['realisasikan_bm'];
+                        $output['data']['tambahan']['rea_btt']                  = $data_pagu_sub_kegiatan_tambahan['realisasikan_btt'];
+                        $output['data']['tambahan']['rea_bt']                  = $data_pagu_sub_kegiatan_tambahan['realisasikan_bt'];
+                    }else{
+
+                        $output['data']['tambahan']['bo_bp']                  = 0;
+                        $output['data']['tambahan']['bo_bbj']                  = 0;
+                        $output['data']['tambahan']['bo_bs']                  = 0;
+                        $output['data']['tambahan']['bo_bh']                  = 0;
+                        $output['data']['tambahan']['bm_bmt']                  = 0;
+                        $output['data']['tambahan']['bm_bmpm']                  = 0;
+                        $output['data']['tambahan']['bm_bmgb']                  = 0;
+                        $output['data']['tambahan']['bm_bmjji']                  = 0;
+                        $output['data']['tambahan']['bm_bmatl']                  = 0;
+                        $output['data']['tambahan']['btt']                  = 0;
+                        $output['data']['tambahan']['bt_bbh']                  = 0;
+                        $output['data']['tambahan']['bt_bbk']                  = 0;
+                        $output['data']['tambahan']['rea_bo']                  = 0;
+                        $output['data']['tambahan']['rea_bm']                  = 0;
+                        $output['data']['tambahan']['rea_btt']                  = 0;
+                        $output['data']['tambahan']['rea_bt']                  = 0;
+
+                    }
+                }
+                    $output['data']['ada_tambahan']                  = $value->ada_tambahan;
                     $output['data']['bo_bp']                  = $value->bo_bp;
                     $output['data']['bo_bbj']                  = $value->bo_bbj;
                     $output['data']['bo_bs']                  = $value->bo_bs;
@@ -3190,7 +3508,13 @@ public function sync_eplanning()
 
                 $output['status'] = true;
             }else{
+                $output['status'] = true;
+
+
+
+
                   $output['data']['tahapan']                  = "APBD AWAL".'<br>'.'<button type="button" class="btn btn-outline-info btn-sm" onclick="Swal.fire(`Error`,`Mohon maaf, data pagu APBD Awal tidak terdeteksi<br>Kemungkinan ii adalah penambahan sub kegiatan baru. Mohon simpan anggaran terlebih dahulu langsung klik simpan tanpa menginputkan), baru lakukan pergeseran `,`error`)">Lakukan Pergeseran</button>';
+                    $output['data']['tambahan']['found']   = 0;
                     $output['data']['pagu_aktif']                  = 0;
                     $output['data']['rea_bo']                  = 0;
                     $output['data']['rea_bm']                  = 0;
@@ -3503,6 +3827,7 @@ public function sync_eplanning()
             $ke = $this->input->post('ke');
             $ski = $this->db->get_where('sub_kegiatan_instansi', ['id_sub_kegiatan_instansi'=>$id_ski])->row_array();
             $kode_sub_kegiatan = $ski['kode_sub_kegiatan'];
+            // $id_tambahan_anggaran  = $ski['id_tambahan_anggaran'];
             $tahun = $ski['tahun'];
             $kode_tahap = $ski['kode_tahap'];
             $id_instansi = $ski['id_instansi'];
@@ -3541,6 +3866,7 @@ public function sync_eplanning()
             $anggaran_apbd_awal = $anggaran_awal->row_array();
  $data_pagu = [
                 'kode_sub_kegiatan'=>$anggaran_apbd_awal['kode_sub_kegiatan'],
+                'id_tambahan_anggaran'=>$anggaran_apbd_awal['id_tambahan_anggaran'],
                 'kode_kegiatan'=>$anggaran_apbd_awal['kode_kegiatan'],
                 'kode_program'=>$anggaran_apbd_awal['kode_program'],
                 'kode_bidang_urusan'=>$anggaran_apbd_awal['kode_bidang_urusan'],
@@ -4160,6 +4486,7 @@ public function sync_eplanning()
                 }
 
                 $pagu_sub_kegiatan    = $this->db->get_where('anggaran_sub_kegiatan', $where);
+                $pagu_sub_kegiatan_tambahan    = $this->db->get_where('anggaran_sub_kegiatan_tambahan', $where);
             if ($validation->run($this)) {
                 $post               = $this->input->post();
                 
@@ -4176,6 +4503,28 @@ public function sync_eplanning()
                     
                 }else{
                     $id_paket_pekerjaan = $data_apbd->save_anggaran_sub_kegiatan();
+                }
+
+                $input_penambahan_anggaran = $this->input->post('input_penambahan_anggaran');
+                $id_tambahan_anggaran = $this->input->post('id_tambahan_anggaran');
+                if ($input_penambahan_anggaran==1) {
+                    
+                        $where_tambahan = ['id_tambahan_anggaran'=>$this->input->post('id_tambahan_anggaran')];
+                    $this->db->update('sub_kegiatan_instansi', $where_tambahan, $where);
+                    if ($pagu_sub_kegiatan_tambahan->num_rows()>0) {
+                        // $whereedit = array_merge($where, $where_tambahan);
+                        $id_paket_pekerjaan = $data_apbd->saveedit_anggaran_sub_kegiatan_tambahan($where);
+                        
+                    }else{
+                        $id_paket_pekerjaan = $data_apbd->save_anggaran_sub_kegiatan_tambahan();
+                    }
+
+                    $id_paket_pekerjaan = $this->db->update('anggaran_sub_kegiatan',['id_tambahan_anggaran'=>$id_tambahan_anggaran],$where);
+
+                }else{
+                    $id_paket_pekerjaan = $this->db->update('anggaran_sub_kegiatan',['id_tambahan_anggaran'=>''],$where);
+                    $id_paket_pekerjaan = $this->db->update('sub_kegiatan_instansi',['id_tambahan_anggaran'=>''],$where);
+
                 }
 
 

@@ -1834,10 +1834,10 @@ class Laporan extends MY_Controller {
 		    'format' => 'Legal',
 		    'orientation' => 'L',
 
-			'margin_left' => 8,    	// 15 margin_left
-			'margin_right' => 8,    	// 15 margin right
-			'margin_header' => 7,     // 9 margin header
-			'margin_footer' => 7,    
+			'margin_left' => 5,    	// 15 margin_left
+			'margin_right' => 5,    	// 15 margin right
+			'margin_header' => 4,     // 9 margin header
+			'margin_footer' => 4,    
 		    'tempDir' => '/tmp'
 		]);
 		$data['keuangan']=$this->realisasi_keuangan_model;
@@ -1869,11 +1869,11 @@ class Laporan extends MY_Controller {
 		switch ($kategori) {
 			case 'akumulasi':
 				$ope = '<=';
-				$judul_laporan = "Realisasi  sampai dengan bulan ".bulan_global($bulan);
+				$judul_laporan = "sampai dengan bulan ".bulan_global($bulan);
 				break;
 			default:
 				$ope = '=';
-				$judul_laporan = "Realisasi  bulan ".bulan_global($bulan);
+				$judul_laporan = "bulan ".bulan_global($bulan);
 				break;
 		}
 
@@ -1890,8 +1890,15 @@ class Laporan extends MY_Controller {
 		  	$kumpul_master_kegiatan[$v['kode_kegiatan']] = $v['nama_kegiatan'];
 		  }
 
+		  $master_sub_kegiatan = $this->db->query("SELECT kode_sub_kegiatan, nama_sub_kegiatan from master_sub_kegiatan")->result_array();
+		  $kumpul_master_sub_kegiatan = [];
+		  foreach ($master_sub_kegiatan as $k => $v) {
+		  	$kumpul_master_sub_kegiatan[$v['kode_sub_kegiatan']] = $v['nama_sub_kegiatan'];
+		  }
+
 	    $data['master_program']=$kumpul_master_program;
 	    $data['master_kegiatan']=$kumpul_master_kegiatan;
+	    $data['master_sub_kegiatan']=$kumpul_master_sub_kegiatan;
 
 
 	    $data['identitas']=$identitas;
@@ -1920,9 +1927,24 @@ class Laporan extends MY_Controller {
 
         // $data['grafik']=$grafik;
 
-        if ($kategori_penampilan_laporan=='rfk_akumulasi') {
 
-        	$judul_penampilan_laporan = "Laporan Realisasi Fisik Dan Keuangan<br>".$judul_laporan;
+        	// $judul_penampilan_laporan = "Data Paket Pekerjaan Per Sub Kegiatan <br>".$judul_laporan;
+        	$judul_penampilan_laporan = "Laporan Realisasi Fisik Dan Keuangan ".$judul_laporan;
+           $data['judul_laporan']=$judul_penampilan_laporan;
+        	$judul_penampilan_laporan_2 = "Laporan Realisasi Fisik Dan Keuangan ".$judul_laporan.'<br><span style="color:blue">Bersumber Dari Dana TKD</span>';
+           $data['judul_laporan_2']=$judul_penampilan_laporan_2;
+
+
+		    $footer =  $this->load->view('laporan/pdf/realisasi_akumulasi/footer', $data, true);
+
+
+	        if ($kategori_penampilan_laporan=='rfk_akumulasi') {
+			    $header1 =  $this->load->view('laporan/new_pdf/realisasi_akumulasi/header', $data, true);
+
+
+				$mpdf->SetHTMLHeaderByName('header1', $header1);
+			// $mpdf->SetHTMLHeader($header);
+
 		    // $html =  $this->load->view('laporan/pdf/realisasi_akumulasi/content_rfk_akumulasi_dengan_bobot.php', $data, true);
 		    // $html =  $this->load->view('laporan/pdf/realisasi_akumulasi/content_rfk_akumulasi', $data, true);
 			if($tahun <=2022){
@@ -1931,39 +1953,88 @@ class Laporan extends MY_Controller {
 				$html =  $this->load->view('laporan/pdf/realisasi_akumulasi/content_rfk_akumulasi', $data, true);
 			}else{
 				if ($tahap==2) {
-			    	$sub_kegiatan = $this->db->query("SELECT ski.kode_program as kode_rekening_program, ski.kategori, ski.jenis_sub_kegiatan, ski.keterangan, ski.kode_kegiatan as kode_rekening_kegiatan, ski.kode_sub_kegiatan as kode_rekening_sub_kegiatan, ski.nama_sub_kegiatan,
+			    	$sub_kegiatan = $this->db->query("SELECT ski.kode_program as kode_rekening_program, ski.kategori, ski.jenis_sub_kegiatan, ski.keterangan, ski.kode_kegiatan as kode_rekening_kegiatan, ski.kode_sub_kegiatan as kode_rekening_sub_kegiatan, ski.nama_sub_kegiatan, ski.id_tambahan_anggaran,
 			    		total_anggaran_sub_kegiatan(ski.kode_sub_kegiatan,2, ski.id_instansi, ski.kode_kegiatan, ski.kode_program, ski.tahun) as pagu,
+			    		total_anggaran_sub_kegiatan_tambahan(ski.kode_sub_kegiatan,2, ski.id_instansi, ski.kode_kegiatan, ski.kode_program, ski.tahun, ski.id_tambahan_anggaran) as pagu_tambahan,
 			    		ski.kode_tahap, ski.pergeseran_ke, ski.id_instansi, ski.tahun
 			    	 from sub_kegiatan_instansi ski where ski.id_instansi='$id_instansi' and ski.tahun='$tahun' and ski.kode_tahap = '2'")->result_array();
 				}elseif ($tahap==3) {
 			    	$sub_kegiatan = $this->db->query("SELECT kode_rekening_program, kategori, jenis_sub_kegiatan, keterangan, kode_rekening_kegiatan, kode_rekening_sub_kegiatan, pagu, nama_sub_kegiatan,
-			    	kode_tahap, pergeseran_ke, id_instansi, tahun 
+			    	kode_tahap, pergeseran_ke, id_instansi, tahun, id_tambahan_anggaran, pagu_tambahan 
 			    		from v_sub_kegiatan_apbd where id_instansi='$id_instansi' and tahun='$tahun' and kode_tahap = '2'")->result_array();
 				}else{
 			    	$sub_kegiatan = $this->db->query("SELECT kode_rekening_program, kategori, jenis_sub_kegiatan, keterangan, kode_rekening_kegiatan, kode_rekening_sub_kegiatan, pagu, nama_sub_kegiatan,
-			    	kode_tahap, pergeseran_ke, id_instansi, tahun 
+			    	kode_tahap, pergeseran_ke, id_instansi, tahun, id_tambahan_anggaran, pagu_tambahan 
 			    		from v_sub_kegiatan_apbd where id_instansi='$id_instansi' and tahun='$tahun' and status = '1'")->result_array();
 
 				}
 				$total_pagu_opd = 0;
+				$total_pagu_opd_tambahan = 0;
+				$kumpul_ski_tambahan = [];
 				foreach ($sub_kegiatan as $k_sk => $v_sk) {
 					$total_pagu_opd +=$v_sk['pagu'];
+					$total_pagu_opd_tambahan +=$v_sk['pagu_tambahan'];
+					if ($v_sk['id_tambahan_anggaran']!='' || $v_sk['id_tambahan_anggaran']!=null) {
+						array_push($kumpul_ski_tambahan, $v_sk);
+					}
 				}
 			    $data['sub_kegiatan'] = $sub_kegiatan;
-			    $data['pagu_skpd'] = $total_pagu_opd;
-				$html =  $this->load->view('laporan/new_pdf/realisasi_akumulasi/content_rfk_akumulasi_rutin_sd_rk', $data, true);
+			    $data['sub_kegiatan_tambahan'] = $kumpul_ski_tambahan;
+			    $data['id_tambahan_anggaran'] = 1;
+				    $data['pagu_skpd'] = $total_pagu_opd;
+				    $data['pagu_skpd_tambahan'] = $total_pagu_opd_tambahan;
+					$html_1 =  $this->load->view('laporan/new_pdf/realisasi_akumulasi/tambahan_anggaran/content_rfk_akumulasi_rutin_sd_rk_pisah_tambahan_anggaran_apbd', $data, true);
+
+					if (mb_strlen($nama_instansi)>75) {
+			        	$mpdf->SetMargins(0, 0, 43);
+						# code...
+					}else{
+			        	$mpdf->SetMargins(0, 0, 40);
+
+					}
+					$mpdf->SetHTMLHeader($header1); 
+					$mpdf->WriteHTML($html_1);
+					$mpdf->SetHTMLFooter($footer);
+
+
+
+			    $header2 =  $this->load->view('laporan/new_pdf/realisasi_akumulasi/tambahan_anggaran/header_tambahan', $data, true);
+			   
+				$mpdf->SetHTMLHeader($header2); 
+				$mpdf->WriteHTML('<pagebreak/>');
+				$html_2 =  $this->load->view('laporan/new_pdf/realisasi_akumulasi/tambahan_anggaran/content_rfk_akumulasi_rutin_sd_rk_pisah_tambahan_anggaran_tambahan', $data, true);
+				$mpdf->WriteHTML($html_2);
+				$mpdf->SetHTMLFooter($footer);
+
+
+
+			    $header3 =  $this->load->view('laporan/new_pdf/realisasi_akumulasi/tambahan_anggaran/header_rekap', $data, true);
+				$mpdf->SetHTMLHeader($header3); 
+				$mpdf->WriteHTML('<pagebreak/>');
+				$html_3 =  $this->load->view('laporan/new_pdf/realisasi_akumulasi/tambahan_anggaran/content_rfk_akumulasi_rutin_sd_rk_pisah_tambahan_anggaran_rekap', $data, true);
+				$mpdf->WriteHTML($html_3);
+
+			$mpdf->SetHTMLFooter($footer);
+
+
+
+
+
+
 			}
+        }else if($kategori_penampilan_laporan=='rfk_data_paket_pekerjaan'){
+
+
+		    $html =  $this->load->view('laporan/new_pdf/realisasi_akumulasi/content_rfk_data_paket_pekerjaan', $data, true);
         	$mpdf->SetMargins(0, 0, 42);
+
+
+
+
+
         }
 
-         $data['judul_laporan']=$judul_penampilan_laporan;
-	    $header =  $this->load->view('laporan/pdf/realisasi_akumulasi/header', $data, true);
-	    $footer =  $this->load->view('laporan/pdf/realisasi_akumulasi/footer', $data, true);
-
-
-		$mpdf->SetHTMLHeader($header);
-		$mpdf->SetHTMLFooter($footer);
-		$mpdf->WriteHTML($html);
+      
 		
 		$mpdf->Output($nama_instansi.' - '.$judul_laporan.' - '.str_replace(':', '.', $tanggal_penarikan).'.pdf', 'I');
 	}

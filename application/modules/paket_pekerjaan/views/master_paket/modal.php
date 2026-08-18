@@ -63,6 +63,8 @@
 
                     <input type="hidden" name="izin_input_pptk" id="izin_input_pptk">
                     <input type="hidden" name="id_kedudukan" id="id_kedudukan">
+                    <input type="hidden" name="menggunakan_anggaran_tambahan" id="menggunakan_anggaran_tambahan" value="0">
+                    <input type="hidden" name="id_tambahan_anggaran" id="id_tambahan_anggaran">
 					<div class="form-group">
                       <!--   <table class="table">
                             <tr>
@@ -97,6 +99,10 @@
                     <div class="form-group">
                         <label for="pagu">ID RUP (Optional)</label>
                         <input type="text" class="form-control" id="id_rup" name="id_rup">
+                    </div>
+                    <div class="form-group" id="f_tambahan">
+                        <input type="checkbox" name="" id="add_tkd"><label for="tkd" style="margin-left:10px"> Menggunakan Dana TKD </label>
+                        <input type="hidden" class="form-control currency" style="text-align: right;"  id="tkd" name="tkd" placeholder="Inputkan Pagu TKD pada Paket" onblur="if(value==''){value='0'}" value="0">
                     </div>
                 </form>
             </div>

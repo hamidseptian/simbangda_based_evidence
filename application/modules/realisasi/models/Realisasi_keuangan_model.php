@@ -161,6 +161,34 @@ ask.kode_sub_kegiatan=ski.kode_sub_kegiatan and ask.id_instansi=ski.id_instansi 
                                         ");
         return $query;
     }
+
+    public function cek_realisasi_dipilih_tambahan($kode_sub_kegiatan, $tahap, $id_instansi, $pergeseran_ke, $id_tambahan_anggaran)
+    {
+        $bulan  = date('n');
+        $tahun = tahun_anggaran();
+        if ($tahap==4) {
+            $where = "WHERE ski.id_instansi = '{$id_instansi}' and ski.tahun='$tahun'
+            and ski.status=1 and ski.kode_sub_kegiatan='$kode_sub_kegiatan'
+            ";
+        }else{
+            if ($pergeseran_ke=='') {
+                $where = "WHERE ski.id_instansi = '{$id_instansi}' and ski.kode_tahap='$tahap' and ski.tahun='$tahun' and ski.kode_sub_kegiatan='$kode_sub_kegiatan'";
+            }else{
+                $where = "WHERE ski.id_instansi = '{$id_instansi}' and ski.kode_tahap='$tahap' and ski.tahun='$tahun' and ski.kode_sub_kegiatan='$kode_sub_kegiatan' and ask.pergeseran_ke = '$pergeseran_ke'";
+
+            }
+
+        }
+
+        $query  = $this->db->query("SELECT
+                                         realisasikan_bo, realisasikan_bm,realisasikan_btt,realisasikan_bt
+                                    FROM anggaran_sub_kegiatan_tambahan ask left join sub_kegiatan_instansi ski on 
+ask.kode_sub_kegiatan=ski.kode_sub_kegiatan and ask.id_instansi=ski.id_instansi and ask.kode_tahap = ski.kode_tahap and ask.tahun = ski.tahun
+and ask.id_tambahan_anggaran ='$id_tambahan_anggaran'
+              $where
+                                        ");
+        return $query;
+    }
     
     public function total_realisasi_perjenis($kode_sub_kegiatan, $tahap, $id_instansi, $jenis, $ope = '<=')
     {
@@ -207,6 +235,54 @@ ask.kode_sub_kegiatan=ski.kode_sub_kegiatan and ask.id_instansi=ski.id_instansi 
     }
 
 
+
+    public function total_realisasi_perjenis_tambahan($kode_sub_kegiatan, $tahap, $id_instansi, $jenis,  $id_tambahan_anggaran, $ope = '<=')
+    {
+        $bulan_aktif  = bulan_aktif();
+        $tahun = tahun_anggaran();
+        if ($jenis=='realisasikan_bo') {
+             $query  = $this->db->query("SELECT
+                                         sum(bo_bp + bo_bbj+ bo_bs+bo_bh) as realisasi_bo
+                                    FROM
+                                        realisasi_keuangan_tambahan 
+                                    WHERE
+                                    id_instansi = '$id_instansi' and kode_tahap='$tahap' and kode_sub_kegiatan='$kode_sub_kegiatan' and bulan $ope $bulan_aktif and tahun = '$tahun' and id_tambahan_anggaran='$id_tambahan_anggaran'
+                                        ");
+        }
+        else if ($jenis=='realisasikan_bm') {
+            $query  = $this->db->query("SELECT
+                                         sum( bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl ) as realisasi_bm
+                                    FROM
+                                        realisasi_keuangan_tambahan 
+                                    WHERE
+                                    id_instansi = '$id_instansi' and kode_tahap='$tahap' and kode_sub_kegiatan='$kode_sub_kegiatan' and bulan $ope $bulan_aktif and tahun = '$tahun' and id_tambahan_anggaran='$id_tambahan_anggaran'
+                                        ");
+        }
+        else if ($jenis=='realisasikan_btt') {
+            $query  = $this->db->query("SELECT
+                                         sum(btt) as realisasi_btt
+                                    FROM
+                                        realisasi_keuangan_tambahan 
+                                    WHERE
+                                    id_instansi = '$id_instansi' and kode_tahap='$tahap' and kode_sub_kegiatan='$kode_sub_kegiatan' and bulan $ope $bulan_aktif and tahun = '$tahun' and id_tambahan_anggaran='$id_tambahan_anggaran'
+                                        ");
+        }
+        else if ($jenis=='realisasikan_bt') {
+            $query  = $this->db->query("SELECT
+                                         sum( bt_bbh+bt_bbk ) as realisasi_bt
+                                    FROM
+                                        realisasi_keuangan_tambahan 
+                                    WHERE
+                                    id_instansi = '$id_instansi' and kode_tahap='$tahap' and kode_sub_kegiatan='$kode_sub_kegiatan' and bulan $ope $bulan_aktif and tahun = '$tahun' and id_tambahan_anggaran='$id_tambahan_anggaran'
+                                        ");
+        }
+     
+        return $query;
+    }
+
+
+
+
     public function total_realisasi($kode_sub_kegiatan, $tahap, $id_instansi)
     {
             $bulan_aktif = bulan_aktif();
@@ -217,6 +293,24 @@ ask.kode_sub_kegiatan=ski.kode_sub_kegiatan and ask.id_instansi=ski.id_instansi 
                                         realisasi_keuangan 
                                     WHERE
                                     id_instansi = '$id_instansi' and kode_tahap='$tahap' and tahun='$tahun' and kode_sub_kegiatan='$kode_sub_kegiatan'  and bulan <= $bulan_aktif
+                                        ");
+     
+     
+        return $query;
+    }
+
+
+
+    public function total_realisasi_tambahan($kode_sub_kegiatan, $tahap, $id_instansi, $id_tambahan_anggaran)
+    {
+            $bulan_aktif = bulan_aktif();
+            $tahun  = tahun_anggaran();
+             $query  = $this->db->query("SELECT
+                                         sum(bo_bp + bo_bbj+ bo_bs+bo_bh + bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl + btt + bt_bbh + bt_bbk ) as total_realisasi
+                                    FROM
+                                        realisasi_keuangan_tambahan 
+                                    WHERE
+                                    id_instansi = '$id_instansi' and kode_tahap='$tahap' and tahun='$tahun' and kode_sub_kegiatan='$kode_sub_kegiatan'  and bulan <= $bulan_aktif and id_tambahan_anggaran= '$id_tambahan_anggaran'
                                         ");
      
      
@@ -246,6 +340,35 @@ ask.kode_sub_kegiatan=ski.kode_sub_kegiatan and ask.id_instansi=ski.id_instansi 
                                        $select
                                     FROM
                                         realisasi_keuangan 
+                                    WHERE
+                                   $where
+                                        ");
+        
+        return $query;
+    }
+
+
+    public function realisasi_tambahan($where, $jenis)
+    {
+        $bulan  = date('n');
+
+        if ($jenis=='bo') {
+            $select = 'bo_bp,bo_bbj,bo_bs,bo_bh';
+        }
+        else if ($jenis=='bm') {
+            $select = 'bm_bmt,bm_bmpm,bm_bmgb,bm_bmjji,bm_bmatl';
+        }
+        else if ($jenis=='btt') {
+            $select = 'btt';
+        }
+        else if ($jenis=='bt') {
+            $select = 'bt_bbh,bt_bbk';
+        }
+             $query  = $this->db->query("SELECT
+                                        id_realisasi_keuangan_tambahan, 
+                                       $select
+                                    FROM
+                                        realisasi_keuangan_tambahan 
                                     WHERE
                                    $where
                                         ");

@@ -279,6 +279,25 @@ function id_instansi()
 {
 	return CI()->session->userdata('id_instansi');
 }
+function tambahan_anggaran()
+{
+	$q = CI()->db->query("SELECT nama_anggaran, id_tambahan_anggaran from tambahan_anggaran where status='1'");
+	if ($q->num_rows()>0) {
+		$d = $q->row_array();
+		$tambahan_anggaran = [
+			'id_tambahan_anggaran'=>$d['id_tambahan_anggaran'],
+			'nama_anggaran'=>$d['nama_anggaran']
+		];
+	}else{
+		$tambahan_anggaran = [
+			'id_tambahan_anggaran'=>'',
+			'nama_anggaran'=>'',
+		];
+
+	}
+
+	return $tambahan_anggaran;
+}
 function id_config_instansi()
 {
 	$id_instansi = CI()->session->userdata('id_instansi');

@@ -3,7 +3,7 @@
 
       <style>
         .font_laporan{
-          font-size:9px;
+          font-size:8px;
           font-family: 'arial';
         }
         .table {
@@ -74,6 +74,11 @@
         }
       </style>
 
+
+
+
+
+        <hr>
         <?php   
 $hasil = [];
 // $total_pagu_opd = 0;
@@ -598,6 +603,369 @@ foreach ($hasil as $k_p => $v_p) {
 
  ?>
 
+
+
+
+ <table class="font_laporan border table"> 
+          <thead class="header"> 
+  <tr>
+      <th rowspan="5">No</th>
+      <th colspan="6">Program, Kegiatan, Sub Kegiatan</th>
+      <th colspan="14">Realisasi</th>
+      <th colspan="3" rowspan="3">Sisa Anggaran</th>
+    </tr>
+    <tr>
+      <th rowspan="4">Tahapan</th>
+      <th rowspan="4">Kode Rekening</th>
+      <th rowspan="4">Uraian</th>
+      <th colspan="3">Pagu</th>
+      <th colspan="4">Fisik</th>
+      <th colspan="10">Keuangan</th>
+    </tr>
+    <tr>
+      <th rowspan="2">APBD</th>
+      <th rowspan="2">TKD</th>
+      <th rowspan="2">Total</th>
+      <th rowspan="2">Target</th>
+      <th rowspan="2">Realisasi</th>
+      <th rowspan="2">Capaian</th>
+      <th rowspan="2">Deviasi</th>
+      <th colspan="6">APBD</th>
+      <th colspan="2">TKD</th>
+      <th colspan="2">Total</th>
+   
+    </tr>
+    <tr>
+      <th colspan="2">Target</th>
+      <th colspan="2">Realisasi</th>
+      <th>Capaian</th>
+      <th>Deviasi</th>
+      <th colspan="2">Realisasi</th>
+      <th colspan="2">Realisasi</th>
+      <th>APBD</th>
+      <th>TKD</th>
+      <th>Total</th>
+    </tr>
+    <tr>
+      <th>Rp</th>
+      <th>Rp</th>
+      <th>Rp</th>
+      <th>%</th>
+      <th>%</th>
+      <th>%</th>
+      <th>%</th>
+      <th>Rp.</th>
+      <th>%</th>
+      <th>Rp.</th>
+      <th>%</th>
+      <th>Rp.</th>
+      <th>%</th>
+      <th>Rp.</th>
+      <th>%</th>
+      <th>Rp.</th>
+      <th>%</th>
+      <th>Rp.</th>
+      <th>Rp.</th>
+      <th>Rp.</th>
+    </tr>
+    <tr>
+    </tr>
+    <tr>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9=(8/7)*100</th>
+      <th>10=8-7</th>
+      <th>11</th>
+      <th>12=(11/5)*100</th>
+      <th>13</th>
+      <th>14=(13/5)*100</th>
+      <th>15=(14/12)*100</th>
+      <th>16=14-12</th>
+      <th>17</th>
+      <th>18=(17/6)*100</th>
+      <th>19=5-13</th>
+      <th>20=6-17</th>
+    </tr>
+
+    <tbody>
+  <?php 
+  $no_program=0;
+
+
+  foreach ($show_data as $k_p => $v_p) { 
+    $no_program++;?>
+    <tr  style="background: #c6d1fa ">  
+      <th align="left"><?php echo $no_program ?></th>
+      <th> - </th>
+      <th align="left"><?php echo $v_p['kode_program'] ?></th>
+      <th align="left"><?php echo $master_program[$v_p['kode_program']] ?></th>
+      <th align="right"><?php echo number_format($v_p['pagu']) ?></th>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+      <th align="center"> <?php echo round($v_p['tf'],2) ?> </th>
+      <th align="center"> <?php echo round($v_p['rf'],2) ?> </th>
+        <th align="center"> <?php echo round($v_p['capaian_fisik'],2) ?> </th>
+        <th align="center" style="<?php echo $v_p['warna_deviasi_fisik_program'] ?>"> <?php echo round($v_p['df'],2) ?> </th>
+        <th align="right"><?php echo number_format($v_p['tk']) ?> </th>
+      <th align="center"> <?php echo round($v_p['persen_tk'],2) ?> </th>
+        <th align="right"><?php echo number_format($v_p['rk']) ?> </th>
+      <th align="center"> <?php echo round($v_p['persen_rk'],2) ?> </th>
+        <th align="center"> <?php echo round($v_p['capaian_keuangan'],2) ?> </th>
+        <th align="center"  style="<?php echo $v_p['warna_deviasi_keuangan_program'] ?>"> <?php echo round($v_p['dk'],2) ?> </th>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <th align="right"><?php echo number_format($v_p['sisa']) ?> </th>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+    </tr>
+    <?php 
+    $no_kegiatan = 0;
+    foreach ($v_p['data_kegiatan'] as $k_k => $v_k) {
+    $no_kegiatan++; ?>
+      <tr style="background:#c6faf8;">
+        <th align="left"><?php echo $no_program.'.'.$no_kegiatan ?></th>
+        <th align="center"> - </th>
+        <th align="left"><?php echo $v_k['kode_kegiatan'] ?></th>
+        <th align="left"><?php echo $master_kegiatan[$v_k['kode_kegiatan']] ?></th>
+        <th align="right"><?php echo number_format($v_k['pagu']) ?> </th>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <th align="center"> <?php echo round($v_k['tf'],2) ?> </th>
+        <th align="center"> <?php echo round($v_k['rf'],2) ?> </th>
+        <th align="center"> <?php echo round($v_k['capaian_fisik'],2) ?> </th>
+        <th align="center"  style="<?php echo $v_k['warna_deviasi_fisik_kegiatan'] ?>"> <?php echo round($v_k['df'],2) ?> </th>
+        <th align="right"><?php echo number_format($v_k['tk']) ?> </th>
+        <th align="center"> <?php echo round($v_k['persen_tk'],2) ?> </th>
+        <th align="right"><?php echo number_format($v_k['rk']) ?> </th>
+        <th align="center"> <?php echo round($v_k['persen_rk'],2) ?> </th>
+        <th align="center"> <?php echo round($v_k['capaian_keuangan'],2) ?> </th>
+        <th align="center"  style="<?php echo $v_k['warna_deviasi_keu_kegiatan'] ?>"> <?php echo round($v_k['dk'],2) ?> </th>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <th align="right"><?php echo number_format($v_k['sisa']) ?> </th>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+      </tr>
+      <?php 
+      $no_ski =0; 
+      foreach ($v_k['data_sub_kegiatan'] as $k_ski => $v_ski) { 
+
+
+
+
+    // mencari bobot dan tertimbang fisik
+          $bobot_ski_kegiatan =( $v_ski['pagu']/$v_k['total_pagu'])*100;
+          $tft_ski_kegiatan =$v_ski['tf'] * $bobot_ski_kegiatan /100;
+          $rft_ski_kegiatan =$v_ski['rf'] * $bobot_ski_kegiatan /100;
+          
+
+
+
+
+
+
+        $no_ski++;?>
+        <tr>
+          <td><?php echo $no_program.'.'.$no_kegiatan.'.'.$no_ski ?></td>
+          <td>
+            <?php 
+            if ($kode_tahap==2) {
+              echo pilihan_nama_tahapan($kode_tahap);
+              # code...
+            }else{
+              echo $v_ski['tahap_apbd'];
+            }
+             ?></td>
+          <td><?php echo $v_ski['kode_sub_kegiatan'] ?></td>
+          <td><?php echo $v_ski['nama_sub_kegiatan'] ?></td>
+        <td align="right"><?php echo number_format($v_ski['pagu']) ?> </td>
+        <td align="center" style="background:#9141F2; color:white"> 999.999.999.999 </td>
+        <td align="center" style="background:#9141F2; color:white"> 999.999.999.999 </td>
+        <td align="center"> <?php echo round($v_ski['tf'],2) ?> </td>
+        <td align="center"> <?php echo round($v_ski['rf'],2) ?> </td>
+        <td align="center"> <?php echo round($v_ski['capaian_fisik'],2) ?> </td>
+        <td align="center"  style="<?php echo $v_ski['warna_deviasi_fisik_ski'] ?>"> <?php echo round($v_ski['deviasi_fisik'],2) ?> </td>
+        <td align="right"> <?php echo number_format($v_ski['tk']) ?> </td>
+        <td align="center"> <?php echo round($v_ski['persen_tk'],2) ?> </td>
+        <td align="right"><?php echo number_format($v_ski['rk']) ?> </td>
+        <td align="center"> <?php echo round($v_ski['persen_rk'],2) ?> </td>
+        <td align="center"> <?php echo round($v_ski['capaian_keu'],2) ?> </td>
+        <td align="center"  style="<?php echo $v_ski['warna_deviasi_keu_ski'] ?>"> <?php echo round($v_ski['deviasi_keuangan'],2) ?> </td>
+        <td align="center" style="background:#9141F2; color:white"> 999.999.999.999 </td>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <td align="center" style="background:#9141F2; color:white"> 999.999.999.999 </td>
+        <td align="center" style="background:#9141F2; color:white"> ?? </td>
+        <td align="right"> <?php echo number_format($v_ski['sisa_anggaran']) ?> </td>
+        <td align="center" style="background:#9141F2; color:white"> 999.999.999.999 </td>
+        <td align="center" style="background:#9141F2; color:white"> 999.999.999.999 </td>
+        </tr>
+    <?php 
+          }
+        }
+      }
+   ?>
+  </tbody>
+
+
+
+
+<tfoot>
+
+
+
+  <tr  style="display:none">
+    <td colspan="4" align="center">Total</td>
+    
+    <td align="right"><?php echo number_format($pagu_skpd) ?></td>
+    <td align="center" align="center"> <?php echo round($total_persen_tf,2) ?> </td>
+    <td align="center" align="center"> <?php echo round($total_persen_rf,2) ?> </td>
+    <td  align="center"> -- <?php //echo round($deviasi_total_fisik,2) ?> </td>
+    <td  align="center"> -- <?php //echo round($deviasi_total_fisik,2) ?> </td>
+    <td align="right">  <?php echo number_format($total_rp_tk) ?> </td>
+    
+    <td align="center" align="center"> <?php echo round($total_persen_tk,2) ?> </td>
+    <td align="right">  <?php echo number_format($total_rp_rk) ?> </td>
+    
+    <td align="center" align="center"> <?php echo round($total_persen_rk,2) ?> </td>
+    <td align="center"> --  <?php //echo round($deviasi_total_keuangan_akuntansi,2) ?> </td>
+    <td align="center"> --  <?php //echo round($deviasi_total_keuangan_akuntansi,2) ?> </td>
+
+    <?php if ($ope=='<=') { ?>
+      <td align="right">  <?php echo number_format($total_sisa_pagu) ?> </td>
+    <?php } ?>
+  </tr>
+
+
+  <?php 
+  $tk_skpd = ($total_rp_tk / $pagu_skpd) * 100;
+  $rk_skpd = ($total_rp_rk / $pagu_skpd) * 100;
+  $capaian_fisik = ($total_rft_ski / $total_tft_ski) * 100;
+  $capaian_keuangan = ($rk_skpd / $tk_skpd) * 100;
+
+  $deviasi_fisik_opd = $total_rft_ski - $total_tft_ski ; 
+  $deviasi_keuangan_opd = $rk_skpd - $tk_skpd ; 
+
+    if ($deviasi_fisik_opd < -10) {
+      $warna_deviasi_fisik_opd = 'background: #f8b2b2'; 
+    }
+    elseif ($deviasi_fisik_opd <-5  && $deviasi_fisik_opd >=-10) {
+      $warna_deviasi_fisik_opd = 'background: #fcf3cf';
+    }
+    elseif ($deviasi_fisik_opd <=0  && $deviasi_fisik_opd >=-5) {
+      $warna_deviasi_fisik_opd = 'background: #d5f5e3';
+    }else{
+      $warna_deviasi_fisik_opd = 'background: #ff7cfd';
+    }
+
+    if ($deviasi_keuangan_opd < -10) {
+      $warna_deviasi_keuangan_opd = 'background: #f8b2b2'; 
+    }
+    elseif ($deviasi_keuangan_opd <-5  && $deviasi_keuangan_opd >=-10) {
+      $warna_deviasi_keuangan_opd = 'background: #fcf3cf';
+    }
+    elseif ($deviasi_keuangan_opd <=0  && $deviasi_keuangan_opd >=-5) {
+      $warna_deviasi_keuangan_opd = 'background: #d5f5e3';
+    }else{
+      $warna_deviasi_keuangan_opd = 'background: #ff7cfd';
+    }
+
+
+
+   ?>
+  <tr>
+        <?php 
+
+
+    if ($ope=='<=') {
+      if ($total_rp_rk==$grafik['rp_realisasi_keuangan_akumulasi'] && $total_rp_tk==$grafik['rp_target_keuangan_akumulasi'] && round($total_tft_ski,2)==$grafik['target_fisik_akumulasi'] && round($total_rft_ski,2)==$grafik['realisasi_fisik_akumulasi']) {
+        $status_synch = 'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
+      }else{
+        $status_synch = 'Belum di synchronize | '.'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
+      }
+            // $cek = $grafik['realisasi_fisik_akumulasi'];
+    }else{
+      if ($total_realisasi_keuangan==$grafik['rp_realisasi_keuangan_bulanan'] && $total_angka_target_keuangan==$grafik['rp_target_keuangan_bulanan']) {
+        $status_synch = 'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
+      }else{
+        $status_synch = 'Belum di synchronize | '.'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
+      }
+            // $cek = $grafik['rp_realisasi_keuangan_bulanan'];
+    }
+
+     ?>
+
+    <td colspan="4" align="center"><b>Pencapaian</b> <br> <?php echo $status_synch;?></td>
+.
+    <th align="center">-</th>
+    
+    <th> <?php echo round($total_tft_ski,2) ?></th>
+    <th> <?php echo round($total_rft_ski,2) ?></th>
+    <th align="center"><?php echo round($capaian_fisik,2) ?></th>
+    <th align="center" style="<?php echo $warna_deviasi_fisik_opd ?>"> <?php echo round($deviasi_fisik_opd,2) ?> </th>
+
+    <th colspan="2" align="center" style=""><?php echo round($tk_skpd,2) ?></th>
+    <th colspan="2" align="center" style=""><?php echo round($rk_skpd,2) ?></th>
+    <th align="center"><?php echo round($capaian_keuangan,2) ?></th>
+    <th align="center" style="<?php echo $warna_deviasi_keuangan_opd ?>">  <?php echo round($deviasi_keuangan_opd,2) ?> </th>
+    <?php if ($ope=='<=') { ?>
+      <th align="center"> - </th>
+    <?php } ?>
+    
+    
+  </tr>
+  
+
+</tfoot>
+          </thead>
+        </table>
+
+
+
+
+
+
+<hr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <table class="font_laporan border table"> 
           <thead class="header"> 
             <tr> 
@@ -668,215 +1036,11 @@ foreach ($hasil as $k_p => $v_p) {
   </tr>
 
 </thead>
-<tbody>
-  <?php 
-  $no_program=0;
-
-
-  foreach ($show_data as $k_p => $v_p) { 
-    $no_program++;?>
-    <tr  style="background: #c6d1fa ">  
-      <th align="left"><?php echo $no_program ?></th>
-      <th> - </th>
-      <th align="left"><?php echo $v_p['kode_program'] ?></th>
-      <th align="left"><?php echo $master_program[$v_p['kode_program']] ?></th>
-      <th align="right"><?php echo number_format($v_p['pagu']) ?></th>
-      <th align="center"> <?php echo round($v_p['tf'],2) ?> </th>
-      <th align="center"> <?php echo round($v_p['rf'],2) ?> </th>
-	      <th align="center"> <?php echo round($v_p['capaian_fisik'],2) ?> </th>
-	      <th align="center" style="<?php echo $v_p['warna_deviasi_fisik_program'] ?>"> <?php echo round($v_p['df'],2) ?> </th>
-        <th align="right"><?php echo number_format($v_p['tk']) ?> </th>
-      <th align="center"> <?php echo round($v_p['persen_tk'],2) ?> </th>
-        <th align="right"><?php echo number_format($v_p['rk']) ?> </th>
-      <th align="center"> <?php echo round($v_p['persen_rk'],2) ?> </th>
-	      <th align="center"> <?php echo round($v_p['capaian_keuangan'],2) ?> </th>
-	      <th align="center"  style="<?php echo $v_p['warna_deviasi_keuangan_program'] ?>"> <?php echo round($v_p['dk'],2) ?> </th>
-        <th align="right"><?php echo number_format($v_p['sisa']) ?> </th>
-    </tr>
-    <?php 
-    $no_kegiatan = 0;
-    foreach ($v_p['data_kegiatan'] as $k_k => $v_k) {
-    $no_kegiatan++; ?>
-      <tr style="background:#c6faf8;">
-        <th align="left"><?php echo $no_program.'.'.$no_kegiatan ?></th>
-        <th align="center"> - </th>
-        <th align="left"><?php echo $v_k['kode_kegiatan'] ?></th>
-        <th align="left"><?php echo $master_kegiatan[$v_k['kode_kegiatan']] ?></th>
-        <th align="right"><?php echo number_format($v_k['pagu']) ?> </th>
-	      <th align="center"> <?php echo round($v_k['tf'],2) ?> </th>
-	      <th align="center"> <?php echo round($v_k['rf'],2) ?> </th>
-	      <th align="center"> <?php echo round($v_k['capaian_fisik'],2) ?> </th>
-	      <th align="center"  style="<?php echo $v_k['warna_deviasi_fisik_kegiatan'] ?>"> <?php echo round($v_k['df'],2) ?> </th>
-        <th align="right"><?php echo number_format($v_k['tk']) ?> </th>
-	      <th align="center"> <?php echo round($v_k['persen_tk'],2) ?> </th>
-        <th align="right"><?php echo number_format($v_k['rk']) ?> </th>
-	      <th align="center"> <?php echo round($v_k['persen_rk'],2) ?> </th>
-	      <th align="center"> <?php echo round($v_k['capaian_keuangan'],2) ?> </th>
-	      <th align="center"  style="<?php echo $v_k['warna_deviasi_keu_kegiatan'] ?>"> <?php echo round($v_k['dk'],2) ?> </th>
-        <th align="right"><?php echo number_format($v_k['sisa']) ?> </th>
-      </tr>
-      <?php 
-      $no_ski =0; 
-      foreach ($v_k['data_sub_kegiatan'] as $k_ski => $v_ski) { 
-
-
-
-
-		// mencari bobot dan tertimbang fisik
-          $bobot_ski_kegiatan =( $v_ski['pagu']/$v_k['total_pagu'])*100;
-          $tft_ski_kegiatan =$v_ski['tf'] * $bobot_ski_kegiatan /100;
-          $rft_ski_kegiatan =$v_ski['rf'] * $bobot_ski_kegiatan /100;
-          
 
 
 
 
 
-
-        $no_ski++;?>
-        <tr>
-          <td><?php echo $no_program.'.'.$no_kegiatan.'.'.$no_ski ?></td>
-          <td>
-            <?php 
-            if ($kode_tahap==2) {
-              echo pilihan_nama_tahapan($kode_tahap);
-              # code...
-            }else{
-              echo $v_ski['tahap_apbd'];
-            }
-             ?></td>
-          <td><?php echo $v_ski['kode_sub_kegiatan'] ?></td>
-          <td><?php echo $v_ski['nama_sub_kegiatan'] ?></td>
-        <td align="right"><?php echo number_format($v_ski['pagu']) ?> </td>
-        <td align="center"> <?php echo round($v_ski['tf'],2) ?> </td>
-        <td align="center"> <?php echo round($v_ski['rf'],2) ?> </td>
-        <td align="center"> <?php echo round($v_ski['capaian_fisik'],2) ?> </td>
-        <td align="center"  style="<?php echo $v_ski['warna_deviasi_fisik_ski'] ?>"> <?php echo round($v_ski['deviasi_fisik'],2) ?> </td>
-        <td align="right"> <?php echo number_format($v_ski['tk']) ?> </td>
-        <td align="center"> <?php echo round($v_ski['persen_tk'],2) ?> </td>
-        <td align="right"><?php echo number_format($v_ski['rk']) ?> </td>
-        <td align="center"> <?php echo round($v_ski['persen_rk'],2) ?> </td>
-        <td align="center"> <?php echo round($v_ski['capaian_keu'],2) ?> </td>
-        <td align="center"  style="<?php echo $v_ski['warna_deviasi_keu_ski'] ?>"> <?php echo round($v_ski['deviasi_keuangan'],2) ?> </td>
-        <td align="right"> <?php echo number_format($v_ski['sisa_anggaran']) ?> </td>
-        </tr>
-    <?php 
-          }
-        }
-      }
-   ?>
-  </tbody>
-
-
-
-
-<tfoot>
-
-
-
-	<tr>
-		<td colspan="4" align="center">Total</td>
-		
-		<td align="right"><?php echo number_format($pagu_skpd) ?></td>
-		<td align="center" align="center"> <?php echo round($total_persen_tf,2) ?> </td>
-		<td align="center" align="center"> <?php echo round($total_persen_rf,2) ?> </td>
-		<td  align="center"> -- <?php //echo round($deviasi_total_fisik,2) ?> </td>
-		<td  align="center"> -- <?php //echo round($deviasi_total_fisik,2) ?> </td>
-		<td align="right">  <?php echo number_format($total_rp_tk) ?> </td>
-		
-		<td align="center" align="center"> <?php echo round($total_persen_tk,2) ?> </td>
-		<td align="right">  <?php echo number_format($total_rp_rk) ?> </td>
-		
-		<td align="center" align="center"> <?php echo round($total_persen_rk,2) ?> </td>
-		<td align="center"> --  <?php //echo round($deviasi_total_keuangan_akuntansi,2) ?> </td>
-		<td align="center"> --  <?php //echo round($deviasi_total_keuangan_akuntansi,2) ?> </td>
-
-		<?php if ($ope=='<=') { ?>
-			<td align="right">  <?php echo number_format($total_sisa_pagu) ?> </td>
-		<?php } ?>
-	</tr>
-
-
-	<?php 
-	$tk_skpd = ($total_rp_tk / $pagu_skpd) * 100;
-	$rk_skpd = ($total_rp_rk / $pagu_skpd) * 100;
-	$capaian_fisik = ($total_rft_ski / $total_tft_ski) * 100;
-	$capaian_keuangan = ($rk_skpd / $tk_skpd) * 100;
-
-	$deviasi_fisik_opd = $total_rft_ski - $total_tft_ski ; 
-	$deviasi_keuangan_opd = $rk_skpd - $tk_skpd ; 
-
-		if ($deviasi_fisik_opd < -10) {
-			$warna_deviasi_fisik_opd = 'background: #f8b2b2'; 
-		}
-		elseif ($deviasi_fisik_opd <-5  && $deviasi_fisik_opd >=-10) {
-			$warna_deviasi_fisik_opd = 'background: #fcf3cf';
-		}
-		elseif ($deviasi_fisik_opd <=0  && $deviasi_fisik_opd >=-5) {
-			$warna_deviasi_fisik_opd = 'background: #d5f5e3';
-		}else{
-			$warna_deviasi_fisik_opd = 'background: #ff7cfd';
-		}
-
-		if ($deviasi_keuangan_opd < -10) {
-			$warna_deviasi_keuangan_opd = 'background: #f8b2b2'; 
-		}
-		elseif ($deviasi_keuangan_opd <-5  && $deviasi_keuangan_opd >=-10) {
-			$warna_deviasi_keuangan_opd = 'background: #fcf3cf';
-		}
-		elseif ($deviasi_keuangan_opd <=0  && $deviasi_keuangan_opd >=-5) {
-			$warna_deviasi_keuangan_opd = 'background: #d5f5e3';
-		}else{
-			$warna_deviasi_keuangan_opd = 'background: #ff7cfd';
-		}
-
-
-
-	 ?>
-	<tr>
-				<?php 
-
-
-    if ($ope=='<=') {
-      if ($total_rp_rk==$grafik['rp_realisasi_keuangan_akumulasi'] && $total_rp_tk==$grafik['rp_target_keuangan_akumulasi'] && round($total_tft_ski,2)==$grafik['target_fisik_akumulasi'] && round($total_rft_ski,2)==$grafik['realisasi_fisik_akumulasi']) {
-        $status_synch = 'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
-      }else{
-        $status_synch = 'Belum di synchronize | '.'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
-      }
-            // $cek = $grafik['realisasi_fisik_akumulasi'];
-    }else{
-      if ($total_realisasi_keuangan==$grafik['rp_realisasi_keuangan_bulanan'] && $total_angka_target_keuangan==$grafik['rp_target_keuangan_bulanan']) {
-        $status_synch = 'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
-      }else{
-        $status_synch = 'Belum di synchronize | '.'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
-      }
-            // $cek = $grafik['rp_realisasi_keuangan_bulanan'];
-    }
-
-     ?>
-
-    <td colspan="4" align="center"><b>Pencapaian</b> <br> <?php echo $status_synch;?></td>
-.
-		<th align="center">-</th>
-		
-		<th> <?php echo round($total_tft_ski,2) ?></th>
-		<th> <?php echo round($total_rft_ski,2) ?></th>
-		<th align="center"><?php echo round($capaian_fisik,2) ?></th>
-		<th align="center" style="<?php echo $warna_deviasi_fisik_opd ?>"> <?php echo round($deviasi_fisik_opd,2) ?> </th>
-
-		<th colspan="2" align="center" style=""><?php echo round($tk_skpd,2) ?></th>
-		<th colspan="2" align="center" style=""><?php echo round($rk_skpd,2) ?></th>
-		<th align="center"><?php echo round($capaian_keuangan,2) ?></th>
-		<th align="center" style="<?php echo $warna_deviasi_keuangan_opd ?>">  <?php echo round($deviasi_keuangan_opd,2) ?> </th>
-		<?php if ($ope=='<=') { ?>
-			<th align="center"> - </th>
-		<?php } ?>
-		
-		
-	</tr>
-	
-
-</tfoot>
 
 
 

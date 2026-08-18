@@ -202,6 +202,14 @@ class Master_user_model extends CI_Model
 		return $result;
 	}
 
+	public function get_master_hak_akses_chatbot()
+	{
+		
+			$result = $this->db->get('hak_akses_chatbot');
+		
+		return $result;
+	}
+
 	public function get_user_group($select, $where)
 	{
 		$this->db->select($select);

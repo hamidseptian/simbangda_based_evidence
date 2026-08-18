@@ -112,6 +112,8 @@ class Master_paket_model extends CI_Model
 			'kategori'					=> $post['jenis_paket'] == 'PENYEDIA' ? $post['kategori'] : '-',
 			'id_metode'				=> !empty($post['id_metode']) ? $post['id_metode'] : 0,
 			'pagu'						=> $post['pagu'],
+			'id_tambahan_anggaran'						=> $post['menggunakan_anggaran_tambahan'] ==1 ? $post['id_tambahan_anggaran'] : '',
+			'pagu_tkd'						=> $post['tkd'],
 			'created_on'				=> timestamp(),
 			'updated_on'				=> timestamp(),
 			'created_by' 				=> id_user(),
@@ -139,6 +141,7 @@ class Master_paket_model extends CI_Model
 			'kategori'					=> $post['jenis_paket'] == 'PENYEDIA' ? $post['kategori'] : '-',
 			'id_metode'				=> !empty($post['id_metode']) ? $post['id_metode'] : 0,
 			'pagu'						=> $post['pagu'],
+			'pagu_tkd'						=> $post['tkd'],
 			'created_on'				=> timestamp(),
 			'updated_on'				=> timestamp(),
 			'created_by' 				=> id_user(),
@@ -322,6 +325,27 @@ SELECT
 
 		}
 		$q = $this->db->query("SELECT $q_terpakai as anggaran_terpakai, pagu, nama_sub_kegiatan, kode_rekening_sub_kegiatan, kode_tahap, tahun, status,  kategori, jenis_sub_kegiatan, keterangan  from  v_sub_kegiatan_apbd 
+						where 	id_instansi='$id_instansi' and
+								kode_rekening_sub_kegiatan='$kode_sub_kegiatan' 
+								and tahun = '$tahun'
+								$where_tahap
+");
+		return $q->row();
+	}
+	public function anggaran_kegiatan_terpakai_tkd($kode_sub_kegiatan,$kode_tahap)
+	{
+		 $tahun = tahun_anggaran();
+            $tahap = $kode_tahap;
+		$id_instansi = id_instansi();
+
+		if ($kode_tahap==4) {
+			$status =1 ; 
+			$where_tahap = "AND status='1'";
+		}else{
+			$where_tahap = "AND kode_tahap='2'";
+
+		}
+		$q = $this->db->query("SELECT sum(pagu_tkd) pagu_tkd  from  paket_pekerjaan  
 						where 	id_instansi='$id_instansi' and
 								kode_rekening_sub_kegiatan='$kode_sub_kegiatan' 
 								and tahun = '$tahun'

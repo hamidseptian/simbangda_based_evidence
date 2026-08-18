@@ -30,6 +30,8 @@
                     <input type="hidden" name="tahun" id="tahun">
                     <input type="hidden" name="pagu_berubah" id="pagu_berubah">
                     <input type="hidden" name="berubah_pada_pergeseran_ke" id="berubah_pada_pergeseran_ke">
+                    <input type="hidden" name="input_penambahan_anggaran" id="input_penambahan_anggaran" value="0">
+                    <input type="hidden" name="id_tambahan_anggaran" id="id_tambahan_anggaran">
                         
 					<div class="form-group">
                         <table class="table">
@@ -60,81 +62,321 @@
                             </tr>   
                         </table>
                     </div>
-                    <div class="form-group">
-                        <table class="table">
-                            <tr>
-                                <td><input type="checkbox" name="rea_bo" class="" id="rea_bo" onclick="ceklis_realisasi('rea_bo')" disabled> <b>Belanja Operasi</b></td>
-                                <td><input type="checkbox" name="rea_bm" class="" id="rea_bm" onclick="ceklis_realisasi('rea_bm')" disabled> <b>Belanja Modal</b></td>
-                                <td><input type="checkbox" name="rea_btt" class="" id="rea_btt" onclick="ceklis_realisasi('rea_btt')" disabled> <b>Belanja Tidak Terduga</b></td>
-                                <td><input type="checkbox" name="rea_bt" class="" id="rea_bt" onclick="ceklis_realisasi('rea_bt')" disabled> <b>Belanja Transfer</b></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="">Belanja Pegawai</label>
-                                     <input type="text" class="form-control currency" style="text-align: right;" id="bo_bp" name="bo_bp" onblur="if(value==''){value='0'}" value="0">
-                                </td>
-                                <td>
-                                    <label for="">Belanja Modal Tanah</label>
-                                     <input type="text" class="form-control currency" style="text-align: right;" id="bm_bmt" name="bm_bmt" onblur="if(value==''){value='0'}" value="0">
-                                </td>
-                                <td>
-                                    <label for="">Belanja Tidak Terduga</label>
-                                     <input type="text" class="form-control currency" style="text-align: right;" id="btt" name="btt" onblur="if(value==''){value='0'}" value="0">
-                                </td>
-                                 <td>
-                                    <label for="">Belanja Bagi Hasil</label>
-                                     <input type="text" class="form-control currency" style="text-align: right;" id="bt_bbh" name="bt_bbh" onblur="if(value==''){value='0'}" value="0">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="">Belanja Barang Jasa</label>
-                                     <input type="text" class="form-control currency" style="text-align: right;" id="bo_bbj" name="bo_bbj" onblur="if(value==''){value='0'}" value="0">
-                                </td>
-                                <td>
-                                    <label for="">Belanja Modal Peralatan Dan Mesin</label>
-                                     <input type="text" class="form-control currency" style="text-align: right;" id="bm_bmpm" name="bm_bmpm" onblur="if(value==''){value='0'}" value="0">
-                                </td>
-                                <td></td>
-                                 <td>
-                                    <label for="">Belanja Bantuan Keuangan</label>
-                                     <input type="text" class="form-control currency" style="text-align: right;" id="bt_bbk" name="bt_bbk" onblur="if(value==''){value='0'}" value="0">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="">Belanja Subsidi</label>
-                                     <input type="text" class="form-control currency" style="text-align: right;" id="bo_bs" name="bo_bs" onblur="if(value==''){value='0'}" value="0">
-                                </td>
-                                <td>
-                                    <label for="">Belanja Modal Gedung dan Bangunan</label>
-                                     <input type="text" class="form-control currency" style="text-align: right;" id="bm_bmgb" name="bm_bmgb" onblur="if(value==''){value='0'}" value="0">
-                                </td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="">Belanja Hibah</label>
-                                     <input type="text" class="form-control currency" style="text-align: right;" id="bo_bh" name="bo_bh" onblur="if(value==''){value='0'}" value="0">
-                                </td>
-                                <td>
-                                    <label for="">Belanja Modal Jalan, Jaringan, dan Irigasi</label>
-                                     <input type="text" class="form-control currency" style="text-align: right;" id="bm_bmjji" name="bm_bmjji" onblur="if(value==''){value='0'}" value="0">
-                                </td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <label for="">Belanja Modal dan Aset Tetap Lainnya</label>
-                                     <input type="text" class="form-control currency" style="text-align: right;" id="bm_bmatl" name="bm_bmatl" onblur="if(value==''){value='0'}" value="0">
-                                </td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </table>
+                        <div class="form-group">
+                            <table class="table">
+                                <tr>
+                                    <td><input type="checkbox" name="rea_bo" class="" id="rea_bo" onclick="ceklis_realisasi('rea_bo')" disabled> <b>Belanja Operasi</b></td>
+                                    <td><input type="checkbox" name="rea_bm" class="" id="rea_bm" onclick="ceklis_realisasi('rea_bm')" disabled> <b>Belanja Modal</b></td>
+                                    <td><input type="checkbox" name="rea_btt" class="" id="rea_btt" onclick="ceklis_realisasi('rea_btt')" disabled> <b>Belanja Tidak Terduga</b></td>
+                                    <td><input type="checkbox" name="rea_bt" class="" id="rea_bt" onclick="ceklis_realisasi('rea_bt')" disabled> <b>Belanja Transfer</b></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                                <label for="">Belanja Pegawai</label>
+                                            </div>
+                                            <div class="col-md-12 col_md_apbd">
+                                                 <input type="text" class="form-control currency" style="text-align: right;" id="bo_bp" name="bo_bp" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="bersumber_apbd">Bersumber dari APBD</small>
+                                            </div>
+                                            <div class="col-md-6 col_md_tambahan" style="display:none" >
+                                                 <input type="text" class="form-control currency" style="text-align: right; border-color:#5265FF; color:#5265FF" id="bo_bp_tambahan" name="bo_bp_tambahan" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="nama_anggaran_tambahan"  style="color:#5265FF"></small>
+                                                
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+
+
+
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                        <label for="">Belanja Modal Tanah</label>
+                                            </div>
+                                            <div class="col-md-12 col_md_apbd">
+                                                 <input type="text" class="form-control currency" style="text-align: right;" id="bm_bmt" name="bm_bmt" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="bersumber_apbd">Bersumber dari APBD</small>
+                                            </div>
+                                            <div class="col-md-6 col_md_tambahan" style="display:none" >
+                                                 <input type="text" class="form-control currency" style="text-align: right; border-color:#5265FF; color:#5265FF" id="bm_bmt_tambahan" name="bm_bmt_tambahan" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="nama_anggaran_tambahan" style="color:#5265FF"></small>
+                                                
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </td>
+                                    <td>
+
+
+
+
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                        <label for="">Belanja Tidak Terduga</label>
+                                            </div>
+                                            <div class="col-md-12 col_md_apbd">
+                                                 <input type="text" class="form-control currency" style="text-align: right;" id="btt" name="btt" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="bersumber_apbd">Bersumber dari APBD</small>
+                                            </div>
+                                            <div class="col-md-6 col_md_tambahan" style="display:none" >
+                                                 <input type="text" class="form-control currency" style="text-align: right; border-color:#5265FF; color:#5265FF" id="btt_tambahan" name="btt_tambahan" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="nama_anggaran_tambahan"  style="color:#5265FF"></small>
+                                                
+                                            </div>
+                                        </div>
+
+
+
+                                    </td>
+                                     <td>
+
+
+
+
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                        <label for="">Belanja Bagi Hasil</label>
+                                            </div>
+                                            <div class="col-md-12 col_md_apbd">
+                                                 <input type="text" class="form-control currency" style="text-align: right;" id="bt_bbh" name="bt_bbh" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="bersumber_apbd">Bersumber dari APBD</small>
+                                            </div>
+                                            <div class="col-md-6 col_md_tambahan" style="display:none" >
+                                                 <input type="text" class="form-control currency" style="text-align: right; border-color:#5265FF; color:#5265FF" id="bt_bbh_tambahan" name="bt_bbh_tambahan" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="nama_anggaran_tambahan"  style="color:#5265FF"></small>
+                                                
+                                            </div>
+                                        </div>
+
+
+
+
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+
+
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                                <label for="">Belanja Barang Jasa</label>
+                                            </div>
+                                            <div class="col-md-12 col_md_apbd">
+                                                 <input type="text" class="form-control currency" style="text-align: right;" id="bo_bbj" name="bo_bbj" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="bersumber_apbd">Bersumber dari APBD</small>
+                                            </div>
+                                            <div class="col-md-6 col_md_tambahan" style="display:none" >
+                                                 <input type="text" class="form-control currency" style="text-align: right; border-color:#5265FF; color:#5265FF" id="bo_bbj_tambahan" name="bo_bbj_tambahan" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="nama_anggaran_tambahan"  style="color:#5265FF"></small>
+                                                
+                                            </div>
+                                        </div>
+
+
+
+                                    </td>
+                                    <td>
+
+
+
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                        <label for="">Belanja Modal Peralatan Dan Mesin</label>
+                                            </div>
+                                            <div class="col-md-12 col_md_apbd">
+                                                 <input type="text" class="form-control currency" style="text-align: right;" id="bm_bmpm" name="bm_bmpm" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="bersumber_apbd">Bersumber dari APBD</small>
+                                            </div>
+                                            <div class="col-md-6 col_md_tambahan" style="display:none" >
+                                                 <input type="text" class="form-control currency" style="text-align: right; border-color:#5265FF; color:#5265FF" id="bm_bmpm_tambahan" name="bm_bmpm_tambahan" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="nama_anggaran_tambahan"  style="color:#5265FF"></small>
+                                                
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </td>
+                                    <td></td>
+                                     <td>
+
+
+
+
+
+
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                        <label for="">Belanja Bantuan Keuangan</label>
+                                            </div>
+                                            <div class="col-md-12 col_md_apbd">
+                                                 <input type="text" class="form-control currency" style="text-align: right;" id="bt_bbk" name="bt_bbk" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="bersumber_apbd">Bersumber dari APBD</small>
+                                            </div>
+                                            <div class="col-md-6 col_md_tambahan" style="display:none" >
+                                                 <input type="text" class="form-control currency" style="text-align: right; border-color:#5265FF; color:#5265FF" id="bt_bbk_tambahan" name="bt_bbk_tambahan" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="nama_anggaran_tambahan"  style="color:#5265FF"></small>
+                                                
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+
+
+
+
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                                <label for="">Belanja Subsidi</label>
+                                            </div>
+                                            <div class="col-md-12 col_md_apbd">
+                                                 <input type="text" class="form-control currency" style="text-align: right;" id="bo_bs" name="bo_bs" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="bersumber_apbd">Bersumber dari APBD</small>
+                                            </div>
+                                            <div class="col-md-6 col_md_tambahan" style="display:none" >
+                                                 <input type="text" class="form-control currency" style="text-align: right; border-color:#5265FF; color:#5265FF" id="bo_bs_tambahan" name="bo_bs_tambahan" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="nama_anggaran_tambahan"  style="color:#5265FF"></small>
+                                                
+                                            </div>
+                                        </div>
+
+
+
+
+
+                                    </td>
+                                    <td>
+
+
+
+
+
+
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                        <label for="">Belanja Modal Gedung dan Bangunan</label>
+                                            </div>
+                                            <div class="col-md-12 col_md_apbd">
+                                                 <input type="text" class="form-control currency" style="text-align: right;" id="bm_bmgb" name="bm_bmgb" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="bersumber_apbd">Bersumber dari APBD</small>
+                                            </div>
+                                            <div class="col-md-6 col_md_tambahan" style="display:none" >
+                                                 <input type="text" class="form-control currency" style="text-align: right; border-color:#5265FF; color:#5265FF" id="bm_bmgb_tambahan" name="bm_bmgb_tambahan" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="nama_anggaran_tambahan"  style="color:#5265FF"></small>
+                                                
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+
+
+
+
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                        <label for="">Belanja Hibah</label>
+                                            </div>
+                                            <div class="col-md-12 col_md_apbd">
+                                                 <input type="text" class="form-control currency" style="text-align: right;" id="bo_bh" name="bo_bh" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="bersumber_apbd">Bersumber dari APBD</small>
+                                            </div>
+                                            <div class="col-md-6 col_md_tambahan" style="display:none" >
+                                                 <input type="text" class="form-control currency" style="text-align: right; border-color:#5265FF; color:#5265FF" id="bo_bh_tambahan" name="bo_bh_tambahan" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="nama_anggaran_tambahan"  style="color:#5265FF"></small>
+                                                
+                                            </div>
+                                        </div>
+
+
+
+
+
+                                    </td>
+                                    <td>
+
+
+
+
+
+
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                        <label for="">Belanja Modal Jalan, Jaringan, dan Irigasi</label>
+                                            </div>
+                                            <div class="col-md-12 col_md_apbd">
+                                                 <input type="text" class="form-control currency" style="text-align: right;" id="bm_bmjji" name="bm_bmjji" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="bersumber_apbd">Bersumber dari APBD</small>
+                                            </div>
+                                            <div class="col-md-6 col_md_tambahan" style="display:none" >
+                                                 <input type="text" class="form-control currency" style="text-align: right; border-color:#5265FF; color:#5265FF" id="bm_bmjji_tambahan" name="bm_bmjji_tambahan" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="nama_anggaran_tambahan"  style="color:#5265FF"></small>
+                                                
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+
+
+
+
+
+
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                        <label for="">Belanja Modal dan Aset Tetap Lainnya</label>
+                                            </div>
+                                            <div class="col-md-12 col_md_apbd">
+                                                 <input type="text" class="form-control currency" style="text-align: right;" id="bm_bmatl" name="bm_bmatl" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="bersumber_apbd">Bersumber dari APBD</small>
+                                            </div>
+                                            <div class="col-md-6 col_md_tambahan" style="display:none" >
+                                                 <input type="text" class="form-control currency" style="text-align: right; border-color:#5265FF; color:#5265FF" id="bm_bmatl_tambahan" name="bm_bmatl_tambahan" onblur="if(value==''){value='0'}" value="0">
+                                                 <small class="nama_anggaran_tambahan"  style="color:#5265FF"></small>
+                                                
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
                     </div>
                    
                 </form>
@@ -150,6 +392,8 @@
                 <?php }else{ ?>
                 <button type="button" class="btn btn-primary" id="btn_save_anggaran_sub_kegiatan" onclick="save_anggaran_sub_kegiatan()">Simpan Anggaran</button>
             <?php } ?>
+                <button type="button" class="btn btn-primary" id="btn_input_tambahan"><spann class="nama_anggaran_tambahan"></spann> </button>
+                <button type="button" class="btn btn-primary" id="btn_batal_input_tambahan">Batal input anggaran Bersumber dari <spann class="nama_anggaran_tambahan"></spann> </button>
                 <!-- <button type="button" class="btn btn-info" id="btn_save_anggaran_sub_kegiatan_pergeseran" onclick="save_anggaran_sub_kegiatan_pergeseran()">Simpan Anggaran Pergeseran</button> -->
                 
             </div>
@@ -204,7 +448,7 @@
                             <input type="hidden" name="tahap" id="tahap">
                             <input type="hidden" name="tahun" id="tahun">
                         </div>
-                        <table class="table tablr-striped table-bordered" id="table-target" border=1>
+                        <table class="table table-striped table-bordered" id="table-target" border=1>
                             <thead>
                                 <tr>
                                     <th rowspan="4" width="1%">No</th>
@@ -239,6 +483,49 @@
 
                             </tbody>
                         </table>
+
+
+                        <div class="alert_input_tk_tambahan">
+                        </div>
+                        <div class="f_input_tk_tambahan" style="display:none">   
+                            <hr> 
+                            <div id="nama_tambahan_anggaran" style="margin-top:10px"></div>
+                        <table class="table table-striped table-bordered" id="table-target" border=1>
+                            <thead>
+                                <tr>
+                                    <th rowspan="4" width="1%">No</th>
+                                    <th rowspan="4">Bulan</th>
+                                    <th colspan="7" style="text-align: center;" >
+                                        Target
+                                    </th>
+                                  
+                                </tr>
+                                <tr>
+                                    <th rowspan="2" colspan="2">Fisik</th>
+                                    <th colspan="4">Keu</th>
+                                    <th rowspan="3" colspan="2">Input By</th>
+                                </tr>
+                                <tr>    
+                                  
+                                    <th colspan="2">%</th>
+                                    <th colspan="2">RP</th>
+                                </tr>
+                                <tr>
+                                    <th>Bulanan</th>
+                                    <th>Akumulasi</th>
+                                    <th>Bulanan</th>
+                                    <th>Akumulasi</th>
+                                    <th>Bulanan</th>
+                                    <th>Akumulasi</th>
+                                </tr>
+                              
+
+                            </thead>
+                            <tbody id="target-apbd-tambahan">
+
+                            </tbody>
+                        </table>
+                    </div>
                     </div>
                 </div>
             </div>

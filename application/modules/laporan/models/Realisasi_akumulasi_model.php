@@ -896,6 +896,24 @@ class Realisasi_akumulasi_model extends CI_Model
 			$this->db->select('kode_rekening_sub_kegiatan,				 target_fisik,target_keuangan,target_fisik_bulanan,target_keuangan_bulanan ');
 		return $this->db->get_where('target_apbd', $where);
 	}
+	public function get_target_tambahan($id_instansi, $kode_rekening_sub_kegiatan, $bulan, $tahap, $tahun, $id_tambahan_anggaran)
+	{
+		// $tahun 				= $this->input->get('tahun');
+		// $tahap 				= $this->input->get('tahap');
+
+		$where =  [
+			'id_instansi' => $id_instansi,
+			'kode_tahap' => $tahap,
+			'tahun' => $tahun,
+			'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan,
+			'bulan' => $bulan,
+			'id_tambahan_anggaran' => $id_tambahan_anggaran,
+		];
+
+
+			$this->db->select('kode_rekening_sub_kegiatan,				 target_fisik,target_keuangan,target_fisik_bulanan,target_keuangan_bulanan ');
+		return $this->db->get_where('target_apbd_tambahan', $where);
+	}
 	public function get_target_pergeseran($id_instansi, $kode_rekening_sub_kegiatan, $pergeseran_ke, $bulan, $tahap, $tahun)
 	{
 		// $tahun 				= $this->input->get('tahun');
@@ -943,6 +961,35 @@ class Realisasi_akumulasi_model extends CI_Model
 										AND tahun='$tahun'");
 		return $query;
 	}
+	public function get_realisasi_keuangan_tambahan($id_instansi, $kode_rekening_sub_kegiatan, $bulan, $ope, $tahun, $tahap, $id_tambahan_anggaran)
+	{
+		// $tahun 				= $this->input->get('tahun');
+		// $tahap 				= $this->input->get('tahap');
+		$query  = $this->db->query("SELECT
+										sum(bo_bp + bo_bbj+ bo_bs+bo_bh + bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl +btt +  bt_bbh+bt_bbk ) as total_realisasi,
+										sum(bo_bp) as realisasi_bo_bp,
+										sum(bo_bbj) as realisasi_bo_bbj,
+										sum(bo_bs) as realisasi_bo_bs,
+										sum(bo_bh) as realisasi_bo_bh,
+										sum(bm_bmt) as realisasi_bm_bmt,
+										sum(bm_bmpm) as realisasi_bm_bmpm,
+										sum(bm_bmgb) as realisasi_bm_bmgb,
+										sum(bm_bmjji) as realisasi_bm_bmjji,
+										sum(bm_bmatl) as realisasi_bm_bmatl,
+										sum(btt) as realisasi_btt,
+										sum(bt_bbh) as realisasi_bt_bbh,
+										sum(bt_bbk) as realisasi_bt_bbk
+									FROM
+										realisasi_keuangan_tambahan 
+									WHERE
+										id_instansi = {$id_instansi} 
+										AND kode_sub_kegiatan = '{$kode_rekening_sub_kegiatan}' 
+										AND bulan {$ope} {$bulan}
+										AND kode_tahap = '$tahap'
+										AND id_tambahan_anggaran = '$id_tambahan_anggaran'
+										AND tahun='$tahun'");
+		return $query;
+	}
 
 	public function get_realisasi_fisik($id_instansi, $kode_rekening_sub_kegiatan, $bulan, $jenis_paket, $ope, $tahun, $tahap)
 	{
@@ -970,6 +1017,39 @@ class Realisasi_akumulasi_model extends CI_Model
 		return $query;
 	}
 
+	public function get_realisasi_fisik_new($id_instansi, $kode_rekening_sub_kegiatan, $bulan, $jenis_paket, $ope, $tahun, $tahap, $kumpul_id_paket)
+	{
+		
+		$join_id_paket = join(',', $kumpul_id_paket);
+		if (count($kumpul_id_paket)==0) {
+			$where_id_paket = "";
+			# code...
+		}else{
+			$where_id_paket = "AND pp.id_paket_pekerjaan in($join_id_paket)";
+
+		}
+		if ($tahap==4) {
+			$where_tahap = "AND pp.status='1'";
+		}else{
+			$where_tahap = "AND pp.kode_tahap='2'";
+
+		}
+		$query  = $this->db->query("SELECT
+										rk.kode_rekening_sub_kegiatan,
+										rk.bulan,
+										SUM( rk.nilai ) AS total 
+									FROM
+										realisasi_fisik rk
+										LEFT JOIN paket_pekerjaan pp ON rk.id_paket_pekerjaan = pp.id_paket_pekerjaan 
+									WHERE
+										rk.id_instansi = {$id_instansi} 
+										AND rk.kode_rekening_sub_kegiatan = '$kode_rekening_sub_kegiatan' 
+										AND pp.jenis_paket = '{$jenis_paket}' $where_tahap $where_id_paket
+										AND rk.bulan {$ope} {$bulan}
+										AND rk.tahun='$tahun'");
+		return $query;
+	}
+
 	public function get_total_paket($id_instansi, $kode_rekening_sub_kegiatan, $tahun, $tahap)
 	{
 		$kode_tahap 				= $this->input->get('tahap');
@@ -991,6 +1071,32 @@ class Realisasi_akumulasi_model extends CI_Model
 									WHERE
 										pp.kode_rekening_sub_kegiatan = '{$kode_rekening_sub_kegiatan}'
 										AND pp.id_instansi = {$id_instansi} and pp.tahun='$tahun'
+										$where 
+								");
+		return $query;
+	}
+	public function get_total_paket_tambahan($id_instansi, $kode_rekening_sub_kegiatan, $tahun, $tahap, $id_tambahan_anggaran)
+	{
+		$kode_tahap 				= $this->input->get('tahap');
+		if ($kode_tahap == 4) {
+			if ($kode_tahap == $tahap) {
+				$where = "AND pp.status=1";
+			}else{
+				$where = "";
+			}
+		}else{
+			$where = "AND pp.kode_tahap='$tahap'";
+
+		}
+
+		$query  = $this->db->query("SELECT
+										id_paket_pekerjaan
+									FROM
+										paket_pekerjaan pp 
+									WHERE
+										pp.kode_rekening_sub_kegiatan = '{$kode_rekening_sub_kegiatan}'
+										AND pp.id_instansi = {$id_instansi} and pp.tahun='$tahun'
+										and pp.id_tambahan_anfggaran='$id_tambahan_anggaran'
 										$where 
 								");
 		return $query;

@@ -117,6 +117,28 @@ function showMasterUser() {
 		$('#btnSaveMasterUser').show();
 		$('#btnUpdateMasterUser').hide();
 	}
+	/* Fungsi untuk menampilkan modal add master user */
+	function add_user_chatbot() {
+		var group = <?php echo $id_group ?>;
+		var id_instansi = "<?php echo encrypt($id_instansi) ?>";
+		status = 'save';
+	    $('#tambah_user_chatbot').modal('show')
+					  		  .find('.modal-title').text('Daftarkan no WA Chatbot');
+		$('.form-control').removeClass('is-valid')
+						  .removeClass('is-invalid');
+        $('.text-danger').remove();
+        if (group==5) {
+			$('#tambah_user_chatbot').find('#idInstansi').val(id_instansi);
+
+        }else{
+			$('#tambah_user_chatbot').find('#idInstansi').val('').change();
+
+        }
+		
+		$('#formMasterUser')[0].reset();
+		$('#btnSaveMasterUser').show();
+		$('#btnUpdateMasterUser').hide();
+	}
 	/* Fungsi untuk menampilkan user */
 	function showUser(idInstansi) {
 		$.ajax({
@@ -251,6 +273,102 @@ function showMasterUser() {
 
 		// ajaxSave(url_data, 'POST', 'JSON', 'formMasterUser', 'btnSaveMasterUser', 'Save Change', 'modalMasterUser');
 		// showMasterUser();
+	}
+	/* Fungsi untuk menghapus master module */
+
+
+	function save_akseschatbot() {
+		// $('.form-control').removeClass('is-valid')
+		// 				  .removeClass('is-invalid');
+  //       $('.text-danger').remove();
+  //       $('#btnSaveMasterUser').html('Loading...');
+
+
+		// $.ajax({
+		// 	url: baseUrl('management_users/save_akses_chatbot'),
+		// 	type : "POST",
+		// 	dataType: 'JSON',
+		// 	data :$('#formMasterUser').serialize(),
+		// 	success : function(data){
+				
+		// 		if(data.success == true)
+		// 		{
+		// 			$('#btnSaveMasterUser').html('Save changes');
+		// 			Swal.fire(
+		// 				      'Sukses!',
+		// 				      'Master User Disimpan..!',
+		// 				      'success'
+		// 				    );
+		// 			$('#formMasterUser')[0].reset();
+		// 			$('#clodemodalmodalMasterUser').click();
+					
+		// 				$('#table-master-user').DataTable().ajax.reload(null, false);
+		// 		}else{
+		// 			$.each(data.messages, function (key, value)
+		// 			{
+						
+		// 				var element = $('#' + key);
+		// 				element.removeClass('is-invalid')
+		// 					.addClass(value.length > 0 ? 'is-invalid' : 'is-valid')
+		// 					.find('.text-danger')
+		// 					.remove();
+		// 				element.after(value);
+		// 			});
+		// 		}
+		// 	},
+		// 	error: function (jqXHR, textStatus, errorThrown) {
+				
+		// 	}
+		//  });
+		alert('coming soon');
+	}
+	/* Fungsi untuk menghapus master module */
+
+
+	function update_akseschatbot() {
+		// $('.form-control').removeClass('is-valid')
+		// 				  .removeClass('is-invalid');
+  //       $('.text-danger').remove();
+  //       $('#btnSaveMasterUser').html('Loading...');
+
+
+		// $.ajax({
+		// 	url: baseUrl('management_users/save_akses_chatbot'),
+		// 	type : "POST",
+		// 	dataType: 'JSON',
+		// 	data :$('#formMasterUser').serialize(),
+		// 	success : function(data){
+				
+		// 		if(data.success == true)
+		// 		{
+		// 			$('#btnSaveMasterUser').html('Save changes');
+		// 			Swal.fire(
+		// 				      'Sukses!',
+		// 				      'Master User Disimpan..!',
+		// 				      'success'
+		// 				    );
+		// 			$('#formMasterUser')[0].reset();
+		// 			$('#clodemodalmodalMasterUser').click();
+					
+		// 				$('#table-master-user').DataTable().ajax.reload(null, false);
+		// 		}else{
+		// 			$.each(data.messages, function (key, value)
+		// 			{
+						
+		// 				var element = $('#' + key);
+		// 				element.removeClass('is-invalid')
+		// 					.addClass(value.length > 0 ? 'is-invalid' : 'is-valid')
+		// 					.find('.text-danger')
+		// 					.remove();
+		// 				element.after(value);
+		// 			});
+		// 		}
+		// 	},
+		// 	error: function (jqXHR, textStatus, errorThrown) {
+				
+		// 	}
+		//  });
+		alert('coming soon');
 	}
 	/* Fungsi untuk menghapus master module */
 

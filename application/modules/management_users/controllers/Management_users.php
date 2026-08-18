@@ -39,6 +39,7 @@ class Management_users extends MY_Controller
         $data['master_instansi'] = $master_user->get_master_instansi();
         $data['master_user']    = $master_user->get_master_user();
         $data['master_group']   = $master_user->get_master_group();
+        $data['master_hak_akses_chatbot']   = $master_user->get_master_hak_akses_chatbot();
         $page                   = 'management_users/master_user/index';
         $data['id_instansi']           = id_instansi();
         $data['id_group']           = $this->session->userdata('id_group');

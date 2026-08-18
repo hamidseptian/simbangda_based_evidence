@@ -105,3 +105,87 @@
         </div>
     </div>
 </div>
+
+
+
+<div class="modal fade" id="tambah_user_chatbot" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formMasterUser">
+                    <input type="hidden" id="idUser" class="idUser" name="idUser">
+                     <?php if ($id_group==5) { ?>
+                        <input type="hidden" name="idInstansi" class="form-control" id="idInstansi" value="<?php echo encrypt($id_instansi) ?>">
+                                    
+                        <?php }else{ ?>
+                            <div class="form-group">
+                                <label for="idInstansi">Instansi Name</label>
+                                <select name="idInstansi" class="form-control" id="idInstansi">
+                                        <option value=""></option>
+                                    <?php foreach($master_instansi->result() as $rows => $value): ?>
+                                        <option value="<?php echo encrypt($value->id_instansi); ?>"><?php echo $value->nama_instansi; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                                    
+                        <?php } ?>
+
+
+                    <!-- <div class="form-group">
+                        <label for="idParent">User Parent</label>
+                        <select name="idParent" class="form-control" id="idParent" style="width: 100%;" onchange="showGroup(this.value)">
+                        </select>
+                    </div> -->
+                    <div class="form-group">
+                        <label for="fullName">Nama</label>
+                        <input type="text" class="form-control" id="fullName" name="fullName">
+                    </div>
+                    <div class="form-group">
+                        <label for="fullName">No HP</label>
+                        <input type="text" class="form-control" id="nohp" name="nohp">
+                    </div>
+                     <div class="form-group">
+                        <label for="group">Hak Akses</label> <br>
+                        <!--  <?php //foreach($master_group->result() as $rows => $value): ?>
+                                <input type="radio" name="group" value="<?php echo $value->id_group; ?>" id="group" style="margin-right: 20px"><?php echo $value->group_name  ; ?> <br>
+                            <?php //endforeach; ?> -->
+
+
+
+                              <select name="group" class="form-control" id="group" style="width: 100%;">
+                                <?php if ($id_group==5) { ?>
+                                    <option value="2" selected>Operator OPD</option>
+                                <?php }else{ ?>
+                                    <option value=""></option>
+                                <?php foreach($master_hak_akses->result() as $rows => $value): ?>
+                                    <option value="<?php echo $value->id_hak_akses; ?>"><?php echo $value->nama_hak_akses  ; ?></option>
+                                <?php endforeach; ?>
+                            <?php } ?>
+                        </select>
+                      
+                    </div>
+                    
+                    <br>
+                    <div class="form-group">
+                        <label for="isActive">Active</label>
+                        <select name="isActive" class="custom-select" id="isActive">
+                            <option value="1">Active</option>
+                            <option value="0">Not Active</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="clodemodalmodal_akseschatbot">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSave_akseschatbot" onclick="save_akseschatbot()">Simpan</button>
+                <button type="button" class="btn btn-primary" id="btnUpdate_akseschatbot" onclick="update_akseschatbot()">Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
+</div>

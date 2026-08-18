@@ -279,6 +279,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 		let status_paket 	= $(this).attr('status');
 		let kedudukan 		= $(this).attr('kedudukan');
 		let pemaketan 		= $(this).attr('pemaketan');
+		let id_tambahan_anggaran 		= $(this).attr('id_tambahan_anggaran');
 
 		let izin_input_pptk 		= $(this).attr('izin_input_pptk');
 		let alert_input_pptk 		= $(this).attr('alert_input_pptk');
@@ -290,7 +291,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 			var tombol_tambah_paket = '<button class="btn btn-outline-danger btn-sm mb-2" onclick="Swal.fire(`Terkunci`,`'+pesan_input+'`,`error`)">Tambah Paket</button>';
 		}else{
 			if (izin_input_pptk==1) {
-				var tombol_tambah_paket = '<button class="btn btn-info btn-sm mb-2" onclick="addMasterPaket('+"'"+ id_pptk +"','"+ kode_sub_kegiatan +"','"+ kode_kegiatan +"','"+kode_program+"','"+ kode_bidang_urusan+"','"+ pemaketan+"','"+ kode_tahap+"','"+ izin_input_pptk+"','"+ id_kedudukan+"')" +'">Tambah Paket</button>';
+				var tombol_tambah_paket = '<button class="btn btn-info btn-sm mb-2" onclick="addMasterPaket('+"'"+ id_pptk +"','"+ kode_sub_kegiatan +"','"+ kode_kegiatan +"','"+kode_program+"','"+ kode_bidang_urusan+"','"+ pemaketan+"','"+ kode_tahap+"','"+ id_tambahan_anggaran+"','"+ izin_input_pptk+"','"+ id_kedudukan+"')" +'">Tambah Paket</button>';
 			}else{
 				var tombol_tambah_paket = '<button class="btn btn-outline-danger btn-sm mb-2" onclick="'+alert_input_pptk+'">Tambah Paket</button>';
 			}
@@ -380,11 +381,54 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 
                 	
 
+                	if ($('#add_tkd').is(':checked')) {
+				        $('#tkd').attr('type', 'text');
+				        $('#modalMasterPaket').find('#menggunakan_anggaran_tambahan').val('1');
+				    } else {
+				        $('#tkd').attr('type', 'hidden');
+				        $('#modalMasterPaket').find('#menggunakan_anggaran_tambahan').val('0');
+				        
+				    }
+
+
+                	var fungsi_anggaran_tersedia = anggaran_tersedia(data.data.kode_rekening_sub_kegiatan, data.data.kode_rekening_kegiatan , data.data.kode_rekening_program, data.data.kode_bidang_urusan, data.data.kode_tahap );
+					var pagu_tersedia = fungsi_anggaran_tersedia.anggaran_tersedia;
+
+                	if (data.data.pagu_tkd=='') {
+						$('#add_tkd').prop('checked', false);
+                		var pagu_tkd = 0;
+                		var caption_terpakai = 'APBD : ' +convert_ke_rupiah(fungsi_anggaran_tersedia.anggaran_terpakai);
+				        $('#tkd').attr('type', 'hidden');
+                		$('#modalMasterPaket').find('#tkd').val('');
+                		$('#modalMasterPaket').find('#menggunakan_anggaran_tambahan').val('0');
+
+                	}else{
+                		var pagu_tkd = data.data.pagu_tkd;
+                		anggaran_terpakai_semua = parseInt(fungsi_anggaran_tersedia.anggaran_terpakai) +  parseInt(fungsi_anggaran_tersedia.anggaran_terpakai_tkd);
+						$('#add_tkd').prop('checked', true);
+                		var caption_terpakai = 'APBD : ' +convert_ke_rupiah(fungsi_anggaran_tersedia.anggaran_terpakai);
+                		caption_terpakai += '<br>TKD : ' +convert_ke_rupiah(fungsi_anggaran_tersedia.anggaran_terpakai_tkd);
+                		caption_terpakai += '<br>Total : ' +convert_ke_rupiah(anggaran_terpakai_semua);
+                		$('#modalMasterPaket').find('#tkd').val(pagu_tkd);
+                		$('#modalMasterPaket').find('#menggunakan_anggaran_tambahan').val('1');
+				        $('#tkd').attr('type', 'text');
+                	}
+
+
+					$('#modalMasterPaket').find('#add_tkd').on('change', function() {
+						// alert(0);
+					    if ($(this).is(':checked')) {
+					        $('#tkd').attr('type', 'text');
+	                		$('#modalMasterPaket').find('#menggunakan_anggaran_tambahan').val('1');
+					    } else {
+					        $('#tkd').attr('type', 'hidden');
+	                		$('#modalMasterPaket').find('#tkd').val('');
+	                		$('#modalMasterPaket').find('#menggunakan_anggaran_tambahan').val('0');
+					    }
+					});
 
 
                 	// var pagu_tersedia = anggaran_tersedia(data.data.kode_rekening_sub_kegiatan, data.data.kode_rekening_kegiatan , data.data.kode_rekening_program, data.data.kode_bidang_urusan, data.data.kode_tahap );
-                	var fungsi_anggaran_tersedia = anggaran_tersedia(data.data.kode_rekening_sub_kegiatan, data.data.kode_rekening_kegiatan , data.data.kode_rekening_program, data.data.kode_bidang_urusan, data.data.kode_tahap );
-					var pagu_tersedia = fungsi_anggaran_tersedia.anggaran_tersedia;
 					
 			// if (pagu_tersedia>0) {
 							$('#modalMasterPaket').modal('show');
@@ -392,7 +436,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 							$('#modalMasterPaket').find('.kode_rekening').html(fungsi_anggaran_tersedia.tahapan_apbd +'<br>'+fungsi_anggaran_tersedia.kode_rekening_sub_kegiatan);
 							$('#modalMasterPaket').find('.nama_sub_kegiatan').html(fungsi_anggaran_tersedia.nama_sub_kegiatan);
 							$('#modalMasterPaket').find('.pagu_sub_kegiatan').html( convert_ke_rupiah(fungsi_anggaran_tersedia.anggaran_sub_kegiatan));
-							$('#modalMasterPaket').find('.pagu_anggaran_terpakai').html( convert_ke_rupiah(fungsi_anggaran_tersedia.anggaran_terpakai));
+							$('#modalMasterPaket').find('.pagu_anggaran_terpakai').html( caption_terpakai);
 							$('#modalMasterPaket').find('.pagu_anggaran_tersedia').html( convert_ke_rupiah(fungsi_anggaran_tersedia.anggaran_tersedia));
        //          	}else{
 							// $('#modalMasterPaket').modal('show')
@@ -640,24 +684,49 @@ function peringatan_beda_tahapan(pesan_warning){
 	Swal.fire('Peringatan',pesan_warning,'warning');
 }
 	/* Fungsi untuk menampilkan modal add master paket */
-	function addMasterPaket(id_pptk, kode_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, pemaketan, kode_tahap, izin_input_pptk=''	, id_kedudukan=''	)
+	function addMasterPaket(id_pptk, kode_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, pemaketan, kode_tahap, id_tambahan_anggaran,  izin_input_pptk=''	, id_kedudukan=''	)
 	{
+        $('#tkd').attr('type', 'hidden');
+		$('#add_tkd').prop('checked', false);
+		$('#modalMasterPaket').find('#tkd').val('');
+
+
+		$('#modalMasterPaket').find('#add_tkd').on('change', function() {
+			// alert(0);
+		    if ($(this).is(':checked')) {
+		        $('#tkd').attr('type', 'text');
+		        $('#modalMasterPaket').find('#menggunakan_anggaran_tambahan').val('1');
+
+		    } else {
+		        $('#tkd').attr('type', 'hidden');
+		        $('#modalMasterPaket').find('#menggunakan_anggaran_tambahan').val('0');
+		    }
+		});
+
+
+		if (id_tambahan_anggaran=='') {
+			$('#modalMasterPaket').find('#f_tambahan').hide();
+		}else{
+			$('#modalMasterPaket').find('#f_tambahan').show();
+
+
+		}
 		var kode_rekening = '';
 		
 		$('#formMasterPaket')[0].reset();
-		if (pemaketan=='wajib_evidence') {
-			$('#modalMasterPaket').find('#jenis_paket').html(
-				`<option value=""></option>
-                            <option value="SWAKELOLA">SWAKELOLA</option>
-                            <option value="PENYEDIA">PENYEDIA</option>`);
-		}else{
+			// if (pemaketan=='wajib_evidence') {
+				// 	$('#modalMasterPaket').find('#jenis_paket').html(
+			// 		`<option value=""></option>
+	  //                           <option value="SWAKELOLA">SWAKELOLA</option>
+	  //                           <option value="PENYEDIA">PENYEDIA</option>`);
+			// }else{
 			$('#modalMasterPaket').find('#jenis_paket').html(
 				`<option value=""></option>
                             
                             <option value="SWAKELOLA">SWAKELOLA</option>
                             <option value="PENYEDIA">PENYEDIA</option>`);
 
-		}
+		// }
 		
 		var fungsi_anggaran_tersedia = anggaran_tersedia(kode_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, kode_tahap);
 		var pagu_tersedia = fungsi_anggaran_tersedia.anggaran_tersedia;
@@ -700,6 +769,7 @@ function peringatan_beda_tahapan(pesan_warning){
 			$('#anggaran_sebelumnya').val(0);
 			$('#pemaketan').val(pemaketan);
 			$('#anggaran_tersedia').val(pagu_tersedia);
+			$('#id_tambahan_anggaran').val(id_tambahan_anggaran);
 			$('#id_pptk').val(id_pptk);
 			$('#kode_program').val(kode_program);
 			$('#kode_rekening_kegiatan').val(kode_kegiatan);

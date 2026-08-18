@@ -260,6 +260,48 @@ class Data_apbd_model extends CI_Model
 		];
 		$this->db->insert('anggaran_sub_kegiatan', $data);
 	}
+	public function save_anggaran_sub_kegiatan_tambahan()
+	{
+		$post = $this->input->post();
+
+		$r_bo = $post['bo_bp_tambahan'] + $post['bo_bbj_tambahan'] + $post['bo_bs_tambahan'] + $post['bo_bh_tambahan'];
+		$r_bm = $post['bm_bmt_tambahan'] + $post['bm_bmpm_tambahan'] + $post['bm_bmgb_tambahan'] + $post['bm_bmjji_tambahan'] + $post['bm_bmatl_tambahan'];
+		$r_btt = $post['btt_tambahan'];
+		$r_bt = $post['bt_bbh_tambahan'] + $post['bt_bbk_tambahan'];
+		$data = [
+			'id_tambahan_anggaran'				=> $post['id_tambahan_anggaran'],
+			'kode_sub_kegiatan'				=> $post['kode_sub_kegiatan'],
+			'kode_kegiatan'				=> $post['kode_kegiatan'],
+			'kode_program'				=> $post['kode_program'],
+			'kode_bidang_urusan'				=> $post['kode_bidang_urusan'],
+			'id_instansi'				=> id_instansi(),
+			'kode_tahap'				=> $post['tahap'],
+			'bo_bp'				=> $post['bo_bp_tambahan'],
+			'bo_bbj'				=> $post['bo_bbj_tambahan'],
+			'bo_bs'				=> $post['bo_bs_tambahan'],
+			'bo_bh'				=> $post['bo_bh_tambahan'],
+			'bm_bmt'				=> $post['bm_bmt_tambahan'],
+			'bm_bmpm'				=> $post['bm_bmpm_tambahan'],
+			'bm_bmgb'				=> $post['bm_bmgb_tambahan'],
+			'bm_bmjji'				=> $post['bm_bmjji_tambahan'],
+			'bm_bmatl'				=> $post['bm_bmatl_tambahan'],
+			'btt'				=> $post['btt_tambahan'],
+			'bt_bbh'				=> $post['bt_bbh_tambahan'],
+			'bt_bbk'				=> $post['bt_bbk_tambahan'],
+
+			'realisasikan_bo'				=> $r_bo > 0  ? 1:0,
+			'realisasikan_bm'				=> $r_bm > 0  ? 1:0,
+			'realisasikan_btt'				=> $r_btt > 0  ? 1:0,
+			'realisasikan_bt'				=> $r_bt > 0  ? 1:0,
+		
+			'tahun'				=> tahun_anggaran(),
+			'created_on'				=> timestamp(),
+			'created_by'				=> id_user(),
+			'input_by'				=> 'Manual Input',
+			'status'				=> '1',
+		];
+		$this->db->insert('anggaran_sub_kegiatan_tambahan', $data);
+	}
 	public function save_anggaran_sub_kegiatan_pergeseran()
 	{
 		$post = $this->input->post();
@@ -404,6 +446,45 @@ class Data_apbd_model extends CI_Model
 			'input_by '				=> 'Manual Input',
 		];
 		$this->db->update('anggaran_sub_kegiatan', $data, $where);
+	}
+	public function saveedit_anggaran_sub_kegiatan_tambahan($where)
+	{
+		$post = $this->input->post();
+		$r_bo = $post['bo_bp_tambahan'] + $post['bo_bbj_tambahan'] + $post['bo_bs_tambahan'] + $post['bo_bh_tambahan'];
+		$r_bm = $post['bm_bmt_tambahan'] + $post['bm_bmpm_tambahan'] + $post['bm_bmgb_tambahan'] + $post['bm_bmjji_tambahan'] + $post['bm_bmatl_tambahan'];
+		$r_btt = $post['btt_tambahan'];
+		$r_bt = $post['bt_bbh_tambahan'] + $post['bt_bbk_tambahan'];
+		$data = [
+			'kode_sub_kegiatan'				=> $post['kode_sub_kegiatan'],
+			'kode_kegiatan'				=> $post['kode_kegiatan'],
+			'kode_program'				=> $post['kode_program'],
+			'kode_bidang_urusan'				=> $post['kode_bidang_urusan'],
+			'id_instansi'				=> id_instansi(),
+			'kode_tahap'				=> $post['tahap'],
+			'bo_bp'				=> $post['bo_bp_tambahan'],
+			'bo_bbj'				=> $post['bo_bbj_tambahan'],
+			'bo_bs'				=> $post['bo_bs_tambahan'],
+			'bo_bh'				=> $post['bo_bh_tambahan'],
+			'bm_bmt'				=> $post['bm_bmt_tambahan'],
+			'bm_bmpm'				=> $post['bm_bmpm_tambahan'],
+			'bm_bmgb'				=> $post['bm_bmgb_tambahan'],
+			'bm_bmjji'				=> $post['bm_bmjji_tambahan'],
+			'bm_bmatl'				=> $post['bm_bmatl_tambahan'],
+			'btt'				=> $post['btt_tambahan'],
+			'bt_bbh'				=> $post['bt_bbh_tambahan'],
+			'bt_bbk'				=> $post['bt_bbk_tambahan'],
+
+			'realisasikan_bo'				=> $r_bo > 0  ? 1:0,
+			'realisasikan_bm'				=> $r_bm > 0  ? 1:0,
+			'realisasikan_btt'				=> $r_btt > 0  ? 1:0,
+			'realisasikan_bt'				=> $r_bt > 0  ? 1:0,
+			
+			'tahun'				=> tahun_anggaran(),
+			'created_on'				=> timestamp(),
+			'created_by'				=> id_user(),
+			'input_by '				=> 'Manual Input',
+		];
+		$this->db->update('anggaran_sub_kegiatan_tambahan', $data, $where);
 	}
 
 	public function saveedit_anggaran_sub_kegiatan_pergeseran($where)

@@ -219,6 +219,10 @@ class Paket_pekerjaan extends MY_Controller
             $q = $this->master_paket_model->anggaran_kegiatan_terpakai($kode_sub_kegiatan,$kode_kegiatan,$kode_program,$kode_bidang_urusan, $kode_tahap);
             $cek_anggaran_terpakai = $q->anggaran_terpakai==''? 0 : $q->anggaran_terpakai;
             $pagu_kegiatan = $q->pagu  == '' ? 0 : $q->pagu;
+
+            $q_tkd = $this->master_paket_model->anggaran_kegiatan_terpakai_tkd($kode_sub_kegiatan, $kode_tahap);
+            $cek_anggaran_terpakai_tkd = $q_tkd->pagu_tkd==''? 0 : $q_tkd->pagu_tkd;
+                
                 $output['status']     = true;
                 $output['data']['anggaran_sub_kegiatan']     = $pagu_kegiatan;
                 $output['data']['anggaran_terpakai']     = $cek_anggaran_terpakai;
@@ -226,6 +230,7 @@ class Paket_pekerjaan extends MY_Controller
                 $output['data']['tahapan_apbd']     = pilihan_nama_tahapan($q->kode_tahap).' '.$q->tahun;
                 $output['data']['nama_sub_kegiatan']     = $q->kategori =='Sub Kegiatan SKPD' ? $q->nama_sub_kegiatan : $q->nama_sub_kegiatan.'<br>'.$q->jenis_sub_kegiatan.' - '.$q->keterangan ;
                 $output['data']['anggaran_tersedia']     = $pagu_kegiatan - $cek_anggaran_terpakai;
+                $output['data']['anggaran_terpakai_tkd']     = $cek_anggaran_terpakai_tkd;
                 $output['message']     = 'Sukses';
             echo json_encode($output);
         }
@@ -593,13 +598,13 @@ class Paket_pekerjaan extends MY_Controller
 
 
                 if ($id_kedudukan=='') {
-                    $row[]  = '<button id="list-paket" status="collapse" id-pptk="'."???".'" kode-sub-kegiatan="'.$lists->kode_rekening_sub_kegiatan.'" kode-kegiatan="'.$lists->kode_rekening_kegiatan.'" kode-program="'.$lists->kode_rekening_program.'" kode-bidang-urusan="'.$lists->kode_bidang_urusan.'" kode_tahap="'.$lists->kode_tahap.'" izin_input_pptk="1" id_kedudukan="'.$id_kedudukan.'" alert_input_pptk="" class="btn btn-info btn-xs">+</button>'; 
+                    $row[]  = '<button id="list-paket" status="collapse" id-pptk="'."???".'" kode-sub-kegiatan="'.$lists->kode_rekening_sub_kegiatan.'" kode-kegiatan="'.$lists->kode_rekening_kegiatan.'" kode-program="'.$lists->kode_rekening_program.'" kode-bidang-urusan="'.$lists->kode_bidang_urusan.'" kode_tahap="'.$lists->kode_tahap.'"  id_tambahan_anggaran="'.$lists->id_tambahan_anggaran.'" izin_input_pptk="1" id_kedudukan="'.$id_kedudukan.'" alert_input_pptk="" class="btn btn-info btn-xs">+</button>'; 
                 }else{
                     if (in_array($krsk, $kumpul_usk_pptk)) {
-                        $row[]  = '<button id="list-paket" status="collapse" id-pptk="'."???".'" kode-sub-kegiatan="'.$lists->kode_rekening_sub_kegiatan.'" kode-kegiatan="'.$lists->kode_rekening_kegiatan.'" kode-program="'.$lists->kode_rekening_program.'" kode-bidang-urusan="'.$lists->kode_bidang_urusan.'" kode_tahap="'.$lists->kode_tahap.'" izin_input_pptk="1" id_kedudukan="'.$id_kedudukan.'" alert_input_pptk="" class="btn btn-info btn-xs">+</button>'; 
+                        $row[]  = '<button id="list-paket" status="collapse" id-pptk="'."???".'" kode-sub-kegiatan="'.$lists->kode_rekening_sub_kegiatan.'" kode-kegiatan="'.$lists->kode_rekening_kegiatan.'" kode-program="'.$lists->kode_rekening_program.'" kode-bidang-urusan="'.$lists->kode_bidang_urusan.'" kode_tahap="'.$lists->kode_tahap.'"  id_tambahan_anggaran="'.$lists->id_tambahan_anggaran.'"  izin_input_pptk="1" id_kedudukan="'.$id_kedudukan.'" alert_input_pptk="" class="btn btn-info btn-xs">+</button>'; 
                     }else{
 
-                        $row[]  = '<button id="list-paket" status="collapse" id-pptk="'."???".'" kode-sub-kegiatan="'.$lists->kode_rekening_sub_kegiatan.'" kode-kegiatan="'.$lists->kode_rekening_kegiatan.'" kode-program="'.$lists->kode_rekening_program.'" kode-bidang-urusan="'.$lists->kode_bidang_urusan.'" kode_tahap="'.$lists->kode_tahap.'" izin_input_pptk="0" id_kedudukan="'.$id_kedudukan.'" alert_input_pptk="'.$warning_bukan_kegiatan_anda.'" class="btn btn-outline-info btn-xs">+</button>'; 
+                        $row[]  = '<button id="list-paket" status="collapse" id-pptk="'."???".'" kode-sub-kegiatan="'.$lists->kode_rekening_sub_kegiatan.'" kode-kegiatan="'.$lists->kode_rekening_kegiatan.'" kode-program="'.$lists->kode_rekening_program.'" kode-bidang-urusan="'.$lists->kode_bidang_urusan.'" kode_tahap="'.$lists->kode_tahap.'"  id_tambahan_anggaran="'.$lists->id_tambahan_anggaran.'"  izin_input_pptk="0" id_kedudukan="'.$id_kedudukan.'" alert_input_pptk="'.$warning_bukan_kegiatan_anda.'" class="btn btn-outline-info btn-xs">+</button>'; 
                     }
 
                 }
@@ -800,7 +805,8 @@ class Paket_pekerjaan extends MY_Controller
         if ($jenis_paket=='RUTIN') {
             $rule_pagu = 'required|trim';
         }else{
-            $rule_pagu = 'required|trim|greater_than[0]';
+            // $rule_pagu = 'required|trim|greater_than[0]';
+            $rule_pagu = 'required|trim';
         }
         return [
             [
@@ -1005,7 +1011,13 @@ class Paket_pekerjaan extends MY_Controller
                       $row[]  = $lists->jenis_paket == 'RUTIN' ? '' : ($this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan) == 0 ? '<button class="btn btn-outline-danger" onclick="'.$warning_bukan_kegiatan_anda.'">Belum Ada</button>' : '<button class="btn btn-outline-danger"  onclick="'.$warning_bukan_kegiatan_anda.'">' . $this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan) . ' Lokasi</button>');
                     $row[]  = $lists->jenis_paket == 'RUTIN' ? '' : '<button class="btn btn-outline-danger"  onclick="'.$warning_bukan_kegiatan_anda.'">' . $lists->volume . '</button>';
                 }
-                $row[]  = number_format($lists->pagu);
+                if ($lists->id_tambahan_anggaran=='') {
+                    $row[]  = '<span style="">'.number_format($lists->pagu + ($lists->pagu_tkd == '' ? 0 : $lists->pagu_tkd)).'</span>';
+                    # code...
+                }else{
+                    $row[]  = '<span style="color:#8C00FF">'.number_format($lists->pagu + ($lists->pagu_tkd == '' ? 0 : $lists->pagu_tkd)).'</span>';
+
+                }
                 $row[]  = pilihan_nama_tahapan($lists->kode_tahap);
 
                 if (jadwal_rfk()['aktif']==0) {
@@ -1145,6 +1157,7 @@ class Paket_pekerjaan extends MY_Controller
                     $output['data']['kode_bidang_urusan']   = $value->kode_bidang_urusan;
                     $output['data']['kode_rekening_program']   = $value->kode_rekening_program;
                     $output['data']['kode_rekening_kegiatan']   = $value->kode_rekening_kegiatan;
+                    $output['data']['pagu_tkd']   = $value->pagu_tkd;
                     $output['data']['kode_tahap']   = tahapan_apbd();
                     $output['data']['nama_tahapan_paket']   = pilihan_nama_tahapan($value->kode_tahap);
                     $output['data']['kode_rekening_sub_kegiatan']   = $krsk ;
