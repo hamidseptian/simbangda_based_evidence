@@ -2163,11 +2163,10 @@ function edit_target_keuangan_tambahan(x) {
 			url: baseUrl('data_apbd/update_target_keuangan_tambahan/' + kode_sub_kegiatan + '/' + tahap),
 			success: function(c) {
 				if (pergeseran_ke=='' || pergeseran_ke==null) {
-					get_target(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran)
+					get_target(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran);
 				}
 				else{
-					get_target_pergeseran(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran, pergeseran_ke)
-					console.log('terpilih pergeseran');
+					get_target_pergeseran(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran, pergeseran_ke);
 
 				}
 			},
