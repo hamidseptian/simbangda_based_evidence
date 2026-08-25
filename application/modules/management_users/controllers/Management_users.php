@@ -148,6 +148,197 @@ class Management_users extends MY_Controller
             echo json_encode($output);
         }
     }
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function dt_master_user_chatbot()
+    {
+        $draw   = $_POST['draw'];
+        $start  = $_POST['start'];
+        $length = $_POST['length'];
+        $id_instansi = id_instansi();
+        $key = $_POST['search']['value'];
+
+        // Mapping kolom untuk sorting dinamis (SESUAIKAN dengan alias tabel yang benar)
+        $valid_columns = [
+            1 => 'mi.nama_instansi',
+            2 => 'ac.nama',
+            3 => 'ac.no_hp',
+            4 => 'ha.nama_hak_akses',
+        ];
+
+        $col = 0;
+        $dir = 'desc';
+        if (!empty($_POST['order'])) {
+            foreach ($_POST['order'] as $o) {
+                $col = $o['column'];
+                $dir = $o['dir'];
+            }
+        }
+        if ($dir != 'asc' && $dir != 'desc') {
+            $dir = 'desc';
+        }
+
+        $order_column = isset($valid_columns[$col]) ? $valid_columns[$col] : 'ac.nama';
+
+
+          $id_group = $this->session->userdata('id_group');
+        $id_instansi = id_instansi();
+            if ($id_group == 5) {
+                $where = ['ac.id_instansi' => $id_instansi];
+                # code...
+            }else{
+                $where = [ ];
+                // $where             = array('id_user !=' => 0, 'id_kota'=>'', 'id_kedudukan'=> null);
+
+            }
+
+
+
+
+        $this->db->reset_query();
+        $this->db->select('ac.*, mi.nama_instansi, ha.nama_hak_akses');
+        $this->db->from('akses_chatbot ac');
+        $this->db->join('master_instansi mi', 'ac.id_instansi = mi.id_instansi', 'left');
+        $this->db->join('hak_akses_chatbot ha', 'ac.id_hak_akses = ha.id_hak_akses', 'left');
+        $this->db->where($where);
+
+        if ($key) {
+            $this->db->group_start();
+                $this->db->or_like(['ac.no_hp' => $key, 'ac.nama' => $key]);
+            $this->db->group_end();
+        }
+
+        // total setelah filter/search (SEBELUM limit)
+        $all_data_filtered = $this->db->count_all_results('', false);
+
+        $this->db->order_by($order_column, $dir);
+        $this->db->limit($length, $start);
+        $query = $this->db->get();
+        $q = $query->result_array();
+
+        // total keseluruhan tanpa filter search (cuma where id_instansi)
+        $this->db->reset_query();
+        $this->db->from('akses_chatbot ac');
+        $this->db->where($where);
+        $all_data_total = $this->db->count_all_results();
+
+        $data = [];
+        $no = $start;
+        foreach ($q as $v) {
+            $no++;
+            $row = [];
+            $row[] = $no;
+
+                $id_akses_chatbot         = sbe_crypt($v['id_akses_chatbot'], 'E');
+            $row[] = $v['nama_instansi'];
+            $row[] = $v['nama'];
+            $row[] = $v['no_hp'];
+            $row[] = $v['nama_hak_akses'];
+            $row[] = $v['is_active'] == 1 ? 'Aktif' : 'Tidak Aktif';
+            // $row[] = '??';
+
+
+
+                    $row[]          = '<button class="btn btn-warning btn-xs" onclick="edit_master_user_chatbot(' . "'" . $id_akses_chatbot. "'" . ')">
+                                       <i class="far fa-edit"></i>
+                                       </button>
+                                       <button class="btn btn-danger btn-xs" onclick="deleteUser_chatbot(' . "'" . $id_akses_chatbot . "'" . ')">
+                                       <i class="fas fa-trash"></i>
+                                       </button>';
+                  
+
+
+            $data[] = $row;
+        }
+
+        $output = [
+            "draw"            => intval($draw),
+            "recordsTotal"    => $all_data_total,
+            "recordsFiltered" => $all_data_filtered,
+            "data"            => $data,
+        ];
+
+        echo json_encode($output);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function dt_helpdesk()
     {
         if (!$this->input->is_ajax_request()) {
@@ -457,6 +648,42 @@ public function rules_save_user()
     }
 
 
+public function rules_save_user_chatbot()
+    {
+        return [
+            [
+                'field' => 'idInstansi',
+                'label' => 'ID Instansi',
+                'rules' => 'required'
+            ],
+         
+            [
+                'field' => 'fullName',
+                'label' => 'Full Name',
+                'rules' => 'required'
+            ],
+            [
+                'field' => 'nohp',
+                'label' => 'No HP',
+                'rules' => 'required|trim|is_unique[akses_chatbot.no_hp]'
+            ],
+           
+            
+
+            [
+                'field' => 'group',
+                'label' => 'Gruop',
+                'rules' => 'required'
+            ],
+            [
+                'field' => 'isActive',
+                'label' => 'Is Active',
+                'rules' => 'required'
+            ],
+        ];
+    }
+
+
 
     public function save_master_user()
     {
@@ -487,6 +714,41 @@ public function rules_save_user()
                
                 $master_user->delete_master_user_groups(['id_user' => $id_user]);
                 $master_user->save_master_user_groups($data_group);
+
+                $output['success']     = true;
+                $output['messages'] = "User berhasil di simpan";
+            } else {
+                $output['success'] = false;
+                foreach ($_POST as $key => $value) {
+                    $output['messages'][$key] = form_error($key);
+                }
+            }
+
+            echo json_encode($output);
+        }
+    }
+
+
+    public function save_master_user_chatbot()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        } else {
+            $output    = [
+                'success' => false,
+                'messages' => []
+            ];
+            $master_user    = $this->master_user_model;
+            $validation     = $this->form_validation;
+            $validation->set_rules($this->rules_save_user_chatbot());
+            $validation->set_error_delimiters('<p class="text-danger">', '</p>');
+
+            if ($validation->run()) {
+                $id_user    = $master_user->save_master_user_chatbot();
+                
+             
+                   
+               
 
                 $output['success']     = true;
                 $output['messages'] = "User berhasil di simpan";
@@ -638,6 +900,80 @@ public function rules_save_user()
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function saveedit_master_user_chatbot()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        } else {
+            $output    = [
+                'success' => false,
+                'messages' => []
+            ];
+            $post                       = $this->input->post();
+            $master_user    = $this->master_user_model;
+            $validation     = $this->form_validation;
+            $validation->set_rules($this->rules_save_user_chatbot());
+            $validation->set_error_delimiters('<p class="text-danger">', '</p>');
+                $id_user    = $this->input->post('idUser');
+
+            if ($validation->run()) {
+                
+             
+
+                            $master_user->saveedit_master_user_chatbot();
+
+
+
+                
+                $output['success']     = true;
+                $output['messages'] = "User berhasil di simpan";
+                   
+             
+            } else {
+                $output['success'] = false;
+                foreach ($_POST as $key => $value) {
+                    $output['messages'][$key] = form_error($key);
+                }
+            }
+
+                $output['id_user'] = $id_user;
+            echo json_encode($output);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
     public function get_user()
     {
         if (!$this->input->is_ajax_request()) {
@@ -665,6 +1001,36 @@ public function rules_save_user()
 
                 $output['status'] = true;
             }
+
+                $output['cek'] = $id_user;
+            echo json_encode($output);
+        }
+    }
+    public function get_user_chatbot()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        } else {
+            $output = [
+                'status'    => false,
+                'data'      => []
+            ];
+
+            $id_user = sbe_crypt($this->input->post('id_user'), 'D');
+            $user    = $this->db->get_where('akses_chatbot', ['id_akses_chatbot' => $id_user]);
+
+                $value= $user->row();
+               
+                    $output['data']['id_akses_chatbot']                  = sbe_crypt($value->id_akses_chatbot);
+                    $output['data']['nama']                  = $value->nama;
+                    $output['data']['no_hp']                  = $value->no_hp;
+                    $output['data']['id_instansi']                  = $value->id_instansi;
+                    $output['data']['id_hak_akses']                  = $value->id_hak_akses;
+                    $output['data']['is_active']                  = $value->is_active ;
+                 
+
+                $output['status'] = true;
+          
 
                 $output['cek'] = $id_user;
             echo json_encode($output);
@@ -1096,6 +1462,28 @@ public function rules_save_user()
 
             $delete_master = $this->db->delete('master_users',['id_user'=>$id_user]);
             $delete_group = $this->db->delete('users_groups',['id_user'=>$id_user]);
+
+            // if ($delete) {
+                $output['status'] = true;
+            // }
+
+            echo json_encode($output);
+        }
+    }
+    public function delete_user_chatbot()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        } else {
+            $output = [
+                'status'    => false,
+                'data'      => [],
+                'message'   => ''
+            ];
+
+            $id_akses_chatbot = sbe_crypt($this->input->post('id_user'), 'D');
+
+            $delete_master = $this->db->delete('akses_chatbot',['id_akses_chatbot'=>$id_akses_chatbot]);
 
             // if ($delete) {
                 $output['status'] = true;

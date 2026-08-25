@@ -98,12 +98,12 @@
                             <tbody class="data-realisasi-keuangan">
 
                             </tbody>
-                            <tbody>
+                            <tfoot>
                                 <tr class="total_realisasi">
                                     
                                 </tr>
 
-                            </tbody>
+                            </tfoot>
                         </table>
                         </div>
 

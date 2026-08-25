@@ -80,16 +80,17 @@
                                                     <button type="button" class="btn btn-primary" id="add_user_chatbot" onclick="add_user_chatbot()">Daftarkan WA Untuk Chatbot</button>
                                              
                                             <hr>
-                                            <table id="table-master-user" class="display" style="width:100%">
+                                            <div class="alert alert-danger">Bagian simpan edit chatbot belum berfungsi</div>
+                                            <table id="table-master-user-chatbot" class="display" style="width:100%">
                                                 <thead>
                                                     <tr>
                                                         <th>No</th>
                                                         <th>Instansi</th>
 
-                                                        <th>Group</th>
-                                                        <th>Username</th>
-                                                        <th>Full Name</th>
-                                                        <th>E-Mail</th>
+                                                        <th>Nama</th>
+                                                        <th>No HP</th>
+                                                        <th>Hak Akses</th>
+                                                      
                                                         <th>Active</th>
                                                         <th>Action</th>
                                                     </tr>

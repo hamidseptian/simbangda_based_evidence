@@ -82,9 +82,8 @@ function input_realisasi(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_
             $('#modal-realisasi-keuangan').find('.f_input_rk_tambahan').hide();
 
         }else{
-            $('#modal-realisasi-keuangan').find('.f_input_rk_tambahan').find('#nama_tambahan_anggaran').html('<h5>Realisasi '+ nama_anggaran_tambahan + '</h5>');
             $('#modal-realisasi-keuangan').find('.f_input_rk_tambahan').show();
-            input_realisasi_tambahan(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, pagu_tambahan, kategori, tahap, tahun, pergeseran_ke, id_tambahan_anggaran);
+            input_realisasi_tambahan(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, pagu, kategori, tahap, tahun, pergeseran_ke, id_tambahan_anggaran);
 
         }
      
@@ -419,7 +418,6 @@ function input_realisasi_tambahan(jenis, kode_rekening_sub_kegiatan, kode_kegiat
             type    : 'POST',
             data    : { 
                 kategori : kategori,
-                pagu : pagu,
                 kode_rekening_sub_kegiatan : kode_rekening_sub_kegiatan,
                 kode_kegiatan : kode_kegiatan,
                 kode_program : kode_program,
@@ -432,12 +430,12 @@ function input_realisasi_tambahan(jenis, kode_rekening_sub_kegiatan, kode_kegiat
             },
             success : function(data)
             {
-                console.log(data);
+            $('#modal-realisasi-keuangan').find('.f_input_rk_tambahan').find('#nama_tambahan_anggaran').html('<h5>Realisasi '+ data.nama_anggaran + '</h5>');
                 var caption_pergeseran = pergeseran_ke == '' ? '' : '<br>Pergeseran ke-'+pergeseran_ke;
 
                 $('#modal-realisasi-keuangan').find('#pagu_tambahan').val(pagu==''? 0: pagu);
                 var pagu_apbd = $('#modal-realisasi-keuangan').find('#pagu_apbd').val();
-                var pagu_tambahan   = pagu;
+                var pagu_tambahan   = data.pagu_total;
                 var pagu_total = parseInt(pagu_apbd) + parseInt(pagu_tambahan);
                 var caption_pagu = "APBD : "+ convert_to_rupiah(pagu_apbd)+ "<br>TKD : "+ convert_to_rupiah(pagu_tambahan) + "<br>Total : "+ convert_to_rupiah(pagu_total) ;
                 $('#modal-realisasi-keuangan').find('#pagu_sub_kegiatan').html(caption_pagu);
@@ -456,7 +454,9 @@ function input_realisasi_tambahan(jenis, kode_rekening_sub_kegiatan, kode_kegiat
                         $('#table-realisasi-keuangan-tambahan').show();
                         var total_realisasi = 0;
                         $.each(data.data, function(k, v) {
-                            var bulan_realisasi = k+1;
+
+                            var bulan_realisasi = parseInt(k)+1;
+                            
                             if (jenis=='bo') {
 
                                 let bo_bp;
@@ -613,7 +613,7 @@ function input_realisasi_tambahan(jenis, kode_rekening_sub_kegiatan, kode_kegiat
                             total_realisasi +=total
                             $('.data-realisasi-keuangan').append(
                                 '<tr ' +v.warna+'>' +
-                                '<td>' + (k + 1) + '</td>' +
+                                '<td>' + bulan_realisasi + '</td>' +
                                 '<td>' + bulan(v.bulan) + hapus_realisasi+ '</td>' +
                                 realisasi + 
                         
@@ -622,6 +622,9 @@ function input_realisasi_tambahan(jenis, kode_rekening_sub_kegiatan, kode_kegiat
                                 // '<td style="text-align: right;">' + '<button  id="target-fisik" kode_sub_kegiatan="' + kode_rekening_sub_kegiatan + '" kode_bidang_urusan="' + kode_bidang_urusan + '" kode_program="' + kode_program + '" kode_kegiatan="' + kode_kegiatan + '" pagu="' + pagu + '"  tahap="' + tahap + '" pk="' + v.id + '" class="edit tombol" data-type="text" onclick="edit_target_keuangan(this)">' + convert_to_rupiah(v.t_keuangan) + '</button>'  + '</td>' +
                                 '</tr>'
                             );
+
+                            
+                           
                         });
                     $('.total_realisasi').html('<td class="label_total_realisasi" colspan="'+colspan_total +'">Total Realisasi</td>' +
                                     '<td id="nilai_total_realisasi">'+ convert_to_rupiah(total_realisasi)+'</td>');
@@ -874,14 +877,18 @@ function get_realisasi(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, 
     //         }
     //     });
     // }
-
-    function convert_to_rupiah(angka) {
-        var rupiah = '';
-        var angkarev = angka.toString().split('').reverse().join('');
-        for (var i = 0; i < angkarev.length; i++)
-            if (i % 3 == 0) rupiah += angkarev.substr(i, 3) + '.';
-        return rupiah.split('', rupiah.length - 1).reverse().join('');
+function convert_to_rupiah(angka) {
+    if (angka === undefined || angka === null || angka === '') {
+        console.warn('convert_to_rupiah dipanggil dengan nilai kosong:', angka);
+        // console.trace(); // tampilkan call stack lengkap di console
+        angka = 0;
     }
+    var rupiah = '';
+    var angkarev = angka.toString().split('').reverse().join('');
+    for (var i = 0; i < angkarev.length; i++)
+        if (i % 3 == 0) rupiah += angkarev.substr(i, 3) + '.';
+    return rupiah.split('', rupiah.length - 1).reverse().join('');
+}
 
     function bulan(x) {
         let bulan = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'July', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];

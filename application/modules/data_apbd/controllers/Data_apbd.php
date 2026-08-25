@@ -170,7 +170,8 @@ class Data_apbd extends MY_Controller
                 $program = [];
                 foreach ($q_program->result_array() as $item) {
                     $kode = $item['kode_rekening_program'];
-                    $pagu = $item['pagu'];
+                    
+                    $pagu = $item['pagu'] + ($item['pagu_tambahan'] == '' ? 0 : $item['pagu_tambahan']);
 
                     if (!isset($program[$kode])) {
                         $program[$kode] = [
@@ -948,8 +949,8 @@ public function sync_eplanning()
 
             foreach ($q_kegiatan->result_array() as $item) {
 
-                $kode = $item['kode_rekening_kegiatan'];
-                $pagu = $item['pagu'];
+                    $kode = $item['kode_rekening_kegiatan'];
+                    $pagu = $item['pagu'] + ($item['pagu_tambahan'] == '' ? 0 : $item['pagu_tambahan']);
 
                 if (!isset($kegiatan[$kode])) {
                     $kegiatan[$kode] = [
@@ -1714,7 +1715,7 @@ public function sub_kegiatan_apbd_instansi()
 
                         $onclick = "hapus_sub_kegiatan_instansi('".$lists->kode_sub_kegiatan."','".$lists->kode_kegiatan."', '".$lists->kode_program."','".$lists->kode_tahap."', '".$lists->tahun."','gabungan')";
                         $onclick2 = "input_anggaran_pergeseran('".$lists->kode_sub_kegiatan."','".$lists->kode_kegiatan."', '".$lists->kode_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$pergeseran_ke_saat_ini."','gabungan')";
-                        $onclick3 = "get_target_pergeseran('".$lists->kode_sub_kegiatan."','".$lists->kode_kegiatan."', '".$lists->kode_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$pagu_saat_ini."','".$pergeseran_ke_saat_ini."')";
+                        $onclick3 = "get_target_pergeseran('".$lists->kode_sub_kegiatan."','".$lists->kode_kegiatan."', '".$lists->kode_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$pagu_saat_ini."','".$pergeseran_ke_saat_ini."','".$lists->id_tambahan_anggaran."')";
                         $onclick4 = "Swal.fire('dev','Dalam Pengmbangan','error')";//"get_sumber_dana('".$lists->kode_sub_kegiatan."','".$lists->kode_kegiatan."', '".$lists->kode_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$pagu_saat_ini."')";
 
 
@@ -2483,6 +2484,9 @@ public function sub_kegiatan_apbd_instansi()
             $tahap = $this->input->post('tahap');
             $tahun = $this->input->post('tahun');
             $id_tambahan_anggaran = $this->input->post('id_tambahan_anggaran');
+
+            $nama_anggaran = $this->db->query("SELECT nama_anggaran from tambahan_anggaran where id_tambahan_anggaran='$id_tambahan_anggaran'")->row_array();
+            $nama_anggaran = $nama_anggaran['nama_anggaran'];
             $id_instansi = id_instansi();
             $where = [
                 'kode_bidang_urusan' => $kode_bidang_urusan, 
@@ -2499,6 +2503,7 @@ public function sub_kegiatan_apbd_instansi()
             $pecah = explode('.', $kode_rekening_sub_kegiatan);
             $kode_sub_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
             $output['totaldata']             = $target->num_rows();
+            $output['nama_anggaran']  = $nama_anggaran;
          
             if ($target->num_rows() > 0) {
                 foreach ($target->result() as $key => $value) {

@@ -118,10 +118,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="formMasterUser">
-                    <input type="hidden" id="idUser" class="idUser" name="idUser">
+                <form id="formMasterUser_chatbot">
+                    <input type="" id="idUser" class="idUser" name="idUser">
                      <?php if ($id_group==5) { ?>
-                        <input type="hidden" name="idInstansi" class="form-control" id="idInstansi" value="<?php echo encrypt($id_instansi) ?>">
+                        <input type="" name="idInstansi" class="form-control" id="idInstansi" value="<?php echo encrypt($id_instansi) ?>">
                                     
                         <?php }else{ ?>
                             <div class="form-group">
@@ -152,10 +152,7 @@
                     </div>
                      <div class="form-group">
                         <label for="group">Hak Akses</label> <br>
-                        <!--  <?php //foreach($master_group->result() as $rows => $value): ?>
-                                <input type="radio" name="group" value="<?php echo $value->id_group; ?>" id="group" style="margin-right: 20px"><?php echo $value->group_name  ; ?> <br>
-                            <?php //endforeach; ?> -->
-
+            
 
 
                               <select name="group" class="form-control" id="group" style="width: 100%;">

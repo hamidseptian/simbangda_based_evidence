@@ -773,7 +773,6 @@ foreach ($hasil as $k_p => $v_p) {
 </table>
 
 
-<hr>
 
 <div>
   

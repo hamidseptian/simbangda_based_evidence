@@ -245,6 +245,24 @@ class Master_user_model extends CI_Model
 
         return $this->db->insert_id();
     }
+    public function save_master_user_chatbot()
+    {
+		$post 						= $this->input->post();
+		$data = [
+			
+				 'id_instansi'		=> decrypt($post['idInstansi']),
+				 'nama' 		=> $post['fullName'],
+				 'no_hp' 		=> $post['nohp'],
+				 'id_hak_akses'			=> $post['group'],
+				 'is_active'		=> $post['isActive'],
+				 'created_on'		=> timestamp(),
+				
+				 'created_by' 		=> id_user()
+				];
+        $this->db->insert('akses_chatbot',$data);
+
+        return $this->db->insert_id();
+    }
     public function save_master_user_kab_kota()
     {
 		$post 						= $this->input->post();
@@ -286,6 +304,28 @@ class Master_user_model extends CI_Model
 			'id_user'=>$post['idUser']
 		];
         $this->db->update($this->table_master_user,$data, $where );
+
+        return $this->db->insert_id();
+    }
+    public function saveedit_master_user_chatbot()
+    {
+		$post 						= $this->input->post();
+		$data = [
+			
+				 'id_instansi'		=> decrypt($post['idInstansi']),
+				 'nama' 		=> $post['fullName'],
+				 'no_hp' 		=> $post['nohp'],
+				 'id_hak_akses'			=> $post['group'],
+				 'is_active'		=> $post['isActive'],
+				 'created_on'		=> timestamp(),
+				
+				 'created_by' 		=> id_user()
+				];
+
+		$where = [
+			'id_akses_chatbot'=>$post['idUser']
+		];
+        $this->db->update('akses_chatbdot',$data, $where );
 
         return $this->db->insert_id();
     }

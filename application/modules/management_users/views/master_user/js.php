@@ -19,6 +19,7 @@
 
 	$(document).ready(function() {
 		showMasterUser();
+		showMasterUser_chatbot();
 		select2();
 	});
 	/**
@@ -41,6 +42,44 @@ function showMasterUser() {
 			responsive: true,
 			ajax: {
 				url: baseUrl('management_users/dt_master_user/'),
+				type: "POST",
+				data: {
+					//kode_rekening_program: kode_rekening_program
+				},
+			},
+			columnDefs: [{
+					targets: [0, -1, -2],
+					orderable: false,
+				},
+				{
+					width: "1%",
+					targets: [-1, -2],
+				},
+				{
+					className: "dt-center",
+					targets: [-1, -2],
+				},
+				{
+					className: "dt-right",
+					targets: [2, 3, 4, 5],
+				},
+			],
+
+		});
+	}
+
+
+
+function showMasterUser_chatbot() {
+		// $("#table-kegiatan-apbd").hide();
+		// $("#table-kegiatan-apbd").slideUp( 1 ).delay( 1 ).fadeIn( 1 );
+		$('#table-master-user-chatbot').DataTable({
+			processing	: true,
+			serverSide: true,
+			bDestroy: true,
+			responsive: true,
+			ajax: {
+				url: baseUrl('management_users/dt_master_user_chatbot/'),
 				type: "POST",
 				data: {
 					//kode_rekening_program: kode_rekening_program
@@ -136,8 +175,8 @@ function showMasterUser() {
         }
 		
 		$('#formMasterUser')[0].reset();
-		$('#btnSaveMasterUser').show();
-		$('#btnUpdateMasterUser').hide();
+		$('#btnSave_akseschatbot').show();
+		$('#btnUpdate_akseschatbot').hide();
 	}
 	/* Fungsi untuk menampilkan user */
 	function showUser(idInstansi) {
@@ -278,101 +317,50 @@ function showMasterUser() {
 
 
 	function save_akseschatbot() {
-		// $('.form-control').removeClass('is-valid')
-		// 				  .removeClass('is-invalid');
-  //       $('.text-danger').remove();
-  //       $('#btnSaveMasterUser').html('Loading...');
+		$('.form-control').removeClass('is-valid')
+						  .removeClass('is-invalid');
+        $('.text-danger').remove();
 
 
-		// $.ajax({
-		// 	url: baseUrl('management_users/save_akses_chatbot'),
-		// 	type : "POST",
-		// 	dataType: 'JSON',
-		// 	data :$('#formMasterUser').serialize(),
-		// 	success : function(data){
+		$.ajax({
+			url: baseUrl('management_users/save_master_user_chatbot'),
+			type : "POST",
+			dataType: 'JSON',
+			data :$('#formMasterUser_chatbot').serialize(),
+			success : function(data){
 				
-		// 		if(data.success == true)
-		// 		{
-		// 			$('#btnSaveMasterUser').html('Save changes');
-		// 			Swal.fire(
-		// 				      'Sukses!',
-		// 				      'Master User Disimpan..!',
-		// 				      'success'
-		// 				    );
-		// 			$('#formMasterUser')[0].reset();
-		// 			$('#clodemodalmodalMasterUser').click();
+				if(data.success == true)
+				{
+					$('#btnSaveMasterUser').html('Save changes');
+					Swal.fire(
+						      'Sukses!',
+						      'Master User Disimpan..!',
+						      'success'
+						    );
+					$('#formMasterUser_chatbot')[0].reset();
+					$('#tambah_user_chatbot').modal('hide');
 					
-		// 				$('#table-master-user').DataTable().ajax.reload(null, false);
-		// 		}else{
-		// 			$.each(data.messages, function (key, value)
-		// 			{
+						$('#table-master-user-chatbot').DataTable().ajax.reload(null, false);
+				}else{
+					$.each(data.messages, function (key, value)
+					{
 						
-		// 				var element = $('#' + key);
-		// 				element.removeClass('is-invalid')
-		// 					.addClass(value.length > 0 ? 'is-invalid' : 'is-valid')
-		// 					.find('.text-danger')
-		// 					.remove();
-		// 				element.after(value);
-		// 			});
-		// 		}
-		// 	},
-		// 	error: function (jqXHR, textStatus, errorThrown) {
+						var element = $('#tambah_user_chatbot').find('#' + key);
+						element.removeClass('is-invalid')
+							.addClass(value.length > 0 ? 'is-invalid' : 'is-valid')
+							.find('.text-danger')
+							.remove();
+						element.after(value);
+					});
+				}
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
 				
-		// 	}
-		//  });
-		alert('coming soon');
+			}
+		 });
+		// alert('coming soon');
 	}
 	/* Fungsi untuk menghapus master module */
-
-
-	function update_akseschatbot() {
-		// $('.form-control').removeClass('is-valid')
-		// 				  .removeClass('is-invalid');
-  //       $('.text-danger').remove();
-  //       $('#btnSaveMasterUser').html('Loading...');
-
-
-		// $.ajax({
-		// 	url: baseUrl('management_users/save_akses_chatbot'),
-		// 	type : "POST",
-		// 	dataType: 'JSON',
-		// 	data :$('#formMasterUser').serialize(),
-		// 	success : function(data){
-				
-		// 		if(data.success == true)
-		// 		{
-		// 			$('#btnSaveMasterUser').html('Save changes');
-		// 			Swal.fire(
-		// 				      'Sukses!',
-		// 				      'Master User Disimpan..!',
-		// 				      'success'
-		// 				    );
-		// 			$('#formMasterUser')[0].reset();
-		// 			$('#clodemodalmodalMasterUser').click();
-					
-		// 				$('#table-master-user').DataTable().ajax.reload(null, false);
-		// 		}else{
-		// 			$.each(data.messages, function (key, value)
-		// 			{
-						
-		// 				var element = $('#' + key);
-		// 				element.removeClass('is-invalid')
-		// 					.addClass(value.length > 0 ? 'is-invalid' : 'is-valid')
-		// 					.find('.text-danger')
-		// 					.remove();
-		// 				element.after(value);
-		// 			});
-		// 		}
-		// 	},
-		// 	error: function (jqXHR, textStatus, errorThrown) {
-				
-		// 	}
-		//  });
-		alert('coming soon');
-	}
-	/* Fungsi untuk menghapus master module */
-
-
 
 
 
@@ -403,6 +391,52 @@ function showMasterUser() {
                 	$('#group').val(data.data.group).trigger('change');
                 	$('#idInstansi').val(data.data.id_instansi).trigger('change');
                 	$('#isActive').val(data.data.is_active);
+                
+                }
+            },
+            error : function(){
+            	
+            }
+        });
+
+		$('#btnSaveMasterUser').hide();
+		$('#btnUpdateMasterUser').show();
+	}
+
+
+
+
+	function edit_master_user_chatbot(id_user)
+	{
+		status = 'update';
+		$('#tambah_user_chatbot').modal('show').find('.modal-title').text('Edit User Chatbot');
+		$('.form-control').removeClass('is-valid')
+						  .removeClass('is-invalid');
+        $('.text-danger').remove();
+
+
+		$('#btnSave_akseschatbot').hide();
+		$('#btnUpdate_akseschatbot').show();
+
+
+		$.ajax(
+        {
+            url     : baseUrl('management_users/get_user_chatbot/'),
+            dataType: 'JSON',
+            type    : 'POST',
+            data    : { id_user : id_user },
+            success : function(data)
+            {
+            	console.log(data);
+                if(data.status == true)
+                {
+                	$('#tambah_user_chatbot').find('#idUser').val(data.data.id_akses_chatbot);
+                	$('#tambah_user_chatbot').find('#fullName').val(data.data.nama);
+                	$('#tambah_user_chatbot').find('#nohp').val(data.data.no_hp);
+                
+                	$('#tambah_user_chatbot').find('#group').val(data.data.id_hak_akses).trigger('change');
+                	// $('#tambah_user_chatbot').find('#idInstansi').val(data.data.id_instansi).trigger('change');
+                	$('#tambah_user_chatbot').find('#isActive').val(data.data.is_active);
                 
                 }
             },
@@ -467,6 +501,55 @@ function showMasterUser() {
 		// ajaxSave(url_data, 'POST', 'JSON', 'formMasterUser', 'btnSaveMasterUser', 'Save Change', 'modalMasterUser');
 		// showMasterUser();
 	}
+
+
+
+	function update_akseschatbot() {
+		$('.form-control').removeClass('is-valid')
+						  .removeClass('is-invalid');
+        $('.text-danger').remove();
+
+        formdata = $('#formMasterUser_chatbot').serialize();
+        
+		$.ajax({
+			url: baseUrl('management_users/saveedit_master_user_chatbot'),
+			type : "POST",
+			dataType: 'JSON',
+			data : formdata,
+			success : function(data){
+				
+				if(data.success == true)
+				{
+					Swal.fire(
+						      'Sukses!',
+						      'Master User Disimpan..!',
+						      'success'
+						    );
+					$('#formMasterUser_chatbot')[0].reset();
+					$('#tambah_user_chatbot').modal('hide');
+					$('#table-master-user-chatbot').DataTable().ajax.reload(null, false);
+					// showMasterUser();
+				}else{
+					$.each(data.messages, function (key, value)
+					{
+						
+						var element = $('#tambah_user_chatbot').find('#' + key);
+						element.removeClass('is-invalid')
+							.addClass(value.length > 0 ? 'is-invalid' : 'is-valid')
+							.find('.text-danger')
+							.remove();
+						element.after(value);
+					});
+				}
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+				
+			}
+		 });
+	}
+
+
+
 	function deleteMasterModule(idModule) {
 		if (confirm('Are you sure ?')) {
 			var data = {
@@ -507,6 +590,52 @@ function showMasterUser() {
 						    );
 							
 						$('#table-master-user').DataTable().ajax.reload(null, false);
+						}
+			  		},
+			  		error : function (){
+			  			 Swal.fire(
+					      'Error!',
+					      'Error',
+					      'error'
+					    )
+			  		}
+			  	});
+
+			  
+			  }
+			});
+	}
+	/* Fungsi untuk menghapus master user */
+	function deleteUser_chatbot(id_user) {
+		console.log(id_user);
+		Swal.fire({
+			  title: 'Hapus ?',
+			  text: 'Hapus User Chatbot.?',
+			  icon: 'warning',
+			  showCancelButton: true,
+			  confirmButtonColor: '#3085d6',
+			  cancelButtonColor: '#d33',
+			  confirmButtonText: 'Hapus',
+			  cancelButtonText: 'Batal'
+			}).then((result) => {
+			  if (result.isConfirmed) {
+			  	$.ajax({
+			  		url: baseUrl('management_users/delete_user_chatbot/'),
+					dataType: 'JSON',
+					type: 'POST',
+					data: {
+						id_user: id_user
+					},
+			  		success : function(data){
+			  			if(data.status == true)
+						{
+							Swal.fire(
+						      'Dihapus!',
+						      'Master User Dihapus..!',
+						      'success'
+						    );
+							
+						$('#table-master-user-chatbot').DataTable().ajax.reload(null, false);
 						}
 			  		},
 			  		error : function (){
