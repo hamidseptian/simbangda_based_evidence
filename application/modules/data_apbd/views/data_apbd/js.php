@@ -1509,7 +1509,8 @@ function get_target_tambahan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_pro
             },
             success : function(data)
             {
-
+            	console.log(data.pagu);
+            	var pagu = parseInt(data.pagu);
 	            $('#modal-target').find('.f_input_tk_tambahan').find('#nama_tambahan_anggaran').html('<h5>Target '+ data.nama_anggaran + '</h5>');
 
             	if (data.totaldata == 0) {

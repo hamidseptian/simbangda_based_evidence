@@ -2484,6 +2484,7 @@ public function sub_kegiatan_apbd_instansi()
             $tahap = $this->input->post('tahap');
             $tahun = $this->input->post('tahun');
             $id_tambahan_anggaran = $this->input->post('id_tambahan_anggaran');
+            $q_pagu = $this->db->query("SELECT (bo_bp+bo_bbj+bo_bs+bo_bh+bm_bmt+bm_bmpm+bm_bmgb+bm_bmjji+bm_bmatl+btt+bt_bbh+bt_bbk) as totalpagu from anggaran_sub_kegiatan_tambahan where id_tambahan_anggaran='$id_tambahan_anggaran' and kode_sub_kegiatan='$kode_rekening_sub_kegiatan' and tahun = '$tahun' and kode_tahap='$tahap'")->row_array();
 
             $nama_anggaran = $this->db->query("SELECT nama_anggaran from tambahan_anggaran where id_tambahan_anggaran='$id_tambahan_anggaran'")->row_array();
             $nama_anggaran = $nama_anggaran['nama_anggaran'];
@@ -2504,6 +2505,7 @@ public function sub_kegiatan_apbd_instansi()
             $kode_sub_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
             $output['totaldata']             = $target->num_rows();
             $output['nama_anggaran']  = $nama_anggaran;
+            $output['pagu']  = $q_pagu['totalpagu'];
          
             if ($target->num_rows() > 0) {
                 foreach ($target->result() as $key => $value) {
@@ -4490,8 +4492,9 @@ public function sub_kegiatan_apbd_instansi()
 
                 }
 
+                $where_tambahan = ['kode_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'kode_kegiatan'=>$kode_kegiatan, 'kode_program'=>$kode_program, 'kode_tahap'=>$tahap,  'tahun'=>$tahun,   'id_instansi' => id_instansi()];
                 $pagu_sub_kegiatan    = $this->db->get_where('anggaran_sub_kegiatan', $where);
-                $pagu_sub_kegiatan_tambahan    = $this->db->get_where('anggaran_sub_kegiatan_tambahan', $where);
+                $pagu_sub_kegiatan_tambahan    = $this->db->get_where('anggaran_sub_kegiatan_tambahan', $where_tambahan);
             if ($validation->run($this)) {
                 $post               = $this->input->post();
                 
@@ -4518,7 +4521,7 @@ public function sub_kegiatan_apbd_instansi()
                     $this->db->update('sub_kegiatan_instansi', $where_tambahan, $where);
                     if ($pagu_sub_kegiatan_tambahan->num_rows()>0) {
                         // $whereedit = array_merge($where, $where_tambahan);
-                        $id_paket_pekerjaan = $data_apbd->saveedit_anggaran_sub_kegiatan_tambahan($where);
+                        $id_paket_pekerjaan = $data_apbd->saveedit_anggaran_sub_kegiatan_tambahan($where_tambahan);
                         
                     }else{
                         $id_paket_pekerjaan = $data_apbd->save_anggaran_sub_kegiatan_tambahan();
