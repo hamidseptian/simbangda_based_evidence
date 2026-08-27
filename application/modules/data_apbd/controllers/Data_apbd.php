@@ -1259,7 +1259,7 @@ public function sync_eplanning()
             for ($i = $target['bulan']; $i <= 12; $i++) {
                  if ($i==$target['bulan']) {
                     $target_keuangan_otomatis = $pagu - $target_lalu['target_keuangan'];
-                    $persen_keuangan = ($target_keuangan_otomatis / $pagu ) * 100 ; 
+                    $persen_keuangan = $pagu == 0 ? 0 : ($target_keuangan_otomatis / $pagu ) * 100 ; 
                     $persen_keuangan_akumulasi = ($nilai / $pagu ) * 100 ; 
                     $this->db->update('target_apbd', ['target_keuangan' => $pagu,'target_keuangan_bulanan' => $target_keuangan_otomatis, 'persen_target_keuangan_bulanan' => $persen_keuangan, 'persen_target_keuangan' => 100, 'input_by' => 'Manual Input'], ['kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'bulan' => $i,  'id_instansi'=>id_instansi(),'kode_tahap'=>$tahap,'tahun'=>$tahun]);
                 }else{
@@ -1292,7 +1292,7 @@ public function sync_eplanning()
         $tahun = tahun_anggaran();
         $id_instansi = id_instansi();
         $qski = $this->db->query("SELECT * from v_sub_kegiatan_apbd where kode_tahap='$tahap' and id_instansi='$id_instansi' and kode_rekening_sub_kegiatan='$kode_rekening_sub_kegiatan' and tahun='$tahun'")->row();
-        $pagu = $qski->pagu =="" ? 0 : $qski->pagu;
+        $pagu = $qski->pagu_tambahan =="" ? 0 : $qski->pagu_tambahan;
         
 
         if ($target['bulan'] == 1) {
@@ -2332,7 +2332,7 @@ public function sub_kegiatan_apbd_instansi()
                 'id_instansi' => id_instansi()
             ];
             $target                 = $this->db->get_where('target_apbd', $where);
-            $subkeg                 = $this->db->query("SELECT nama_sub_kegiatan, kategori, jenis_sub_kegiatan, keterangan from v_sub_kegiatan_apbd where kode_rekening_sub_kegiatan='$kode_rekening_sub_kegiatan' and kode_tahap='$tahap' and id_instansi='$id_instansi' and tahun = '$tahun'")->row();
+            $subkeg                 = $this->db->query("SELECT nama_sub_kegiatan, kategori, jenis_sub_kegiatan, keterangan, pagu, pagu_tambahan, id_tambahan_anggaran from v_sub_kegiatan_apbd where kode_rekening_sub_kegiatan='$kode_rekening_sub_kegiatan' and kode_tahap='$tahap' and id_instansi='$id_instansi' and tahun = '$tahun'")->row();
             $nama_sub_kegiatan = $subkeg->kategori =='Sub Kegiatan SKPD' ? $subkeg->nama_sub_kegiatan : $subkeg->nama_sub_kegiatan.'<br>'.$subkeg->jenis_sub_kegiatan.' - '.$subkeg->keterangan;
 
             $pecah = explode('.', $kode_rekening_sub_kegiatan);
@@ -2341,6 +2341,10 @@ public function sub_kegiatan_apbd_instansi()
             $output['kategori']              = $subkeg->kategori;
             $output['nama_sub_kegiatan']     = $nama_sub_kegiatan;
             $output['kode_sub_kegiatan']     = $kode_sub_kegiatan;
+            $output['pagu']              = $subkeg->pagu;
+            $output['pagu_tambahan']              = $subkeg->pagu_tambahan;
+            $output['pagu_total']              = $subkeg->pagu + $subkeg->pagu_tambahan;
+            $output['id_tambahan_anggaran']              = $subkeg->id_tambahan_anggaran;
             $output['nama_tahapan']  = pilihan_nama_tahapan($tahap);
             if ($target->num_rows() > 0) {
                 foreach ($target->result() as $key => $value) {
@@ -4515,7 +4519,13 @@ public function sub_kegiatan_apbd_instansi()
 
                 $input_penambahan_anggaran = $this->input->post('input_penambahan_anggaran');
                 $id_tambahan_anggaran = $this->input->post('id_tambahan_anggaran');
-                if ($input_penambahan_anggaran==1) {
+
+
+                 $total_anggaran_tambahan = $post['bo_bp_tambahan'] + $post['bo_bbj_tambahan'] + $post['bo_bs_tambahan'] + $post['bo_bh_tambahan'] + $post['bm_bmt_tambahan'] + $post['bm_bmpm_tambahan'] + $post['bm_bmgb_tambahan'] + $post['bm_bmjji_tambahan'] + $post['bm_bmatl_tambahan'] + $post['btt_tambahan'] + $post['bt_bbh_tambahan'] + $post['bt_bbk_tambahan'];
+
+
+
+                if ($input_penambahan_anggaran==1 && $total_anggaran_tambahan>0) {
                     
                         $where_tambahan = ['id_tambahan_anggaran'=>$this->input->post('id_tambahan_anggaran')];
                     $this->db->update('sub_kegiatan_instansi', $where_tambahan, $where);

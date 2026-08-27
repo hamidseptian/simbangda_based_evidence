@@ -1285,13 +1285,19 @@ function simpanedit_pergeseran_ke(){
 		});
 	}
 
+
 function convert_to_rupiah(angka) {
-		var rupiah = '';
-		var angkarev = angka.toString().split('').reverse().join('');
-		for (var i = 0; i < angkarev.length; i++)
-			if (i % 3 == 0) rupiah += angkarev.substr(i, 3) + '.';
-		return rupiah.split('', rupiah.length - 1).reverse().join('');
-	}
+    if (angka === undefined || angka === null || angka === '') {
+        console.warn('convert_to_rupiah dipanggil dengan nilai kosong:', angka);
+        // console.trace(); // tampilkan call stack lengkap di console
+        angka = 0;
+    }
+    var rupiah = '';
+    var angkarev = angka.toString().split('').reverse().join('');
+    for (var i = 0; i < angkarev.length; i++)
+        if (i % 3 == 0) rupiah += angkarev.substr(i, 3) + '.';
+    return rupiah.split('', rupiah.length - 1).reverse().join('');
+}
 function bulan(x) {
 		let bulan = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'July', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 		return bulan[x];
@@ -1309,17 +1315,6 @@ function get_target(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tah
         $('.text-danger').remove();
         
 
-
-        if (id_tambahan_anggaran=='') {
-            $('#modal-target').find('.f_input_tk_tambahan').hide();
-
-        }else{
-            $('#modal-target').find('.f_input_tk_tambahan').show();
-             get_target_tambahan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran)
-            // input_realisasi_tambahan(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, pagu_tambahan, kategori, tahap, tahun, pergeseran_ke, id_tambahan_anggaran);
-
-        }
-     
 
 
 
@@ -1353,8 +1348,27 @@ function get_target(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tah
             	tahun : tahun,
             },
             success : function(data)
-            {	$('#modal-target').find('.kode_sub_kegiatan').html(data.kode_sub_kegiatan);
-		    	$('#modal-target').find('#pagu_sub_kegiatan').html(convert_to_rupiah(show_pagu));
+            {	
+
+            	console.log(data);
+        if (id_tambahan_anggaran=='') {
+            $('#modal-target').find('.f_input_tk_tambahan').hide();
+	    	$('#modal-target').find('#pagu_sub_kegiatan').html(convert_to_rupiah(show_pagu));
+
+        }else{
+            $('#modal-target').find('.f_input_tk_tambahan').show();
+            var html_pagu = `APBD : `+ convert_to_rupiah(data.pagu);
+            html_pagu += `<br>TKD : `+ convert_to_rupiah(data.pagu_tambahan);
+            html_pagu += `<br>Total : `+ convert_to_rupiah(data.pagu_total);
+	    	$('#modal-target').find('#pagu_sub_kegiatan').html(html_pagu);
+             get_target_tambahan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran)
+            // input_realisasi_tambahan(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, pagu_tambahan, kategori, tahap, tahun, pergeseran_ke, id_tambahan_anggaran);
+
+        }
+     
+
+
+     			$('#modal-target').find('.kode_sub_kegiatan').html(data.kode_sub_kegiatan);
             	$('#modal-target').find('#exampleModalLabel').html("Setting Target APBD");
             	$('#modal-target').find('#nama_sub_kegiatan').html(data.nama_sub_kegiatan);
             	$('#modal-target').find('#kode_sub_kegiatan').html(kode_rekening_sub_kegiatan);
@@ -1509,7 +1523,6 @@ function get_target_tambahan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_pro
             },
             success : function(data)
             {
-            	console.log(data.pagu);
             	var pagu = parseInt(data.pagu);
 	            $('#modal-target').find('.f_input_tk_tambahan').find('#nama_tambahan_anggaran').html('<h5>Target '+ data.nama_anggaran + '</h5>');
 
@@ -1548,7 +1561,7 @@ function get_target_tambahan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_pro
 								);
 
 							}else{
-								if (show_pagu==0) {
+								if (pagu==0) {
 									a_href_tk =  '<a href="javascript:void(0)" onclick="Swal.fire('+ "'Tidak Diizinkan','Mohon maaf, anda tidak bisa  mengubah target keuangan karena tidak ada pagu','error'" +')" class="text-danger">' + convert_to_rupiah(v.t_keuangan_bulanan) + '</a>';
 
 									td_persen_keu = '<td style="text-align: right;">0</td><td style="text-align: right;">0</td>' ;
