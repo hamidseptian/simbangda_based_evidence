@@ -4527,11 +4527,11 @@ public function sub_kegiatan_apbd_instansi()
 
                 if ($input_penambahan_anggaran==1 && $total_anggaran_tambahan>0) {
                     
-                        $where_tambahan = ['id_tambahan_anggaran'=>$this->input->post('id_tambahan_anggaran')];
-                    $this->db->update('sub_kegiatan_instansi', $where_tambahan, $where);
+                    $this->db->update('sub_kegiatan_instansi', ['id_tambahan_anggaran'=>$id_tambahan_anggaran],  $where_tambahan);
                     if ($pagu_sub_kegiatan_tambahan->num_rows()>0) {
                         // $whereedit = array_merge($where, $where_tambahan);
-                        $id_paket_pekerjaan = $data_apbd->saveedit_anggaran_sub_kegiatan_tambahan($where_tambahan);
+                        $where_tambahan_update = ['kode_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'kode_kegiatan'=>$kode_kegiatan, 'kode_program'=>$kode_program, 'kode_tahap'=>$tahap,  'tahun'=>$tahun,   'id_instansi' => id_instansi(), 'id_tambahan_anggaran'=>$id_tambahan_anggaran];
+                        $id_paket_pekerjaan = $data_apbd->saveedit_anggaran_sub_kegiatan_tambahan($where_tambahan_update);
                         
                     }else{
                         $id_paket_pekerjaan = $data_apbd->save_anggaran_sub_kegiatan_tambahan();
