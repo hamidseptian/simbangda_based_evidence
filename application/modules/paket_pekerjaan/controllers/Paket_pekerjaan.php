@@ -560,6 +560,20 @@ class Paket_pekerjaan extends MY_Controller
             foreach ($list as $lists) {
                 $krsk = $lists->kode_rekening_sub_kegiatan;
                 $pecah = explode('.', $lists->kode_rekening_sub_kegiatan);
+
+
+            $tambahan_anggaran = $lists->id_tambahan_anggaran;
+            if($tambahan_anggaran=='' || $tambahan_anggaran==null){
+                $pagu  = $lists->pagu == '' ? 0 : $lists->pagu;
+                $warna_pagu = '';
+            }else{
+                $pagu  = ($lists->pagu == '' ? 0 : $lists->pagu) + ($lists->pagu_tambahan == '' ? 0 : $lists->pagu_tambahan);
+                $warna_pagu = 'color:blue';
+
+            }
+
+
+
                 // $kode_sub_kegiatan = $pecah[0].'.'.$pecah[1].'.'.$pecah[2].'.'.$pecah[3].'.'.$pecah[4].'.'.$pecah[5];
                 $kategori = $lists->kategori;
                 $sub_organisasi = '<br>'.$lists->jenis_sub_kegiatan.' - '.$lists->keterangan;
@@ -612,8 +626,8 @@ class Paket_pekerjaan extends MY_Controller
                 $row[]  = '<b>'. $caption_tahapan .'</b>'  ; 
                 $row[]  = $nama_sub_kegiatan ; 
                
-                 $pagu   = $lists->pagu =='' ? 0 : $lists->pagu;
-                $row[]  =  '<span style="float:right">'.number_format($pagu,0,'','.').'</span>';
+                 $pagu   = $pagu;
+            $row[] = '<span style="float:right; '.$warna_pagu.'">'.number_format($pagu, 0, '', '.').'</span>';
                 if ($pptk->num_rows() ==0) {
                     $row[]  = '<span class="text-danger">PPTK Belum ditentukan</span>';
                     # code...

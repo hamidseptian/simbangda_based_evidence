@@ -1948,6 +1948,21 @@ class Realisasi extends MY_Controller
                 $no++;
                 $kode_rekening_program = $lists->kode_rekening_program;
                 $kode_rekening_kegiatan = $lists->kode_rekening_kegiatan;
+
+
+            $tambahan_anggaran = $lists->id_tambahan_anggaran;
+            if($tambahan_anggaran=='' || $tambahan_anggaran==null){
+                $pagu  = $lists->pagu == '' ? 0 : $lists->pagu;
+                $warna_pagu = '';
+            }else{
+                $pagu  = ($lists->pagu == '' ? 0 : $lists->pagu) + ($lists->pagu_tambahan == '' ? 0 : $lists->pagu_tambahan);
+                $warna_pagu = 'color:blue';
+
+            }
+
+
+
+
                 // $kegiatan  = $this->db->query("SELECT nama_kegiatan from master_kegiatan where kode_kegiatan = '$kode_rekening_kegiatan'")->row();
                 // $program  = $this->db->query("SELECT nama_program from master_program where kode_program = '$kode_rekening_program'")->row();
 
@@ -2012,8 +2027,7 @@ class Realisasi extends MY_Controller
                 $row[]  = pilihan_nama_tahapan($lists->kode_tahap); 
                 $row[]  = $nama_sub_kegiatan ; 
                
-                 $pagu   = $lists->pagu =='' ? 0 : $lists->pagu;
-                $row[]  =  '<span style="float:right">'.number_format($pagu,0,'','.').'</span>';
+            $row[] = '<span style="float:right; '.$warna_pagu.'">'.number_format($pagu, 0, '', '.').'</span>';
 
 
                 if ($pptk->num_rows() ==0) {

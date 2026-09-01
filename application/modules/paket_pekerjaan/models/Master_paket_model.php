@@ -140,6 +140,8 @@ class Master_paket_model extends CI_Model
 			'jenis_paket'				=> $post['jenis_paket'],
 			'kategori'					=> $post['jenis_paket'] == 'PENYEDIA' ? $post['kategori'] : '-',
 			'id_metode'				=> !empty($post['id_metode']) ? $post['id_metode'] : 0,
+			
+			'id_tambahan_anggaran'						=> $post['tkd'] ==1 ? $post['id_tambahan_anggaran'] : '',
 			'pagu'						=> $post['pagu'],
 			'pagu_tkd'						=> $post['tkd'],
 			'created_on'				=> timestamp(),
