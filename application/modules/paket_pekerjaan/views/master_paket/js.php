@@ -222,7 +222,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 			}
 		}
 
-
+ 
 		let tr_detail_paket	= '';
 		
 		tr_detail_paket  = '<tr colspan="8" class="card-body formulira" id="'+ id_detail +'" rowspan="1">';
@@ -354,7 +354,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 			      'warning'
 			    );
 	}
-	function edit_paket(id_paket_pekerjaan, jenis_input, izin_input_pptk, id_kedudukan)
+	function edit_paket(id_paket_pekerjaan, jenis_input, izin_input_pptk, id_kedudukan, id_tambahan_anggaran)
 	{
 		status_paket = 'update';
 		$('#modalMasterPaket').modal('show');
@@ -384,9 +384,11 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
                 	if ($('#add_tkd').is(':checked')) {
 				        $('#tkd').attr('type', 'text');
 				        $('#modalMasterPaket').find('#menggunakan_anggaran_tambahan').val('1');
+				        $('#modalMasterPaket').find('#id_tambahan_anggaran').val(id_tambahan_anggaran);
 				    } else {
 				        $('#tkd').attr('type', 'hidden');
 				        $('#modalMasterPaket').find('#menggunakan_anggaran_tambahan').val('0');
+				        $('#modalMasterPaket').find('#id_tambahan_anggaran').val('');
 				        
 				    }
 

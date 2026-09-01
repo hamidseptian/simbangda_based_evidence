@@ -1606,6 +1606,8 @@ function get_target_tambahan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_pro
 
 function get_target_pergeseran(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, pergeseran_ke, id_tambahan_anggaran)
 	{	
+		
+		var show_pagu = pagu==''? 0: pagu;
 		$('#modal-target').modal('show');
 		$('.form-control').removeClass('is-valid')
 						  .removeClass('is-invalid');
@@ -1657,8 +1659,27 @@ function get_target_pergeseran(kode_rekening_sub_kegiatan, kode_kegiatan, kode_p
             	pergeseran_ke : pergeseran_ke,
             },
             success : function(data)
-            {	$('#modal-target').find('.kode_sub_kegiatan').html(data.kode_sub_kegiatan);
-		    	$('#modal-target').find('#pagu_sub_kegiatan').html(convert_to_rupiah(pagu==''? 0 : pagu));
+            {	
+
+
+        if (id_tambahan_anggaran=='') {
+            $('#modal-target').find('.f_input_tk_tambahan').hide();
+	    	$('#modal-target').find('#pagu_sub_kegiatan').html(convert_to_rupiah(show_pagu));
+
+        }else{
+            $('#modal-target').find('.f_input_tk_tambahan').show();
+            var html_pagu = `APBD : `+ convert_to_rupiah(data.pagu);
+            html_pagu += `<br>TKD : `+ convert_to_rupiah(data.pagu_tambahan);
+            html_pagu += `<br>Total : `+ convert_to_rupiah(data.pagu_total);
+	    	$('#modal-target').find('#pagu_sub_kegiatan').html(html_pagu);
+             get_target_tambahan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran)
+            // input_realisasi_tambahan(jenis, kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, kode_bidang_urusan, pagu_tambahan, kategori, tahap, tahun, pergeseran_ke, id_tambahan_anggaran);
+
+        }
+
+
+
+        $('#modal-target').find('.kode_sub_kegiatan').html(data.kode_sub_kegiatan);
             	$('#modal-target').find('#exampleModalLabel').html("Setting Target APBD");
             	$('#modal-target').find('#nama_sub_kegiatan').html(data.nama_sub_kegiatan);
             	$('#modal-target').find('#kode_sub_kegiatan').html(kode_rekening_sub_kegiatan);

@@ -2595,7 +2595,8 @@ public function sub_kegiatan_apbd_instansi()
                 'id_instansi' => id_instansi()
             ];
             $target                 = $this->db->get_where('target_apbd', $where);
-            $subkeg                 = $this->db->query("SELECT nama_sub_kegiatan, kategori, jenis_sub_kegiatan, keterangan from v_sub_kegiatan_apbd where kode_rekening_sub_kegiatan='$kode_rekening_sub_kegiatan' and kode_tahap='$tahap' and id_instansi='$id_instansi' and tahun = '$tahun'")->row();
+
+            $subkeg                 = $this->db->query("SELECT nama_sub_kegiatan, kategori, jenis_sub_kegiatan, keterangan, pagu, pagu_tambahan, id_tambahan_anggaran from v_sub_kegiatan_apbd where kode_rekening_sub_kegiatan='$kode_rekening_sub_kegiatan' and kode_tahap='$tahap' and id_instansi='$id_instansi' and tahun = '$tahun'")->row();
             $nama_sub_kegiatan = $subkeg->kategori =='Sub Kegiatan SKPD' ? $subkeg->nama_sub_kegiatan : $subkeg->nama_sub_kegiatan.'<br>'.$subkeg->jenis_sub_kegiatan.' - '.$subkeg->keterangan;
 
             $pecah = explode('.', $kode_rekening_sub_kegiatan);
@@ -2603,6 +2604,10 @@ public function sub_kegiatan_apbd_instansi()
             $output['totaldata']             = $target->num_rows();
             $output['kategori']              = $subkeg->kategori;
             $output['nama_sub_kegiatan']     = $nama_sub_kegiatan;
+
+            $output['pagu']              = $subkeg->pagu;
+            $output['pagu_tambahan']              = $subkeg->pagu_tambahan;
+            $output['pagu_total']              = $subkeg->pagu + $subkeg->pagu_tambahan;
             $output['kode_sub_kegiatan']     = $kode_rekening_sub_kegiatan;
             $output['nama_tahapan']  = "APBD PERGESERAN <br>Pergeseran Ke ".$pergeseran_ke;
             if ($target->num_rows() > 0) {

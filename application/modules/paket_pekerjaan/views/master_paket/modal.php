@@ -63,8 +63,8 @@
 
                     <input type="hidden" name="izin_input_pptk" id="izin_input_pptk">
                     <input type="hidden" name="id_kedudukan" id="id_kedudukan">
-                    <input type="hidden" name="menggunakan_anggaran_tambahan" id="menggunakan_anggaran_tambahan" value="0">
-                    <input type="hidden" name="id_tambahan_anggaran" id="id_tambahan_anggaran">
+                    <input type="" name="menggunakan_anggaran_tambahan" id="menggunakan_anggaran_tambahan" value="0">
+                    <input type="" name="id_tambahan_anggaran" id="id_tambahan_anggaran">
 					<div class="form-group">
                       <!--   <table class="table">
                             <tr>
