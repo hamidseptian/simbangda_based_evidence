@@ -935,10 +935,12 @@ class Paket_pekerjaan extends MY_Controller
 
             $izin_input_pptk   = $this->input->post('izin_input_pptk');
             $id_kedudukan   = $this->input->post('id_kedudukan');
+            $id_tambahan_anggaran   = $this->input->post('id_tambahan_anggaran');
 
 
             $output['izin_input_pptk']     = $izin_input_pptk;
             $output['id_kedudukan']     = $id_kedudukan ;
+            $output['id_tambahan_anggaran']  = $id_tambahan_anggaran ;
 
             if ($validation->run()) {
                 $post               = $this->input->post();
@@ -989,6 +991,7 @@ class Paket_pekerjaan extends MY_Controller
             $kode_rekening  = $this->input->post('kode_rekening');
             $izin_input_pptk  = $this->input->post('izin_input_pptk');
             $id_kedudukan  = $this->input->post('id_kedudukan');
+            $id_tambahan_anggaran  = $this->input->post('id_tambahan_anggaran');
 
             if ($id_kedudukan==3) {
                 $warning_bukan_kegiatan_anda = "Swal.fire('Terkunci','Sub Kegiatan ini milik PPTK lain','warning')";
@@ -1020,7 +1023,7 @@ class Paket_pekerjaan extends MY_Controller
                  if ($izin_input_pptk==1) {
                     $row[]  = $lists->jenis_paket == 'RUTIN' ? '' : ($this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan) == 0 ? '<button class="btn btn-outline-primary" onclick="lokasi(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."','".$lists->kode_rekening_sub_kegiatan."'" . ')">Belum Ada</button>' : '<button class="btn btn-outline-primary" onclick="lokasi(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."','".$lists->kode_rekening_sub_kegiatan."'" . ')">' . $this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan) . ' Lokasi</button>');
                     // $row[]  = $lists->jenis_paket == 'RUTIN' ? '' : '<button class="btn btn-outline-primary" onclick="volume(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."'" . ')">' . $lists->volume . '</button>';
-                    $row[]  = '<button class="btn btn-outline-primary" onclick="volume(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."','".$lists->kode_rekening_sub_kegiatan."'" . ')">' . $lists->volume . '</button>';
+                    $row[]  = '<button class="btn btn-outline-primary" onclick="volume(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."','".$lists->kode_rekening_sub_kegiatan."','".$id_tambahan_anggaran."'" . ')">' . $lists->volume . '</button>';
                 }else{
                       $row[]  = $lists->jenis_paket == 'RUTIN' ? '' : ($this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan) == 0 ? '<button class="btn btn-outline-danger" onclick="'.$warning_bukan_kegiatan_anda.'">Belum Ada</button>' : '<button class="btn btn-outline-danger"  onclick="'.$warning_bukan_kegiatan_anda.'">' . $this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan) . ' Lokasi</button>');
                     $row[]  = $lists->jenis_paket == 'RUTIN' ? '' : '<button class="btn btn-outline-danger"  onclick="'.$warning_bukan_kegiatan_anda.'">' . $lists->volume . '</button>';
@@ -1040,7 +1043,7 @@ class Paket_pekerjaan extends MY_Controller
                     }else{
                         if ($kode_tahap==4) {
                             if ($izin_input_pptk==1) {
-                                $row[]  = '<button class="btn btn-info btn-sm" onclick="edit_paket(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."'" . ')"><i class="fas fa-edit"></i></button> <button class="btn btn-danger btn-sm" onclick="option_delete_paket(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."'" . ')"><i class="fa fa-times"></i></button>';
+                                $row[]  = '<button class="btn btn-info btn-sm" onclick="edit_paket(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."','".$id_tambahan_anggaran    ."'" . ')"><i class="fas fa-edit"></i></button> <button class="btn btn-danger btn-sm" onclick="option_delete_paket(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."'" . ')"><i class="fa fa-times"></i></button>';
                                 # code...
                             }else{
                                 $row[]  = '<button class="btn btn-outline-info btn-sm" onclick="'.$warning_bukan_kegiatan_anda.'"><i class="fas fa-edit"></i></button> <button class="btn btn-outline-danger btn-sm" onclick="'.$warning_bukan_kegiatan_anda.'"><i class="fa fa-times"></i></button>';
@@ -1048,7 +1051,7 @@ class Paket_pekerjaan extends MY_Controller
                             }
                         }else{
                             if ($izin_input_pptk==1) {
-                                $row[]  = '<button class="btn btn-info btn-sm" onclick="edit_paket(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."'" . ')"><i class="fas fa-edit"></i></button> <button class="btn btn-danger btn-sm" onclick="delete_paket(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."','".$lists->kode_rekening_sub_kegiatan."'" . ')"><i class="fa fa-times"></i></button>';
+                                $row[]  = '<button class="btn btn-info btn-sm" onclick="edit_paket(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."','".$id_tambahan_anggaran    ."'" . ')"><i class="fas fa-edit"></i></button> <button class="btn btn-danger btn-sm" onclick="delete_paket(' . "'" . $lists->id_paket_pekerjaan . "','input','".$izin_input_pptk."','".$id_kedudukan."','".$lists->kode_rekening_sub_kegiatan."'" . ')"><i class="fa fa-times"></i></button>';
                             }else{
                                
                                 $row[]  = '<button class="btn btn-outline-info btn-sm" onclick="'.$warning_bukan_kegiatan_anda.'"><i class="fas fa-edit"></i></button> <button class="btn btn-outline-danger btn-sm" onclick="'.$warning_bukan_kegiatan_anda.'"><i class="fa fa-times"></i></button>';

@@ -112,7 +112,7 @@ class Master_paket_model extends CI_Model
 			'kategori'					=> $post['jenis_paket'] == 'PENYEDIA' ? $post['kategori'] : '-',
 			'id_metode'				=> !empty($post['id_metode']) ? $post['id_metode'] : 0,
 			'pagu'						=> $post['pagu'],
-			'id_tambahan_anggaran'						=> $post['menggunakan_anggaran_tambahan'] ==1 ? $post['id_tambahan_anggaran'] : '',
+			'id_tambahan_anggaran'						=> ($post['menggunakan_anggaran_tambahan'] ==1 &&  $post['tkd'] >0 ) ? $post['id_tambahan_anggaran'] : '',
 			'pagu_tkd'						=> $post['tkd'],
 			'created_on'				=> timestamp(),
 			'updated_on'				=> timestamp(),
@@ -141,7 +141,7 @@ class Master_paket_model extends CI_Model
 			'kategori'					=> $post['jenis_paket'] == 'PENYEDIA' ? $post['kategori'] : '-',
 			'id_metode'				=> !empty($post['id_metode']) ? $post['id_metode'] : 0,
 			
-			'id_tambahan_anggaran'						=> $post['menggunakan_anggaran_tambahan'] ==1 ? $post['id_tambahan_anggaran'] : '',
+			'id_tambahan_anggaran'						=> ($post['menggunakan_anggaran_tambahan'] ==1 &&  $post['tkd'] >0 ) ? $post['id_tambahan_anggaran'] : '',
 			'pagu'						=> $post['pagu'],
 			'pagu_tkd'						=> $post['tkd'],
 			'created_on'				=> timestamp(),

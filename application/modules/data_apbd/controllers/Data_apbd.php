@@ -1490,7 +1490,7 @@ public function sub_kegiatan_apbd_instansi()
 
             $onclick  = "hapus_sub_kegiatan_instansi('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."', '".$lists->kode_tahap."', '".$lists->tahun."','instansi')";
             $onclick2 = "input_anggaran('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_tahap."','".tahun_anggaran()."','instansi')";
-            $onclick4 = "get_sumber_dana('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."')";
+            $onclick4 = "get_sumber_dana('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->pagu_tambahan."')";
 
             $onclick_copy = "copy_data_apbd_sub_kegiatan('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".tahapan_apbd()."','".$lists->kode_bidang_urusan."','".$nama_sub_kegiatan."')";
 
@@ -2422,7 +2422,10 @@ public function sub_kegiatan_apbd_instansi()
             $tahap = $this->input->post('tahap');
             $tahun = $this->input->post('tahun');
             $id_tambahan_anggaran = $this->input->post('id_tambahan_anggaran');
+            $pergeseran_ke = $this->input->post('pergeseran_ke');
             $id_instansi = id_instansi();
+            if ($pergeseran_ke=='' || $pergeseran_ke == null) {
+                    
             $where = [
                 'kode_bidang_urusan' => $kode_bidang_urusan, 
                 'kode_rekening_program' => $kode_program, 
@@ -2432,6 +2435,19 @@ public function sub_kegiatan_apbd_instansi()
                 'tahun' => $tahun,
                 'id_instansi' => id_instansi()
             ];
+            }else{
+            $where = [
+                'kode_bidang_urusan' => $kode_bidang_urusan, 
+                'kode_rekening_program' => $kode_program, 
+                'kode_rekening_kegiatan' => $kode_kegiatan, 
+                'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 
+                'pergeseran_ke' => $pergeseran_ke, 
+                'kode_tahap' => $tahap,
+                'tahun' => $tahun,
+                'id_instansi' => id_instansi()
+            ];
+
+            }
             $target                 = $this->db->get_where('target_apbd', $where);
             $kumpul_target_baru = [];
             foreach ($target->result_array() as $k => $v) {

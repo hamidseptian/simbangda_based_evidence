@@ -330,7 +330,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 			$(this).attr('status','expand');
 			$(this).html('-');
 			$(table).after(tr_detail_paket);
-			showPaket(id_table,id_pptk, izin_input_pptk, id_kedudukan, kode_sub_kegiatan);
+			showPaket(id_table,id_pptk, izin_input_pptk, id_kedudukan, kode_sub_kegiatan, id_tambahan_anggaran	);
 		}else{
 			$(this).attr('status','collapse');
 			$(this).html('+');
@@ -363,7 +363,8 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
         $('.text-danger').remove();
         $('#pesan_mnodal_paket').html('');
 		$('#formMasterPaket').attr('style', '');
-
+		console.log(id_tambahan_anggaran);
+        $('#modalMasterPaket').find('#id_tambahan_anggaran').val(id_tambahan_anggaran);
 		$.ajax(
         {
             url     : baseUrl('paket_pekerjaan/get_paket_pekerjaan/'),
@@ -384,11 +385,9 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
                 	if ($('#add_tkd').is(':checked')) {
 				        $('#tkd').attr('type', 'text');
 				        $('#modalMasterPaket').find('#menggunakan_anggaran_tambahan').val('1');
-				        $('#modalMasterPaket').find('#id_tambahan_anggaran').val(id_tambahan_anggaran);
 				    } else {
 				        $('#tkd').attr('type', 'hidden');
 				        $('#modalMasterPaket').find('#menggunakan_anggaran_tambahan').val('0');
-				        $('#modalMasterPaket').find('#id_tambahan_anggaran').val('');
 				        
 				    }
 
@@ -1165,7 +1164,7 @@ function convert_ke_rupiah(x) {
 						}else{
 							var izin_input_pptk	= data.izin_input_pptk;
 						var id_kedudukan	= data.id_kedudukan;
-						showPaket(id_table, id_pptk, izin_input_pptk, id_kedudukan, data.kode_sub_kegiatan);
+						showPaket(id_table, id_pptk, izin_input_pptk, id_kedudukan, data.kode_sub_kegiatan, data.id_tambahan_anggaran	);
 						}
 
 					}
@@ -1192,7 +1191,7 @@ function convert_ke_rupiah(x) {
 		});
 	}
 
-	function showPaket(id_table, id_pptk, izin_input_pptk, id_kedudukan, kode_sub_kegiatan = '')
+	function showPaket(id_table, id_pptk, izin_input_pptk, id_kedudukan, kode_sub_kegiatan = '', id_tambahan_anggaran = '')
 	{
 		let kode_rekening = id_table.split('-').join('.');
 		id_table_active   = id_table;
@@ -1210,6 +1209,7 @@ function convert_ke_rupiah(x) {
 				          		kode_rekening : kode_sub_kegiatan, 
 				          		izin_input_pptk : izin_input_pptk, 
 				          		id_kedudukan : id_kedudukan, 
+				          		id_tambahan_anggaran : id_tambahan_anggaran, 
 				          		id_pptk : id_pptk 
 				          	},
 	        			  },
