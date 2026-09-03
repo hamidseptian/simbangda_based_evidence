@@ -1590,10 +1590,13 @@ function get_target_tambahan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_pro
 									td_persen_keu = '<td style="text-align: right;">0</td><td style="text-align: right;">0</td>' ;
 								}else{
 									if (pergeseran_ke=='') {
-										a_href_tk =  '<a href="javascript:void(0)" id="target-fisik" kode_sub_kegiatan="' + kode_rekening_sub_kegiatan + '" kode_bidang_urusan="' + kode_bidang_urusan + '" kode_program="' + kode_program + '" kode_kegiatan="' + kode_kegiatan + '" pagu="' + pagu + '" id_tambahan_anggaran="' + id_tambahan_anggaran + '"  tahap="' + tahap + '", tahun="' + tahun + '" pk="' + v.id + '" class="edit" data-type="text" onclick="edit_target_keuangan_tambahan(this)">' + convert_to_rupiah(v.t_keuangan_bulanan) + '</a>';
+										a_href_tk =  '<a href="javascript:void(0)" id="target-fisik" kode_sub_kegiatan="' + kode_rekening_sub_kegiatan + '" kode_bidang_urusan="' + kode_bidang_urusan + '" kode_program="' + kode_program + '" kode_kegiatan="' + kode_kegiatan + '" pagu="' + show_pagu + '" id_tambahan_anggaran="' + id_tambahan_anggaran + '"  tahap="' + tahap + '", tahun="' + tahun + '" pk="' + v.id + '" class="edit" data-type="text" onclick="edit_target_keuangan_tambahan(this)">' + convert_to_rupiah(v.t_keuangan_bulanan) + '</a>';
+										a_href_tf =  '<a href="javascript:void(0)" id="target-fisik" kode_sub_kegiatan="' + kode_rekening_sub_kegiatan + '" kode_bidang_urusan="' + kode_bidang_urusan + '" kode_program="' + kode_program + '" kode_kegiatan="' + kode_kegiatan + '" pagu="' + show_pagu + '" id_tambahan_anggaran="' + id_tambahan_anggaran + '"  tahap="' + tahap + '", tahun="' + tahun + '" pk="' + v.id + '" class="edit" data-type="text" onclick="edit_target_fisik_tambahan(this)">' + v.t_fisik_bulanan + '</a>';
 
 									}else{
-										a_href_tk =  '<a href="javascript:void(0)" id="target-fisik" kode_sub_kegiatan="' + kode_rekening_sub_kegiatan + '" kode_bidang_urusan="' + kode_bidang_urusan + '" kode_program="' + kode_program + '" kode_kegiatan="' + kode_kegiatan + '" pagu="' + pagu + '" id_tambahan_anggaran="' + id_tambahan_anggaran + '"  pergeseran_ke="' + pergeseran_ke + '"  tahap="' + tahap + '", tahun="' + tahun + '" pk="' + v.id + '" class="edit" data-type="text" onclick="edit_target_keuangan_tambahan(this)">' + convert_to_rupiah(v.t_keuangan_bulanan) + '</a>';
+										a_href_tk =  '<a href="javascript:void(0)" id="target-fisik" kode_sub_kegiatan="' + kode_rekening_sub_kegiatan + '" kode_bidang_urusan="' + kode_bidang_urusan + '" kode_program="' + kode_program + '" kode_kegiatan="' + kode_kegiatan + '" pagu="' + show_pagu + '" id_tambahan_anggaran="' + id_tambahan_anggaran + '"  pergeseran_ke="' + pergeseran_ke + '"  tahap="' + tahap + '", tahun="' + tahun + '" pk="' + v.id + '" class="edit" data-type="text" onclick="edit_target_keuangan_tambahan(this)">' + convert_to_rupiah(v.t_keuangan_bulanan) + '</a>';
+
+										a_href_tf =  '<a href="javascript:void(0)" id="target-fisik" kode_sub_kegiatan="' + kode_rekening_sub_kegiatan + '" kode_bidang_urusan="' + kode_bidang_urusan + '" kode_program="' + kode_program + '" kode_kegiatan="' + kode_kegiatan + '" pagu="' + show_pagu + '" id_tambahan_anggaran="' + id_tambahan_anggaran + '"  tahap="' + tahap + '", tahun="' + tahun + '" pergeseran_ke="' + pergeseran_ke + '" pk="' + v.id + '" class="edit" data-type="text" onclick="edit_target_fisik_tambahan(this)">' + v.t_fisik_bulanan + '</a>';
 
 									}
 
@@ -1604,7 +1607,7 @@ function get_target_tambahan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_pro
 									'<tr>' +
 									'<td style="text-align: right;">' + (k + 1) + '</td>' +
 									'<td style="text-align: right;">' + bulan(v.bulan) + '</td>' +
-									'<td style="text-align: right;"><a href="javascript:void(0)" id="target-fisik" kode_sub_kegiatan="' + kode_rekening_sub_kegiatan + '" kode_bidang_urusan="' + kode_bidang_urusan + '" kode_program="' + kode_program + '" kode_kegiatan="' + kode_kegiatan + '" pagu="' + pagu + '" id_tambahan_anggaran="' + id_tambahan_anggaran + '"  tahap="' + tahap + '", tahun="' + tahun + '" pk="' + v.id + '" class="edit" data-type="text" onclick="edit_target_fisik_tambahan(this)">' + v.t_fisik_bulanan + '</a></td>' +
+									'<td style="text-align: right;">'+a_href_tf+'</td>' +
 
 									'<td style="text-align: right;">' + v.t_fisik + '</td>' +
 									td_persen_keu + 
@@ -2151,6 +2154,7 @@ function edit_target_fisik_tambahan(x) {
 		let kode_kegiatan = $(x).attr('kode_kegiatan');
 		let pagu = $(x).attr('pagu');
 		let tahap = $(x).attr('tahap');
+		let pergeseran_ke = $(x).attr('pergeseran_ke');
 		let tahun = $(x).attr('tahun');
 		let id_tambahan_anggaran = $(x).attr('id_tambahan_anggaran');
 		
@@ -2160,7 +2164,14 @@ function edit_target_fisik_tambahan(x) {
 			savenochange: true,
 			url: baseUrl('data_apbd/update_target_fisik_tambahan/' + kode_sub_kegiatan + '/' + tahap),
 			success: function(c) {
-				get_target(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran)
+				if (pergeseran_ke=='' || pergeseran_ke==null) {
+					get_target(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran);
+				}
+				else{
+					get_target_pergeseran(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran, pergeseran_ke);
+
+				}
+				// get_target(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran)
 			},
 		});
 	}
@@ -2177,6 +2188,8 @@ function edit_target_fisik_pergeseran(x) {
 		let tahap = $(x).attr('tahap');
 		let tahun = $(x).attr('tahun');
 		let pergeseran_ke = $(x).attr('pergeseran_ke');
+		let id_tambahan_anggaran = $(x).attr('id_tambahan_anggaran');
+		// console.log(pergeseran_ke);
 		
 		$(x).editable({
 			mode: 'inline',
@@ -2184,14 +2197,17 @@ function edit_target_fisik_pergeseran(x) {
 			savenochange: true,
 			url: baseUrl('data_apbd/update_target_fisik_pergeseran/' + kode_sub_kegiatan + '/' + tahap + '/' + pergeseran_ke),
 			success: function(c) {
-				if (pergeseran_ke=='') {
-					get_target(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran)
-				}
-				else{
-					get_target_pergeseran(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran, pergeseran_ke)
+					console.log(kode_bidang_urusan);
+					console.log(pagu);
+					console.log(pergeseran_ke);
+					console.log(id_tambahan_anggaran);
+					get_target_pergeseran(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, pergeseran_ke, id_tambahan_anggaran);
 
-				}
+				
 			},
+			error : function(){
+				alert('err');
+			}
 		});
 	}
 function edit_target_keuangan(x) {
