@@ -540,10 +540,13 @@ $pendapatan_tahun_sebelumnya = $pendapatan['tahun_sebelumnya']['data']['result']
 $pendapatan_dua_tahun_sebelumnya = $pendapatan['dua_tahun_sebelumnya']['data']['result']->response[0];
 for ($i=0; $i < 12 ; $i++) { 
     $angka_target_tahun_ini += $pendapatan_tahun_ini[$i]->target;
-    $target_tahun_ini[] = $angka_target_tahun_ini;
     
     $angka_realisasi_tahun_ini += $pendapatan_tahun_ini[$i]->jumlah;
+    if ($i<bulan_aktif()) {
+        # code...
+    $target_tahun_ini[] = $angka_target_tahun_ini;
     $realisasi_tahun_ini[] = $angka_realisasi_tahun_ini;
+    }
 
 
     $angka_target_tahun_sebelumnya += $pendapatan_tahun_sebelumnya[$i]->target;
@@ -1395,13 +1398,20 @@ perbandingan_grafik_2_tahun_terakhir_asisten('Akumulasi', 'Semua');
         $('#t_2026').append('<td>Target</td>');
         $('#r_2026').append('<td>Realisasi</td>');
         for (var i = 0; i < 12; i++) {
-            var text = 1234.332;
+            // var text = 1234.332;
             $('#t_2024').append('<td>' + formatRupiahSingkat(target_2_tahun_sebelumnya[i]) + '</td>');
             $('#r_2024').append('<td>' + formatRupiahSingkat(realisasi_2_tahun_sebelumnya[i]) + '</td>');
             $('#t_2025').append('<td>' + formatRupiahSingkat(target_tahun_sebelumnya[i]) + '</td>');
             $('#r_2025').append('<td>' + formatRupiahSingkat(realisasi_tahun_sebelumnya[i]) + '</td>');
-            $('#t_2026').append('<td>' + formatRupiahSingkat(target_tahun_ini[i]) + '</td>');
 
+            if (target_tahun_ini[i]) {
+                $('#t_2026').append('<td>' + formatRupiahSingkat(target_tahun_ini[i]) + '</td>');
+                // $('#r_2026').append('<td>' + formatRupiahSingkat(realisasi_tahun_ini[i]) + '</td>');
+
+            }else{
+                $('#t_2026').append('<td>-</td>');
+
+            }
             if (realisasi_tahun_ini[i]) {
                 $('#r_2026').append('<td>' + formatRupiahSingkat(realisasi_tahun_ini[i]) + '</td>');
 

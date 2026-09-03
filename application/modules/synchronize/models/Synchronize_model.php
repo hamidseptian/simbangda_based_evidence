@@ -235,7 +235,7 @@ class Synchronize_model extends CI_Model
 										paket_pekerjaan pp 
 									WHERE
 										pp.kode_rekening_sub_kegiatan = '{$kode_rekening_sub_kegiatan}'
-										AND pp.id_instansi = {$id_instansi} and pp.tahun='$tahun'
+										AND pp.id_instansi = {$id_instansi} and pp.tahun='$tahun' and (pp.id_tambahan_anggaran ='' || pp.id_tambahan_anggaran is null)
 										$where 
 								");
 		return $query;
@@ -259,7 +259,7 @@ class Synchronize_model extends CI_Model
 										pp.kode_rekening_sub_kegiatan = '{$kode_rekening_sub_kegiatan}'
 										AND pp.id_instansi = {$id_instansi}
 										AND pp.jenis_paket = '{$jenis}'
-										AND pp.tahun='$tahun' 
+										AND pp.tahun='$tahun' and (pp.id_tambahan_anggaran ='' || pp.id_tambahan_anggaran is null)
 										$where
 								");
 		return $query;
@@ -284,7 +284,7 @@ class Synchronize_model extends CI_Model
 									WHERE
 										rk.id_instansi = {$id_instansi} 
 										AND rk.kode_rekening_sub_kegiatan = '$kode_rekening_sub_kegiatan' 
-										AND pp.jenis_paket = '{$jenis_paket}' 
+										AND pp.jenis_paket = '{$jenis_paket}'   and (pp.id_tambahan_anggaran ='' || pp.id_tambahan_anggaran is null)
 										AND rk.bulan <= {$bulan}
 										AND rk.tahun='$tahun'
 										$where_tahap")->row_array();

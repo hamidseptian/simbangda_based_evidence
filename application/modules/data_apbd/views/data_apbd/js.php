@@ -2168,7 +2168,7 @@ function edit_target_fisik_tambahan(x) {
 					get_target(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran);
 				}
 				else{
-					get_target_pergeseran(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran, pergeseran_ke);
+					get_target_pergeseran(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, pergeseran_ke, id_tambahan_anggaran);
 
 				}
 				// get_target(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran)
@@ -2248,18 +2248,19 @@ function edit_target_keuangan_tambahan(x) {
 		let tahun = $(x).attr('tahun');
 		let id_tambahan_anggaran = $(x).attr('id_tambahan_anggaran');
 		let pergeseran_ke = $(x).attr('pergeseran_ke');
-		
+
 		$(x).editable({
 			mode: 'inline',
 			pk: id,
 			savenochange: true,
 			url: baseUrl('data_apbd/update_target_keuangan_tambahan/' + kode_sub_kegiatan + '/' + tahap),
 			success: function(c) {
+		console.log(pergeseran_ke)
 				if (pergeseran_ke=='' || pergeseran_ke==null) {
 					get_target(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran);
 				}
 				else{
-					get_target_pergeseran(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, id_tambahan_anggaran, pergeseran_ke);
+					get_target_pergeseran(kode_sub_kegiatan, kode_kegiatan, kode_program, tahap, tahun, kode_bidang_urusan, pagu, pergeseran_ke, id_tambahan_anggaran);
 
 				}
 			},

@@ -1997,9 +1997,9 @@ class Laporan extends MY_Controller {
 					$mpdf->SetHTMLFooter($footer);
 
 
-
+				if (count($kumpul_ski_tambahan)>0) {
+					
 			    $header2 =  $this->load->view('laporan/new_pdf/realisasi_akumulasi/tambahan_anggaran/header_tambahan', $data, true);
-			   
 				$mpdf->SetHTMLHeader($header2); 
 				$mpdf->WriteHTML('<pagebreak/>');
 				$html_2 =  $this->load->view('laporan/new_pdf/realisasi_akumulasi/tambahan_anggaran/content_rfk_akumulasi_rutin_sd_rk_pisah_tambahan_anggaran_tambahan', $data, true);
@@ -2015,6 +2015,7 @@ class Laporan extends MY_Controller {
 				$mpdf->WriteHTML($html_3);
 
 			$mpdf->SetHTMLFooter($footer);
+				}
 
 
 

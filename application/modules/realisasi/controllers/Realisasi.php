@@ -509,11 +509,22 @@ class Realisasi extends MY_Controller
 
                 $lokasi_paket = $this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan) == 0 ? 'Belum Ada' : '<button class="btn btn-outline-primary" onclick="lokasi(' . "'" . $lists->id_paket_pekerjaan . "','".$lists->nama_paket."'" . ')">' . $this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan).' Lokasi' . '</button>';
 
-
+ 
                 $row[]  = $lokasi_paket;
 
                 $row[]  = $lists->volume;
-                $row[]  = number_format($lists->pagu);
+
+
+
+                if ($lists->id_tambahan_anggaran=='') {
+                    $row[]  = '<span style="">'.number_format($lists->pagu + ($lists->pagu_tkd == '' ? 0 : $lists->pagu_tkd)).'</span>';
+                    # code...
+                }else{
+                    $row[]  = '<span style="color:#8C00FF">'.number_format($lists->pagu + ($lists->pagu_tkd == '' ? 0 : $lists->pagu_tkd)).'</span>';
+
+                }
+
+                
                 if ($lists->jenis_paket=='RUTIN') {
                      $id_instansi = $lists->id_instansi;
                     $bulan_mulai = mulai_realisasi_instansi($id_instansi);
