@@ -818,6 +818,7 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 							$('#jumlah_selesai_synchronize').html(selesai+" OPD");
 							$('#jumlah_synchronize_berhasil').html(berhasil_synch+" OPD");
 						$('#keterangan_status_progress_' + id_instansi).html(data.message);
+						sync_tkd(id_instansi,tahapan_apbd,tahun) ; 
 					}
 					else{
 						
@@ -855,6 +856,93 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 				}
 			});
 		}
+
+
+	}
+
+
+
+	function sync_tkd(id_instansi, tahapan_apbd, tahun) {
+		var tahapan_apbd = $('#tahapan_apbd').val();
+		var tahun = $('#tahun').val();
+		var banyak_instansi = $('.hitung_intansi').length; 
+		gagal_synch = 0;
+		berhasil_synch = 0;
+		$('#cek_status_progress_' + id_instansi).html('<span class="badge badge-info">Loading Synch TKD</span>');
+
+		
+
+
+			$.ajax({
+				url: baseUrl('synchronize/synch_tkd/' +tahun+ '/' +tahapan_apbd+'/'+id_instansi),
+				type: 'GET',
+				dataType: 'JSON',
+				data: {
+					// id_instansi : id_instansi,
+					// tahap : tahapan_apbd,
+					// tahun : tahun
+				},
+				success: function(data) {
+					
+						$('#tahap-2'+ '-' + id_instansi).find('i').attr('class', 'ion ion-checkmark');
+
+						$('#tahap-2'+ '-' + id_instansi).attr('class', 'btn btn-sm btn-success selesai_sinkron');
+						var selesai = $('.selesai_sinkron').length; 
+						$('#banyak_selesai').html(selesai);
+
+						// $('#cek_status_progress_' + id_instansi).attr('style','background:green-light');
+						if (selesai==banyak_instansi) {
+							$('#synchronize_all').html(`<div style="text-align: center;" class='alert alert-success'><b>Sinkronisasi Selesai</b></div>`);
+						}
+
+
+					if (data.responcode == 200) {
+						$('#cek_status_progress_' + id_instansi).html('<span class="badge badge-' +data.badge+'">'+ data.synchronize +'</span>');
+
+
+						$('#cek_status_progress_' + id_instansi).attr('class', 'berhasil_sinkron');
+						var berhasil_synch = $('.berhasil_sinkron').length; 
+
+							$('#jumlah_selesai_synchronize').html(selesai+" OPD");
+							$('#jumlah_synchronize_berhasil').html(berhasil_synch+" OPD");
+						$('#keterangan_status_progress_' + id_instansi).html(data.message);
+					}
+					else{
+						
+						$('#cek_status_progress_' + id_instansi).html('<span class="badge badge-' +data.badge+'">'+ data.synchronize +'</span>');
+
+						$('#cek_status_progress_' + id_instansi).attr('class', 'gagal_sinkron');
+						var gagal_synch = $('.gagal_sinkron').length; 
+
+							$('#jumlah_selesai_synchronize').html(selesai+" OPD");
+							$('#jumlah_synchronize_gagal').html(gagal_synch+" OPD");
+						$('#keterangan_status_progress_' + id_instansi).html(data.message);
+
+					}
+
+				},
+				error : function(){
+					
+					$('#tahap-2'+ '-' + id_instansi).attr('class', 'btn btn-sm btn-success selesai_sinkron');
+					$('#tahap-2'+ '-' + id_instansi).find('i').attr('class', 'ion ion-checkmark');
+					
+						$('#cek_status_progress_' + id_instansi).html('<span class="badge badge-danger">Synchronize Error</span>');
+						$('#keterangan_status_progress_' + id_instansi).html('Error pada Aplikasi');
+					var selesai = $('.selesai_sinkron').length; 
+					$('#banyak_selesai').html(selesai);
+					if (selesai==banyak_instansi) {
+							$('#synchronize_all').html(`<div style="text-align: center;" class='alert alert-success'><b>Sinkronisasi Selesai</b></div>`);
+						}
+
+							$('#cek_status_progress_' + id_instansi).attr('class', 'gagal_sinkron');
+						var gagal_synch = $('.gagal_sinkron').length; 
+							$('#jumlah_selesai_synchronize').html(selesai+" OPD");
+							$('#jumlah_synchronize_gagal').html(gagal_synch+" OPD");
+
+					
+				}
+			});
+		
 
 
 	}

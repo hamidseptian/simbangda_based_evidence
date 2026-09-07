@@ -165,7 +165,7 @@ foreach ($sub_kegiatan as $row) {
                     AND pp.id_instansi = {$id_instansi}
                     AND pp.tahun='$tahun' 
 
-                    AND pp.id_tambahan_anggaran='' 
+                    AND pp.pagu>0 
                     $where_paket");
 
        	$jlm_rutin = 0;
