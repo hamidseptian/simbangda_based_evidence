@@ -171,12 +171,12 @@ ask.kode_sub_kegiatan=ski.kode_sub_kegiatan and ask.id_instansi=ski.id_instansi 
             and ski.status=1 and ski.kode_sub_kegiatan='$kode_sub_kegiatan'
             ";
         }else{
-            if ($pergeseran_ke=='') {
+            // if ($pergeseran_ke=='') {
                 $where = "WHERE ski.id_instansi = '{$id_instansi}' and ski.kode_tahap='$tahap' and ski.tahun='$tahun' and ski.kode_sub_kegiatan='$kode_sub_kegiatan'";
-            }else{
-                $where = "WHERE ski.id_instansi = '{$id_instansi}' and ski.kode_tahap='$tahap' and ski.tahun='$tahun' and ski.kode_sub_kegiatan='$kode_sub_kegiatan' and ask.pergeseran_ke = '$pergeseran_ke'";
+            // }else{
+            //     $where = "WHERE ski.id_instansi = '{$id_instansi}' and ski.kode_tahap='$tahap' and ski.tahun='$tahun' and ski.kode_sub_kegiatan='$kode_sub_kegiatan' and ask.pergeseran_ke = '$pergeseran_ke'";
 
-            }
+            // }
 
         }
 

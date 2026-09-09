@@ -3390,7 +3390,7 @@ class Realisasi extends MY_Controller
          from realisasi_keuangan_tambahan where id_realisasi_keuangan_tambahan='$id_realisasi'");
         $realisasi_total = $cekdata->row_array()['total_realisasi'];
         $nilai = str_replace('.', '', $value);
-        $persentasi_insert = ($nilai / $pagu) * 100 ; 
+        $persentasi_insert = $pagu == 0 ? 0 : ($nilai / $pagu) * 100 ; 
         $persentasi_update = $realisasi_total ;//- $nilai) + $nilai;//(($realisasi_total['total_realisasi'] - $nilai) / $pagu) * 100 ; 
 
         switch ($target) {

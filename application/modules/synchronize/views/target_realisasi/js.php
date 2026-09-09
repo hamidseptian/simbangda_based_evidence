@@ -818,7 +818,7 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 							$('#jumlah_selesai_synchronize').html(selesai+" OPD");
 							$('#jumlah_synchronize_berhasil').html(berhasil_synch+" OPD");
 						$('#keterangan_status_progress_' + id_instansi).html(data.message);
-						sync_tkd(id_instansi,tahapan_apbd,tahun) ; 
+						// sync_tkd(id_instansi,tahapan_apbd,tahun) ; 
 					}
 					else{
 						
