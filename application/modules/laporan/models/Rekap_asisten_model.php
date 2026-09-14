@@ -57,6 +57,14 @@ class Rekap_asisten_model extends CI_Model
                    g.rp_target_keuangan_akumulasi as rp_target_keuangan,
                    g.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan
                    ';
+         $query_sql_tambahan = 'gt.target_fisik_akumulasi as target_fisik_tambahan,
+                   gt.realisasi_fisik_akumulasi as realisasi_fisik_tambahan,
+                   gt.target_keuangan_akumulasi as target_keuangan_tambahan,
+                   gt.realisasi_keuangan_akumulasi as realisasi_keuangan_tambahan,
+                   gt.pagu_total as pagu_total_tambahan,
+                   gt.rp_target_keuangan_akumulasi as rp_target_keuangan_tambahan,
+                   gt.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan_tambahan
+                   ';
       }else{
          $query_sql = 'g.target_fisik_bulanan as target_fisik,
                    g.realisasi_fisik_bulanan as realisasi_fisik,
@@ -66,6 +74,15 @@ class Rekap_asisten_model extends CI_Model
                    g.pagu_total,
                    g.rp_target_keuangan_bulanan as rp_target_keuangan,
                    g.rp_realisasi_keuangan_bulanan as rp_realisasi_keuangan
+                   ';
+         $query_sql_tambahan = 'gt.target_fisik_bulanan as target_fisik_tambahan,
+                   gt.realisasi_fisik_bulanan as realisasi_fisik_tambahan,
+                   gt.target_keuangan_bulanan as target_keuangan_tambahan,
+                   gt.realisasi_keuangan_bulanan as realisasi_keuangan_tambahan,
+                   
+                   gt.pagu_total as pagu_total_tambahan,
+                   gt.rp_target_keuangan_bulanan as rp_target_keuangan_tambahan,
+                   gt.rp_realisasi_keuangan_bulanan as rp_realisasi_keuangan_tambahan
                    ';
         
 
@@ -87,69 +104,35 @@ class Rekap_asisten_model extends CI_Model
 
     //   }  
     // }
-
+$this->db->query("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
     $query  = $this->db->query("SELECT
                                   mi.id_instansi,
                                   mi.kode_opd,
                                   mi.nama_instansi,
                                   mi.singkatan_nama_instansi,
                                   $query_sql,
-                                   g.id_grafik,
-                                    g.id_instansi,
-                                    g.kode_opd,
-                                    g.bulan,
-                                    g.pagu_bo_bp,
-                                    g.pagu_bo_bbj,
-                                    g.pagu_bo_bs,
-                                    g.pagu_bo_bh,
-                                    g.pagu_bo_bbs,
-                                    g.pagu_bm_bmt,
-                                    g.pagu_bm_bmpm,
-                                    g.pagu_bm_bmgb,
-                                    g.pagu_bm_bmjji,
-                                    g.pagu_bm_bmatl,
-                                    g.pagu_bm_bmatb,
-                                    g.pagu_btt,
-                                    g.pagu_bt_bbh,
-                                    g.pagu_bt_bbk,
-                                    g.pagu_total,
-                                    g.rp_target_keuangan_akumulasi,
-                                    g.rp_target_keuangan_bulanan,
-                                    g.rp_realisasi_keuangan_akumulasi,
-                                    g.rp_realisasi_keuangan_akumulasi_bo_bp,
-                                    g.rp_realisasi_keuangan_akumulasi_bo_bbj,
-                                    g.rp_realisasi_keuangan_akumulasi_bo_bs,
-                                    g.rp_realisasi_keuangan_akumulasi_bo_bh,
-                                    g.rp_realisasi_keuangan_akumulasi_bo_bbs,
-                                    g.rp_realisasi_keuangan_akumulasi_bm_bmt,
-                                    g.rp_realisasi_keuangan_akumulasi_bm_bmpm,
-                                    g.rp_realisasi_keuangan_akumulasi_bm_bmgb,
-                                    g.rp_realisasi_keuangan_akumulasi_bm_bmjji,
-                                    g.rp_realisasi_keuangan_akumulasi_bm_bmatl,
-                                    g.rp_realisasi_keuangan_akumulasi_bm_bmatb,
-                                    g.rp_realisasi_keuangan_akumulasi_btt,
-                                    g.rp_realisasi_keuangan_akumulasi_bt_bbh,
-                                    g.rp_realisasi_keuangan_akumulasi_bt_bbk,
-                                    g.rp_realisasi_keuangan_bulanan,
-                                    g.rp_realisasi_keuangan_bulanan_bo_bp,
-                                    g.rp_realisasi_keuangan_bulanan_bo_bbj,
-                                    g.rp_realisasi_keuangan_bulanan_bo_bs,
-                                    g.rp_realisasi_keuangan_bulanan_bo_bh,
-                                    g.rp_realisasi_keuangan_bulanan_bo_bbs,
-                                    g.rp_realisasi_keuangan_bulanan_bm_bmt,
-                                    g.rp_realisasi_keuangan_bulanan_bm_bmpm,
-                                    g.rp_realisasi_keuangan_bulanan_bm_bmgb,
-                                    g.rp_realisasi_keuangan_bulanan_bm_bmjji,
-                                    g.rp_realisasi_keuangan_bulanan_bm_bmatl,
-                                    g.rp_realisasi_keuangan_bulanan_bm_bmatb,
-                                    g.rp_realisasi_keuangan_bulanan_btt,
-                                    g.rp_realisasi_keuangan_bulanan_bt_bbh,
-                                    g.rp_realisasi_keuangan_bulanan_bt_bbk,
+                                  $query_sql_tambahan,
+                                  
                                     g.last_update
 
-                                FROM
+                                
+
+
+
+                                  FROM
                                   master_instansi mi
-                                  LEFT JOIN grafik g ON mi.id_instansi = g.id_instansi 
+                                  LEFT JOIN grafik g ON mi.id_instansi COLLATE utf8mb4_unicode_ci = g.id_instansi COLLATE utf8mb4_unicode_ci
+                                  LEFT JOIN grafik_tambahan gt ON g.id_instansi COLLATE utf8mb4_unicode_ci = gt.id_instansi COLLATE utf8mb4_unicode_ci
+                                  AND g.tahun COLLATE utf8mb4_unicode_ci = gt.tahun COLLATE utf8mb4_unicode_ci
+                                  AND g.kode_tahap COLLATE utf8mb4_unicode_ci = gt.kode_tahap COLLATE utf8mb4_unicode_ci
+                                  AND g.bulan COLLATE utf8mb4_unicode_ci = gt.bulan COLLATE utf8mb4_unicode_ci
+                                
+                                
+                                
+
+
+
+
                                 WHERE
                                   mi.id_parent = {$id_asisten}
                                   AND mi.is_active='1'
@@ -180,6 +163,16 @@ class Rekap_asisten_model extends CI_Model
                    g.rp_target_keuangan_akumulasi as rp_target_keuangan,
                    g.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan
                    ';
+
+         $query_sql_tambahan = 'gt.target_fisik_akumulasi as target_fisik_tambahan,
+                   gt.realisasi_fisik_akumulasi as realisasi_fisik_tambahan,
+                   gt.target_keuangan_akumulasi as target_keuangan_tambahan,
+                   gt.realisasi_keuangan_akumulasi as realisasi_keuangan_tambahan,
+                   gt.pagu_total as pagu_total_tambahan,
+                   gt.rp_target_keuangan_akumulasi as rp_target_keuangan_tambahan,
+                   gt.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan_tambahan
+                   ';
+
       }else{
          $query_sql = 'g.target_fisik_bulanan as target_fisik,
                    g.realisasi_fisik_bulanan as realisasi_fisik,
@@ -190,6 +183,16 @@ class Rekap_asisten_model extends CI_Model
                    g.rp_target_keuangan_bulanan as rp_target_keuangan,
                    g.rp_realisasi_keuangan_bulanan as rp_realisasi_keuangan
                    ';
+         $query_sql_tambahan = 'gt.target_fisik_bulanan as target_fisik_tambahan,
+                   gt.realisasi_fisik_bulanan as realisasi_fisik_tambahan,
+                   gt.target_keuangan_bulanan as target_keuangan_tambahan,
+                   gt.realisasi_keuangan_bulanan as realisasi_keuangan_tambahan,
+                   
+                   gt.pagu_total as pagu_total_tambahan,
+                   gt.rp_target_keuangan_bulanan as rp_target_keuangan_tambahan,
+                   gt.rp_realisasi_keuangan_bulanan as rp_realisasi_keuangan_tambahan
+                   ';
+
         
 
       }
@@ -211,12 +214,14 @@ class Rekap_asisten_model extends CI_Model
     //   }  
     // }
 
+$this->db->query("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
     $query  = $this->db->query("SELECT
                                   mi.id_instansi,
                                   mi.kode_opd,
                                   mi.nama_instansi,
                                   mi.singkatan_nama_instansi,
                                   $query_sql,
+                                  $query_sql_tambahan,
                                    g.id_grafik,
                                     g.id_instansi,
                                     g.kode_opd,
@@ -270,9 +275,19 @@ class Rekap_asisten_model extends CI_Model
                                     g.rp_realisasi_keuangan_bulanan_bt_bbk,
                                     g.last_update
 
-                                FROM
+
+
+                                  FROM
                                   master_instansi mi
-                                  LEFT JOIN grafik g ON mi.id_instansi = g.id_instansi 
+                                  LEFT JOIN grafik g ON mi.id_instansi COLLATE utf8mb4_unicode_ci = g.id_instansi COLLATE utf8mb4_unicode_ci
+                                  LEFT JOIN grafik_tambahan gt ON g.id_instansi COLLATE utf8mb4_unicode_ci = gt.id_instansi COLLATE utf8mb4_unicode_ci
+                                  AND g.tahun COLLATE utf8mb4_unicode_ci = gt.tahun COLLATE utf8mb4_unicode_ci
+                                  AND g.kode_tahap COLLATE utf8mb4_unicode_ci = gt.kode_tahap COLLATE utf8mb4_unicode_ci
+                                  AND g.bulan COLLATE utf8mb4_unicode_ci = gt.bulan COLLATE utf8mb4_unicode_ci
+                                
+
+
+
                                 WHERE
                                   g.id_instansi = '70'
                                   AND mi.is_active='1'
@@ -479,16 +494,27 @@ class Rekap_asisten_model extends CI_Model
                    g.pagu_total,
                    g.rp_target_keuangan_akumulasi as rp_target_keuangan,
                    g.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan,
-                   (g.realisasi_keuangan_akumulasi - g.target_keuangan_akumulasi) as deviasi_keuangan,
                    (g.realisasi_fisik_akumulasi - g.target_fisik_akumulasi) as deviasi_fisik
                    ';
+
+
+         $query_sql_tambahan = 'gt.target_fisik_akumulasi as target_fisik_tambahan,
+                   gt.realisasi_fisik_akumulasi as realisasi_fisik_tambahan,
+                   gt.target_keuangan_akumulasi as target_keuangan_tambahan,
+                   gt.realisasi_keuangan_akumulasi as realisasi_keuangan_tambahan,
+                   gt.pagu_total as pagu_total_tambahan,
+                   gt.rp_target_keuangan_akumulasi as rp_target_keuangan_tambahan,
+                   gt.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan_tambahan
+                   ';
+
 
                      if ($realisasi=='fisik') {
                         $order_by = "ORDER by g.realisasi_fisik_akumulasi desc";
                       }
                       
                      elseif ($realisasi=='keuangan') {
-                        $order_by = "ORDER by g.realisasi_keuangan_akumulasi desc";
+                        $order_by = "ORDER by persentase_realisasi_keuangan_diurutkan desc";
+                        // $order_by = "ORDER by ((g.realisasi_keuangan_akumulasi + gt.realisasi_keuangan_akumulasi) / (g.pagu_total + gt.pagu_total) * 100) desc";
                       }
                      elseif ($realisasi=='deviasi_fisik') {
                         $order_by = "ORDER by (g.realisasi_fisik_akumulasi - g.target_fisik_akumulasi) desc";
@@ -544,15 +570,65 @@ class Rekap_asisten_model extends CI_Model
     //   }  
     // }
 
+
+    $query_perubahan_persen_rk = '  CASE
+        WHEN gt.pagu_total > 0 THEN
+            ( g.rp_realisasi_keuangan_akumulasi + gt.rp_realisasi_keuangan_akumulasi )
+            / ( g.pagu_total + gt.pagu_total ) * 100
+        ELSE
+            (g.realisasi_keuangan_akumulasi)
+    END AS persentase_realisasi_keuangan_diurutkan';
+
+    $query_perubahan_persen_dk = '  CASE
+        WHEN gt.pagu_total > 0 THEN
+            ( g.rp_realisasi_keuangan_akumulasi + gt.rp_realisasi_keuangan_akumulasi )
+            / ( g.pagu_total + gt.pagu_total ) * 100
+        ELSE
+            (g.realisasi_keuangan_akumulasi)
+    END AS persentase_realisasi_keuangan_diurutkan';
+    
+    $query_perubahan_persen_dk = '  CASE
+        WHEN gt.pagu_total > 0 THEN
+           ( ( g.rp_realisasi_keuangan_akumulasi + gt.rp_realisasi_keuangan_akumulasi )
+                       / ( g.pagu_total + gt.pagu_total ) * 100)
+                       -
+           ( ( g.rp_target_keuangan_akumulasi + gt.rp_target_keuangan_akumulasi )
+                       / ( g.pagu_total + gt.pagu_total ) * 100)
+        ELSE
+            
+         (g.realisasi_keuangan_akumulasi - g.target_keuangan_akumulasi) 
+    END as deviasi_keuangan';
     $query  = $this->db->query("SELECT
                                   mi.id_instansi,
                                   mi.id_parent,
                                   mi.nama_instansi,
                                   mi.singkatan_nama_instansi,
-                                  $query_sql
-                                FROM
+                                  $query_sql, 
+                                  $query_sql_tambahan,
+                                  $query_perubahan_persen_rk,
+                                  $query_perubahan_persen_dk
+
+
+
+
+
+
+
+
+                                  FROM
                                   master_instansi mi
-                                  LEFT JOIN grafik g ON mi.id_instansi = g.id_instansi 
+                                  LEFT JOIN grafik g ON mi.id_instansi COLLATE utf8mb4_unicode_ci = g.id_instansi COLLATE utf8mb4_unicode_ci
+                                  LEFT JOIN grafik_tambahan gt ON g.id_instansi COLLATE utf8mb4_unicode_ci = gt.id_instansi COLLATE utf8mb4_unicode_ci
+                                  AND g.tahun COLLATE utf8mb4_unicode_ci = gt.tahun COLLATE utf8mb4_unicode_ci
+                                  AND g.kode_tahap COLLATE utf8mb4_unicode_ci = gt.kode_tahap COLLATE utf8mb4_unicode_ci
+                                  AND g.bulan COLLATE utf8mb4_unicode_ci = gt.bulan COLLATE utf8mb4_unicode_ci
+
+
+
+
+                                -- FROM
+                                --   master_instansi mi
+                                --   LEFT JOIN grafik g ON mi.id_instansi = g.id_instansi 
                                 WHERE
                                   mi.is_active='1'
                                   AND g.kode_tahap = '$tahap'

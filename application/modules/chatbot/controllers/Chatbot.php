@@ -14,11 +14,16 @@ class Chatbot extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-        header('Content-Type: application/json; charset=utf-8');
+        // header('Content-Type: application/json; charset=utf-8');
     }
 
 
 private $instansi = null;
+
+
+public function qr(){
+    $this->load->view('chatbot/qr');
+}
 
 private function get_master_instansi($force_refresh = false) {
     if ($this->instansi !== null && !$force_refresh) {

@@ -168,28 +168,64 @@
           $rf_ttb_1 = 0; 
        foreach ($asisten_1 as $satu) { 
 
-        $total_pagu_satu +=$satu->pagu_total;
-        $total_rp_t_keu_satu +=$satu->rp_target_keuangan;
-        $total_rp_r_keu_satu +=$satu->rp_realisasi_keuangan;
-
-
-        $total_pagu +=$satu->pagu_total;
-        $total_rp_t_keu +=$satu->rp_target_keuangan;
-        $total_rp_r_keu +=$satu->rp_realisasi_keuangan;
-
         $total_data_skpd +=1;
         $total_data_skpd_satu +=1;
 
 
-        $bobot_1 = ($satu->pagu_total / $pagu_asisten_1) * 100;
-        $tf_tertimbang_1 = $satu->target_fisik * $bobot_1 / 100;
-        $tf_ttb_1 += $tf_tertimbang_1;
-        $rf_tertimbang_1 = $satu->realisasi_fisik * $bobot_1 / 100;
-        $rf_ttb_1 += $rf_tertimbang_1;
+
+
+
+            // $show_tf = $satu->target_fisik;
+            // $show_rf = $satu->realisasi_fisik == '' ? 0 : $satu->realisasi_fisik;
+
+            if ($satu->pagu_total_tambahan>0) {
+              $pagu_semua = $satu->pagu_total + $satu->pagu_total_tambahan;
+              $rp_target_keuangan = $satu->rp_target_keuangan + $satu->rp_target_keuangan_tambahan;
+              $persen_tk = ($rp_target_keuangan / $pagu_semua) * 100;
+
+              $rp_realisasi_keuangan = $satu->rp_realisasi_keuangan + $satu->rp_realisasi_keuangan_tambahan;
+              $persen_rk = ($rp_realisasi_keuangan / $pagu_semua) * 100;
+              $show_tk = $persen_tk;
+              $show_rk = $persen_rk;// $pagu_semua;//$satu->realisasi_keuangan == '' ? 0 :  $satu->realisasi_keuangan;
+
+              $bobot_apbd =($satu->pagu_total / $pagu_semua) * 100;
+              $bobot_tambahan =($satu->pagu_total_tambahan / $pagu_semua) * 100;
+              $ttb_tf_apbd = $satu->target_fisik * $bobot_apbd /100;
+              $ttb_tf_tambahan = $satu->target_fisik_tambahan * $bobot_tambahan /100;
+
+              $ttb_rf_apbd = $satu->realisasi_fisik * $bobot_apbd /100;
+              $ttb_rf_tambahan = $satu->realisasi_fisik_tambahan * $bobot_tambahan /100;
+
+              $target_fisik = $ttb_tf_apbd + $ttb_tf_tambahan;
+              $realisasi_fisik = $ttb_rf_apbd + $ttb_rf_tambahan;
+
+
+            // $show_tf =$target_fisik ;//$satu->target_fisik;
+            // $show_rf =$realisasi_fisik ;//$satu->realisasi_fisik == '' ? 0 : $satu->realisasi_fisik;
+            $show_tf =$satu->target_fisik;
+            $show_rf =$satu->realisasi_fisik == '' ? 0 : $satu->realisasi_fisik;
+            }else{
+              $pagu_semua = $satu->pagu_total;
+              $rp_target_keuangan = $satu->rp_target_keuangan;
+              $rp_realisasi_keuangan = $satu->rp_realisasi_keuangan;
+
+              $show_tk = $satu->target_keuangan;
+              $show_rk = $satu->realisasi_keuangan == '' ? 0 :  $satu->realisasi_keuangan;
+
+
+            $show_tf = $satu->target_fisik;
+            $show_rf = $satu->realisasi_fisik == '' ? 0 : $satu->realisasi_fisik;
+
+            }
+
+
+
+
+
 
 
         $dev_fisik = round($satu->realisasi_fisik -$satu->target_fisik ,2);
-          $dev_keu = round($satu->realisasi_keuangan - $satu->target_keuangan,2);
+          $dev_keu = number_format($show_rk,2) - number_format($show_tk,2);
 
 
             if ($dev_fisik < -10) {
@@ -197,17 +233,17 @@
               $total_peringatan_dev_fisik_merah += 1; 
               $total_peringatan_dev_fisik_merah_satu += 1; 
             }
-            elseif ($dev_fisik <=-5  && $dev_fisik >=-10) {
+            elseif ($dev_fisik <-5  && $dev_fisik >=-10) {
               $warna_peringatan_dev_fisik = 'background: #fcf3cf';
               $total_peringatan_dev_fisik_kuning += 1; 
               $total_peringatan_dev_fisik_kuning_satu += 1; 
             }
-            elseif ($dev_fisik <=0  && $dev_fisik >=-5) {
-              $warna_peringatan_dev_fisik = 'background: #d5f5e3';
+            elseif ($dev_fisik <=0  && $dev_fisik >=-10) {
+              $warna_peringatan_dev_fisik = 'background:#d5f5e3';
               $total_peringatan_dev_fisik_hijau += 1; 
               $total_peringatan_dev_fisik_hijau_satu += 1; 
             }else{
-              $warna_peringatan_dev_fisik = 'background: #ff7cfd';
+              $warna_peringatan_dev_fisik = 'background:#ff7cfd';
               $total_peringatan_dev_fisik_ungu += 1; 
               $total_peringatan_dev_fisik_ungu_satu += 1; 
             }
@@ -222,115 +258,75 @@
               $total_peringatan_dev_keu_kuning += 1; 
               $total_peringatan_dev_keu_kuning_satu += 1; 
             }
-            elseif ($dev_keu <=0  && $dev_keu >=-5) {
-              $warna_peringatan_dev_keu = 'background: #d5f5e3';
+            elseif ($dev_keu <=0  && $dev_keu >=-10) {
+              $warna_peringatan_dev_keu = 'background:#d5f5e3';
               $total_peringatan_dev_keu_hijau += 1; 
               $total_peringatan_dev_keu_hijau_satu += 1; 
             }else{
-              $warna_peringatan_dev_keu = 'background: #ff7cfd';
+              $warna_peringatan_dev_keu = 'background:#ff7cfd';
               $total_peringatan_dev_keu_ungu += 1; 
               $total_peringatan_dev_keu_ungu_satu += 1; 
             }
 
 
             $total_t_fisik_satu    += $satu->target_fisik;
-            $total_t_keu_satu      += $satu->target_keuangan;
             $total_r_fisik_satu    += $satu->realisasi_fisik;
-            $total_r_keu_satu      += $satu->realisasi_keuangan;
+            $total_t_keu_satu      += $show_tk;
+            $total_r_keu_satu      += $show_rk;
             $jml_skpd_satu++;
+
+
+            $total_pagu +=$pagu_semua;
+            $total_rp_t_keu +=$rp_target_keuangan;
+            $total_rp_r_keu +=$rp_realisasi_keuangan;
+
+            $total_pagu_satu +=$satu->pagu_total;
+            $total_rp_t_keu_satu +=$rp_target_keuangan;
+            $total_rp_r_keu_satu +=$rp_realisasi_keuangan;
+
+
+
+            $bobot_2 = ($pagu_semua / $pagu_asisten_2) * 100;
+            $tf_tertimbang_2 = $satu->target_fisik * $bobot_2 / 100;
+            $tf_ttb_2 += $tf_tertimbang_2;
+            $rf_tertimbang_2 = $satu->realisasi_fisik * $bobot_2 / 100;
+            $rf_ttb_2 += $rf_tertimbang_2;
+
+
+
+
         
 
 
-            $show_tf = $satu->target_fisik;
-            $show_tk = $satu->target_keuangan;
-            $show_rf = $satu->realisasi_fisik == '' ? 0 : $satu->realisasi_fisik;
-            $show_rk = $satu->realisasi_keuangan == '' ? 0 :  $satu->realisasi_keuangan;
+            // $show_tf = $satu->target_fisik;
+            // $show_rf = $satu->realisasi_fisik == '' ? 0 : $satu->realisasi_fisik;
+
+            // $show_tf = $satu->target_fisik_tambahan;
+            // $show_rf = $satu->realisasi_fisik_tambahan == '' ? 0 : $satu->realisasi_fisik_tambahan;
 
 
-            $pisah_decimal_show_tf = explode('.', $satu->target_fisik);
-            $pisah_decimal_show_tk = explode('.', $satu->target_keuangan);
-            $pisah_decimal_show_rf = explode('.', $show_rf);
-            $pisah_decimal_show_rk = explode('.', $show_rk);
-            $pisah_decimal_dev_fisik = explode('.', $dev_fisik);
-            $pisah_decimal_dev_keu = explode('.', $dev_keu);
-
-            $digit_show_tf = count($pisah_decimal_show_tk);
-            $digit_show_tk = count($pisah_decimal_show_tf);
-            $digit_show_rf = count($pisah_decimal_show_rf);
-            $digit_show_rk = count($pisah_decimal_show_rk);
-            $digit_dev_fisik = count($pisah_decimal_dev_fisik);
-            $digit_dev_keu = count($pisah_decimal_dev_keu);
-
-            // Fisik
-            if ($digit_show_tf>1) {
-              $didepan_koma_tf = $pisah_decimal_show_tf[0] ; 
-              $dibelakang_koma_tf = strlen($pisah_decimal_show_tf[1]) >1 ? $pisah_decimal_show_tf[1] : $pisah_decimal_show_tf[1].'0';
-              $hasil_tf = $didepan_koma_tf.'.'.$dibelakang_koma_tf;
-            }else{
-              $hasil_tf = $show_tf.'.00';
-            }
-
-            if ($digit_show_rf>1) {
-              $didepan_koma_rf = $pisah_decimal_show_rf[0] ; 
-              $dibelakang_koma_rf = strlen($pisah_decimal_show_rf[1]) >1 ? $pisah_decimal_show_rf[1] : $pisah_decimal_show_rf[1].'0';
-              $hasil_rf = $didepan_koma_rf.'.'.$dibelakang_koma_rf;
-            }else{
-              $hasil_rf = $show_rf.'.00';
-            }
-
-            if ($digit_dev_fisik>1) {
-              $didepan_koma_dev_fisik = $pisah_decimal_dev_fisik[0] ; 
-              $dibelakang_koma_dev_fisik = strlen($pisah_decimal_dev_fisik[1]) >1 ? $pisah_decimal_dev_fisik[1] : $pisah_decimal_dev_fisik[1].'0';
-              $hasil_dev_fisik = $didepan_koma_dev_fisik.'.'.$dibelakang_koma_dev_fisik;
-            }else{
-              $hasil_dev_fisik = $dev_fisik.'.00';
-            }
-
-            // keuangan
-            if ($digit_show_tk>1) {
-              $didepan_koma_tk = $pisah_decimal_show_tk[0] ; 
-              $dibelakang_koma_tk = strlen($pisah_decimal_show_tk[1]) >1 ? $pisah_decimal_show_tk[1] : $pisah_decimal_show_tk[1].'0';
-              $hasil_tk = $didepan_koma_tk.'.'.$dibelakang_koma_tk;
-            }else{
-              $hasil_tk = $show_tk.'.00';
-            }
-
-            if ($digit_show_rk>1) {
-              $didepan_koma_rk = $pisah_decimal_show_rk[0] ; 
-              $dibelakang_koma_rk = strlen($pisah_decimal_show_rk[1]) >1 ? $pisah_decimal_show_rk[1] : $pisah_decimal_show_rk[1].'0';
-              $hasil_rk = $didepan_koma_rk.'.'.$dibelakang_koma_rk;
-            }else{
-              $hasil_rk = $show_rk.'.00';
-            }
-
-            if ($digit_dev_keu>1) {
-              $didepan_koma_dev_keu = $pisah_decimal_dev_keu[0] ; 
-              $dibelakang_koma_dev_keu = strlen($pisah_decimal_dev_keu[1]) >1 ? $pisah_decimal_dev_keu[1] : $pisah_decimal_dev_keu[1].'0';
-              $hasil_dev_keu = $didepan_koma_dev_keu.'.'.$dibelakang_koma_dev_keu;
-            }else{
-              $hasil_dev_keu = $dev_keu.'.00';
-            }
 
 
-             if ($hasil_tf<$hasil_tk) {
+          
+             if ($show_tf<$show_tk) {
               $blok_tf = 'style="background: #ebdef0 "';
             }else{
               $blok_tf = '';
             }
-             if ($hasil_rf<$hasil_rk) {
+             if ($show_rf<$show_rk) {
               $blok_rf = 'style="background: #ebdef0 "';
             }else{
               $blok_rf = '';
             }
         ?>
-         <tr>
+         <tr >
           <td><?php echo $satu->nama_instansi ?></td>
-          <td class="rata_tengah"  <?php echo $blok_tf ?>><?php echo $hasil_tf ?></td>
-          <td class="rata_tengah" <?php echo $blok_rf ?>><?php echo $hasil_rf ?></td>
-          <td class="rata_tengah" style="<?php echo $warna_peringatan_dev_fisik ?>"><?php echo $hasil_dev_fisik ?></td>
-          <td class="rata_tengah"><?php echo $hasil_tk ?></td>
-          <td class="rata_tengah"><?php echo $hasil_rk ?></td>
-          <td class="rata_tengah" style="<?php echo $warna_peringatan_dev_keu ?>"><?php echo $hasil_dev_keu?></td>
+          <td class="rata_tengah" <?php echo $blok_tf ?>><?php echo number_format($show_tf,2) ?></td>
+          <td class="rata_tengah" <?php echo $blok_rf ?>><?php echo number_format($show_rf,2) ?></td>
+          <td class="rata_tengah" style="<?php echo $warna_peringatan_dev_fisik ?>"><?php echo number_format($dev_fisik,2) ?></td>
+          <td class="rata_tengah"><?php echo number_format($show_tk,2) ?></td>
+          <td class="rata_tengah"><?php echo number_format($show_rk,2) ?></td>
+          <td class="rata_tengah" style="<?php echo $warna_peringatan_dev_keu ?>"><?php echo number_format($dev_keu,2) ?></td>
         
         </tr>
 
@@ -552,21 +548,52 @@
         $total_data_skpd_dua +=1;
 
 
-        $total_pagu +=$dua->pagu_total;
-        $total_rp_t_keu +=$dua->rp_target_keuangan;
-        $total_rp_r_keu +=$dua->rp_realisasi_keuangan;
-
-        $total_pagu_dua +=$dua->pagu_total;
-        $total_rp_t_keu_dua +=$dua->rp_target_keuangan;
-        $total_rp_r_keu_dua +=$dua->rp_realisasi_keuangan;
 
 
 
-        $bobot_2 = ($dua->pagu_total / $pagu_asisten_2) * 100;
-        $tf_tertimbang_2 = $dua->target_fisik * $bobot_2 / 100;
-        $tf_ttb_2 += $tf_tertimbang_2;
-        $rf_tertimbang_2 = $dua->realisasi_fisik * $bobot_2 / 100;
-        $rf_ttb_2 += $rf_tertimbang_2;
+            // $show_tf = $dua->target_fisik;
+            // $show_rf = $dua->realisasi_fisik == '' ? 0 : $dua->realisasi_fisik;
+
+            if ($dua->pagu_total_tambahan>0) {
+              $pagu_semua = $dua->pagu_total + $dua->pagu_total_tambahan;
+              $rp_target_keuangan = $dua->rp_target_keuangan + $dua->rp_target_keuangan_tambahan;
+              $persen_tk = ($rp_target_keuangan / $pagu_semua) * 100;
+
+              $rp_realisasi_keuangan = $dua->rp_realisasi_keuangan + $dua->rp_realisasi_keuangan_tambahan;
+              $persen_rk = ($rp_realisasi_keuangan / $pagu_semua) * 100;
+              $show_tk = $persen_tk;
+              $show_rk = $persen_rk;// $pagu_semua;//$dua->realisasi_keuangan == '' ? 0 :  $satu->realisasi_keuangan;
+
+              $bobot_apbd =($dua->pagu_total / $pagu_semua) * 100;
+              $bobot_tambahan =($dua->pagu_total_tambahan / $pagu_semua) * 100;
+              $ttb_tf_apbd = $dua->target_fisik * $bobot_apbd /100;
+              $ttb_tf_tambahan = $dua->target_fisik_tambahan * $bobot_tambahan /100;
+
+              $ttb_rf_apbd = $dua->realisasi_fisik * $bobot_apbd /100;
+              $ttb_rf_tambahan = $dua->realisasi_fisik_tambahan * $bobot_tambahan /100;
+
+              $target_fisik = $ttb_tf_apbd + $ttb_tf_tambahan;
+              $realisasi_fisik = $ttb_rf_apbd + $ttb_rf_tambahan;
+
+
+            // $show_tf =$target_fisik ;//$dua->target_fisik;
+            // $show_rf =$realisasi_fisik ;//$dua->realisasi_fisik == '' ? 0 : $dua->realisasi_fisik;
+            $show_tf =$dua->target_fisik;
+            $show_rf =$dua->realisasi_fisik == '' ? 0 : $dua->realisasi_fisik;
+            }else{
+              $pagu_semua = $dua->pagu_total;
+              $rp_target_keuangan = $dua->rp_target_keuangan;
+              $rp_realisasi_keuangan = $dua->rp_realisasi_keuangan;
+
+              $show_tk = $dua->target_keuangan;
+              $show_rk = $dua->realisasi_keuangan == '' ? 0 :  $dua->realisasi_keuangan;
+
+
+            $show_tf = $dua->target_fisik;
+            $show_rf = $dua->realisasi_fisik == '' ? 0 : $dua->realisasi_fisik;
+
+            }
+
 
 
 
@@ -574,7 +601,7 @@
 
 
         $dev_fisik = round($dua->realisasi_fisik -$dua->target_fisik ,2);
-          $dev_keu = round($dua->realisasi_keuangan - $dua->target_keuangan,2);
+          $dev_keu = number_format($show_rk,2) - number_format($show_tk,2);
 
 
             if ($dev_fisik < -10) {
@@ -619,90 +646,50 @@
 
 
             $total_t_fisik_dua    += $dua->target_fisik;
-            $total_t_keu_dua      += $dua->target_keuangan;
             $total_r_fisik_dua    += $dua->realisasi_fisik;
-            $total_r_keu_dua      += $dua->realisasi_keuangan;
+            $total_t_keu_dua      += $show_tk;
+            $total_r_keu_dua      += $show_rk;
             $jml_skpd_dua++;
+
+
+            $total_pagu +=$pagu_semua;
+            $total_rp_t_keu +=$rp_target_keuangan;
+            $total_rp_r_keu +=$rp_realisasi_keuangan;
+
+            $total_pagu_dua +=$dua->pagu_total;
+            $total_rp_t_keu_dua +=$rp_target_keuangan;
+            $total_rp_r_keu_dua +=$rp_realisasi_keuangan;
+
+
+
+            $bobot_2 = ($pagu_semua / $pagu_asisten_2) * 100;
+            $tf_tertimbang_2 = $dua->target_fisik * $bobot_2 / 100;
+            $tf_ttb_2 += $tf_tertimbang_2;
+            $rf_tertimbang_2 = $dua->realisasi_fisik * $bobot_2 / 100;
+            $rf_ttb_2 += $rf_tertimbang_2;
+
+
+
+
         
 
 
-            $show_tf = $dua->target_fisik;
-            $show_tk = $dua->target_keuangan;
-            $show_rf = $dua->realisasi_fisik == '' ? 0 : $dua->realisasi_fisik;
-            $show_rk = $dua->realisasi_keuangan == '' ? 0 :  $dua->realisasi_keuangan;
+            // $show_tf = $dua->target_fisik;
+            // $show_rf = $dua->realisasi_fisik == '' ? 0 : $dua->realisasi_fisik;
+
+            // $show_tf = $dua->target_fisik_tambahan;
+            // $show_rf = $dua->realisasi_fisik_tambahan == '' ? 0 : $dua->realisasi_fisik_tambahan;
 
 
-            $pisah_decimal_show_tf = explode('.', $dua->target_fisik);
-            $pisah_decimal_show_tk = explode('.', $dua->target_keuangan);
-            $pisah_decimal_show_rf = explode('.', $show_rf);
-            $pisah_decimal_show_rk = explode('.', $show_rk);
-            $pisah_decimal_dev_fisik = explode('.', $dev_fisik);
-            $pisah_decimal_dev_keu = explode('.', $dev_keu);
 
-            $digit_show_tf = count($pisah_decimal_show_tk);
-            $digit_show_tk = count($pisah_decimal_show_tf);
-            $digit_show_rf = count($pisah_decimal_show_rf);
-            $digit_show_rk = count($pisah_decimal_show_rk);
-            $digit_dev_fisik = count($pisah_decimal_dev_fisik);
-            $digit_dev_keu = count($pisah_decimal_dev_keu);
-
-            // Fisik
-            if ($digit_show_tf>1) {
-              $didepan_koma_tf = $pisah_decimal_show_tf[0] ; 
-              $dibelakang_koma_tf = strlen($pisah_decimal_show_tf[1]) >1 ? $pisah_decimal_show_tf[1] : $pisah_decimal_show_tf[1].'0';
-              $hasil_tf = $didepan_koma_tf.'.'.$dibelakang_koma_tf;
-            }else{
-              $hasil_tf = $show_tf.'.00';
-            }
-
-            if ($digit_show_rf>1) {
-              $didepan_koma_rf = $pisah_decimal_show_rf[0] ; 
-              $dibelakang_koma_rf = strlen($pisah_decimal_show_rf[1]) >1 ? $pisah_decimal_show_rf[1] : $pisah_decimal_show_rf[1].'0';
-              $hasil_rf = $didepan_koma_rf.'.'.$dibelakang_koma_rf;
-            }else{
-              $hasil_rf = $show_rf.'.00';
-            }
-
-            if ($digit_dev_fisik>1) {
-              $didepan_koma_dev_fisik = $pisah_decimal_dev_fisik[0] ; 
-              $dibelakang_koma_dev_fisik = strlen($pisah_decimal_dev_fisik[1]) >1 ? $pisah_decimal_dev_fisik[1] : $pisah_decimal_dev_fisik[1].'0';
-              $hasil_dev_fisik = $didepan_koma_dev_fisik.'.'.$dibelakang_koma_dev_fisik;
-            }else{
-              $hasil_dev_fisik = $dev_fisik.'.00';
-            }
-
-            // keuangan
-            if ($digit_show_tk>1) {
-              $didepan_koma_tk = $pisah_decimal_show_tk[0] ; 
-              $dibelakang_koma_tk = strlen($pisah_decimal_show_tk[1]) >1 ? $pisah_decimal_show_tk[1] : $pisah_decimal_show_tk[1].'0';
-              $hasil_tk = $didepan_koma_tk.'.'.$dibelakang_koma_tk;
-            }else{
-              $hasil_tk = $show_tk.'.00';
-            }
-
-            if ($digit_show_rk>1) {
-              $didepan_koma_rk = $pisah_decimal_show_rk[0] ; 
-              $dibelakang_koma_rk = strlen($pisah_decimal_show_rk[1]) >1 ? $pisah_decimal_show_rk[1] : $pisah_decimal_show_rk[1].'0';
-              $hasil_rk = $didepan_koma_rk.'.'.$dibelakang_koma_rk;
-            }else{
-              $hasil_rk = $show_rk.'.00';
-            }
-
-            if ($digit_dev_keu>1) {
-              $didepan_koma_dev_keu = $pisah_decimal_dev_keu[0] ; 
-              $dibelakang_koma_dev_keu = strlen($pisah_decimal_dev_keu[1]) >1 ? $pisah_decimal_dev_keu[1] : $pisah_decimal_dev_keu[1].'0';
-              $hasil_dev_keu = $didepan_koma_dev_keu.'.'.$dibelakang_koma_dev_keu;
-            }else{
-              $hasil_dev_keu = $dev_keu.'.00';
-            }
 
           
-             if ($hasil_tf<$hasil_tk) {
+             if ($show_tf<$show_tk) {
               $blok_tf = 'style="background: #ebdef0 "';
             }else{
               $blok_tf = '';
             }
-             if ($hasil_rf<$hasil_rk) {
+             if ($show_rf<$show_rk) {
               $blok_rf = 'style="background: #ebdef0 "';
             }else{
               $blok_rf = '';
@@ -710,12 +697,12 @@
         ?>
          <tr >
           <td><?php echo $dua->nama_instansi ?></td>
-          <td class="rata_tengah" <?php echo $blok_tf ?>><?php echo $hasil_tf ?></td>
-          <td class="rata_tengah" <?php echo $blok_rf ?>><?php echo $hasil_rf ?></td>
-          <td class="rata_tengah" style="<?php echo $warna_peringatan_dev_fisik ?>"><?php echo $hasil_dev_fisik ?></td>
-          <td class="rata_tengah"><?php echo $hasil_tk ?></td>
-          <td class="rata_tengah"><?php echo $hasil_rk ?></td>
-          <td class="rata_tengah" style="<?php echo $warna_peringatan_dev_keu ?>"><?php echo $hasil_dev_keu?></td>
+          <td class="rata_tengah" <?php echo $blok_tf ?>><?php echo number_format($show_tf,2) ?></td>
+          <td class="rata_tengah" <?php echo $blok_rf ?>><?php echo number_format($show_rf,2) ?></td>
+          <td class="rata_tengah" style="<?php echo $warna_peringatan_dev_fisik ?>"><?php echo number_format($dev_fisik,2) ?></td>
+          <td class="rata_tengah"><?php echo number_format($show_tk,2) ?></td>
+          <td class="rata_tengah"><?php echo number_format($show_rk,2) ?></td>
+          <td class="rata_tengah" style="<?php echo $warna_peringatan_dev_keu ?>"><?php echo number_format($dev_keu,2) ?></td>
         
         </tr>
 
@@ -938,25 +925,60 @@
         $total_data_skpd_tiga +=1;
 
 
-        $total_pagu +=$tiga->pagu_total;
-        $total_rp_t_keu +=$tiga->rp_target_keuangan;
-        $total_rp_r_keu +=$tiga->rp_realisasi_keuangan;
-
-        $total_pagu_tiga +=$tiga->pagu_total;
-        $total_rp_t_keu_tiga +=$tiga->rp_target_keuangan;
-        $total_rp_r_keu_tiga +=$tiga->rp_realisasi_keuangan;
 
 
 
-        $bobot_3 = ($tiga->pagu_total / $pagu_asisten_3) * 100;
-        $tf_tertimbang_3 = $tiga->target_fisik * $bobot_3 / 100;
-        $tf_ttb_3 += $tf_tertimbang_3;
-        $rf_tertimbang_3 = $tiga->realisasi_fisik * $bobot_3 / 100;
-        $rf_ttb_3 += $rf_tertimbang_3;
+            // $show_tf = $tiga->target_fisik;
+            // $show_rf = $tiga->realisasi_fisik == '' ? 0 : $tiga->realisasi_fisik;
+
+            if ($tiga->pagu_total_tambahan>0) {
+              $pagu_semua = $tiga->pagu_total + $tiga->pagu_total_tambahan;
+              $rp_target_keuangan = $tiga->rp_target_keuangan + $tiga->rp_target_keuangan_tambahan;
+              $persen_tk = ($rp_target_keuangan / $pagu_semua) * 100;
+
+              $rp_realisasi_keuangan = $tiga->rp_realisasi_keuangan + $tiga->rp_realisasi_keuangan_tambahan;
+              $persen_rk = ($rp_realisasi_keuangan / $pagu_semua) * 100;
+              $show_tk = $persen_tk;
+              $show_rk = $persen_rk;// $pagu_semua;//$tiga->realisasi_keuangan == '' ? 0 :  $tiga->realisasi_keuangan;
+
+              $bobot_apbd =($tiga->pagu_total / $pagu_semua) * 100;
+              $bobot_tambahan =($tiga->pagu_total_tambahan / $pagu_semua) * 100;
+              $ttb_tf_apbd = $tiga->target_fisik * $bobot_apbd /100;
+              $ttb_tf_tambahan = $tiga->target_fisik_tambahan * $bobot_tambahan /100;
+
+              $ttb_rf_apbd = $tiga->realisasi_fisik * $bobot_apbd /100;
+              $ttb_rf_tambahan = $tiga->realisasi_fisik_tambahan * $bobot_tambahan /100;
+
+              $target_fisik = $ttb_tf_apbd + $ttb_tf_tambahan;
+              $realisasi_fisik = $ttb_rf_apbd + $ttb_rf_tambahan;
+
+
+            // $show_tf =$target_fisik ;//$tiga->target_fisik;
+            // $show_rf =$realisasi_fisik ;//$tiga->realisasi_fisik == '' ? 0 : $tiga->realisasi_fisik;
+            $show_tf =$tiga->target_fisik;
+            $show_rf =$tiga->realisasi_fisik == '' ? 0 : $tiga->realisasi_fisik;
+            }else{
+              $pagu_semua = $tiga->pagu_total;
+              $rp_target_keuangan = $tiga->rp_target_keuangan;
+              $rp_realisasi_keuangan = $tiga->rp_realisasi_keuangan;
+
+              $show_tk = $tiga->target_keuangan;
+              $show_rk = $tiga->realisasi_keuangan == '' ? 0 :  $tiga->realisasi_keuangan;
+
+
+            $show_tf = $tiga->target_fisik;
+            $show_rf = $tiga->realisasi_fisik == '' ? 0 : $tiga->realisasi_fisik;
+
+            }
+
+
+
+
+
 
 
         $dev_fisik = round($tiga->realisasi_fisik -$tiga->target_fisik ,2);
-          $dev_keu = round($tiga->realisasi_keuangan - $tiga->target_keuangan,2);
+          $dev_keu = number_format($show_rk,2) - number_format($show_tk,2);
 
 
             if ($dev_fisik < -10) {
@@ -969,12 +991,12 @@
               $total_peringatan_dev_fisik_kuning += 1; 
               $total_peringatan_dev_fisik_kuning_tiga += 1; 
             }
-            elseif ($dev_fisik <=0  && $dev_fisik >-5) {
-              $warna_peringatan_dev_fisik = 'background: #d5f5e3';
+            elseif ($dev_fisik <=0  && $dev_fisik >=-10) {
+              $warna_peringatan_dev_fisik = 'background:#d5f5e3';
               $total_peringatan_dev_fisik_hijau += 1; 
               $total_peringatan_dev_fisik_hijau_tiga += 1; 
             }else{
-              $warna_peringatan_dev_fisik = 'background: #ff7cfd';
+              $warna_peringatan_dev_fisik = 'background:#ff7cfd';
               $total_peringatan_dev_fisik_ungu += 1; 
               $total_peringatan_dev_fisik_ungu_tiga += 1; 
             }
@@ -989,102 +1011,62 @@
               $total_peringatan_dev_keu_kuning += 1; 
               $total_peringatan_dev_keu_kuning_tiga += 1; 
             }
-            elseif ($dev_keu <=0  && $dev_keu >=-5) {
-              $warna_peringatan_dev_keu = 'background: #d5f5e3';
+            elseif ($dev_keu <=0  && $dev_keu >=-10) {
+              $warna_peringatan_dev_keu = 'background:#d5f5e3';
               $total_peringatan_dev_keu_hijau += 1; 
               $total_peringatan_dev_keu_hijau_tiga += 1; 
             }else{
-              $warna_peringatan_dev_keu = 'background: #ff7cfd';
+              $warna_peringatan_dev_keu = 'background:#ff7cfd';
               $total_peringatan_dev_keu_ungu += 1; 
               $total_peringatan_dev_keu_ungu_tiga += 1; 
             }
 
 
             $total_t_fisik_tiga    += $tiga->target_fisik;
-            $total_t_keu_tiga      += $tiga->target_keuangan;
             $total_r_fisik_tiga    += $tiga->realisasi_fisik;
-            $total_r_keu_tiga      += $tiga->realisasi_keuangan;
-           $jml_skpd_tiga++;
+            $total_t_keu_tiga      += $show_tk;
+            $total_r_keu_tiga      += $show_rk;
+            $jml_skpd_tiga++;
+
+
+            $total_pagu +=$pagu_semua;
+            $total_rp_t_keu +=$rp_target_keuangan;
+            $total_rp_r_keu +=$rp_realisasi_keuangan;
+
+            $total_pagu_tiga +=$tiga->pagu_total;
+            $total_rp_t_keu_tiga +=$rp_target_keuangan;
+            $total_rp_r_keu_tiga +=$rp_realisasi_keuangan;
+
+
+
+            $bobot_2 = ($pagu_semua / $pagu_asisten_2) * 100;
+            $tf_tertimbang_2 = $tiga->target_fisik * $bobot_2 / 100;
+            $tf_ttb_2 += $tf_tertimbang_2;
+            $rf_tertimbang_2 = $tiga->realisasi_fisik * $bobot_2 / 100;
+            $rf_ttb_2 += $rf_tertimbang_2;
+
+
+
+
         
 
 
-            $show_tf = $tiga->target_fisik;
-            $show_tk = $tiga->target_keuangan;
-            $show_rf = $tiga->realisasi_fisik == '' ? 0 : $tiga->realisasi_fisik;
-            $show_rk = $tiga->realisasi_keuangan == '' ? 0 :  $tiga->realisasi_keuangan;
+            // $show_tf = $tiga->target_fisik;
+            // $show_rf = $tiga->realisasi_fisik == '' ? 0 : $tiga->realisasi_fisik;
+
+            // $show_tf = $tiga->target_fisik_tambahan;
+            // $show_rf = $tiga->realisasi_fisik_tambahan == '' ? 0 : $tiga->realisasi_fisik_tambahan;
 
 
-            $pisah_decimal_show_tf = explode('.', $tiga->target_fisik);
-            $pisah_decimal_show_tk = explode('.', $tiga->target_keuangan);
-            $pisah_decimal_show_rf = explode('.', $show_rf);
-            $pisah_decimal_show_rk = explode('.', $show_rk);
-            $pisah_decimal_dev_fisik = explode('.', $dev_fisik);
-            $pisah_decimal_dev_keu = explode('.', $dev_keu);
-
-            $digit_show_tf = count($pisah_decimal_show_tk);
-            $digit_show_tk = count($pisah_decimal_show_tf);
-            $digit_show_rf = count($pisah_decimal_show_rf);
-            $digit_show_rk = count($pisah_decimal_show_rk);
-            $digit_dev_fisik = count($pisah_decimal_dev_fisik);
-            $digit_dev_keu = count($pisah_decimal_dev_keu);
-
-            // Fisik
-            if ($digit_show_tf>1) {
-              $didepan_koma_tf = $pisah_decimal_show_tf[0] ; 
-              $dibelakang_koma_tf = strlen($pisah_decimal_show_tf[1]) >1 ? $pisah_decimal_show_tf[1] : $pisah_decimal_show_tf[1].'0';
-              $hasil_tf = $didepan_koma_tf.'.'.$dibelakang_koma_tf;
-            }else{
-              $hasil_tf = $show_tf.'.00';
-            }
-
-            if ($digit_show_rf>1) {
-              $didepan_koma_rf = $pisah_decimal_show_rf[0] ; 
-              $dibelakang_koma_rf = strlen($pisah_decimal_show_rf[1]) >1 ? $pisah_decimal_show_rf[1] : $pisah_decimal_show_rf[1].'0';
-              $hasil_rf = $didepan_koma_rf.'.'.$dibelakang_koma_rf;
-            }else{
-              $hasil_rf = $show_rf.'.00';
-            }
-
-            if ($digit_dev_fisik>1) {
-              $didepan_koma_dev_fisik = $pisah_decimal_dev_fisik[0] ; 
-              $dibelakang_koma_dev_fisik = strlen($pisah_decimal_dev_fisik[1]) >1 ? $pisah_decimal_dev_fisik[1] : $pisah_decimal_dev_fisik[1].'0';
-              $hasil_dev_fisik = $didepan_koma_dev_fisik.'.'.$dibelakang_koma_dev_fisik;
-            }else{
-              $hasil_dev_fisik = $dev_fisik.'.00';
-            }
-
-            // keuangan
-            if ($digit_show_tk>1) {
-              $didepan_koma_tk = $pisah_decimal_show_tk[0] ; 
-              $dibelakang_koma_tk = strlen($pisah_decimal_show_tk[1]) >1 ? $pisah_decimal_show_tk[1] : $pisah_decimal_show_tk[1].'0';
-              $hasil_tk = $didepan_koma_tk.'.'.$dibelakang_koma_tk;
-            }else{
-              $hasil_tk = $show_tk.'.00';
-            }
-
-            if ($digit_show_rk>1) {
-              $didepan_koma_rk = $pisah_decimal_show_rk[0] ; 
-              $dibelakang_koma_rk = strlen($pisah_decimal_show_rk[1]) >1 ? $pisah_decimal_show_rk[1] : $pisah_decimal_show_rk[1].'0';
-              $hasil_rk = $didepan_koma_rk.'.'.$dibelakang_koma_rk;
-            }else{
-              $hasil_rk = $show_rk.'.00';
-            }
-
-            if ($digit_dev_keu>1) {
-              $didepan_koma_dev_keu = $pisah_decimal_dev_keu[0] ; 
-              $dibelakang_koma_dev_keu = strlen($pisah_decimal_dev_keu[1]) >1 ? $pisah_decimal_dev_keu[1] : $pisah_decimal_dev_keu[1].'0';
-              $hasil_dev_keu = $didepan_koma_dev_keu.'.'.$dibelakang_koma_dev_keu;
-            }else{
-              $hasil_dev_keu = $dev_keu.'.00';
-            }
 
 
-            if ($hasil_tf<$hasil_tk) {
+          
+             if ($show_tf<$show_tk) {
               $blok_tf = 'style="background: #ebdef0 "';
             }else{
               $blok_tf = '';
             }
-             if ($hasil_rf<$hasil_rk) {
+             if ($show_rf<$show_rk) {
               $blok_rf = 'style="background: #ebdef0 "';
             }else{
               $blok_rf = '';
@@ -1092,17 +1074,17 @@
         ?>
          <tr >
           <td><?php echo $tiga->nama_instansi ?></td>
-          <td class="rata_tengah" <?php echo $blok_tf ?>><?php echo $hasil_tf ?></td>
-          <td class="rata_tengah" <?php echo $blok_rf ?>><?php echo $hasil_rf ?></td>
-          <td class="rata_tengah" style="<?php echo $warna_peringatan_dev_fisik ?>"><?php echo $hasil_dev_fisik ?></td>
-          <td class="rata_tengah"><?php echo $hasil_tk ?></td>
-          <td class="rata_tengah"><?php echo $hasil_rk ?></td>
-          <td class="rata_tengah" style="<?php echo $warna_peringatan_dev_keu ?>"><?php echo $hasil_dev_keu?></td>
+          <td class="rata_tengah" <?php echo $blok_tf ?>><?php echo number_format($show_tf,2) ?></td>
+          <td class="rata_tengah" <?php echo $blok_rf ?>><?php echo number_format($show_rf,2) ?></td>
+          <td class="rata_tengah" style="<?php echo $warna_peringatan_dev_fisik ?>"><?php echo number_format($dev_fisik,2) ?></td>
+          <td class="rata_tengah"><?php echo number_format($show_tk,2) ?></td>
+          <td class="rata_tengah"><?php echo number_format($show_rk,2) ?></td>
+          <td class="rata_tengah" style="<?php echo $warna_peringatan_dev_keu ?>"><?php echo number_format($dev_keu,2) ?></td>
         
         </tr>
 
 
-       <?php } 
+       <?php }
 
 
 
@@ -1284,12 +1266,59 @@
   <table  class="font_laporan laporan_asisten table"  style="background:#ECFCCA">
     <?php 
 
- $dev_f_inspektorat = $inspektorat['realisasi_fisik'] - $inspektorat['target_fisik'];
-           $dev_k_inspektorat = $inspektorat['realisasi_keuangan'] - $inspektorat['target_keuangan'];
 
-        $total_pagu +=$inspektorat['pagu_total'];
-        $total_rp_t_keu += $inspektorat['rp_target_keuangan'];
-        $total_rp_r_keu += $inspektorat['rp_realisasi_keuangan'];
+
+
+            if ($inspektorat['pagu_total_tambahan']>0) {
+               $pagu_inspektorat = $inspektorat['pagu_total'] + $inspektorat['pagu_total_tambahan'];
+              $rp_target_keuangan = $inspektorat['rp_target_keuangan'] + $inspektorat['rp_target_keuangan_tambahan'];
+              $persen_tk = ($rp_target_keuangan / $pagu_semua) * 100;
+
+              $rp_realisasi_keuangan = $inspektorat['rp_realisasi_keuangan'] + $inspektorat['rp_realisasi_keuangan_tambahan'];
+              $persen_rk = ($rp_realisasi_keuangan / $pagu_semua) * 100;
+              $show_tk = $persen_tk;
+              $show_rk = $persen_rk;// $pagu_semua;//$tiga->realisasi_keuangan == '' ? 0 :  $tiga->realisasi_keuangan;
+
+              $bobot_apbd =($inspektorat['pagu_total'] / $pagu_semua) * 100;
+              $bobot_tambahan =($inspektorat['pagu_total_tambahan'] / $pagu_semua) * 100;
+              $ttb_tf_apbd = $inspektorat['target_fisik'] * $bobot_apbd /100;
+              $ttb_tf_tambahan = $inspektorat['target_fisik_tambahan'] * $bobot_tambahan /100;
+
+              $ttb_rf_apbd = $inspektorat['realisasi_fisik'] * $bobot_apbd /100;
+              $ttb_rf_tambahan = $inspektorat['realisasi_fisik_tambahan'] * $bobot_tambahan /100;
+
+              $target_fisik = $ttb_tf_apbd + $ttb_tf_tambahan;
+              $realisasi_fisik = $ttb_rf_apbd + $ttb_rf_tambahan;
+
+
+            // $show_tf =$target_fisik ;//$tiga->target_fisik;
+            // $show_rf =$realisasi_fisik ;//$tiga->realisasi_fisik == '' ? 0 : $tiga->realisasi_fisik;
+            $show_tf =$inspektorat['target_fisik'];
+            $show_rf =$inspektorat['realisasi_fisik'] == '' ? 0 : $inspektorat['realisasi_fisik'];
+            }else{
+               $pagu_inspektorat = $inspektorat['pagu_total']; 
+              $rp_target_keuangan = $inspektorat['rp_target_keuangan'];
+              $rp_realisasi_keuangan = $inspektorat['rp_realisasi_keuangan'];
+
+              $show_tk = $inspektorat['target_keuangan'];
+              $show_rk = $inspektorat['realisasi_keuangan'] == '' ? 0 :  $inspektorat['realisasi_keuangan'];
+
+
+            $show_tf = $inspektorat['target_fisik'];
+            $show_rf = $inspektorat['realisasi_fisik'] == '' ? 0 : $inspektorat['realisasi_fisik'];
+
+            }
+
+
+
+
+
+
+ $dev_f_inspektorat = $show_rf - $show_tf;
+           $dev_k_inspektorat = $show_rk - $show_tk;
+        $total_pagu +=$pagu_inspektorat;
+        $total_rp_t_keu += $rp_target_keuangan;
+        $total_rp_r_keu += $rp_realisasi_keuangan;
 
             if ($dev_f_inspektorat < -10) {
               $warna_peringatan_total_dev_fisik_inspektorat = 'background: #f8b2b2'; 

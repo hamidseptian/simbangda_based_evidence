@@ -818,7 +818,9 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 							$('#jumlah_selesai_synchronize').html(selesai+" OPD");
 							$('#jumlah_synchronize_berhasil').html(berhasil_synch+" OPD");
 						$('#keterangan_status_progress_' + id_instansi).html(data.message);
-						// sync_tkd(id_instansi,tahapan_apbd,tahun) ; 
+						if (data.ada_tkd>0) {
+							sync_tkd(id_instansi,tahapan_apbd,tahun) ; 
+						}
 					}
 					else{
 						
@@ -863,11 +865,12 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 
 
 	function sync_tkd(id_instansi, tahapan_apbd, tahun) {
-		var tahapan_apbd = $('#tahapan_apbd').val();
-		var tahun = $('#tahun').val();
+	
 		var banyak_instansi = $('.hitung_intansi').length; 
 		gagal_synch = 0;
 		berhasil_synch = 0;
+
+		$('#tahap-2'+ '-' + id_instansi).html('<i class="fa fa-plus fa-w-3 fa-spin"></i>').attr('disabled', true);
 		$('#cek_status_progress_' + id_instansi).html('<span class="badge badge-info">Loading Synch TKD</span>');
 
 		
@@ -878,9 +881,9 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 				type: 'GET',
 				dataType: 'JSON',
 				data: {
-					// id_instansi : id_instansi,
-					// tahap : tahapan_apbd,
-					// tahun : tahun
+					id_instansi : id_instansi,
+					tahap : tahapan_apbd,
+					tahun : tahun
 				},
 				success: function(data) {
 					
@@ -926,7 +929,7 @@ function requestData_2_tahun_terakhir_asisten(kategori, asisten) {
 					$('#tahap-2'+ '-' + id_instansi).attr('class', 'btn btn-sm btn-success selesai_sinkron');
 					$('#tahap-2'+ '-' + id_instansi).find('i').attr('class', 'ion ion-checkmark');
 					
-						$('#cek_status_progress_' + id_instansi).html('<span class="badge badge-danger">Synchronize Error</span>');
+						$('#cek_status_progress_' + id_instansi).html('<span class="badge badge-danger">Synchronize Error TKD</span>');
 						$('#keterangan_status_progress_' + id_instansi).html('Error pada Aplikasi');
 					var selesai = $('.selesai_sinkron').length; 
 					$('#banyak_selesai').html(selesai);

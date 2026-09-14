@@ -7,11 +7,14 @@
         // $tahun = $this->input->get('tahun');
         // $tahap = $this->input->get('tahap');
         // $id_instansi = $this->input->get('id_instansi');
-    
+          $q_opd = $this->db->query("SELECT nama_instansi, kode_opd from master_instansi where id_instansi='$id_instansi'")->row_array();
+        $kode_opd = $q_opd['kode_opd'];
         $kode_tahap = $tahap;
         // $this->db->trans_begin();
         $synchronize    = $this->synchronize_model;
-        $sub_kegiatan = $synchronize->get_sub_kegiatan_new($id_instansi, $tahun, $tahap);
+        $id_tambahan_anggaran = $this->db->query("SELECT id_tambahan_anggaran from tambahan_anggaran where status='1'")->row_array();
+        $id_tambahan_anggaran = $id_tambahan_anggaran['id_tambahan_anggaran'];
+        $sub_kegiatan = $synchronize->get_sub_kegiatan_new_tkd($id_instansi, $tahun, $tahap, $id_tambahan_anggaran);
         $bulan = 12;
         $ope = '<=';
 
@@ -59,8 +62,8 @@
          else{
             $q_pagu = $this->db->query("SELECT kode_sub_kegiatan,
             bo_bp , bo_bbj , bo_bs , bo_bh , bm_bmt , bm_bmpm , bm_bmgb , bm_bmjji , bm_bmatl , btt , bt_bbh , bt_bbk , pergeseran_ke
-            from anggaran_sub_kegiatan
-            where tahun='$tahun' and status='1' and id_instansi='$id_instansi'
+            from anggaran_sub_kegiatan_tambahan
+            where tahun='$tahun' and status='1' and id_instansi='$id_instansi' and id_tambahan_anggaran='$id_tambahan_anggaran'
             ");
           }
 
@@ -101,8 +104,8 @@
           }
 
         // $gagu_kegiatan = $synchronize->get_pagu($id_instansi, $value_sk->kode_rekening_sub_kegiatan, $value_sk->kode_tahap, $value_sk->tahun)->result_array();
-        $target = $synchronize->get_target($id_instansi, $value_sk->kode_rekening_sub_kegiatan, $value_sk->kode_tahap, $value_sk->tahun, $value_sk->pergeseran_ke)->result_array();
-        $realisasi_keuangan = $synchronize->get_realisasi_keuangan($id_instansi, $value_sk->kode_rekening_sub_kegiatan, $tahun, $tahap)->result_array();
+        $target = $synchronize->get_target_tambahan($id_instansi, $value_sk->kode_rekening_sub_kegiatan, $value_sk->kode_tahap, $value_sk->tahun, $value_sk->pergeseran_ke, $id_tambahan_anggaran)->result_array();
+        $realisasi_keuangan = $synchronize->get_realisasi_keuangan_Tambahan($id_instansi, $value_sk->kode_rekening_sub_kegiatan, $tahun, $tahap, $id_tambahan_anggaran)->result_array();
         $kumpul_data_realisasi_keuangan = [];
         $kumpul_sum_realisasi_bo_bp = [];
         $kumpul_sum_realisasi_bo_bbj = [];
@@ -181,8 +184,8 @@
           $kumpultarget = [];
           $kumpul_realisasi_keuangan = [];
           $kumpul_realisasi_fisik = [];
-          $total_paket = $synchronize->get_total_paket($id_instansi, $value_sk->kode_rekening_sub_kegiatan, $tahun, $tahap)->num_rows();
-          $jenis_rutin = $synchronize->get_total_paket_perjenis($id_instansi, $value_sk->kode_rekening_sub_kegiatan, "RUTIN", $tahun, $tahap)->num_rows();
+          $total_paket = $synchronize->get_total_paket($id_instansi, $value_sk->kode_rekening_sub_kegiatan, $tahun, $tahap, $id_tambahan_anggaran)->num_rows();
+          $jenis_rutin = $synchronize->get_total_paket_perjenis($id_instansi, $value_sk->kode_rekening_sub_kegiatan, "RUTIN", $tahun, $tahap, $id_tambahan_anggaran)->num_rows();
           
           $kumpul_rp_realisasi_keuangan_bulanan_bo_bp = [];      
           $kumpul_rp_realisasi_keuangan_bulanan_bo_bbj = [];      
@@ -418,8 +421,9 @@
                     }
              
              
-                    $swa = $synchronize->get_realisasi_fisik($id_instansi, $value_sk->kode_rekening_sub_kegiatan, 'SWAKELOLA', $tahun, $tahap , $bulan);
-                    $pen = $synchronize->get_realisasi_fisik($id_instansi, $value_sk->kode_rekening_sub_kegiatan,'PENYEDIA', $tahun, $tahap , $bulan);
+                    $swa = $synchronize->get_realisasi_fisik_tambahan($id_instansi, $value_sk->kode_rekening_sub_kegiatan, 'SWAKELOLA', $tahun, $tahap , $bulan, $id_tambahan_anggaran);
+                    $pen = $synchronize->get_realisasi_fisik_tambahan($id_instansi, $value_sk->kode_rekening_sub_kegiatan,'PENYEDIA', $tahun, $tahap , $bulan, $id_tambahan_anggaran);
+
 
                     $swa_akumulasi = $swa['akumulasi'];
                     $swa_bulanan = $swa['bulanan'];
@@ -436,7 +440,7 @@
                $nilai_rf_rutin_akumulasi = $persen_realisasi_keuangan_akumulasi > 90 ? 100 : $persen_realisasi_keuangan_akumulasi;
                $nilai_rf_rutin_bulanan = $persen_realisasi_keuangan_bulanan > 90 ? 100 : $persen_realisasi_keuangan_bulanan;
            }else{
-                $f_rutin = $synchronize->get_realisasi_fisik($id_instansi, $value_sk->kode_rekening_sub_kegiatan,'RUTIN', $tahun, $tahap , $bulan);
+                $f_rutin = $synchronize->get_realisasi_fisik_tambahan($id_instansi, $value_sk->kode_rekening_sub_kegiatan,'RUTIN', $tahun, $tahap , $bulan, $id_tambahan_anggaran);
                 $nilai_rf_rutin_akumulasi = $f_rutin['akumulasi'];
                 $nilai_rf_rutin_bulanan = $f_rutin['bulanan'];
 
@@ -1001,14 +1005,14 @@
         else
         {
             $where_delete = ['id_instansi'=>$id_instansi, 'tahun'=>$tahun, 'kode_tahap'=>$kode_tahap];
-            $this->db->delete('grafik', $where_delete);
+            $this->db->delete('grafik_tambahan', $where_delete);
             if ($banyak_sub_kegiatan>0) {
                 if ($pagu_total>0) {
                     # code...
-                  $this->db->delete('laporan_sub_kegiatan_opd', $where_delete);
+                  // $this->db->delete('laporan_sub_kegiatan_opd', $where_delete);
 
-                  $this->db->insert_batch('laporan_sub_kegiatan_opd', $pecahkan_kembali);
-                  $this->db->insert_batch('grafik', $kumpul_laporan_akhir_opd);
+                  // $this->db->insert_batch('laporan_sub_kegiatan_opd', $pecahkan_kembali);
+                  $this->db->insert_batch('grafik_tambahan', $kumpul_laporan_akhir_opd);
 
               
               $responcode = 200;
@@ -1028,7 +1032,7 @@
                     // }
                 }else{
 
-                  $this->db->insert_batch('grafik', $kumpul_laporan_akhir_opd);
+                  $this->db->insert_batch('grafik_tambahan', $kumpul_laporan_akhir_opd);
               $responcode = 500;
               $status_synch = 'error';
               
@@ -1044,10 +1048,10 @@
                 }
             }
             else{
-                      $this->db->delete('laporan_sub_kegiatan_opd', $where_delete);
+                      // $this->db->delete('laporan_sub_kegiatan_opd', $where_delete);
                   
 
-                  $this->db->insert_batch('grafik', $kumpul_laporan_akhir_opd);
+                  $this->db->insert_batch('grafik_tambahan', $kumpul_laporan_akhir_opd);
               
               $responcode = 500;
               $status_synch = 'error';

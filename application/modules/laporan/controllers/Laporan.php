@@ -3697,24 +3697,73 @@ $data['identitas']=$identitas;
 
 
 
+		   if ($satu->pagu_total_tambahan>0) {
+              $pagu_semua = $satu->pagu_total + $satu->pagu_total_tambahan;
+              $rp_target_keuangan = $satu->rp_target_keuangan + $satu->rp_target_keuangan_tambahan;
+              $persen_tk = ($rp_target_keuangan / $pagu_semua) * 100;
 
-		$total_target_fisik +=$satu->target_fisik;
-		$total_realisasi_fisik +=$satu->realisasi_fisik;
-		$total_target_keuangan +=$satu->target_keuangan;
+              $rp_realisasi_keuangan = $satu->rp_realisasi_keuangan + $satu->rp_realisasi_keuangan_tambahan;
+              $persen_rk = ($rp_realisasi_keuangan / $pagu_semua) * 100;
+              $show_tk = $persen_tk;
+              $show_rk = $persen_rk;// $pagu_semua;//$satu->realisasi_keuangan == '' ? 0 :  $satu->realisasi_keuangan;
 
-		$total_pagu +=($satu->pagu_total == '' ? 0 : $satu->pagu_total);
-		$total_rp_target_keuangan +=($satu->rp_target_keuangan == '' ? 0 : $satu->rp_target_keuangan);
-		$total_rp_realisasi_keuangan+= ($satu->rp_realisasi_keuangan == '' ? 0 :  $satu->rp_realisasi_keuangan);
-	
-		  $dev_fisik = round($satu->realisasi_fisik -$satu->target_fisik ,2);
-          $dev_keu = round($satu->realisasi_keuangan - $satu->target_keuangan,2);
+              $bobot_apbd =($satu->pagu_total / $pagu_semua) * 100;
+              $bobot_tambahan =($satu->pagu_total_tambahan / $pagu_semua) * 100;
+              $ttb_tf_apbd = $satu->target_fisik * $bobot_apbd /100;
+              $ttb_tf_tambahan = $satu->target_fisik_tambahan * $bobot_tambahan /100;
+
+              $ttb_rf_apbd = $satu->realisasi_fisik * $bobot_apbd /100;
+              $ttb_rf_tambahan = $satu->realisasi_fisik_tambahan * $bobot_tambahan /100;
+
+              $target_fisik = $ttb_tf_apbd + $ttb_tf_tambahan;
+              $realisasi_fisik = $ttb_rf_apbd + $ttb_rf_tambahan;
+
+
+            // $show_tf =$target_fisik ;//$satu->target_fisik;
+            // $show_rf =$realisasi_fisik ;//$satu->realisasi_fisik == '' ? 0 : $satu->realisasi_fisik;
+            $show_tf =$satu->target_fisik;
+            $show_rf =$satu->realisasi_fisik == '' ? 0 : $satu->realisasi_fisik;
+            }else{
+              $pagu_semua = $satu->pagu_total;
+              $rp_target_keuangan = $satu->rp_target_keuangan;
+              $rp_realisasi_keuangan = $satu->rp_realisasi_keuangan;
+
+              $show_tk = $satu->target_keuangan;
+              $show_rk = $satu->realisasi_keuangan == '' ? 0 :  $satu->realisasi_keuangan;
+
+
+			$show_tf = $satu->target_fisik;
+			$show_rf = $satu->realisasi_fisik == '' ? 0 : $satu->realisasi_fisik;
+
+            }
+
+
+            
+
+
+
+		$total_target_fisik +=$show_tf;
+		$total_realisasi_fisik +=$show_rf;
+		$total_target_keuangan +=$show_tk;
+
+		$total_pagu += $pagu_semua ;//($satu->pagu_total == '' ? 0 : $satu->pagu_total);
+		$total_rp_target_keuangan += $rp_target_keuangan;// ($satu->rp_target_keuangan == '' ? 0 : $satu->rp_target_keuangan);
+		$total_rp_realisasi_keuangan+= $rp_realisasi_keuangan;// ($satu->rp_realisasi_keuangan == '' ? 0 :  $satu->rp_realisasi_keuangan);
+
+
+
+
+
+
+        $dev_fisik = round($satu->realisasi_fisik -$satu->target_fisik ,2);
+          $dev_keu = number_format($show_rk,2) - number_format($show_tk,2);
           $data = [
           	'skpd'=>$satu->nama_instansi,
           	'tf'=>$satu->target_fisik,
           	'rf'=>$satu->realisasi_fisik == '' ? 0 : $satu->realisasi_fisik,
           	'df'=>$dev_fisik,
-          	'tk'=>$satu->target_keuangan,
-          	'rk'=>$satu->realisasi_keuangan == '' ? 0 :  $satu->realisasi_keuangan,
+          	'tk'=>$show_tk,
+          	'rk'=>$show_rk,
           	'dk'=>$dev_keu,
           ];
 
@@ -3723,10 +3772,10 @@ $data['identitas']=$identitas;
 
 
          $sort_rk = [
-          	'rk'=>$satu->realisasi_keuangan == '' ? 0 :  $satu->realisasi_keuangan,
+          	'rk'=>$show_rk,
           	'skpd'=>$satu->nama_instansi,
           	'singkatan_skpd'=>$satu->singkatan_nama_instansi,
-      		'tk'=>$satu->target_keuangan,
+      		'tk'=>$show_tk,
           	'dk'=>$dev_keu,
           ];
          $sort_rf = [
@@ -4360,14 +4409,61 @@ $data['identitas']=$identitas;
 		 foreach ($realisasi_keuangan_opd as $v) {
 
 
+
+	   if ($v->pagu_total_tambahan>0) {
+              $pagu_semua = $v->pagu_total + $v->pagu_total_tambahan;
+              $rp_target_keuangan = $v->rp_target_keuangan + $v->rp_target_keuangan_tambahan;
+              $persen_tk = ($rp_target_keuangan / $pagu_semua) * 100;
+
+              $rp_realisasi_keuangan = $v->rp_realisasi_keuangan + $v->rp_realisasi_keuangan_tambahan;
+              $persen_rk = ($rp_realisasi_keuangan / $pagu_semua) * 100;
+              $show_tk = $persen_tk;
+              $show_rk = $persen_rk;// $pagu_semua;//$v->realisasi_keuangan == '' ? 0 :  $v->realisasi_keuangan;
+
+              $bobot_apbd =($v->pagu_total / $pagu_semua) * 100;
+              $bobot_tambahan =($v->pagu_total_tambahan / $pagu_semua) * 100;
+              $ttb_tf_apbd = $v->target_fisik * $bobot_apbd /100;
+              $ttb_tf_tambahan = $v->target_fisik_tambahan * $bobot_tambahan /100;
+
+              $ttb_rf_apbd = $v->realisasi_fisik * $bobot_apbd /100;
+              $ttb_rf_tambahan = $v->realisasi_fisik_tambahan * $bobot_tambahan /100;
+
+              $target_fisik = $ttb_tf_apbd + $ttb_tf_tambahan;
+              $realisasi_fisik = $ttb_rf_apbd + $ttb_rf_tambahan;
+
+
+            // $show_tf =$target_fisik ;//$v->target_fisik;
+            // $show_rf =$realisasi_fisik ;//$v->realisasi_fisik == '' ? 0 : $v->realisasi_fisik;
+            $show_tf =$v->target_fisik;
+            $show_rf =$v->realisasi_fisik == '' ? 0 : $v->realisasi_fisik;
+            }else{
+              $pagu_semua = $v->pagu_total;
+              $rp_target_keuangan = $v->rp_target_keuangan;
+              $rp_realisasi_keuangan = $v->rp_realisasi_keuangan;
+
+              $show_tk = $v->target_keuangan;
+              $show_rk = $v->realisasi_keuangan == '' ? 0 :  $v->realisasi_keuangan;
+
+
+			$show_tf = $v->target_fisik;
+			$show_rf = $v->realisasi_fisik == '' ? 0 : $v->realisasi_fisik;
+
+            }
+
+
+            
+
+
+
+
           $total_rp_r_keu += $v->rp_realisasi_keuangan;
-          $total_pagu += $v->pagu_total;
+          $total_pagu += $pagu_semua;
 
 		  $data_rk = [
           	'skpd'=>$v->nama_instansi,
           	'singkatan_skpd'=>$v->singkatan_nama_instansi,
-          	'tk'=>$v->target_keuangan == '' ? 0 : $v->target_keuangan,
-          	'rk'=>$v->realisasi_keuangan == '' ? 0 : $v->realisasi_keuangan,
+          	'tk'=>number_format($show_tk,2),
+          	'rk'=>number_format($show_rk,2),
           ];
           array_push($kumpul_realisasi_keuangan, $data_rk);
 
@@ -4377,8 +4473,8 @@ $data['identitas']=$identitas;
 	          		$data_realisasi_keuangan_per_asisten_1 = [
 		       			'skpd'=>$v->nama_instansi,
 			          	'singkatan_skpd'=>$v->singkatan_nama_instansi,
-			          	'rk'=>$v->realisasi_keuangan == '' ? 0 : $v->realisasi_keuangan,
-			          	'tk'=>$v->target_keuangan == '' ? 0 : $v->target_keuangan,
+          	'tk'=>number_format($show_tk,2),
+          	'rk'=>number_format($show_rk,2),
 			          	
 		          	
 		          ];
@@ -4389,8 +4485,8 @@ $data['identitas']=$identitas;
 	          		$data_realisasi_keuangan_per_asisten_2 = [
 		       			'skpd'=>$v->nama_instansi,
 			          	'singkatan_skpd'=>$v->singkatan_nama_instansi,
-			          	'rk'=>$v->realisasi_keuangan == '' ? 0 : $v->realisasi_keuangan,
-			          	'tk'=>$v->target_keuangan == '' ? 0 : $v->target_keuangan,
+          	'tk'=>number_format($show_tk,2),
+          	'rk'=>number_format($show_rk,2),
 			          	
 		          	
 		          ];
@@ -4401,8 +4497,8 @@ $data['identitas']=$identitas;
 	          		$data_realisasi_keuangan_per_asisten_3 = [
 		       			'skpd'=>$v->nama_instansi,
 			          	'singkatan_skpd'=>$v->singkatan_nama_instansi,
-			          	'rk'=>$v->realisasi_keuangan == '' ? 0 : $v->realisasi_keuangan,
-			          	'tk'=>$v->target_keuangan == '' ? 0 : $v->target_keuangan,
+          	'tk'=>number_format($show_tk,2),
+          	'rk'=>number_format($show_rk,2),
 			          	
 		          	
 		          ];
@@ -4414,8 +4510,8 @@ $data['identitas']=$identitas;
 		       			'skpd'=>$v->nama_instansi,
 
 			          	'singkatan_skpd'=>$v->singkatan_nama_instansi,
-			          	'rk'=>$v->realisasi_keuangan == '' ? 0 : $v->realisasi_keuangan,
-			          	'tk'=>$v->target_keuangan == '' ? 0 : $v->target_keuangan,
+          	'tk'=>number_format($show_tk,2),
+          	'rk'=>number_format($show_rk,2),
 		          	
 		          ];
 		          array_push($kumpul_realisasi_keuangan_inspektorat, $data_realisasi_keuangan_inspektorat);
