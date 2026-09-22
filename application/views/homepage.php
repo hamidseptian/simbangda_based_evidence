@@ -380,6 +380,9 @@
                                                 class="btn-icon btn-shadow btn-outline-2x btn btn-outline-primary"
                                                 onclick="data_per_opd()"><i class="fa fa-building"> </i> Lihat Per
                                                 OPD</button>
+                                           <!--  <button type="button"
+                                                class="btn-icon btn-shadow btn-outline-2x btn btn-outline-primary"
+                                                onclick="infografis()"><i class="fa fa-building"> </i> Infografis</button> -->
 
                                         </div>
 

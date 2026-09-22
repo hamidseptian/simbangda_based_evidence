@@ -563,6 +563,30 @@ class Laporan extends MY_Controller {
 		$data['modal']      	= $this->load->view('laporan/rekap_asisten/modal', $data, true);
 		$this->template->load('backend_template', $page, $data);
 	}
+	public function lrfk_tambahan_anggaran()
+	{
+		$breadcrumbs    = $this->breadcrumbs;
+		$rekap_asisten  = $this->rekap_asisten_model;
+
+		$breadcrumbs->add('Home', base_url());
+		$breadcrumbs->add('Laporan', base_url($this->router->fetch_class()));
+		$breadcrumbs->add('Rekap Asisten', base_url());
+		$breadcrumbs->render();
+
+		$data['title']      	= "Tambahan Anggaran TKD";
+		$data['icon']       	= "metismenu-icon fas fa-file-signature";
+		$data['description']	= "Laporan realisasi fisik dan keuangan TKD";
+		$data['breadcrumbs']	= $breadcrumbs->render();
+		$page               	= 'laporan/tambahan_anggaran/index';
+
+		$data['config']					= $this->db->query("SELECT tahun_anggaran from config where tahun_anggaran >=2026")->result_array();
+		$data['link']       	= $this->router->fetch_method();
+		$data['menu']       	= $this->load->view('layout/menu', $data, true);
+		$data['extra_css']  	= $this->load->view('laporan/tambahan_anggaran/css', $data, true);
+		$data['extra_js']   	= $this->load->view('laporan/tambahan_anggaran/js', $data, true);
+		$data['modal']      	= $this->load->view('laporan/tambahan_anggaran/modal', $data, true);
+		$this->template->load('backend_template', $page, $data);
+	}
 
 	public function pencapaian_semua_skpd()
 	{
@@ -2860,6 +2884,184 @@ ini_set("pcre.backtrack_limit", "5000000");
 		$mpdf->SetHTMLHeader($header);
 		$mpdf->SetHTMLFooter($footer);
 		$mpdf->WriteHTML($html);
+
+
+		// $mpdf->AddPage();
+
+		// $cek_instansi_yang_sudah = $this->db->query("SELECT id_instansi from grafik g
+		// 	where  g.kode_tahap = '$tahap'
+  //                                 and g.tahun = '$tahun'
+  //                                 AND g.bulan = {$bulan}
+  //                                 ");
+		// $kumpul_instansi_sudah = [];
+		// foreach ($cek_instansi_yang_sudah->result_array() as $k => $v) {
+		// 	array_push($kumpul_instansi_sudah, $v['id_instansi']);
+		// }
+
+		// $id_instansi_yang_sudah = join(",",$kumpul_instansi_sudah);
+		// $instansi_yang_belum = $this->db->query("SELECT nama_instansi from master_instansi where 
+		// 	is_active=1 
+		// 	and id_instansi not in ($id_instansi_yang_sudah) ")->result_array();
+
+		// // $mpdf->WriteHTML(json_encode($instansi_yang_belum));
+		$mpdf->Output($judul_file.' - '.str_replace(':', '.', $tanggal_penarikan).'.pdf', 'I');
+	}
+
+
+	public function pdf_laporan_tambahan_anggaran()
+	{
+		$mpdf = new \Mpdf\Mpdf([
+		    'mode' => 'utf-8',
+		    'format' => 'legal',
+		    'orientation' => 'L',
+		    'tempDir' => '/tmp',
+
+		]);
+
+
+		
+		global $bulan;
+		$bulan 				= $this->input->get('bulan');
+		$tahap 				= $this->input->get('tahap');
+		$tahun 				= $this->input->get('tahun');
+		$kategori 				= $this->input->get('kategori');
+		$perhitungan 				= 'Akuntansi'; //$this->input->get('perhitungan');
+		$cara_hitung = $perhitungan	;
+
+
+	    
+
+	     $tanggal_penarikan = date('d').' '.bulan_global(date('n')).' '.date('Y').' - '.date('H:i:s');
+        $data['tanggal_penarikan'] = $tanggal_penarikan ;
+
+        // $data['grafik']=$grafik;
+
+
+        	// $judul_penampilan_laporan = "Data Paket Pekerjaan Per Sub Kegiatan <br>".$judul_laporan;
+        	$judul_penampilan_laporan = "Laporan Realisasi Fisik Dan Keuangan bersumber dari APBD";
+           $data['judul_laporan']=$judul_penampilan_laporan;
+        	$judul_penampilan_laporan_2 = "Laporan Realisasi Fisik Dan Keuangan ".$judul_laporan.'<br><span style="color:blue">Bersumber Dari Dana TKD</span>';
+           $data['judul_laporan_2']=$judul_penampilan_laporan_2;
+
+
+
+
+           $query_sql = 'g.target_fisik_akumulasi as target_fisik,
+                   g.realisasi_fisik_akumulasi as realisasi_fisik,
+                   g.target_keuangan_akumulasi as target_keuangan,
+                   g.realisasi_keuangan_akumulasi as realisasi_keuangan,
+                   g.pagu_total,
+                   g.rp_target_keuangan_akumulasi as rp_target_keuangan,
+                   g.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan
+                   ';
+         $query_sql_tambahan = 'gt.target_fisik_akumulasi as target_fisik_tambahan,
+                   gt.realisasi_fisik_akumulasi as realisasi_fisik_tambahan,
+                   gt.target_keuangan_akumulasi as target_keuangan_tambahan,
+                   gt.realisasi_keuangan_akumulasi as realisasi_keuangan_tambahan,
+                   gt.pagu_total as pagu_total_tambahan,
+                   gt.rp_target_keuangan_akumulasi as rp_target_keuangan_tambahan,
+                   gt.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan_tambahan
+                   ';
+
+
+$this->db->query("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
+	    $grafik = $this->db->query("SELECT 
+	  
+
+
+                                  mi.id_instansi,
+                                  mi.kode_opd,
+                                  mi.nama_instansi,
+                                  mi.singkatan_nama_instansi,
+                                  $query_sql,
+                                  $query_sql_tambahan,
+                                  
+                                    g.last_update,
+                                    gt.last_update as last_update_tambahan
+
+
+                                    from grafik g 
+
+
+				                   left join master_instansi mi on g.id_instansi = mi.id_instansi
+                                  LEFT JOIN grafik_tambahan gt ON g.id_instansi COLLATE utf8mb4_unicode_ci = gt.id_instansi COLLATE utf8mb4_unicode_ci
+                                  AND g.tahun COLLATE utf8mb4_unicode_ci = gt.tahun COLLATE utf8mb4_unicode_ci
+                                  AND g.kode_tahap COLLATE utf8mb4_unicode_ci = gt.kode_tahap COLLATE utf8mb4_unicode_ci
+                                  AND g.bulan COLLATE utf8mb4_unicode_ci = gt.bulan COLLATE utf8mb4_unicode_ci
+                                
+
+
+                   where g.tahun='$tahun' and g.kode_tahap = '$tahap' and g.bulan = '$bulan'
+                   order by mi.nama_instansi asc
+                   ")->result_array();
+
+
+
+				$kumpul_opd_tambahan = [];
+				$total_pagu_apbd = 0 ;
+				$total_pagu_tambahan = 0 ;
+				foreach ($grafik as $k => $v) {
+					$total_pagu_apbd += $v['pagu_total'] ;
+
+					if ($v['pagu_total_tambahan']>0) {
+						$total_pagu_tambahan += $v['pagu_total_tambahan'] ;
+						array_push($kumpul_opd_tambahan, $v);
+					}
+					# code...
+				}
+		$identitas = $this->db->get('identitas')->row_array();
+	    $data['grafik'] = $grafik;
+	    $data['grafik_tambahan'] = $kumpul_opd_tambahan;
+	    $data['total_pagu_apbd'] = $total_pagu_apbd;
+	    $data['total_pagu_tambahan'] = $total_pagu_tambahan;
+	    $data['identitas'] = $identitas;
+
+	    $data['kategori']=$kategori;
+	    $data['bulan']=$bulan;
+	    $data['nama_tahap']=pilihan_nama_tahapan($tahap);
+	    $data['kode_tahap']=$tahap;
+	    $data['tahun']=$tahun;
+
+
+
+$mpdf->SetMargins(0, 0, 40);
+		$header1 =  $this->load->view('laporan/new_pdf/tambahan_anggaran/header', $data, true);
+$mpdf->SetHTMLHeaderByName('header1', $header1);
+$html_1 =  $this->load->view('laporan/new_pdf/tambahan_anggaran/content_apbd', $data, true);
+$mpdf->SetHTMLHeader($header1); 
+$mpdf->WriteHTML($html_1);
+$mpdf->SetHTMLFooter($footer);			
+		
+
+
+
+
+
+
+				$mpdf->WriteHTML('<pagebreak/>');
+			    $header2 =  $this->load->view('laporan/new_pdf/realisasi_akumulasi/tambahan_anggaran/header_tambahan', $data, true);
+				$mpdf->SetHTMLHeader($header2); 
+				$html_2 =  $this->load->view('laporan/new_pdf/tambahan_anggaran/content_tambahan', $data, true);
+				$mpdf->WriteHTML($html_2);
+				$mpdf->SetHTMLFooter($footer);
+
+
+
+				$mpdf->WriteHTML('<pagebreak/>');
+			    $header3 =  $this->load->view('laporan/new_pdf/tambahan_anggaran/header_rekap', $data, true);
+				$mpdf->SetHTMLHeader($header3); 
+				$html_3 =  $this->load->view('laporan/new_pdf/tambahan_anggaran/content_rekap', $data, true);
+				$mpdf->WriteHTML($html_3);
+
+			$mpdf->SetHTMLFooter($footer);
+
+
+
+
+
+
+	    $mpdf->SetMargins(0, 0, 28);
+
 
 
 		// $mpdf->AddPage();

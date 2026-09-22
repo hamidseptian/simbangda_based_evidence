@@ -342,7 +342,7 @@ private function get_master_instansi($force_refresh = false) {
 
     public function check_no_hp(){
         $no_hp = $this->input->get('nohp');
-        $q = $this->db->query("SELECT ac.no_hp, mi.nama_instansi, ac.id_hak_akses, ha.nama_hak_akses from akses_chatbot ac
+        $q = $this->db->query("SELECT ac.no_hp, ac.id_akses_chatbot as id_user, mi.nama_instansi, ac.id_hak_akses, ha.nama_hak_akses from akses_chatbot ac
             left join master_instansi mi on ac.id_instansi = mi.id_instansi
             left join hak_akses_chatbot ha on ac.id_hak_akses =ha.id_hak_akses
          where ac.no_hp='$no_hp'");
@@ -367,6 +367,31 @@ private function get_master_instansi($force_refresh = false) {
        
 
             echo json_encode($output);
+    }
+
+    public function tracking(){
+         $input = json_decode(file_get_contents('php://input'), true);
+
+        $data = [
+            'id_user'    => $input['id_user'] ?? null,
+            'nama'    => $input['nama'] ?? null,
+            'modules'    => $input['modules'] ?? null,
+            'timestamp'  => date('Y-m-d H:i:s'),
+            'status'     => $input['status'] ?? null,
+            'response' => $input['keterangan'] ?? null,
+        ];
+        $this->db->insert('chatbot_log', $data);
+
+
+            $output = [
+                'modules'=>'chatbot',
+                'bag'=>'tracking',
+                'data'=>$data,
+            ];
+
+    header('Content-Type: application/json');
+            echo json_encode($output);
+
     }
         
 }
