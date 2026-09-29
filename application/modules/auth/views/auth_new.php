@@ -3,7 +3,7 @@
 <style>
   .lb_auth {
       background-color: white;
-      background-image: url('../assets/sbe/image/bg1_ok.jpg');
+      background-image: url('../assets/sbe/image/bg1_ok_lama.jpg');
       background-attachment: fixed;
       background-size: cover;
       background-repeat: no-repeat;

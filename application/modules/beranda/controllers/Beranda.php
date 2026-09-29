@@ -514,5 +514,53 @@ array_multisort($deviasi_keu_terendah, SORT_DESC);
     }
 
 
+    public function show_infografis(){
+        $tahun = tahun_anggaran();
+        $tahap = tahapan_apbd();
+        $bulan = bulan_aktif();
+        $query = $this->db->query("
+  SELECT
+    COALESCE(g.pagu, 0) AS pagu,
+    COALESCE(g.jumlah_instansi, 0) AS jumlah_instansi,
+    COALESCE(gt.pagu_tambahan, 0) AS pagu_tambahan,
+    COALESCE(gt.jumlah_instansi_tambahan, 0) AS jumlah_instansi_tambahan
+FROM
+(
+    SELECT
+        SUM(pagu_total) AS pagu,
+        COUNT(id_instansi) AS jumlah_instansi
+    FROM grafik
+    WHERE tahun = '$tahun'
+      AND kode_tahap = '$tahap'
+      AND bulan = '$bulan'
+) AS g
+CROSS JOIN
+(
+    SELECT
+        SUM(pagu_total) AS pagu_tambahan,
+        COUNT(id_instansi) AS jumlah_instansi_tambahan
+    FROM grafik_tambahan
+    WHERE tahun = '$tahun'
+      AND kode_tahap = '$tahap'
+      AND bulan = '$bulan'
+) AS gt
+");
+
+$d = $query->row();
+
+$pagu =  $d->pagu;
+$pagu_tambahan =  $d->pagu_tambahan;
+$pagu_total = $pagu + $pagu_tambahan ;
+        $data['pagu'] = [
+        'pagu' => $pagu,
+        'opd_apbd' => $d->jumlah_instansi,
+        'pagu_tambahan' => $pagu_tambahan,
+        'pagu_total' => $pagu_total,
+        'opd_tkd' => $d->jumlah_instansi_tambahan ,
+        ];
+      
+
+        $this->load->view('beranda/show_infografis', $data);
+    }
    
 }

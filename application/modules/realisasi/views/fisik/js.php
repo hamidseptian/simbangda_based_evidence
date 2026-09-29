@@ -436,7 +436,25 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 
 
 
+						if (b=='KONTRAK') {
+							if (data.terkontrak==0) {
+							var link_register_kontrak = '<?php echo base_url("register_kontrak/buat_kontrak") ?>';
+							var form_upload = 	'<div class="input-group-append">' +
+							'<button class="btn btn-outline-info" type="button" id="btn-upload-' + id_dok + '-' + id + '" onclick="Swal.fire(`Tidak diizinkan`,`Harap mengisi dokumen kontrak dulu agar bisa mengupload evidence kontrak. ' + "<a href='"+link_register_kontrak+"'  target='_blank' " + '>Isi dokumen kontrak</a>`,`warning`) ; ">Upload</button>' +
+							'</div>' ;
 
+							}else{
+							var form_upload = 	'<div class="input-group-append">' +
+							'<button class="btn btn-info" type="button" id="btn-upload-' + id_dok + '-' + id + '" onclick="upload_file(this,' + "'" + id_dok + '-' + id + "'" + ',' + "'" + v + "'" + ',' + "'" + id_volume + "'," + izin_input_pptk +"," + id_kedudukan + ')">Upload</button>' +
+							'</div>' ;
+
+							}
+
+						}else{
+							var form_upload = 	'<div class="input-group-append">' +
+							'<button class="btn btn-info" type="button" id="btn-upload-' + id_dok + '-' + id + '" onclick="upload_file(this,' + "'" + id_dok + '-' + id + "'" + ',' + "'" + v + "'" + ',' + "'" + id_volume + "'," + izin_input_pptk +"," + id_kedudukan + ')">Upload</button>' +
+							'</div>' ;
+						}
 						$('#form-upload-dokumen').append('<div class="position-relative form-group" id="upload-' + id_dok + '-' + id + '">' +
 							'<input type="hidden" id="id_volume" name="id_volume" value="'+ id_volume+'">' +
 							'<div class="form-row">' +
@@ -447,9 +465,7 @@ function show_sub_kegiatan_apbd_instansi_gabungan()
 							'<input type="file" class="custom-file-input" id="' + id_dok + '-' + id + '" name="berkas" aria-describedby="inputGroupFileAddon04" onchange="get_file_name(this)">' +
 							'<label class="custom-file-label" id="label-' + id_dok + '-' + id + '" for="' + id_dok + '-' + id + '">Choose File</label>' +
 							'</div>' +
-							'<div class="input-group-append">' +
-							'<button class="btn btn-info" type="button" id="btn-upload-' + id_dok + '-' + id + '" onclick="upload_file(this,' + "'" + id_dok + '-' + id + "'" + ',' + "'" + v + "'" + ',' + "'" + id_volume + "'," + izin_input_pptk +"," + id_kedudukan + ')">Upload</button>' +
-							'</div>' +
+							form_upload +
 							'</div>' +
 							'</div>' +
 							'</div>' +

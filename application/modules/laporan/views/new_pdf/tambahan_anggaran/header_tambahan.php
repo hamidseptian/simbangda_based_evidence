@@ -7,7 +7,7 @@
 <div class="skpd">
     <div class="kop">
       <div class="pemprov_sumbar"><?php echo $identitas['identitas'] ?></div>
-      <div class="nama_instansi"><b><?php echo $nama_instansi ?></b></div>
+      <div class="nama_instansi"><b>Laporan Data Realisasi OPD  </b></div>
       <div class="judul_laporan"><b>Lampiran 2 : <?php echo $judul_laporan_2 ?> <br> </b></div>
 
 

@@ -694,7 +694,7 @@ class Realisasi extends MY_Controller
                     $rea[]  = $value->dokumen;
                 }
             }
-
+ 
             if ($dokumen->num_rows() > 0) {
                 $output['status']   = true;
                 $output['message']  = 'Sukses';
@@ -717,6 +717,9 @@ class Realisasi extends MY_Controller
                 $output['message']  = 'Gagal';
             }
 
+            $q_kontrak = $this->db->query("SELECT id_kontrak_pekerjaan from kontrak_pekerjaan where id_paket_pekerjaan='$id_paket_pekerjaan'");
+            $j_kontrak = $q_kontrak->num_rows();
+            $output['terkontrak'] = $j_kontrak;
             $output['dok'] = $dok;
             $output['rea'] = $rea;
             $output['cek'] = array_values(array_diff_assoc($dok, $rea));

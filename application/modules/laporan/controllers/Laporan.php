@@ -3036,20 +3036,22 @@ $mpdf->SetHTMLFooter($footer);
 
 
 
+        	// $judul_penampilan_laporan_2 = "Laporan Realisasi Fisik Dan Keuangan ".$judul_laporan.'<br><span style="color:blue">Bersumber Dari Dana TKD</span>';
+         //   $data['judul_laporan_2']=$judul_penampilan_laporan_2;
 
 
-				$mpdf->WriteHTML('<pagebreak/>');
-			    $header2 =  $this->load->view('laporan/new_pdf/realisasi_akumulasi/tambahan_anggaran/header_tambahan', $data, true);
+			    $header2 =  $this->load->view('laporan/new_pdf/tambahan_anggaran/header_tambahan', $data, true);
 				$mpdf->SetHTMLHeader($header2); 
+				$mpdf->WriteHTML('<pagebreak/>');
 				$html_2 =  $this->load->view('laporan/new_pdf/tambahan_anggaran/content_tambahan', $data, true);
 				$mpdf->WriteHTML($html_2);
 				$mpdf->SetHTMLFooter($footer);
 
 
 
-				$mpdf->WriteHTML('<pagebreak/>');
 			    $header3 =  $this->load->view('laporan/new_pdf/tambahan_anggaran/header_rekap', $data, true);
 				$mpdf->SetHTMLHeader($header3); 
+				$mpdf->WriteHTML('<pagebreak/>');
 				$html_3 =  $this->load->view('laporan/new_pdf/tambahan_anggaran/content_rekap', $data, true);
 				$mpdf->WriteHTML($html_3);
 
@@ -3082,7 +3084,7 @@ $mpdf->SetHTMLFooter($footer);
 		// 	and id_instansi not in ($id_instansi_yang_sudah) ")->result_array();
 
 		// // $mpdf->WriteHTML(json_encode($instansi_yang_belum));
-		$mpdf->Output($judul_file.' - '.str_replace(':', '.', $tanggal_penarikan).'.pdf', 'I');
+		$mpdf->Output('Laporan Rekap APBD & TKD Semua OPD - '.str_replace(':', '.', $tanggal_penarikan).'.pdf', 'I');
 	}
 
 
