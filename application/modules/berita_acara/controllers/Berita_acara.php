@@ -187,9 +187,12 @@ class Berita_acara extends MY_Controller
              $data['tgl_sync']='';
         }else{
     		$q_grafik = $this->db->query("SELECT pagu_bo_bp, pagu_bo_bbj, pagu_bo_bs, pagu_bo_bh, pagu_bm_bmt, pagu_bm_bmpm, pagu_bm_bmgb, pagu_bm_bmjji, pagu_bm_bmatl, pagu_btt, pagu_bt_bbh, pagu_bt_bbk, pagu_total, 
-                bulan, target_fisik_akumulasi, target_keuangan_akumulasi, 
-                realisasi_fisik_akumulasi,realisasi_keuangan_akumulasi 
-                from grafik_berita_acara where id_instansi = '$id_instansi' and kode_tahap='$kode_tahap' and tahun = '$tahun' and id_setting_berita_acara='$periode' order by bulan asc")->result_array();
+                bulan, target_fisik_akumulasi, target_keuangan_akumulasi, rp_target_keuangan_akumulasi, 
+                realisasi_fisik_akumulasi,realisasi_keuangan_akumulasi, rp_realisasi_keuangan_akumulasi
+                from grafik where id_instansi = '$id_instansi' and kode_tahap='$kode_tahap' and tahun = '$tahun' -- and id_setting_berita_acara='$periode' 
+                order by bulan asc")->result_array();
+            $q_grafik_tambahan = $this->db->query("SELECT *
+                from grafik_tambahan where id_instansi = '$id_instansi' and kode_tahap='$kode_tahap' and tahun = '$tahun'  order by bulan asc");
     		$q_statistika = $this->db->query("SELECT  pagu_bo, pagu_bm, pagu_total, jumlah_paket_swakelola, jumlah_paket_penyedia, last_update  from  statistika_berita_acara  where id_instansi = '$id_instansi' and id_setting_berita_acara='$periode' ")->row_array();
     		$hitung_swakelola =$q_statistika['jumlah_paket_swakelola'];
     		$hitung_penyedia =$q_statistika['jumlah_paket_penyedia'];
@@ -221,6 +224,7 @@ class Berita_acara extends MY_Controller
          $data['caption_jadwal']= $caption_jadwal;
          $data['nama_hari']=$nama_hari;
          $data['grafik']=$q_grafik;
+         $data['grafik_tambahan']=$q_grafik_tambahan;
          $data['cek']=$periode;
          $data['nama_tahap']=pilihan_nama_tahapan($q_template['kode_tahap']);
          $data['template']=$q_template;
@@ -237,7 +241,8 @@ class Berita_acara extends MY_Controller
 
 
          if ($pengambilan_data == 'Dengan Catatan') {
-            $html =  $this->load->view('berita_acara/pdf/print_dengan_catatan_dan_deviasi', $data, true);
+            // $html = $this->load->view('berita_acara/pdf/print_dengan_catatan_dan_deviasi', $data, true);
+            $html =  $this->load->view('berita_acara/pdf/print_dengan_catatan_dan_deviasi_dan_tkd', $data, true);
              # code...
          }else{
     	    $html =  $this->load->view('berita_acara/pdf/print_tanpa_catatan_dengan_deviasi', $data, true);

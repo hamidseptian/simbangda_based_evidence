@@ -136,10 +136,12 @@ class Dashboard extends MY_Controller
             $id_instansi = id_instansi();
             if ($level==2) {
                 $pagu = $dashboard->pagu_total($tahap)->row();
+                $pagu_tambahan = $dashboard->pagu_total_tambahan($tahap)->row();
                 $rk = $dashboard->rk_total($tahap)->row();
             }else{
                 $pagu = $dashboard->pagu($id_instansi, $tahap, $tahun)->row();
                 $rk = $dashboard->rk($id_instansi, $tahap, $tahun)->row();
+                $pagu_tambahan = $dashboard->pagu_tambahan($id_instansi, $tahap, $tahun)->row();
             }
             $bo = $pagu->pagu_bo;
             $bm = $pagu->pagu_bm;
@@ -160,7 +162,9 @@ class Dashboard extends MY_Controller
             $bt_bbh = $pagu->pagu_bt_bbh;
             $bt_bbk = $pagu->pagu_bt_bbk;
 
+            $pagu_total_tambahan = $pagu_tambahan->total;
             $pagu_total = $pagu->total == '' ? 0 : $pagu->total;
+            $show_pagu_total = $pagu_total+$pagu_total_tambahan;
             $data['bo']       = $bo;
             $data['bm']       = $bm;
             $data['btt']       = $btt;
@@ -179,7 +183,7 @@ class Dashboard extends MY_Controller
             $data['bt_bbh']       = $bt_bbh;
             $data['bt_bbk']       = $bt_bbk;
 
-            $data['anggaran_apbd']       = $pagu_total;
+            $data['anggaran_apbd']       = $show_pagu_total;
             @$data['persen_bo']       = $pagu_total == 0 ? 0 : round(($bo / $pagu_total) * 100, 2);
             @$data['persen_bm']       = $pagu_total == 0 ? 0 : round(($bm / $pagu_total) * 100, 2);
             @$data['persen_btt']       = $pagu_total == 0 ? 0 : round(($btt / $pagu_total) * 100, 2);
@@ -280,11 +284,17 @@ class Dashboard extends MY_Controller
 
             $page                               = 'dashboard/index';
 
-            $grafik = $this->db->query("SELECT id_grafik,  pagu_bo_bp, pagu_bo_bbj, pagu_bo_bs, pagu_bo_bh, pagu_bo_bbs, pagu_bm_bmt, pagu_bm_bmpm, pagu_bm_bmgb, pagu_bm_bmjji, pagu_bm_bmatl, pagu_bm_bmatb, pagu_btt, pagu_bt_bbh, pagu_bt_bbk,
+            $grafik = $this->db->query("SELECT id_grafik, pagu_total,rp_realisasi_keuangan_akumulasi,  pagu_bo_bp, pagu_bo_bbj, pagu_bo_bs, pagu_bo_bh, pagu_bo_bbs, pagu_bm_bmt, pagu_bm_bmpm, pagu_bm_bmgb, pagu_bm_bmjji, pagu_bm_bmatl, pagu_bm_bmatb, pagu_btt, pagu_bt_bbh, pagu_bt_bbk,
 
              rp_realisasi_keuangan_akumulasi_bo_bp,rp_realisasi_keuangan_akumulasi_bo_bbj,rp_realisasi_keuangan_akumulasi_bo_bs,rp_realisasi_keuangan_akumulasi_bo_bh,rp_realisasi_keuangan_akumulasi_bo_bbs,rp_realisasi_keuangan_akumulasi_bm_bmt,rp_realisasi_keuangan_akumulasi_bm_bmpm,rp_realisasi_keuangan_akumulasi_bm_bmgb,rp_realisasi_keuangan_akumulasi_bm_bmjji,rp_realisasi_keuangan_akumulasi_bm_bmatl,rp_realisasi_keuangan_akumulasi_bm_bmatb,rp_realisasi_keuangan_akumulasi_btt,rp_realisasi_keuangan_akumulasi_bt_bbh,rp_realisasi_keuangan_akumulasi_bt_bbk 
 
   from grafik where id_instansi = '$id_instansi' and tahun = '$tahun' and kode_tahap='$tahap'");
+
+            $grafik_tambahan = $this->db->query("SELECT id_grafik, pagu_total, rp_realisasi_keuangan_akumulasi, pagu_bo_bp, pagu_bo_bbj, pagu_bo_bs, pagu_bo_bh, pagu_bo_bbs, pagu_bm_bmt, pagu_bm_bmpm, pagu_bm_bmgb, pagu_bm_bmjji, pagu_bm_bmatl, pagu_bm_bmatb, pagu_btt, pagu_bt_bbh, pagu_bt_bbk,
+
+             rp_realisasi_keuangan_akumulasi_bo_bp,rp_realisasi_keuangan_akumulasi_bo_bbj,rp_realisasi_keuangan_akumulasi_bo_bs,rp_realisasi_keuangan_akumulasi_bo_bh,rp_realisasi_keuangan_akumulasi_bo_bbs,rp_realisasi_keuangan_akumulasi_bm_bmt,rp_realisasi_keuangan_akumulasi_bm_bmpm,rp_realisasi_keuangan_akumulasi_bm_bmgb,rp_realisasi_keuangan_akumulasi_bm_bmjji,rp_realisasi_keuangan_akumulasi_bm_bmatl,rp_realisasi_keuangan_akumulasi_bm_bmatb,rp_realisasi_keuangan_akumulasi_btt,rp_realisasi_keuangan_akumulasi_bt_bbh,rp_realisasi_keuangan_akumulasi_bt_bbk 
+
+  from grafik_tambahan where id_instansi = '$id_instansi' and tahun = '$tahun' and kode_tahap='$tahap'");
             $index_bulan = date('n'); 
             $data['index_bulan'] = $index_bulan;
 
@@ -320,6 +330,10 @@ class Dashboard extends MY_Controller
             $realisasi_total                = $realisasi_bo + $realisasi_bm + $realisasi_btt + $realisasi_bt;
             $data['persen_realisasi_total'] = ($realisasi_total / $pagu_total)   * 100;
 
+            $pagu_grafik_tambahan                      = $grafik_tambahan->result_array()[$index_bulan];
+            $show_pagu_total = $pagu_grafik['pagu_total'] + $pagu_grafik_tambahan['pagu_total'];
+            $show_realisasi_total = $pagu_grafik['rp_realisasi_keuangan_akumulasi'] + $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi'];
+             $data['persen_realisasi_total'] = ($show_realisasi_total / $show_pagu_total)   * 100;
 
 
             }
@@ -328,12 +342,12 @@ class Dashboard extends MY_Controller
             $data['pagu_bm'] = $pagu_bm;
             $data['pagu_btt'] = $pagu_btt;
             $data['pagu_bt'] = $pagu_bt;
-            $data['pagu_total'] = $pagu_total;
+            $data['pagu_total'] = $show_pagu_total;
             $data['realisasi_bo'] = $realisasi_bo;
             $data['realisasi_bm'] = $realisasi_bm;
             $data['realisasi_btt'] = $realisasi_btt;
             $data['realisasi_bt'] = $realisasi_bt;
-            $data['realisasi_total'] = $realisasi_total;
+            $data['realisasi_total'] = $show_realisasi_total;
 
 
 

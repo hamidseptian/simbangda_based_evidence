@@ -253,6 +253,80 @@ class Dashboard_model extends CI_Model
         return $query;
     }
 
+    public function pagu_tambahan($id_instansi, $tahap, $tahun)
+    {
+        $bulan  = date('n');
+
+        if ($tahap==2) {
+        	
+	        $query  = $this->db->query("SELECT
+			sum(bo_bp) as pagu_bo_bp,
+			sum(bo_bbj) as pagu_bo_bbj,
+			sum(bo_bs) as pagu_bo_bs,
+			sum(bo_bh) as pagu_bo_bh,
+			sum(bo_bp + bo_bbj+ bo_bs+bo_bh) as pagu_bo,
+
+			sum(bm_bmt) as pagu_bm_bmt,
+			sum(bm_bmpm) as pagu_bm_bmpm,
+			sum(bm_bmgb) as pagu_bm_bmgb,
+			sum(bm_bmjji) as pagu_bm_bmjji,
+			sum(bm_bmatl) as pagu_bm_bmatl,
+			sum( bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl ) as pagu_bm,
+
+			sum(btt) as pagu_btt,
+
+
+			sum(bt_bbh) as pagu_bt_bbh,
+			sum(bt_bbk) as pagu_bt_bbk,
+			sum( bt_bbh+bt_bbk ) as pagu_bt,
+
+
+			sum(bo_bp + bo_bbj+ bo_bs+bo_bh + bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl +btt +  bt_bbh+bt_bbk ) as total
+
+			FROM
+			anggaran_sub_kegiatan_tambahan 
+			WHERE
+			id_instansi = '$id_instansi'
+			and kode_tahap = '$tahap' and tahun='$tahun' and kode_sub_kegiatan in 
+			(SELECT kode_sub_kegiatan from sub_kegiatan_instansi where id_instansi='$id_instansi' and kode_tahap='$tahap' and tahun='$tahun')
+	          ");
+	    }
+	    else{
+	        $query  = $this->db->query("SELECT
+			sum(bo_bp) as pagu_bo_bp,
+			sum(bo_bbj) as pagu_bo_bbj,
+			sum(bo_bs) as pagu_bo_bs,
+			sum(bo_bh) as pagu_bo_bh,
+			sum(bo_bp + bo_bbj+ bo_bs+bo_bh) as pagu_bo,
+
+			sum(bm_bmt) as pagu_bm_bmt,
+			sum(bm_bmpm) as pagu_bm_bmpm,
+			sum(bm_bmgb) as pagu_bm_bmgb,
+			sum(bm_bmjji) as pagu_bm_bmjji,
+			sum(bm_bmatl) as pagu_bm_bmatl,
+			sum( bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl ) as pagu_bm,
+
+			sum(btt) as pagu_btt,
+
+
+			sum(bt_bbh) as pagu_bt_bbh,
+			sum(bt_bbk) as pagu_bt_bbk,
+			sum( bt_bbh+bt_bbk ) as pagu_bt,
+
+
+			sum(bo_bp + bo_bbj+ bo_bs+bo_bh + bm_bmt + bm_bmpm + bm_bmgb + bm_bmjji + bm_bmatl +btt +  bt_bbh+bt_bbk ) as total
+
+			FROM
+			anggaran_sub_kegiatan_tambahan 
+			WHERE
+			id_instansi = '$id_instansi'
+			and tahun='$tahun' and status =1 
+	          ");
+
+	    }
+        return $query;
+    }
+
 
 
     public function rk($id_instansi, $tahap)
@@ -501,6 +575,43 @@ sum(pagu_bt_bbk ) as pagu_bt_bbk,
                                                           
                                     FROM
                                         grafik 
+                                    WHERE
+                                     kode_tahap = '$tahap' and tahun='$tahun' and bulan=$bulan
+                                        ");
+        return $query;
+    }
+
+
+    public function pagu_total_tambahan($tahap)
+    {
+    	$tahun = tahun_anggaran();
+        $bulan  = date('n');
+        $query  = $this->db->query("SELECT
+sum( pagu_bo_bp) as pagu_bo_bp,
+sum(pagu_bo_bbj) as pagu_bo_bbj,
+sum(pagu_bo_bs) as pagu_bo_bs,
+sum(pagu_bo_bh ) as pagu_bo_bh,
+sum( pagu_bo_bp + pagu_bo_bbj+ pagu_bo_bs+pagu_bo_bh ) as pagu_bo,
+
+sum( pagu_bm_bmt) as pagu_bm_bmt,
+sum(pagu_bm_bmpm) as pagu_bm_bmpm,
+sum(pagu_bm_bmgb) as pagu_bm_bmgb,
+sum(pagu_bm_bmjji) as pagu_bm_bmjji,
+sum(pagu_bm_bmatl ) as pagu_bm_bmatl,
+sum(  pagu_bm_bmt + pagu_bm_bmpm + pagu_bm_bmgb + pagu_bm_bmjji + pagu_bm_bmatl  ) as pagu_bm,
+
+sum( pagu_btt ) as pagu_btt,
+
+
+sum( pagu_bt_bbh) as pagu_bt_bbh,
+sum(pagu_bt_bbk ) as pagu_bt_bbk,
+ sum(  pagu_bt_bbh+pagu_bt_bbk  ) as pagu_bt,
+
+
+ sum( pagu_total ) as total
+                                                          
+                                    FROM
+                                        grafik_tambahan 
                                     WHERE
                                      kode_tahap = '$tahap' and tahun='$tahun' and bulan=$bulan
                                         ");
