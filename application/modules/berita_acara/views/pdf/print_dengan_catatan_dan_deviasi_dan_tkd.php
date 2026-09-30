@@ -77,6 +77,20 @@
                 <td style="text-align: right"><?php echo number_format($pagu_bm_total) ?></td>
                 
             </tr>
+          <!--   <tr>
+                <td>Belanja Tidak Terduga</td>
+                <td style="text-align: right">0</td>
+                <td style="text-align: right"><?php echo number_format($pagu_btt_tambahan) ?></td>
+                <td style="text-align: right"><?php echo number_format($pagu_btt_tambahan) ?></td>
+                
+            </tr> -->
+           <!--  <tr>
+                <td>Belanja Transfer</td>
+                <td style="text-align: right">0</td>
+                <td style="text-align: right"><?php echo number_format($pagu_bt_tambahan) ?></td>
+                <td style="text-align: right"><?php echo number_format($pagu_bt_tambahan) ?></td>
+                
+            </tr> -->
             <tr>
                 <td>Total Pagu</td>
                 <td style="text-align: right"><?php echo number_format($pagu_total) ?></td>
@@ -207,19 +221,38 @@
                     <?php if ($grafik_tambahan->num_rows()) { 
 
 
-                    $deviasi_keuangan_tambahan = $data_grafik_tambahan[$key]['realisasi_keuangan_akumulasi'] - $data_grafik_tambahan[$key]['target_keuangan_akumulasi'];
 
                     $rp_target_keuangan_total = $data_grafik_tambahan[$key]['rp_target_keuangan_akumulasi'] +$v['rp_target_keuangan_akumulasi'];
                     $rp_realisasi_keuangan_total = $data_grafik_tambahan[$key]['rp_realisasi_keuangan_akumulasi'] +$v['rp_realisasi_keuangan_akumulasi'];
                     $rp_pagu_total = $data_grafik_tambahan[$key]['pagu_total'] +$v['pagu_total'];
 
-                    
+
                     $persen_tk = $rp_target_keuangan_total / $rp_pagu_total * 100;
                     $persen_rk = $rp_realisasi_keuangan_total / $rp_pagu_total * 100;
+                    $deviasi_keuangan_tambahan = $persen_rk - $persen_tk;
+
+
+
+                       if ($deviasi_keuangan_tambahan < -10) {
+                          $warna_dev_keuangan_tambahan = 'background: #f8b2b2'; 
+                        }
+                        elseif ($deviasi_keuangan_tambahan <=-5  && $deviasi_keuangan_tambahan >=-10) {
+                          $warna_dev_keuangan_tambahan = 'background: #fcf3cf';
+                        }
+                        elseif ($deviasi_keuangan_tambahan <=0  && $deviasi_keuangan_tambahan >=-5) {
+                          $warna_dev_keuangan_tambahan = 'background: #d5f5e3';
+                        }else{
+                          $warna_dev_keuangan_tambahan = 'background: #ff7cfd';
+                        }
+
+
+
+
+
                         ?>
                         <td align="center"><?php echo round($persen_tk,2) ?></td>
                     <td align="center"><?php echo round($persen_rk,2) ?></td>
-                    <td align="center" style="<?php echo $warna_dev_keuangan ?>"> <?php echo  round($deviasi_keuangan_tambahan,2) ?> </td>
+                    <td align="center" style="<?php echo $warna_dev_keuangan_tambahan ?>"> <?php echo  round($deviasi_keuangan_tambahan,2) ?> </td>
                     
                     <?php } else{ ?>
                     <td align="center"><?php echo $v['target_keuangan_akumulasi'] ?></td>
