@@ -940,8 +940,13 @@ public function sync_eplanning()
         $data = [];
 
 
+        if ($tahap==2) {
+             $q_kegiatan = $this->db->query("SELECT * from v_sub_kegiatan_apbd where kode_rekening_program = '$kode_program' and tahun ='$tahun' and kode_tahap = '2' and id_instansi = '$id_instansi'");
+            # code...
+        }else{
+             $q_kegiatan = $this->db->query("SELECT * from v_sub_kegiatan_apbd where kode_rekening_program = '$kode_program' and tahun ='$tahun' and status = '1' and id_instansi = '$id_instansi' order by kode_rekening_sub_kegiatan asc");
 
-         $q_kegiatan = $this->db->query("SELECT * from v_sub_kegiatan_apbd where kode_rekening_program = '$kode_program' and tahun ='$tahun' and kode_tahap = '2' and id_instansi = '$id_instansi'");
+        }
          $no =0;
 
         

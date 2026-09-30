@@ -175,24 +175,6 @@
     color:var(--emas);
   }
 
-  /* ---------- LAYOUT 3 KOLOM: PAGU | FISIK | KEUANGAN ---------- */
-  /* Lebar kolom diatur di baris grid-template-columns (kolom 1 = pagu, 2 = fisik, 3 = keuangan).
-     Angka 4fr 3fr 3fr = perbandingan 40 : 30 : 30. Ubah angkanya untuk mengganti rasio. */
-  .grid-3kolom{
-    grid-template-columns:minmax(0,4fr) minmax(0,3fr) minmax(0,3fr);  /* rasio 40% : 30% : 30% (Pagu : Fisik : Keuangan) */
-    align-items:stretch;
-  }
-  .pagu-col{
-    display:flex;
-    flex-direction:column;
-    gap:16px;
-    min-width:0;
-  }
-  .pagu-col .pagu-bar{flex:1;padding:14px 18px;gap:12px;}
-  .pagu-col .pagu-icon{width:46px;height:46px;font-size:1.3rem;}
-  .pagu-col .pagu-number{font-size:1.15rem;overflow-wrap:anywhere;}
-  .pagu-col .pagu-sub{min-width:0;flex:1;}
-  .pagu-col .pagu-sub-value{font-size:.85rem;overflow-wrap:anywhere;}
 
   /* =====================================================
      BACKGROUND GAMBAR: PAGU, FISIK, KEUANGAN
@@ -291,38 +273,32 @@
   }
   .target-card-title.hijau{color:var(--hijau-terang);}
   .target-card-title.biru{color:var(--biru);}
-  /* Target / Realisasi / Deviasi ditampilkan sebagai 3 BADGE (bukan tabel) */
-  .metric-badges{
-    display:flex;
-    gap:8px;
-    margin-bottom:12px;
+  /* Target / Realisasi / Deviasi: gaya "tabel tanpa garis" (baris Bulan Ini & Akumulasi) */
+  .capaian-table{width:100%;margin-bottom:12px;}
+  .capaian-table .cap-row{
+    display:grid;
+    grid-template-columns:1.5fr 1fr 1fr 1fr;
+    align-items:center;
+    gap:4px;
+    padding:8px 10px;
+    border-radius:10px;
   }
-  .badge-metric{
-    flex:1;
-    border-radius:12px;
-    padding:10px 6px;
-    text-align:center;
-    background:#f7f4e9;          /* warna dasar: Target */
-    border:1px solid #eee2c8;
-  }
-  .badge-metric .bm-label{
-    font-size:.68rem;
+  .capaian-table .cap-row + .cap-row{margin-top:4px;}
+  .capaian-table .cap-head{
+    font-size:.66rem;
     font-weight:700;
     letter-spacing:.4px;
     color:#5a5f55;
+    padding:0 10px 4px;
   }
-  .badge-metric .bm-value{
-    font-size:1.35rem;
-    font-weight:800;
-    line-height:1.2;
-    color:var(--hijau-tua);
-  }
-  .badge-metric.bm-realisasi{background:#e3f6f7;border-color:#bfe7ea;}   /* aqua muda */
-  .badge-metric.bm-realisasi .bm-value{color:var(--hijau);}
-  .badge-metric.bm-deviasi-pos{background:#e6f4ea;border-color:#c7e6d0;}  /* hijau: deviasi positif */
-  .badge-metric.bm-deviasi-pos .bm-value{color:var(--hijau);}
-  .badge-metric.bm-deviasi-neg{background:#fbe9e7;border-color:#f3c9c4;}  /* merah: deviasi negatif */
-  .badge-metric.bm-deviasi-neg .bm-value{color:var(--merah);}
+  .capaian-table .cap-head > div{text-align:center;}
+  .capaian-table .cap-head > div:first-child{text-align:left;}
+  .capaian-table .cap-row:not(.cap-head):nth-of-type(2){background:#f7fbf8;}
+  .capaian-table .cap-row:not(.cap-head):nth-of-type(3){background:#eef8f9;}
+  .capaian-table .cap-label{font-weight:700;font-size:.78rem;color:#22301f;text-align:left;}
+  .capaian-table .cap-val{font-weight:800;font-size:1.05rem;text-align:center;color:var(--hijau-tua);}
+  .capaian-table .cap-val.deviasi-neg{color:var(--merah);}
+  .capaian-table .cap-val.deviasi-pos{color:var(--hijau);}
   .badge-row{display:flex;gap:8px;}
   .badge-row .mini-badge{flex:1;margin-bottom:0;}
 
@@ -666,45 +642,54 @@
   <!-- ============ BAGIAN 2: KONTEN (80%) ============ -->
   <div class="app-content">
 
-  <!-- ============ 3 KOLOM: [PAGU + APBD/TKD] | FISIK | KEUANGAN ============ -->
-  <div class="grid grid-3kolom">
-
-    <!-- KOLOM 1: PAGU (atas) + APBD / TKD (bawah) -->
-    <div class="pagu-col">
-
-      <div class="pagu-bar pagu-bg-uang-1">
-        <div class="icon-circle bg-emas pagu-icon">🏛️</div>
-        <div class="pagu-main">
-          <div class="label-kecil">PAGU ANGGARAN</div>
-          <div class="pagu-number">Rp. <?php echo number_format($pagu['pagu_total']) ?></div>
-          <div class="label-kecil"><small>Dari <?php echo  $pagu['opd_apbd'] ?> OPD</small></div>
-        </div>
-      </div>
-
-      <div class="pagu-bar pagu-bg-uang-2 pagu-sub-card">
-        <div class="pagu-sub">
-          <div class="label-kecil">APBD</div>
-          <div class="pagu-sub-value">Rp. <?php echo number_format($pagu['pagu']) ?></div>
-          <div class="label-kecil"><small>Dari <?php echo $pagu['opd_apbd'] ?> OPD</small></div>
-        </div>
-        <div class="pagu-divider"></div>
-        <div class="pagu-sub">
-          <div class="label-kecil">TKD</div>
-          <div class="pagu-sub-value">Rp. <?php echo number_format($pagu['pagu_tambahan']) ?></div>
-          <div class="label-kecil"><small>Dari <?php echo $pagu['opd_tkd'] ?> OPD</small></div>
-        </div>
-      </div>
-
+  <!-- ============ BAGIAN 1: PAGU / APBD / TKD (1 baris) ============ -->
+  <div class="pagu-bar pagu-bg-uang-1">
+    <div class="icon-circle bg-emas pagu-icon" style="width:60px;height:60px;font-size:1.7rem;">🏛️</div>
+    <div class="pagu-main">
+      <div class="label-kecil">PAGU ANGGARAN</div>
+      <div class="pagu-number">Rp. <?php echo number_format($pagu['pagu_total']) ?></div>
+      <div class="label-kecil"><small>Dari <?php echo $pagu['opd_apbd'] ?> OPD</small></div>
     </div>
+    <div class="pagu-divider"></div>
+    <div class="pagu-sub">
+      <div class="label-kecil">APBD</div>
+      <div class="pagu-sub-value">Rp. <?php echo number_format($pagu['pagu']) ?></div>
+      <div class="label-kecil"><small>Dari <?php echo $pagu['opd_apbd'] ?> OPD</small></div>
+    </div>
+    <div class="pagu-divider"></div>
+    <div class="pagu-sub">
+      <div class="label-kecil">TKD</div>
+      <div class="pagu-sub-value">Rp. <?php echo number_format($pagu['pagu_tambahan']) ?></div>
+      <div class="label-kecil"><small>Dari <?php echo $pagu['opd_tkd'] ?> OPD</small></div>
+    </div>
+  </div>
 
-    <!-- KOLOM 2: FISIK -->
+  <!-- ============ BAGIAN 2 & 3: KARTU FISIK & KEUANGAN ============ -->
+  <div class="grid" style="grid-template-columns:1fr 1fr;">
+
+    <!-- BAGIAN 2: FISIK -->
     <div class="target-card target-card-fisik">
       <div class="target-card-title hijau">FISIK</div>
-      <div class="metric-badges">
-        <div class="badge-metric bm-target"><div class="bm-label">TARGET</div><div class="bm-value">7%</div></div>
-        <div class="badge-metric bm-realisasi"><div class="bm-label">REALISASI</div><div class="bm-value">5%</div></div>
-        <div class="badge-metric bm-deviasi-neg"><div class="bm-label">DEVIASI</div><div class="bm-value">-2%</div></div>
+
+      <!-- Capaian Target/Realisasi/Deviasi: ganti angka di bawah sesuai data asli -->
+      <div class="capaian-table">
+        <div class="cap-row cap-head">
+          <div>Capaian</div><div>Target</div><div>Realisasi</div><div>Deviasi</div>
+        </div>
+        <div class="cap-row">
+          <div class="cap-label">Bulan Ini</div>
+          <div class="cap-val">7%</div>
+          <div class="cap-val">5%</div>
+          <div class="cap-val deviasi-neg">-2%</div>
+        </div>
+        <div class="cap-row">
+          <div class="cap-label">Akumulasi Bulan Ini</div>
+          <div class="cap-val">7%</div>
+          <div class="cap-val">5%</div>
+          <div class="cap-val deviasi-neg">-2%</div>
+        </div>
       </div>
+
       <div class="badge-row">
         <span class="mini-badge hijau">29 OPD DI ATAS RATA-RATA</span>
         <span class="mini-badge merah">23 OPD DI BAWAH RATA-RATA</span>
@@ -714,11 +699,26 @@
     <!-- BAGIAN 3: KEUANGAN -->
     <div class="target-card target-card-keuangan">
       <div class="target-card-title biru">KEUANGAN</div>
-      <div class="metric-badges">
-        <div class="badge-metric bm-target"><div class="bm-label">TARGET</div><div class="bm-value">10%</div></div>
-        <div class="badge-metric bm-realisasi"><div class="bm-label">REALISASI</div><div class="bm-value">5%</div></div>
-        <div class="badge-metric bm-deviasi-neg"><div class="bm-label">DEVIASI</div><div class="bm-value">-5%</div></div>
+
+      <!-- Capaian Target/Realisasi/Deviasi: ganti angka di bawah sesuai data asli -->
+      <div class="capaian-table">
+        <div class="cap-row cap-head">
+          <div>Capaian</div><div>Target</div><div>Realisasi</div><div>Deviasi</div>
+        </div>
+        <div class="cap-row">
+          <div class="cap-label">Bulan Ini</div>
+          <div class="cap-val">10%</div>
+          <div class="cap-val">5%</div>
+          <div class="cap-val deviasi-neg">-5%</div>
+        </div>
+        <div class="cap-row">
+          <div class="cap-label">Akumulasi Bulan Ini</div>
+          <div class="cap-val">10%</div>
+          <div class="cap-val">5%</div>
+          <div class="cap-val deviasi-neg">-5%</div>
+        </div>
       </div>
+
       <div class="badge-row">
         <span class="mini-badge hijau">15 OPD DI ATAS RATA-RATA</span>
         <span class="mini-badge merah">20 OPD DI BAWAH RATA-RATA</span>
