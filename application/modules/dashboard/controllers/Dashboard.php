@@ -136,12 +136,12 @@ class Dashboard extends MY_Controller
             $id_instansi = id_instansi();
             if ($level==2) {
                 $pagu = $dashboard->pagu_total($tahap)->row();
-                $pagu_tambahan = $dashboard->pagu_total_tambahan($tahap)->row();
+                $pagu_tambahan = $dashboard->pagu_total_tambahan($tahap);
                 $rk = $dashboard->rk_total($tahap)->row();
             }else{
                 $pagu = $dashboard->pagu($id_instansi, $tahap, $tahun)->row();
                 $rk = $dashboard->rk($id_instansi, $tahap, $tahun)->row();
-                $pagu_tambahan = $dashboard->pagu_tambahan($id_instansi, $tahap, $tahun)->row();
+                $pagu_tambahan = $dashboard->pagu_tambahan($id_instansi, $tahap, $tahun);
             }
             $bo = $pagu->pagu_bo;
             $bm = $pagu->pagu_bm;
@@ -162,7 +162,7 @@ class Dashboard extends MY_Controller
             $bt_bbh = $pagu->pagu_bt_bbh;
             $bt_bbk = $pagu->pagu_bt_bbk;
 
-            $pagu_total_tambahan = $pagu_tambahan->total;
+            $pagu_total_tambahan = $pagu_tambahan->num_rows()>0 ? $pagu_tambahan->row()->total : 0;
             $pagu_total = $pagu->total == '' ? 0 : $pagu->total;
             $show_pagu_total = $pagu_total+$pagu_total_tambahan;
             $data['bo']       = $bo;
@@ -330,10 +330,16 @@ class Dashboard extends MY_Controller
             $realisasi_total                = $realisasi_bo + $realisasi_bm + $realisasi_btt + $realisasi_bt;
             $data['persen_realisasi_total'] = ($realisasi_total / $pagu_total)   * 100;
 
+            if ($grafik_tambahan->num_rows()>0) {
             $pagu_grafik_tambahan                      = $grafik_tambahan->result_array()[$index_bulan];
             $show_pagu_total = $pagu_grafik['pagu_total'] + $pagu_grafik_tambahan['pagu_total'];
             $show_realisasi_total = $pagu_grafik['rp_realisasi_keuangan_akumulasi'] + $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi'];
              $data['persen_realisasi_total'] = ($show_realisasi_total / $show_pagu_total)   * 100;
+            }else{
+                  $show_pagu_total = $pagu_grafik['pagu_total'];
+            $show_realisasi_total = $pagu_grafik['rp_realisasi_keuangan_akumulasi'];
+             $data['persen_realisasi_total'] = ($show_realisasi_total / $show_pagu_total)   * 100;
+            }
 
 
             }

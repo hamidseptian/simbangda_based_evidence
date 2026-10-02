@@ -187,7 +187,7 @@
         </thead>
         <tbody>
             <tr >
-                <td style="text-align: center; padding-top: 100px; border: none;"><b><?php echo "Ria Wijayanty, ST, M.Si";//$template['helpdesk'] ?></b></td>
+                <td style="text-align: center; padding-top: 100px; border: none;"><b><?php echo "Dr. Ria Wijayanty, ST, M.Si";//$template['helpdesk'] ?></b></td>
                 <td style="text-align: center; padding-top: 100px; border: none;"><b><?php echo $template['pimpinan']=='' ? '...................................' : $template['pimpinan'] ?></b></td>
             </tr>
 

@@ -88,7 +88,6 @@ foreach ($sub_kegiatan_tambahan as $row) {
                     pp.kode_rekening_sub_kegiatan = '{$sub}'
                     AND pp.id_instansi = {$id_instansi}
                     AND pp.tahun='$tahun' 
-                    AND pp.tahun='$tahun' 
                     AND pp.id_tambahan_anggaran='$id_tambahan_anggaran' 
                     $where_paket");
 
