@@ -112,7 +112,7 @@ foreach ($sub_kegiatan_tambahan as $row) {
        	}
 
     // $convert
-		$swa = $this->realisasi_akumulasi_model->get_realisasi_fisik_new($id_instansi, $sub, $bulan, 'SWAKELOLA', $ope, $tahun,$row['kode_tahap'], $kumpul_id_paket_penyedia)->row_array();
+		$swa = $this->realisasi_akumulasi_model->get_realisasi_fisik_new($id_instansi, $sub, $bulan, 'SWAKELOLA', $ope, $tahun,$row['kode_tahap'], $kumpul_id_paket_swakelola)->row_array();
 		$pen = $this->realisasi_akumulasi_model->get_realisasi_fisik_new($id_instansi, $sub, $bulan, 'PENYEDIA', $ope, $tahun,$row['kode_tahap'], $kumpul_id_paket_penyedia)->row_array();
 		$swa_tot  = !empty($swa['total']) ? $swa['total'] : 0;
 		$pen_tot  = !empty($pen['total']) ? $pen['total'] : 0;

@@ -1044,7 +1044,7 @@ class Realisasi_akumulasi_model extends CI_Model
 									WHERE
 										rk.id_instansi = {$id_instansi} 
 										AND rk.kode_rekening_sub_kegiatan = '$kode_rekening_sub_kegiatan' 
-										AND pp.jenis_paket = '{$jenis_paket}' $where_tahap $where_id_paket
+										AND pp.jenis_paket = '{$jenis_paket}' $where_id_paket
 										AND rk.bulan {$ope} {$bulan}
 										AND rk.tahun='$tahun'");
 		return $query;
