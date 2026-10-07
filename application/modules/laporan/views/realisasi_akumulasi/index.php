@@ -24,11 +24,11 @@ $nama_tahap = [
 							
 								$kategori_laporan = [
 									'rfk_akumulasi'=>'Realisasi Fisik Dan Keuangan Akumulasi',
-									'rfk_akumulasi_dengan_bobot'=>'Realisasi Fisik Dan Keuangan Akumulasi Dengan Bobot Fisik',
-									'rfk_akumulasi_struktur_instansi'=>'Realisasi Fisik Dan Keuangan Akumulasi Berdasarkan Struktur Instansi',
-									'rfk_akumulasi_instansi_pembantu'=>'Realisasi Fisik Dan Keuangan Akumulasi Berdasarkan Instansi Pembantu Teknis',
-									'rfk_data_sumber_dana'=>'Sumber Dana Kegiatan SKPD',
-									'rfk_berdasarkan_data_sumber_dana'=>'Realisasi Fisik Dan Keuangan Akumulasi berdasarkan Sumber Dana Kegiatan SKPD',
+									// 'rfk_akumulasi_dengan_bobot'=>'Realisasi Fisik Dan Keuangan Akumulasi Dengan Bobot Fisik',
+									// 'rfk_akumulasi_struktur_instansi'=>'Realisasi Fisik Dan Keuangan Akumulasi Berdasarkan Struktur Instansi',
+									// 'rfk_akumulasi_instansi_pembantu'=>'Realisasi Fisik Dan Keuangan Akumulasi Berdasarkan Instansi Pembantu Teknis',
+									// 'rfk_data_sumber_dana'=>'Sumber Dana Kegiatan SKPD',
+									// 'rfk_berdasarkan_data_sumber_dana'=>'Realisasi Fisik Dan Keuangan Akumulasi berdasarkan Sumber Dana Kegiatan SKPD',
 									// 'rfk_akumulasi_data_paket_pekerjaan'=>'RFK Akumulasi dengan Data Paket Per Sub Kegiatan',
 									'rfk_data_paket_pekerjaan'=>'Data Paket Per Sub Kegiatan',
 									// 'paket_pekerjaan'=>'Paket Pekerjaan',

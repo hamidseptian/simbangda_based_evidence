@@ -145,9 +145,36 @@ class Dashboard_model extends CI_Model
 																g.target_fisik_akumulasi  AS target_fisik,
 																g.realisasi_fisik_akumulasi  AS realisasi_fisik,
 																g.target_keuangan_akumulasi AS target_keuangan,
-																g.realisasi_keuangan_akumulasi AS realisasi_keuangan 
+																g.realisasi_keuangan_akumulasi AS realisasi_keuangan,
+
+																g.pagu_total as pagu_total, 
+																g.rp_target_keuangan_akumulasi	as rp_target_keuangan, 
+																g.rp_realisasi_keuangan_akumulasi	as rp_realisasi_keuangan 
 									FROM
 										grafik g 
+									WHERE 
+										g.id_instansi = '{$id_instansi}' and tahun = '$tahun' and kode_tahap='$tahap'
+									GROUP BY
+										g.bulan");
+		return $query;
+	}
+
+	public function get_grafik_akumulasi_tambahan($id_instansi, $tahun, $tahap)
+	{
+		$query  = $this->db->query("SELECT
+											g.bulan AS bulan,
+																g.target_fisik_akumulasi  AS target_fisik,
+																g.realisasi_fisik_akumulasi  AS realisasi_fisik,
+																g.target_keuangan_akumulasi AS target_keuangan,
+																g.realisasi_keuangan_akumulasi AS realisasi_keuangan,
+
+
+
+																g.pagu_total as pagu_total, 
+																g.rp_target_keuangan_akumulasi	as rp_target_keuangan, 
+																g.rp_realisasi_keuangan_akumulasi	as rp_realisasi_keuangan 
+									FROM
+										grafik_tambahan g 
 									WHERE 
 										g.id_instansi = '{$id_instansi}' and tahun = '$tahun' and kode_tahap='$tahap'
 									GROUP BY
@@ -164,9 +191,34 @@ class Dashboard_model extends CI_Model
 							g.target_fisik_bulanan  AS target_fisik,
 							g.realisasi_fisik_bulanan  AS realisasi_fisik,
 							g.target_keuangan_bulanan AS target_keuangan,
-							g.realisasi_keuangan_bulanan AS realisasi_keuangan 
+							g.realisasi_keuangan_bulanan AS realisasi_keuangan ,
+							
+							g.pagu_total as pagu_total, 
+							g.rp_target_keuangan_akumulasi	as rp_target_keuangan, 
+							g.rp_realisasi_keuangan_akumulasi	as rp_realisasi_keuangan 
 		FROM
 			grafik g 
+		WHERE 
+			g.id_instansi = '{$id_instansi}' and tahun = '$tahun' and kode_tahap='$tahap'
+		GROUP BY
+			g.bulan");
+		return $query;
+	}
+
+	public function get_grafik_bulanan_tambahan($id_instansi, $tahun, $tahap)
+	{
+		$query  = $this->db->query("SELECT
+		g.bulan AS bulan,
+							g.target_fisik_bulanan  AS target_fisik,
+							g.realisasi_fisik_bulanan  AS realisasi_fisik,
+							g.target_keuangan_bulanan AS target_keuangan,
+							g.realisasi_keuangan_bulanan AS realisasi_keuangan ,
+							
+							g.pagu_total as pagu_total, 
+							g.rp_target_keuangan_akumulasi	as rp_target_keuangan, 
+							g.rp_realisasi_keuangan_akumulasi	as rp_realisasi_keuangan 
+		FROM
+			grafik_tambahan g 
 		WHERE 
 			g.id_instansi = '{$id_instansi}' and tahun = '$tahun' and kode_tahap='$tahap'
 		GROUP BY

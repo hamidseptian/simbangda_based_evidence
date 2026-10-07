@@ -92,17 +92,6 @@ class Dashboard extends MY_Controller
             $data['breadcrumbs']                = $breadcrumbs->render();
             $data['total_users']                = $dashboard->total_users();
             $id_instansi = id_instansi();
-
-
-
-
-
-
-
-
-
-
-
             $q = $this->db->query("SELECT 
                     mi.nama_instansi,
                     mi.id_config as id_config_instansi,
@@ -125,165 +114,14 @@ class Dashboard extends MY_Controller
             $data['config']           = $q;
 
 
-
-
-            $q_pengumuman = $this->db->query("SELECT * from pengumuman order by id_pengumuman desc");
-            $data['jumlah_pengumuman'] = $q_pengumuman->num_rows();
-            $data['data_pengumuman'] = $q_pengumuman->row();
             $level = $this->session->userdata('id_group');
             $tahap = tahapan_apbd();
             $tahun = tahun_anggaran();
-            $id_instansi = id_instansi();
-            if ($level==2) {
-                $pagu = $dashboard->pagu_total($tahap)->row();
-                $pagu_tambahan = $dashboard->pagu_total_tambahan($tahap);
-                $rk = $dashboard->rk_total($tahap)->row();
-            }else{
-                $pagu = $dashboard->pagu($id_instansi, $tahap, $tahun)->row();
-                $rk = $dashboard->rk($id_instansi, $tahap, $tahun)->row();
-                $pagu_tambahan = $dashboard->pagu_tambahan($id_instansi, $tahap, $tahun);
-            }
-            $bo = $pagu->pagu_bo;
-            $bm = $pagu->pagu_bm;
-            $btt = $pagu->pagu_btt;
-            $bt = $pagu->pagu_bt;
-
-
-            $bo_bp = $pagu->pagu_bo_bp;
-            $bo_bbj = $pagu->pagu_bo_bbj;
-            $bo_bs = $pagu->pagu_bo_bs;
-            $bo_bh = $pagu->pagu_bo_bh;
-            $bm_bmt = $pagu->pagu_bm_bmt;
-            $bm_bmpm = $pagu->pagu_bm_bmpm;
-            $bm_bmgb = $pagu->pagu_bm_bmgb;
-            $bm_bmjji = $pagu->pagu_bm_bmjji;
-            $bm_bmatl = $pagu->pagu_bm_bmatl;
-            $btt = $pagu->pagu_btt;
-            $bt_bbh = $pagu->pagu_bt_bbh;
-            $bt_bbk = $pagu->pagu_bt_bbk;
-
-            $pagu_total_tambahan = $pagu_tambahan->num_rows()>0 ? $pagu_tambahan->row()->total : 0;
-            $pagu_total = $pagu->total == '' ? 0 : $pagu->total;
-            $show_pagu_total = $pagu_total+$pagu_total_tambahan;
-            $data['bo']       = $bo;
-            $data['bm']       = $bm;
-            $data['btt']       = $btt;
-            $data['bt']       = $bt;
-
-            $data['bo_bp']       = $bo_bp;
-            $data['bo_bbj']       = $bo_bbj;
-            $data['bo_bs']       = $bo_bs;
-            $data['bo_bh']       = $bo_bh;
-            $data['bm_bmt']       = $bm_bmt;
-            $data['bm_bmpm']       = $bm_bmpm;
-            $data['bm_bmgb']       = $bm_bmgb;
-            $data['bm_bmjji']       = $bm_bmjji;
-            $data['bm_bmatl']       = $bm_bmatl;
-            $data['btt']       = $btt;
-            $data['bt_bbh']       = $bt_bbh;
-            $data['bt_bbk']       = $bt_bbk;
-
-            $data['anggaran_apbd']       = $show_pagu_total;
-            @$data['persen_bo']       = $pagu_total == 0 ? 0 : round(($bo / $pagu_total) * 100, 2);
-            @$data['persen_bm']       = $pagu_total == 0 ? 0 : round(($bm / $pagu_total) * 100, 2);
-            @$data['persen_btt']       = $pagu_total == 0 ? 0 : round(($btt / $pagu_total) * 100, 2);
-            @$data['persen_bt']       = $pagu_total == 0 ? 0 : round(($bt / $pagu_total) * 100, 2);
-
-            @$data['persen_bo_bp']       = $pagu_total == 0 ? 0 : round(($bo_bp / $pagu_total) * 100, 2);
-            @$data['persen_bo_bbj']       = $pagu_total == 0 ? 0 : round(($bo_bbj / $pagu_total) * 100, 2);
-            @$data['persen_bo_bs']       = $pagu_total == 0 ? 0 : round(($bo_bs / $pagu_total) * 100, 2);
-            @$data['persen_bo_bh']       = $pagu_total == 0 ? 0 : round(($bo_bh / $pagu_total) * 100, 2);
-            @$data['persen_bm_bmt']       = $pagu_total == 0 ? 0 : round(($bm_bmt / $pagu_total) * 100, 2);
-            @$data['persen_bm_bmpm']       = $pagu_total == 0 ? 0 : round(($bm_bmpm / $pagu_total) * 100, 2);
-            @$data['persen_bm_bmgb']       = $pagu_total == 0 ? 0 : round(($bm_bmgb / $pagu_total) * 100, 2);
-            @$data['persen_bm_bmjji']       = $pagu_total == 0 ? 0 : round(($bm_bmjji / $pagu_total) * 100, 2);
-            @$data['persen_bm_bmatl']       = $pagu_total == 0 ? 0 : round(($bm_bmatl / $pagu_total) * 100, 2);
-            @$data['persen_btt']       = $pagu_total == 0 ? 0 : round(($btt / $pagu_total) * 100, 2);
-            @$data['persen_bt_bbh']       = $pagu_total == 0 ? 0 : round(($bt_bbh / $pagu_total) * 100, 2);
-            @$data['persen_bt_bbk']       = $pagu_total == 0 ? 0 : round(($bt_bbk / $pagu_total) * 100, 2);
-
-
-
-
-
-
-
-
-            $rk_bo = $rk->rk_bo;
-            $rk_bm = $rk->rk_bm;
-            $rk_btt = $rk->rk_btt;
-            $rk_bt = $rk->rk_bt;
-
-
-            $rk_bo_bp = $rk->rk_bo_bp;
-            $rk_bo_bbj = $rk->rk_bo_bbj;
-            $rk_bo_bs = $rk->rk_bo_bs;
-            $rk_bo_bh = $rk->rk_bo_bh;
-            $rk_bm_bmt = $rk->rk_bm_bmt;
-            $rk_bm_bmpm = $rk->rk_bm_bmpm;
-            $rk_bm_bmgb = $rk->rk_bm_bmgb;
-            $rk_bm_bmjji = $rk->rk_bm_bmjji;
-            $rk_bm_bmatl = $rk->rk_bm_bmatl;
-            $rk_btt = $rk->rk_btt;
-            $rk_bt_bbh = $rk->rk_bt_bbh;
-            $rk_bt_bbk = $rk->rk_bt_bbk;
-
-            $rk_total = $rk->total == '' ? 0 : $rk->total;
-            $data['rk_bo']       = $rk_bo;
-            $data['rk_bm']       = $rk_bm;
-            $data['rk_btt']       = $rk_btt;
-            $data['rk_bt']       = $rk_bt;
-
-            $data['rk_bo_bp']       = $rk_bo_bp;
-            $data['rk_bo_bbj']       = $rk_bo_bbj;
-            $data['rk_bo_bs']       = $rk_bo_bs;
-            $data['rk_bo_bh']       = $rk_bo_bh;
-            $data['rk_bm_bmt']       = $rk_bm_bmt;
-            $data['rk_bm_bmpm']       = $rk_bm_bmpm;
-            $data['rk_bm_bmgb']       = $rk_bm_bmgb;
-            $data['rk_bm_bmjji']       = $rk_bm_bmjji;
-            $data['rk_bm_bmatl']       = $rk_bm_bmatl;
-            $data['rk_btt']       = $rk_btt;
-            $data['rk_bt_bbh']       = $rk_bt_bbh;
-            $data['rk_bt_bbk']       = $rk_bt_bbk;
-
-            $data['rk_total']       = $rk_total;
-            @$data['persen_rk_total']       = $rk_total == 0 ? 0: round(($rk_total / $pagu_total) * 100, 2);
-
-            @$data['persen_rk_bo']       = $rk_total == 0 ? 0: round(($rk_bo / $pagu_total) * 100, 2);
-            @$data['persen_rk_bm']       = $rk_total == 0 ? 0: round(($rk_bm / $pagu_total) * 100, 2);
-            @$data['persen_rk_btt']       = $rk_total == 0 ? 0: round(($rk_btt / $pagu_total) * 100, 2);
-            @$data['persen_rk_bt']       = $rk_total == 0 ? 0: round(($rk_bt / $pagu_total) * 100, 2);
-
-            @$data['persen_rk_bo_bp']       = $rk_total == 0 ? 0: round(($rk_bo_bp / $pagu_total) * 100, 2);
-            @$data['persen_rk_bo_bbj']       = $rk_total == 0 ? 0: round(($rk_bo_bbj / $pagu_total) * 100, 2);
-            @$data['persen_rk_bo_bs']       = $rk_total == 0 ? 0: round(($rk_bo_bs / $pagu_total) * 100, 2);
-            @$data['persen_rk_bo_bh']       = $rk_total == 0 ? 0: round(($rk_bo_bh / $pagu_total) * 100, 2);
-            @$data['persen_rk_bm_bmt']       = $rk_total == 0 ? 0: round(($rk_bm_bmt / $pagu_total) * 100, 2);
-            @$data['persen_rk_bm_bmpm']       = $rk_total == 0 ? 0: round(($rk_bm_bmpm / $pagu_total) * 100, 2);
-            @$data['persen_rk_bm_bmgb']       = $rk_total == 0 ? 0: round(($rk_bm_bmgb / $pagu_total) * 100, 2);
-            @$data['persen_rk_bm_bmjji']       = $rk_total == 0 ? 0: round(($rk_bm_bmjji / $pagu_total) * 100, 2);
-            @$data['persen_rk_bm_bmatl']       = $rk_total == 0 ? 0: round(($rk_bm_bmatl / $pagu_total) * 100, 2);
-            @$data['persen_rk_btt']       = $rk_total == 0 ? 0: round(($rk_btt / $pagu_total) * 100, 2);
-            @$data['persen_rk_bt_bbh']       = $rk_total == 0 ? 0: round(($rk_bt_bbh / $pagu_total) * 100, 2);
-            @$data['persen_rk_bt_bbk']       = $rk_total == 0 ? 0: round(($rk_bt_bbk / $pagu_total) * 100, 2);
-    /*        $data['anggaran_apbd']              = $program_apbd->anggaran_apbd();
-            $data['total_program_apbd']         = $program_apbd->total_program_apbd();
-            $data['belanja_pegawai_prog']       = $program_apbd->belanja_pegawai_prog();
-            $data['belanja_barang_jasa_prog']   = $program_apbd->belanja_barang_jasa_prog();
-            $data['belanja_modal_prog']         = $program_apbd->belanja_modal_prog();
-            $data['persentase_bp_prog']         = $data['anggaran_apbd'] != 0 ? ROUND(($data['belanja_pegawai_prog'] / $data['anggaran_apbd']) * 100, 2) : 0;
-            $data['persentase_bbj_prog']        = $data['anggaran_apbd'] != 0 ? ROUND(($data['belanja_barang_jasa_prog'] / $data['anggaran_apbd']) * 100, 2) : 0;
-            $data['persentase_bm_prog']         = $data['anggaran_apbd'] != 0 ? ROUND(($data['belanja_modal_prog'] / $data['anggaran_apbd']) * 100, 2) : 0;*/
-
-
-
-
+          
 
 
 
             $page                               = 'dashboard/index';
-
             $grafik = $this->db->query("SELECT id_grafik, pagu_total,rp_realisasi_keuangan_akumulasi,  pagu_bo_bp, pagu_bo_bbj, pagu_bo_bs, pagu_bo_bh, pagu_bo_bbs, pagu_bm_bmt, pagu_bm_bmpm, pagu_bm_bmgb, pagu_bm_bmjji, pagu_bm_bmatl, pagu_bm_bmatb, pagu_btt, pagu_bt_bbh, pagu_bt_bbk,
 
              rp_realisasi_keuangan_akumulasi_bo_bp,rp_realisasi_keuangan_akumulasi_bo_bbj,rp_realisasi_keuangan_akumulasi_bo_bs,rp_realisasi_keuangan_akumulasi_bo_bh,rp_realisasi_keuangan_akumulasi_bo_bbs,rp_realisasi_keuangan_akumulasi_bm_bmt,rp_realisasi_keuangan_akumulasi_bm_bmpm,rp_realisasi_keuangan_akumulasi_bm_bmgb,rp_realisasi_keuangan_akumulasi_bm_bmjji,rp_realisasi_keuangan_akumulasi_bm_bmatl,rp_realisasi_keuangan_akumulasi_bm_bmatb,rp_realisasi_keuangan_akumulasi_btt,rp_realisasi_keuangan_akumulasi_bt_bbh,rp_realisasi_keuangan_akumulasi_bt_bbk 
@@ -316,43 +154,82 @@ class Dashboard extends MY_Controller
             }else{
 
 
-            $pagu_grafik                      = $grafik->result_array()[$index_bulan];
-            $pagu_bo                = $pagu_grafik['pagu_bo_bp'] + $pagu_grafik['pagu_bo_bbj'] + $pagu_grafik['pagu_bo_bs'] + $pagu_grafik['pagu_bo_bh'] + $pagu_grafik['pagu_bo_bbs'];
-            $pagu_bm                = $pagu_grafik['pagu_bm_bmt'] + $pagu_grafik['pagu_bm_bmpm'] + $pagu_grafik['pagu_bm_bmgb'] + $pagu_grafik['pagu_bm_bmjji'] + $pagu_grafik['pagu_bm_bmatl'] + $pagu_grafik['pagu_bm_bmatb'];
-            $pagu_btt                = $pagu_grafik['pagu_btt'];
-            $pagu_bt                = $pagu_grafik['pagu_bt_bbk'] + $pagu_grafik['pagu_bt_bbh'];
-            $pagu_total                = $pagu_bo + $pagu_bm + $pagu_btt + $pagu_bt;
+                $pagu_grafik                      = $grafik->result_array()[$index_bulan];
+                $pagu_bo                = $pagu_grafik['pagu_bo_bp'] + $pagu_grafik['pagu_bo_bbj'] + $pagu_grafik['pagu_bo_bs'] + $pagu_grafik['pagu_bo_bh'] + $pagu_grafik['pagu_bo_bbs'];
+                $pagu_bm                = $pagu_grafik['pagu_bm_bmt'] + $pagu_grafik['pagu_bm_bmpm'] + $pagu_grafik['pagu_bm_bmgb'] + $pagu_grafik['pagu_bm_bmjji'] + $pagu_grafik['pagu_bm_bmatl'] + $pagu_grafik['pagu_bm_bmatb'];
+                $pagu_btt                = $pagu_grafik['pagu_btt'];
+                $pagu_bt                = $pagu_grafik['pagu_bt_bbk'] + $pagu_grafik['pagu_bt_bbh'];
+                $pagu_total                = $pagu_bo + $pagu_bm + $pagu_btt + $pagu_bt;
+                $realisasi_bo                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bp'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbj'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bs'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bh'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbs'];
+                $realisasi_bm                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmt'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmpm'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmgb'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmjji'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatl'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatb'];
+                $realisasi_btt                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_btt'];
+                $realisasi_bt                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbk'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbh'];
+                $realisasi_total                = $realisasi_bo + $realisasi_bm + $realisasi_btt + $realisasi_bt;
+                $data['persen_realisasi_total'] = ($realisasi_total / $pagu_total)   * 100;
 
-            $realisasi_bo                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bp'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbj'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bs'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bh'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbs'];
-            $realisasi_bm                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmt'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmpm'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmgb'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmjji'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatl'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatb'];
-            $realisasi_btt                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_btt'];
-            $realisasi_bt                = $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbk'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbh'];
-            $realisasi_total                = $realisasi_bo + $realisasi_bm + $realisasi_btt + $realisasi_bt;
-            $data['persen_realisasi_total'] = ($realisasi_total / $pagu_total)   * 100;
+                if ($grafik_tambahan->num_rows()>0) {
+                
+                $pagu_grafik_tambahan                = $grafik_tambahan->result_array()[$index_bulan];
+                $pagu_bo_tambahan                = $pagu_grafik_tambahan['pagu_bo_bp'] + $pagu_grafik_tambahan['pagu_bo_bbj'] + $pagu_grafik_tambahan['pagu_bo_bs'] + $pagu_grafik_tambahan['pagu_bo_bh'] + $pagu_grafik_tambahan['pagu_bo_bbs'];
+                $pagu_bm_tambahan                = $pagu_grafik_tambahan['pagu_bm_bmt'] + $pagu_grafik_tambahan['pagu_bm_bmpm'] + $pagu_grafik_tambahan['pagu_bm_bmgb'] + $pagu_grafik_tambahan['pagu_bm_bmjji'] + $pagu_grafik_tambahan['pagu_bm_bmatl'] + $pagu_grafik_tambahan['pagu_bm_bmatb'];
+                $pagu_btt_tambahan                = $pagu_grafik_tambahan['pagu_btt'];
+                $pagu_bt_tambahan                = $pagu_grafik_tambahan['pagu_bt_bbk'] + $pagu_grafik_tambahan['pagu_bt_bbh'];
+                $pagu_total_tambahan                = $pagu_bo_tambahan + $pagu_bm_tambahan + $pagu_btt_tambahan + $pagu_bt_tambahan;
+                $realisasi_bo_tambahan                = $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi_bo_bp'] + $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi_bo_bbj'] + $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi_bo_bs'] + $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi_bo_bh'] + $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi_bo_bbs'];
+                $realisasi_bm_tambahan                = $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi_bm_bmt'] + $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi_bm_bmpm'] + $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi_bm_bmgb'] + $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi_bm_bmjji'] + $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi_bm_bmatl'] + $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi_bm_bmatb'];
+                $realisasi_btt_tambahan                = $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi_btt'];
+                $realisasi_bt_tambahan                = $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi_bt_bbk'] + $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi_bt_bbh'];
+                $realisasi_total_tambahan                = $realisasi_bo_tambahan + $realisasi_bm_tambahan + $realisasi_btt_tambahan + $realisasi_bt_tambahan;
 
-            if ($grafik_tambahan->num_rows()>0) {
-            $pagu_grafik_tambahan                      = $grafik_tambahan->result_array()[$index_bulan];
-            $show_pagu_total = $pagu_grafik['pagu_total'] + $pagu_grafik_tambahan['pagu_total'];
-            $show_realisasi_total = $pagu_grafik['rp_realisasi_keuangan_akumulasi'] + $pagu_grafik_tambahan['rp_realisasi_keuangan_akumulasi'];
-             $data['persen_realisasi_total'] = ($show_realisasi_total / $show_pagu_total)   * 100;
-            }else{
-                  $show_pagu_total = $pagu_grafik['pagu_total'];
-            $show_realisasi_total = $pagu_grafik['rp_realisasi_keuangan_akumulasi'];
-             $data['persen_realisasi_total'] = ($show_realisasi_total / $show_pagu_total)   * 100;
+
+
+
+
+                $pagu_bo_total = $pagu_bo + $pagu_bo_tambahan;
+                $pagu_bm_total = $pagu_bm + $pagu_bm_tambahan;
+                $pagu_btt_total = $pagu_btt + $pagu_btt_tambahan;
+                $pagu_bt_total = $pagu_bt + $pagu_bt_tambahan;
+
+                $realisasi_bo_total = $realisasi_bo + $realisasi_bo_tambahan;
+                $realisasi_bm_total = $realisasi_bm + $realisasi_bm_tambahan;
+                $realisasi_btt_total = $realisasi_btt + $realisasi_btt_tambahan;
+                $realisasi_bt_total = $realisasi_bt + $realisasi_bt_tambahan;
+
+                $show_pagu_total = $pagu_total+  $pagu_total_tambahan;
+                $show_realisasi_total = $realisasi_total + $realisasi_total_tambahan;
+                 $data['persen_realisasi_total'] = ($show_realisasi_total / $show_pagu_total)   * 100;
+                 $data['menerima_tkd'] = 1;
+                }else{
+
+                $pagu_bo_total = $pagu_bo;
+                $pagu_bm_total = $pagu_bm;
+                $pagu_btt_total = $pagu_btt;
+                $pagu_bt_total = $pagu_bt;
+
+                $realisasi_bo_total = $realisasi_bo;
+                $realisasi_bm_total = $realisasi_bm;
+                $realisasi_btt_total = $realisasi_btt;
+                $realisasi_bt_total = $realisasi_bt;
+
+
+                 $data['menerima_tkd'] = 0;
+                      $show_pagu_total = $pagu_grafik['pagu_total'];
+                $show_realisasi_total = $pagu_grafik['rp_realisasi_keuangan_akumulasi'];
+                 $data['persen_realisasi_total'] = ($show_realisasi_total / $show_pagu_total)   * 100;
+                }
+
+
             }
 
-
-            }
-
-            $data['pagu_bo'] = $pagu_bo;
-            $data['pagu_bm'] = $pagu_bm;
-            $data['pagu_btt'] = $pagu_btt;
-            $data['pagu_bt'] = $pagu_bt;
+            $data['pagu_bo'] = $pagu_bo_total;
+            $data['pagu_bm'] = $pagu_bm_total;
+            $data['pagu_btt'] = $pagu_btt_total;
+            $data['pagu_bt'] = $pagu_bt_total;
             $data['pagu_total'] = $show_pagu_total;
-            $data['realisasi_bo'] = $realisasi_bo;
-            $data['realisasi_bm'] = $realisasi_bm;
-            $data['realisasi_btt'] = $realisasi_btt;
-            $data['realisasi_bt'] = $realisasi_bt;
+            $data['realisasi_bo'] = $realisasi_bo_total;
+            $data['realisasi_bm'] = $realisasi_bm_total;
+            $data['realisasi_btt'] = $realisasi_btt_total;
+            $data['realisasi_bt'] = $realisasi_bt_total;
             $data['realisasi_total'] = $show_realisasi_total;
 
 
@@ -715,7 +592,7 @@ public function saveedit_user()
         }
     }
 
-    public function show_chart($result = '')
+    public function show_chart()
     {
         if ($this->session->userdata('id_group')==5) {
             $id_instansi = id_instansi();
@@ -725,16 +602,33 @@ public function saveedit_user()
 
         $nama_instansi = nama_instansi($id_instansi);
         $level = $this->input->get('id_group');
+        $type = $this->input->get('tipe');
         $kategori = $this->input->get('kategori');
         $tahun = tahun_anggaran();
         $tahap = tahapan_apbd();
         $bulan_aktif = bulan_aktif();
-        $fisik   = [];
-        $r_fisik = [];
-        $d_fisik = [];
-        $keu     = [];
-        $rea     = [];
-        $d_keu     = [];
+        $data_grafik   = [
+            'apbd'=>[
+
+                'tf'=>[],
+                'rf'=>[],
+                'tk'=>[],
+                'rk'=>[],
+            ],
+            'tambahan'=>[
+
+                'tf'=>[],
+                'rf'=>[],
+                'tk'=>[],
+                'rk'=>[],
+            ],
+            'gabungan'=>[
+                'tf'=>[],
+                'rf'=>[],
+                'tk'=>[],
+                'rk'=>[],
+            ],
+        ];
         if ($level==2 || $level==4 || $level==6) {
             if ($kategori=='Akumulasi') {
                  $sync    = $this->dashboard_model->get_grafik_total_akumulasi($tahun, $tahap)->result();
@@ -769,32 +663,92 @@ public function saveedit_user()
          
         } else {
             if ($kategori=='Akumulasi') {
-                $sync    = $this->dashboard_model->get_grafik_akumulasi($id_instansi, $tahun, $tahap)->result();
+                $sync    = $this->dashboard_model->get_grafik_akumulasi($id_instansi, $tahun, $tahap)->result_array();
+                $sync_tambahan    = $this->dashboard_model->get_grafik_akumulasi_tambahan($id_instansi, $tahun, $tahap)->result_array();
             }else{
-                $sync    = $this->dashboard_model->get_grafik_bulanan($id_instansi, $tahun, $tahap)->result();
+                $sync    = $this->dashboard_model->get_grafik_bulanan($id_instansi, $tahun, $tahap)->result_array();
+                $sync_tambahan    = $this->dashboard_model->get_grafik_bulanan_tambahan($id_instansi, $tahun, $tahap)->result_array();
             }
 
+            for ($i=0; $i < 12; $i++) { 
+
+                        array_push($data_grafik['apbd']['tf'],  (float) $sync[$i]['target_fisik']);
+                        array_push($data_grafik['apbd']['tk'],  (float) $sync[$i]['target_keuangan']);
+                   if($bulan_aktif>= $sync[$i]['bulan']){
+                        array_push($data_grafik['apbd']['rf'],  (float) $sync[$i]['realisasi_fisik']);
+                        array_push($data_grafik['apbd']['rk'],   (float) $sync[$i]['realisasi_keuangan']);
+                   }
 
 
-            foreach ($sync as $key => $value) {
-                
-                $fisik[$key]   = (float) round($value->target_fisik,2 ) ;
-                $keu[$key]     = (float) round($value->target_keuangan,2 ) ;
-                if($bulan_aktif>=$value->bulan){
 
-                    $r_fisik[$key] = (float) round($value->realisasi_fisik,2 ) ;
-                    $d_fisik[$key]     = round( (float) round($value->realisasi_fisik,2 ) -  (float) round($value->target_fisik,2 ) ,2) ;
+                if (count($sync_tambahan)>0) {
 
-                    $rea[$key]     = (float) round($value->realisasi_keuangan,2 ) ;
-                    $d_keu[$key]     =round( (float) round($value->realisasi_keuangan,2 ) -  (float) round($value->target_keuangan,2 ) ,2) ;
-                }else{
-                    $r_fisik[$key]= "" ;
-                    $d_fisik[$key]    = "" ;
 
-                    $rea[$key]    = "" ;
-                    $d_keu[$key]    = "" ;
+
+                        array_push($data_grafik['tambahan']['tf'],  (float) $sync_tambahan[$i]['target_fisik']);
+                        array_push($data_grafik['tambahan']['tk'],  (float) $sync_tambahan[$i]['target_keuangan']);
+                   if($bulan_aktif>= $sync[$i]['bulan']){
+                        array_push($data_grafik['tambahan']['rf'],  (float) $sync_tambahan[$i]['realisasi_fisik']);
+                        array_push($data_grafik['tambahan']['rk'],   (float) $sync_tambahan[$i]['realisasi_keuangan']);
+                   }
+
+
+
+
+                   
+
+                    $pagu_total = $sync[$i]['pagu_total'] + $sync_tambahan[$i]['pagu_total'];
+                    $rp_target_keuangan = $sync[$i]['rp_target_keuangan'] + $sync_tambahan[$i]['rp_target_keuangan'];
+                    $rp_realisasi_keuangan = $sync[$i]['rp_realisasi_keuangan'] + $sync_tambahan[$i]['rp_realisasi_keuangan'];
+                    $persen_tk = ($rp_target_keuangan / $pagu_total)  * 100;
+                    $persen_rk = ($rp_realisasi_keuangan / $pagu_total)  * 100;
+                    $data_gabungan = [
+                        'tf'=>$sync[$i]['target_fisik'],
+                        'rf'=>$sync[$i]['realisasi_fisik'],
+                        'tk'=>round($persen_tk,2),
+                        'rk'=>round($persen_rk,2),
+                    ];
+                    // $fisik_apbd
+                   // array_push($data_grafik['apbd'], $data_apbd);
+                    // $df =  $sync[$i]['realisasi_fisik'] - $sync[$i]['target_fisik']; 
+
+                   array_push($data_grafik['gabungan']['tf'],  (float) $sync[$i]['target_fisik']);
+                   array_push($data_grafik['gabungan']['tk'],  (float) round($persen_tk,2));
+
+                    if($bulan_aktif>= $sync[$i]['bulan']){
+                   array_push($data_grafik['gabungan']['rf'],  (float) $sync[$i]['realisasi_fisik']);
+                   array_push($data_grafik['gabungan']['rk'],   (float) round($persen_rk,2));
+                   }
+                   else{
+
+                   }
+                   // array_push($data_grafik['gabungan']['cek'],   number_format($pagu_total));
+                   // array_push($data_grafik['gabungan']['df'], (float) round($df));
                 }
+
             }
+
+            // foreach ($sync as $key => $value) {
+                
+            //     $fisik[$key]   = (float) round($value->target_fisik,2 ) ;
+            //     $keu[$key]     = (float) round($value->target_keuangan,2 ) ;
+            //     if($bulan_aktif>=$value->bulan){
+
+            //         $r_fisik[$key] = (float) round($value->realisasi_fisik,2 ) ;
+            //         $d_fisik[$key]     = round( (float) round($value->realisasi_fisik,2 ) -  (float) round($value->target_fisik,2 ) ,2) ;
+
+            //         $rea[$key]     = (float) round($value->realisasi_keuangan,2 ) ;
+            //         $d_keu[$key]     =round( (float) round($value->realisasi_keuangan,2 ) -  (float) round($value->target_keuangan,2 ) ,2) ;
+            //         $bulan[$key]     = $key;
+            //     }else{
+            //         $r_fisik[$key]= "" ;
+            //         $d_fisik[$key]    = "" ;
+
+            //         $rea[$key]    = "" ;
+            //         $d_keu[$key]    = "" ;
+            //         $bulan[$key]    = "" ;
+            //     }
+            // }
 
 
 
@@ -853,21 +807,41 @@ public function saveedit_user()
         }
 
         $output = [];
-        $output['fisik'] = $fisik;
-        $output['keu']   = $keu;
-        $output['r_fis'] = $r_fisik;
-        $output['r_keu'] = $rea;
-        $output['d_keu'] = $d_keu;
-        $output['d_fisik'] = $d_fisik;
+        // $output['key'] = $bulan;
+        // $output['fisik'] = $fisik;
+        // $output['keu']   = $keu;
+        // $output['r_fis'] = $r_fisik;
+        // $output['r_keu'] = $rea;
+        // $output['d_keu'] = $d_keu;
+        // $output['d_fisik'] = $d_fisik;
         $output['bulan_laporan'] = bulan_aktif();
+        if (count($sync_tambahan)>0) {
+            if ($type=='gabungan') {
+                
+                $output['grafik'] =$data_grafik['gabungan'];
+                $output['caption_data_grafik'] ='Grafik Gabungan <br><small>APBD & TKD Tambahan</small>';
+                # code...
+            }
+            elseif ($type=='tkd') {
+                $output['grafik'] =$data_grafik['tambahan'];
+                $output['caption_data_grafik'] ='Grafik TKD';
+                # code...
+            }else{
+                $output['grafik'] =$data_grafik['apbd'];
+                $output['caption_data_grafik'] ='Grafik APBD';
+
+            }
+        }else{
+                $output['grafik'] =$data_grafik['apbd'];
+                $output['caption_data_grafik'] ='Grafik APBD';
+
+        }
         $output['opd'] = $nama_instansi;
         $output['tahapan_apbd'] = pilihan_nama_tahapan($tahap).' '.$tahun;
 
-        if ($result == '') :
-            echo json_encode($output);
-        else :
-            return $output;
-        endif;
+       
+         echo json_encode($output);
+       
     }
     public function show_chart_2_tahun_terakhir($result = '')
     {

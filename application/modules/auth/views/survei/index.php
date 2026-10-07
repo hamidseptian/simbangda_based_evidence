@@ -102,7 +102,7 @@
         <script>
             // untuk survey ===================
             // mulai_survey();
-            setTimeout(mulai_survey, 6000);
+            // setTimeout(mulai_survey, 6000);
 			function mulai_survey() {
 				const modal = document.getElementById('statusModal');
 				const modalContent = modal.querySelector('.modal-content_survey');

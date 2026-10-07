@@ -2483,8 +2483,34 @@ return $kumpul_realisasi_keuangan_ratarata;
           $kumpultarget = [];
           $kumpul_realisasi_keuangan = [];
           $kumpul_realisasi_fisik = [];
-          $total_paket = $synchronize->get_total_paket($id_instansi, $value_sk->kode_rekening_sub_kegiatan, $tahun, $tahap)->num_rows();
-          $jenis_rutin = $synchronize->get_total_paket_perjenis($id_instansi, $value_sk->kode_rekening_sub_kegiatan, "RUTIN", $tahun, $tahap)->num_rows();
+          $q_paket = $synchronize->get_total_paket($id_instansi, $value_sk->kode_rekening_sub_kegiatan, $tahun, $tahap);
+
+          // $total_paket = $q_paket->num_rows();
+          // $jenis_rutin = $synchronize->get_total_paket_perjenis($id_instansi, $value_sk->kode_rekening_sub_kegiatan, "RUTIN", $tahun, $tahap)->num_rows();
+
+
+            $jlm_rutin = 0;
+            $jlm_swakelola = 0;
+            $jlm_penyedia = 0;
+            $total_paket = 0;
+            $kumpul_id_paket_swakelola = [];
+            $kumpul_id_paket_penyedia = [];
+        foreach ($q_paket->result_array() as $k_jp => $v_jp) {
+          $total_paket++;
+          if ($v_jp['jenis_paket']=='SWAKELOLA') {
+            $jlm_swakelola++;
+            array_push($kumpul_id_paket_swakelola, $v_jp['id_paket_pekerjaan']);
+          }
+          elseif ($v_jp=='PENYEDIA') {
+            $jlm_penyedia++;
+            array_push($kumpul_id_paket_penyedia, $v_jp['id_paket_pekerjaan']);
+          }else{
+            $jlm_rutin++;
+          }
+        }
+
+
+
           
           $kumpul_rp_realisasi_keuangan_bulanan_bo_bp = [];      
           $kumpul_rp_realisasi_keuangan_bulanan_bo_bbj = [];      
@@ -2720,8 +2746,17 @@ return $kumpul_realisasi_keuangan_ratarata;
                     }
              
              
-                    $swa = $synchronize->get_realisasi_fisik($id_instansi, $value_sk->kode_rekening_sub_kegiatan, 'SWAKELOLA', $tahun, $tahap , $bulan);
-                    $pen = $synchronize->get_realisasi_fisik($id_instansi, $value_sk->kode_rekening_sub_kegiatan,'PENYEDIA', $tahun, $tahap , $bulan);
+                    $swa = $synchronize->get_realisasi_fisik($id_instansi, $value_sk->kode_rekening_sub_kegiatan, 'SWAKELOLA', $tahun, $tahap , $bulan ,$kumpul_id_paket_swakelola);
+                    $pen = $synchronize->get_realisasi_fisik($id_instansi, $value_sk->kode_rekening_sub_kegiatan,'PENYEDIA', $tahun, $tahap , $bulan ,$kumpul_id_paket_penyedia);
+
+
+                    //  $swa = $this->realisasi_akumulasi_model->get_realisasi_fisik_new($id_instansi, $value_sk->kode_rekening_sub_kegiatan, $bulan, 'SWAKELOLA', '<=', $tahun,$tahap, $kumpul_id_paket_swakelola)->row_array();
+                    // $pen = $this->realisasi_akumulasi_model->get_realisasi_fisik_new($id_instansi, $value_sk->kode_rekening_sub_kegiatan, $bulan, 'PENYEDIA', '<=', $tahun,$tahap, $kumpul_id_paket_penyedia)->row_array();
+
+
+
+                    //     $swa_tot  = !empty($swa['total']) ? $swa['total'] : 0;
+                    //     $pen_tot  = !empty($pen['total']) ? $pen['total'] : 0;
 
                     $swa_akumulasi = $swa['akumulasi'];
                     $swa_bulanan = $swa['bulanan'];
@@ -2738,23 +2773,23 @@ return $kumpul_realisasi_keuangan_ratarata;
                $nilai_rf_rutin_akumulasi = $persen_realisasi_keuangan_akumulasi > 90 ? 100 : $persen_realisasi_keuangan_akumulasi;
                $nilai_rf_rutin_bulanan = $persen_realisasi_keuangan_bulanan > 90 ? 100 : $persen_realisasi_keuangan_bulanan;
            }else{
-                $f_rutin = $synchronize->get_realisasi_fisik($id_instansi, $value_sk->kode_rekening_sub_kegiatan,'RUTIN', $tahun, $tahap , $bulan);
-                $nilai_rf_rutin_akumulasi = $f_rutin['akumulasi'];
-                $nilai_rf_rutin_bulanan = $f_rutin['bulanan'];
+                $f_rutin =  0;//$synchronize->get_realisasi_fisik($id_instansi, $value_sk->kode_rekening_sub_kegiatan,'RUTIN', $tahun, $tahap , $bulan);
+                $nilai_rf_rutin_akumulasi = 0;// $f_rutin['akumulasi'];
+                $nilai_rf_rutin_bulanan = 0;// $f_rutin['bulanan'];
 
            }
 
 
-                    $rutin_akumulasi = $jenis_rutin > 0 ? $nilai_rf_rutin_akumulasi : 0;  
-                    $rutin_bulanan = $jenis_rutin > 0 ?  $nilai_rf_rutin_bulanan : 0 ;
+                    $rutin_akumulasi = 0;//$jenis_rutin > 0 ? $nilai_rf_rutin_akumulasi : 0;  
+                    $rutin_bulanan = 0;//$jenis_rutin > 0 ?  $nilai_rf_rutin_bulanan : 0 ;
 
                     if($total_paket==0){
                         $fisik_kegiatan_akumulasi = 0;
                         $fisik_kegiatan_bulanan = 0;
                     }else{
-                        $jumlah_fisik_per_kegiatan_akumulasi = ($swa_akumulasi + $pen_akumulasi + ($rutin_akumulasi * $jenis_rutin)) / $total_paket;
-                        $fisik_kegiatan_akumulasi  = $jumlah_fisik_per_kegiatan_akumulasi > 100 ? 100 : $jumlah_fisik_per_kegiatan_akumulasi;
-                        $jumlah_fisik_per_kegiatan_bulanan = ($swa_bulanan + $pen_bulanan + ($rutin_bulanan * $jenis_rutin)) / $total_paket;
+                        $jumlah_fisik_per_kegiatan_akumulasi = ($swa_akumulasi + $pen_akumulasi) / $total_paket;
+                        $fisik_kegiatan_akumulasi  =  $jumlah_fisik_per_kegiatan_akumulasi > 100 ? 100 : $jumlah_fisik_per_kegiatan_akumulasi;
+                        $jumlah_fisik_per_kegiatan_bulanan = ($swa_bulanan + $pen_bulanan + ($rutin_bulanan * $jlm_rutin)) / $total_paket;
                         $fisik_kegiatan_bulanan  = $jumlah_fisik_per_kegiatan_bulanan > 100 ? 100 : $jumlah_fisik_per_kegiatan_bulanan;
                     }
 

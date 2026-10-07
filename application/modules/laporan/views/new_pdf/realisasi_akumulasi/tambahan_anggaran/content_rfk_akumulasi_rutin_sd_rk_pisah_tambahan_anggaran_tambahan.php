@@ -774,24 +774,24 @@ foreach ($hasil as $k_p => $v_p) {
 
 
     if ($ope=='<=') {
-      if ($total_rp_rk==$grafik['rp_realisasi_keuangan_akumulasi'] && $total_rp_tk==$grafik['rp_target_keuangan_akumulasi'] && round($total_tft_ski,2)==$grafik['target_fisik_akumulasi'] && round($total_rft_ski,2)==$grafik['realisasi_fisik_akumulasi']) {
-        $status_synch = 'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
+      if ($total_rp_rk==$grafik_tambahan['rp_realisasi_keuangan_akumulasi'] && $total_rp_tk==$grafik_tambahan['rp_target_keuangan_akumulasi'] && round($total_tft_ski,2)==$grafik_tambahan['target_fisik_akumulasi'] && round($total_rft_ski,2)==$grafik_tambahan['realisasi_fisik_akumulasi']) {
+        $status_synch = 'Terakhir synchronize pada '.timestamp_lengkap($grafik_tambahan['last_update']);
       }else{
-        $status_synch = 'Belum di synchronize | '.'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
+        $status_synch = 'Belum di synchronize | '.'Terakhir synchronize pada '.timestamp_lengkap($grafik_tambahan['last_update']);
       }
-            // $cek = $grafik['realisasi_fisik_akumulasi'];
+            // $cek = $grafik_tambahan['realisasi_fisik_akumulasi'];
     }else{
-      if ($total_realisasi_keuangan==$grafik['rp_realisasi_keuangan_bulanan'] && $total_angka_target_keuangan==$grafik['rp_target_keuangan_bulanan']) {
-        $status_synch = 'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
+      if ($total_realisasi_keuangan==$grafik_tambahan['rp_realisasi_keuangan_bulanan'] && $total_angka_target_keuangan==$grafik_tambahan['rp_target_keuangan_bulanan']) {
+        $status_synch = 'Terakhir synchronize pada '.timestamp_lengkap($grafik_tambahan['last_update']);
       }else{
-        $status_synch = 'Belum di synchronize | '.'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
+        $status_synch = 'Belum di synchronize | '.'Terakhir synchronize pada '.timestamp_lengkap($grafik_tambahan['last_update']);
       }
-            // $cek = $grafik['rp_realisasi_keuangan_bulanan'];
+            // $cek = $grafik_tambahan['rp_realisasi_keuangan_bulanan'];
     }
 
      ?>
 
-    <td colspan="4" align="center"><b>Pencapaian</b><!--  <br> <?php echo $status_synch;?> --></td>
+    <td colspan="4" align="center"><b>Pencapaian</b> <br> <?php echo $status_synch;?></td>
 .
 		<th align="center">-</th>
 		

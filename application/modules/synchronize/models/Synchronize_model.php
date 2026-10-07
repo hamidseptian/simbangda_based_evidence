@@ -320,7 +320,7 @@ class Synchronize_model extends CI_Model
 		}
 
 		$query  = $this->db->query("SELECT
-										id_paket_pekerjaan
+										id_paket_pekerjaan, jenis_paket
 									FROM
 										paket_pekerjaan pp 
 									WHERE
@@ -406,7 +406,7 @@ class Synchronize_model extends CI_Model
 	}
 
 
-	public function get_realisasi_fisik($id_instansi, $kode_rekening_sub_kegiatan, $jenis_paket, $tahun, $tahap, $bulan)
+	public function get_realisasi_fisik($id_instansi, $kode_rekening_sub_kegiatan, $jenis_paket, $tahun, $tahap, $bulan, $kumpul_id_paket)
 	{
 		if ($tahap==2) {
 			$where_tahap = "AND pp.kode_tahap='2'";
@@ -414,6 +414,18 @@ class Synchronize_model extends CI_Model
 			$where_tahap = "AND pp.status='1'";
 
 		}
+
+		$join_id_paket = join(',', $kumpul_id_paket);
+		if (count($kumpul_id_paket)==0) {
+			$where_id_paket = "";
+			# code...
+		}else{
+			$where_id_paket = "AND pp.id_paket_pekerjaan in($join_id_paket)";
+
+		}
+
+
+
 				$query_akumulasi  = $this->db->query("SELECT
 										rk.kode_rekening_sub_kegiatan,
 										rk.bulan,
@@ -424,10 +436,10 @@ class Synchronize_model extends CI_Model
 									WHERE
 										rk.id_instansi = {$id_instansi} 
 										AND rk.kode_rekening_sub_kegiatan = '$kode_rekening_sub_kegiatan' 
-										AND pp.jenis_paket = '{$jenis_paket}'  and pp.pagu > 0 --  and (pp.id_tambahan_anggaran ='' || pp.id_tambahan_anggaran is null)
+										AND pp.jenis_paket = '{$jenis_paket}'  and pp.pagu > 0  $where_id_paket --  and (pp.id_tambahan_anggaran ='' || pp.id_tambahan_anggaran is null)
 										AND rk.bulan <= {$bulan}
 										AND rk.tahun='$tahun'
-										$where_tahap")->row_array();
+										")->row_array();
 										
 				$query_bulanan  = $this->db->query("SELECT
 						rk.kode_rekening_sub_kegiatan,

@@ -895,6 +895,8 @@ function convert_ke_rupiah(x) {
                 			$('#id_metode').append('<option value='+ v.id +'>'+ v.metode +'</option>');
                 		}
                 	});
+
+                	$('#id_metode').val(x).trigger('change');
                 }else{
                 	$('#switch-metode').hide();
                 }

@@ -1940,9 +1940,11 @@ class Laporan extends MY_Controller {
 	    $data['nama_instansi']=$nama_instansi;
 	    if ($tahap=='3') {
 		    $data['grafik'] = $this->db->get_where('grafik',['id_instansi'=>$id_instansi, 'bulan'=>$bulan,'tahun'=>$tahun,'kode_tahap'=>2])->row_array();
+		    $data['grafik_tambahan'] = $this->db->get_where('grafik_tambahan',['id_instansi'=>$id_instansi, 'bulan'=>$bulan,'tahun'=>$tahun,'kode_tahap'=>2])->row_array();
 	    	# code...
 	    }else{
 		    $data['grafik'] = $this->db->get_where('grafik',['id_instansi'=>$id_instansi, 'bulan'=>$bulan,'tahun'=>$tahun,'kode_tahap'=>$tahap])->row_array();
+		    $data['grafik_tambahan'] = $this->db->get_where('grafik_tambahan',['id_instansi'=>$id_instansi, 'bulan'=>$bulan,'tahun'=>$tahun,'kode_tahap'=>$tahap])->row_array();
 
 	    }
 

@@ -45,6 +45,8 @@ if ($q_kuisioner->num_rows()>0) {
     <!-- token -->
     <meta name="csrf_token" content="<?= $this->security->get_csrf_hash() ?>">
     <script src="<?php echo base_url() ?>assets/sweetalert/dist/sweetalert2.min.js"></script>
+    
+    <script type="text/javascript" src="<?php echo base_url() ?>assets/jquery/jquery.js"></script>
 <link rel="stylesheet" href="<?php echo base_url() ?>assets/sweetalert/dist/sweetalert2.min.css">
     <?php echo $extra_css; ?>
 </head>
@@ -678,7 +680,6 @@ if ($q_kuisioner->num_rows()>0) {
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <!-- Bootstrap 4.3.1 -->
-    <script type="text/javascript" src="<?php echo base_url() ?>assets/jquery/jquery.js"></script>
     <!-- <script type="text/javascript" src="<?php echo base_url() ?>assets/jquery/jquery.4.0.0.js"></script> -->
     <script src="<?php echo base_url() ?>assets/bootstrap/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script type="text/javascript" src="<?php echo base_url() ?>assets/architectui-html-pro/assets/scripts/main.87c0748b313a1dda75f5.js"></script>
