@@ -2364,6 +2364,7 @@ return $kumpul_realisasi_keuangan_ratarata;
 
 
         $total_pagu_semua = 0;
+        $cek_pagunya = 0;
         foreach ($q_pagu->result_array() as $k_pagu => $v_pagu) {
             $pagu_total = $v_pagu['bo_bp'] + $v_pagu['bo_bbj'] + $v_pagu['bo_bs'] + $v_pagu['bo_bh'] + $v_pagu['bm_bmt'] + $v_pagu['bm_bmpm'] + $v_pagu['bm_bmgb'] + $v_pagu['bm_bmjji'] + $v_pagu['bm_bmatl'] + $v_pagu['btt'] + $v_pagu['bt_bbh'] + $v_pagu['bt_bbk'];
             $kumpul_pagu[$v_pagu['kode_sub_kegiatan']][$v_pagu['pergeseran_ke']]['bo_bp'] = $v_pagu['bo_bp'];
@@ -2379,6 +2380,7 @@ return $kumpul_realisasi_keuangan_ratarata;
             $kumpul_pagu[$v_pagu['kode_sub_kegiatan']][$v_pagu['pergeseran_ke']]['bt_bbh'] = $v_pagu['bt_bbh'];
             $kumpul_pagu[$v_pagu['kode_sub_kegiatan']][$v_pagu['pergeseran_ke']]['bt_bbk'] = $v_pagu['bt_bbk'];
             $kumpul_pagu[$v_pagu['kode_sub_kegiatan']][$v_pagu['pergeseran_ke']]['pagu_total'] = $pagu_total;
+        $cek_pagunya = $pagu_total;
           }
 
 

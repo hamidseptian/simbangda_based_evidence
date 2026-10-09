@@ -17,6 +17,11 @@
     --merah:#c0392b;
     --biru:#0891b2;
     --abu:#8a8f87;
+
+    /* Transparansi background BERSAMA untuk kotak TOP 10 & panel ANALISIS DEVIASI.
+       Ubah SATU angka ini saja -> otomatis berubah di keduanya. */
+    --bg-transparan-warna:160, 227, 141;   /* warna dasar (format R,G,B) aqua */
+    --bg-transparan-opacity:0.35;       /* 0 = sepenuhnya transparan/putih, 1 = solid pekat */
   }
   *{box-sizing:border-box;}
   html, body{
@@ -311,6 +316,15 @@
     padding:16px;
     height:100%;
   }
+  /* ---------- BACKGROUND TRANSPARAN BERSAMA (Top 10 & Analisis Deviasi) ---------- */
+  /* Class ini dipakai di KEDUA bagian. Ubah --bg-transparan-opacity / --bg-transparan-warna
+     di :root (atas) untuk mengubah transparansi KEDUANYA sekaligus. */
+  .panel-transparan{
+    background:rgba(var(--bg-transparan-warna), var(--bg-transparan-opacity)) !important;
+    border:2px solid rgba(var(--bg-transparan-warna), calc(var(--bg-transparan-opacity) + 0.25)) !important;
+    box-shadow:none !important;
+  }
+
   .panel-dark{
     background:var(--hijau-tua);
     color:#fff;
@@ -586,13 +600,12 @@
   .top-tables{grid-template-columns:1fr 1fr;margin-bottom:16px;}
   .low-tables{grid-template-columns:1fr 1fr;}
 
-  /* ---------- KOTAK INDUK AREA TABEL (biru transparan 60%) ---------- */
+  /* ---------- KOTAK INDUK AREA TABEL ---------- */
   .tables-wrapper{
-    background:rgba(20,184,196,0.35);  /* aqua, transparan 65% */
-    border:2px solid rgba(20,184,196,0.6);
     border-radius:18px;
     padding:0;
   }
+  .tables-wrapper.panel-transparan{border-radius:18px;}
   .bottom-grid{grid-template-columns:1fr 1fr 2fr;}
   .donut-flex{display:flex;justify-content:space-around;margin-top:12px;}
 
@@ -632,7 +645,7 @@
     <div>
       <h1>REALISASI BELANJA</h1>
       <h1 class="sub">FISIK &amp; KEUANGAN</h1>
-      <div class="header-tanggal">PENGINPUTAN S.D 31 JULI 2026</div>
+      <div class="header-tanggal">Penginputan <?php echo $penginputan ?></div>
       <span class="header-tag">DATA PEMBANGUNAN PROVINSI SUMATERA BARAT</span>
     </div>
   </div>
@@ -650,6 +663,7 @@
       <div class="pagu-number">Rp. <?php echo number_format($pagu['pagu_total']) ?></div>
       <div class="label-kecil"><small>Dari <?php echo $pagu['opd_apbd'] ?> OPD</small></div>
     </div>
+    <?php if ($pagu['opd_tkd']>0){ ?>
     <div class="pagu-divider"></div>
     <div class="pagu-sub">
       <div class="label-kecil">APBD</div>
@@ -662,6 +676,7 @@
       <div class="pagu-sub-value">Rp. <?php echo number_format($pagu['pagu_tambahan']) ?></div>
       <div class="label-kecil"><small>Dari <?php echo $pagu['opd_tkd'] ?> OPD</small></div>
     </div>
+  <?php } ?>
   </div>
 
   <!-- ============ BAGIAN 2 & 3: KARTU FISIK & KEUANGAN ============ -->
@@ -678,15 +693,15 @@
         </div>
         <div class="cap-row">
           <div class="cap-label">Bulan Ini</div>
-          <div class="cap-val">7%</div>
-          <div class="cap-val">5%</div>
-          <div class="cap-val deviasi-neg">-2%</div>
+          <div class="cap-val"><?php echo $pencapaian['fisik']['tf_b'] ?>%</div>
+          <div class="cap-val"><?php echo $pencapaian['fisik']['rf_b'] ?>%</div>
+          <div class="cap-val deviasi-neg"><?php echo $pencapaian['fisik']['df_b'] ?>%</div>
         </div>
         <div class="cap-row">
           <div class="cap-label">Akumulasi Bulan Ini</div>
-          <div class="cap-val">7%</div>
-          <div class="cap-val">5%</div>
-          <div class="cap-val deviasi-neg">-2%</div>
+          <div class="cap-val"><?php echo $pencapaian['fisik']['tf_a'] ?>%</div>
+          <div class="cap-val"><?php echo $pencapaian['fisik']['rf_a'] ?>%</div>
+          <div class="cap-val deviasi-neg"><?php echo $pencapaian['fisik']['df_a'] ?>%</div>
         </div>
       </div>
 
@@ -707,15 +722,15 @@
         </div>
         <div class="cap-row">
           <div class="cap-label">Bulan Ini</div>
-          <div class="cap-val">10%</div>
-          <div class="cap-val">5%</div>
-          <div class="cap-val deviasi-neg">-5%</div>
+          <div class="cap-val"><?php echo $pencapaian['keuangan']['tk_b'] ?>%</div>
+          <div class="cap-val"><?php echo $pencapaian['keuangan']['rk_b'] ?>%</div>
+          <div class="cap-val deviasi-neg"><?php echo $pencapaian['keuangan']['dk_b'] ?>%</div>
         </div>
         <div class="cap-row">
           <div class="cap-label">Akumulasi Bulan Ini</div>
-          <div class="cap-val">10%</div>
-          <div class="cap-val">5%</div>
-          <div class="cap-val deviasi-neg">-5%</div>
+          <div class="cap-val"><?php echo $pencapaian['keuangan']['tk_a'] ?>%</div>
+          <div class="cap-val"><?php echo $pencapaian['keuangan']['rk_a'] ?>%</div>
+          <div class="cap-val deviasi-neg"><?php echo $pencapaian['keuangan']['dk_a'] ?>%</div>
         </div>
       </div>
 
@@ -733,7 +748,7 @@
     <!-- KIRI (2/3): TOP 10 & TERENDAH -->
     <div class="tables-wrapper">
       <div class="grid top-tables">
-        <div class="card-panel">
+        <div class="card-panel panel-transparan">
           <div class="trophy-header"><span class="trophy-icon">🏆</span> TOP 10 REALISASI FISIK <span class="label-kecil">(%)</span></div>
           <table class="top">
             <thead><tr><th>NO</th><th>OPD</th><th>REALISASI</th></tr></thead>
@@ -752,7 +767,7 @@
           </table>
         </div>
 
-        <div class="card-panel">
+        <div class="card-panel panel-transparan">
           <div class="trophy-header blue"><span class="trophy-icon">🏆</span> TOP 10 REALISASI KEUANGAN <span class="label-kecil">(%)</span></div>
           <table class="top">
             <thead><tr><th>NO</th><th>OPD</th><th>REALISASI</th></tr></thead>
@@ -773,7 +788,7 @@
       </div>
 
       <div class="grid low-tables">
-        <div class="card-panel">
+        <div class="card-panel panel-transparan">
           <div class="table-title-low">10 TERENDAH REALISASI FISIK (%)</div>
           <table class="low">
             <thead><tr><th>NO</th><th>OPD</th><th>REALISASI</th></tr></thead>
@@ -789,7 +804,7 @@
           </table>
         </div>
 
-        <div class="card-panel">
+        <div class="card-panel panel-transparan">
           <div class="table-title-low">10 TERENDAH REALISASI KEUANGAN (%)</div>
           <table class="low">
             <thead><tr><th>NO</th><th>OPD</th><th>REALISASI</th></tr></thead>
@@ -813,7 +828,7 @@
     <!-- KANAN (1/3): ANALISIS DEVIASI (grid 2 kolom) + PERBANDINGAN RATA-RATA -->
     <div class="flex-col" style="display:flex;gap:16px;">
 
-      <div class="card-panel">
+      <div class="card-panel panel-transparan">
         <div class="panel-title" style="margin-bottom:14px;">
           ANALISIS DEVIASI<br>REALISASI FISIK<br>
           <span style="font-size:.85rem;color:#5a5f55;font-weight:600;">TERHADAP TARGET</span>

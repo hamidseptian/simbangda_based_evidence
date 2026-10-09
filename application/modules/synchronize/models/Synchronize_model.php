@@ -159,7 +159,7 @@ class Synchronize_model extends CI_Model
 		// $tahun 				= $this->input->get('tahun');
 		// $tahap 				= $this->input->get('tahap');
 
-	if (!empty($pergeseran_ke) || $pergeseran_ke=='') {
+	if (!empty($pergeseran_ke) || $pergeseran_ke!='') {
 	    $where = [
 	        'id_instansi'                 => $id_instansi,
 	        'kode_tahap'                  => $tahap,

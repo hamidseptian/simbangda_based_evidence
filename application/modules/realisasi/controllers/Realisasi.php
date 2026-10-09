@@ -571,6 +571,10 @@ class Realisasi extends MY_Controller
                                         if ($lists->id_metode=='') {
                                              $row[]  = '<button class="btn btn-danger btn-sm" onclick="metode_null()"><i class="fas fa-minus-circle"></i></button>';
                                          $row[]  = '<button class="btn btn-info btn-sm" onclick="daftar_dokumen(' . "'" . sbe_crypt($lists->id_paket_pekerjaan, 'E') . "','".$izin_input_pptk ."','".$id_kedudukan ."'" . ')"><i class="fa fa-list-ul"></i></button>';
+                                        }
+                                        else if ($this->lokasi_paket_pekerjaan($lists->id_paket_pekerjaan)=='0') {
+                                             $row[]  = '<button class="btn btn-danger btn-sm" onclick="lokasi_0()"><i class="fas fa-minus-circle"></i></button>';
+                                         $row[]  = '<button class="btn btn-info btn-sm" onclick="daftar_dokumen(' . "'" . sbe_crypt($lists->id_paket_pekerjaan, 'E') . "','".$izin_input_pptk ."','".$id_kedudukan ."'" . ')"><i class="fa fa-list-ul"></i></button>';
                                         }else{
         	                            $row[]  = '<button class="btn btn-info btn-sm" onclick="upload_dokumen(' . "'" . $lists->id_instansi . "','" . 'null' . "','" . $lists->id_pptk . "','" . $lists->id_paket_pekerjaan . "','" . $lists->kode_rekening_sub_kegiatan . "','" . $nm_pk . "','" . $lists->jenis_paket . "','" . $lists->id_metode . "','" . $izin_input_pptk . "','" . $id_kedudukan . "'" . ')"><i class="fas fa-upload"></i></button>';
                                          $row[]  = '<button class="btn btn-info btn-sm" onclick="daftar_dokumen(' . "'" . sbe_crypt($lists->id_paket_pekerjaan, 'E') . "','".$izin_input_pptk ."','".$id_kedudukan ."'" . ')"><i class="fa fa-list-ul"></i></button>';

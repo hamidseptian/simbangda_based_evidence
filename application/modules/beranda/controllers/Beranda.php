@@ -517,46 +517,189 @@ array_multisort($deviasi_keu_terendah, SORT_DESC);
     public function show_infografis(){
         $tahun = tahun_anggaran();
         $tahap = tahapan_apbd();
-        $bulan = bulan_aktif();
-        $query = $this->db->query("
-  SELECT
-    COALESCE(g.pagu, 0) AS pagu,
-    COALESCE(g.jumlah_instansi, 0) AS jumlah_instansi,
-    COALESCE(gt.pagu_tambahan, 0) AS pagu_tambahan,
-    COALESCE(gt.jumlah_instansi_tambahan, 0) AS jumlah_instansi_tambahan
-FROM
-(
-    SELECT
-        SUM(pagu_total) AS pagu,
-        COUNT(id_instansi) AS jumlah_instansi
-    FROM grafik
-    WHERE tahun = '$tahun'
-      AND kode_tahap = '$tahap'
-      AND bulan = '$bulan'
-) AS g
-CROSS JOIN
-(
-    SELECT
-        SUM(pagu_total) AS pagu_tambahan,
-        COUNT(id_instansi) AS jumlah_instansi_tambahan
-    FROM grafik_tambahan
-    WHERE tahun = '$tahun'
-      AND kode_tahap = '$tahap'
-      AND bulan = '$bulan'
-) AS gt
-");
+        $bulan = $this->input->get('bulan') ? $this->input->get('bulan') : bulan_aktif();
+        $deskripsi_bulan = '' . jml_hari_dalam_bulan($bulan, $tahun) . ' ' . bulan_global($bulan) . ' ' .$tahun;
+        $data['penginputan'] = 'Sampai ' . jml_hari_dalam_bulan($bulan, $tahun) . ' ' . (bulan_global($bulan)) . ' ' .$tahun;
+       $select = "
+            realisasi_keuangan_akumulasi,
+            pagu_total,
+            target_fisik_akumulasi,
+            target_fisik_bulanan,
+            realisasi_fisik_akumulasi,
+            realisasi_fisik_bulanan,
+            target_keuangan_akumulasi,
+            target_keuangan_bulanan,
+            realisasi_keuangan_bulanan,
+            rp_target_keuangan_akumulasi,
+            rp_target_keuangan_bulanan,
+            rp_realisasi_keuangan_akumulasi,
+            rp_realisasi_keuangan_bulanan,
 
-$d = $query->row();
+            count(id_instansi) OVER () AS total_opd,
+            SUM(pagu_total) OVER () AS total_pagu_apbd,
 
-$pagu =  $d->pagu;
-$pagu_tambahan =  $d->pagu_tambahan;
-$pagu_total = $pagu + $pagu_tambahan ;
+
+            SUM(target_fisik_akumulasi) OVER () AS sum_target_fisik_akumulasi,
+            SUM(realisasi_fisik_akumulasi) OVER () AS sum_realisasi_fisik_akumulasi,
+            SUM(target_fisik_bulanan) OVER () AS sum_target_fisik_bulanan,
+            SUM(realisasi_fisik_bulanan) OVER () AS sum_realisasi_fisik_bulanan,
+            SUM(rp_target_keuangan_akumulasi) OVER () AS sum_rp_target_keuangan_akumulasi,
+            SUM(rp_realisasi_keuangan_akumulasi) OVER () AS sum_rp_realisasi_keuangan_akumulasi,
+            SUM(rp_target_keuangan_bulanan) OVER () AS sum_rp_target_keuangan_bulanan,
+            SUM(rp_realisasi_keuangan_bulanan) OVER () AS sum_rp_realisasi_keuangan_bulanan
+        ";
+        $q_grafik = $this->db->query("SELECT $select from grafik where tahun='$tahun' and kode_tahap='$tahap' and bulan='$bulan'");
+        $q_tambahan = $this->db->query("SELECT $select from grafik_tambahan where tahun='$tahun' and kode_tahap='$tahap' and bulan='$bulan'");
+
+        
+
+        $data_tambahan = [];
+        foreach ($q_tambahan->result_array() as $k => $v) {
+             $data_tambahan[$v['id_instansi']] = $v;
+            // $opd_pagu_tambahan =$v['total_opd'];
+            // $total_pagu_tambahan= $v['total_pagu_apbd'];
+
+
+
+            // $total_rp_tk_tambahan= $v['sum_rp_target_keuangan_akumulasi'];
+            // $total_rp_rk_tambahan= $v['sum_rp_realisasi_keuangan_akumulasi'];
+            // $total_rp_tk_bulanan_tambahan= $v['sum_rp_target_keuangan_bulanan'];
+            // $total_rp_rk_bulanan_tambahan= $v['sum_rp_realisasi_keuangan_bulanan'];
+
+        }
+
+
+
+
+
+        $data_grafik = [];
+      
+
+        $total_pagu_tambahan =0;
+        $opd_pagu_tambahan=0;
+        $total_tk_akumulasi = 0;
+        $total_rk_akumulasi = 0;
+        $total_tk_bulanan = 0;
+        $total_rk_bulanan = 0;
+        foreach ($q_grafik->result_array() as $k => $v) {
+            $id_instansi = $v['id_instansi'];
+            $data = $v;
+            $total_pagu_apbd = $v['total_pagu_apbd'];
+
+
+
+             if (isset($data_tambahan[$id_instansi])) {
+                $opd_pagu_tambahan++;
+
+                $tambahan = $data_tambahan[$id_instansi];
+                $total_pagu_tambahan +=$tambahan['pagu_total'];
+
+                // Gabungkan nilai Query 1 + Query 2
+                $data['pagu_total_gabungan'] =
+                    (float)$v['pagu_total'] +
+                    (float)$tambahan['pagu_total'];
+
+                $data['rp_target_keuangan_akumulasi_gabungan'] =
+                    (float)$v['rp_target_keuangan_akumulasi'] +
+                    (float)$tambahan['rp_target_keuangan_akumulasi'];
+
+                $data['rp_realisasi_keuangan_akumulasi_gabungan'] =
+                    (float)$v['rp_realisasi_keuangan_akumulasi'] +
+                    (float)$tambahan['rp_realisasi_keuangan_akumulasi'];
+
+            } else {
+
+                // Tidak ada Query 2
+                // Jadi tetap menggunakan Query 1
+                $data['pagu_total_gabungan'] =
+                    (float)$v['pagu_total'];
+
+                $data['rp_target_keuangan_akumulasi_gabungan'] =
+                    (float)$v['rp_target_keuangan_akumulasi'];
+
+                $data['rp_realisasi_keuangan_akumulasi_gabungan'] =
+                    (float)$v['rp_realisasi_keuangan_akumulasi'];
+            }
+
+            $data_grafik[] = $data;
+
+
+
+
+
+
+
+
+        $opd_pagu_apbd = $v['total_opd'];
+            $total_tf = $v['sum_target_fisik_akumulasi'];
+            $total_rf = $v['sum_realisasi_fisik_akumulasi'];
+            $total_tf_bulanan = $v['sum_target_fisik_bulanan'];
+            $total_rf_bulanan = $v['sum_realisasi_fisik_bulanan'];
+
+            // $total_rp_tk = $v['sum_rp_target_keuangan_akumulasi'];
+            // $total_rp_rk = $v['sum_rp_realisasi_keuangan_akumulasi'];
+            // $total_rp_tk_bulanan = $v['sum_rp_target_keuangan_bulanan'];
+            // $total_rp_rk_bulanan = $v['sum_rp_realisasi_keuangan_bulanan'];
+
+        }
+        
+
+
+
+        $tf_akumulasi = ($total_tf /$opd_pagu_apbd);
+        $rf_akumulasi = ($total_rf /$opd_pagu_apbd);
+        $df_akumulasi = $rf_akumulasi - $tf_akumulasi ; 
+
+        $tf_bulanan = ($total_tf_bulanan /$opd_pagu_apbd);
+        $rf_bulanan = ($total_rf_bulanan /$opd_pagu_apbd);
+        $df_bulanan = $rf_bulanan - $tf_bulanan ; 
+
+
+        $pagu_total = $total_pagu_apbd + $total_pagu_tambahan ;
+        $rp_tk_total = $total_rp_tk + $total_rp_tk_tambahan ;
+        $rp_rk_total = $total_rp_rk + $total_rp_rk_tambahan ;
+        $rp_tk_bulanan_total = $total_rp_tk_bulanan + $total_rp_tk_bulanan_tambahan ;
+        $rp_rk_bulanan_total = $total_rp_rk_bulanan + $total_rp_rk_bulanan_tambahan ;
+
+        $persen_tk_akumulasi = ($rp_tk_total / $pagu_total) * 100;
+        $persen_rk_akumulasi = ($rp_rk_total / $pagu_total) * 100;
+
+        $persen_tk_bulanan = ($rp_tk_bulanan_total / $pagu_total) * 100;
+        $persen_rk_bulanan = ($rp_rk_bulanan_total / $pagu_total) * 100;
+
+        $dk_akumulasi = $persen_rk_akumulasi - $persen_tk_akumulasi;
+        $dk_bulanan = $persen_rk_bulanan - $persen_tk_bulanan;
+
+
         $data['pagu'] = [
-        'pagu' => $pagu,
-        'opd_apbd' => $d->jumlah_instansi,
-        'pagu_tambahan' => $pagu_tambahan,
+        'pagu' => $total_pagu_apbd,
+        'opd_apbd' => $opd_pagu_apbd,
+        'pagu_tambahan' => $total_pagu_tambahan,
         'pagu_total' => $pagu_total,
-        'opd_tkd' => $d->jumlah_instansi_tambahan ,
+        'opd_tkd' =>$opd_pagu_tambahan,
+        ];
+      
+        $data['pencapaian'] = [
+        'fisik' => [
+            'tf_a' =>number_format($tf_akumulasi,2),
+            'rf_a' =>number_format($rf_akumulasi,2),
+            'df_a' =>number_format($df_akumulasi,2),
+            'tf_b' =>number_format($tf_bulanan,2),
+            'rf_b' =>number_format($rf_bulanan,2),
+            'df_b' =>number_format($df_bulanan,2),
+        ],
+        'keuangan' => [
+            'tk_a' =>number_format($persen_tk_akumulasi,2),
+            'rk_a' =>number_format($persen_rk_akumulasi,2),
+            'dk_a' =>number_format($dk_akumulasi,2),
+            'tk_b' =>number_format($persen_tk_bulanan,2),
+            'rk_b' =>number_format($persen_rk_bulanan,2),
+            'dk_b' =>number_format($dk_bulanan,2),
+        ],
+        // 'opd_apbd' => $opd_pagu_apbd,
+        // 'pagu_tambahan' => $total_pagu_tambahan,
+        // 'pagu_total' => $pagu_total,
+        // 'opd_tkd' => $opd_pagu_tambahan,
         ];
       
 
