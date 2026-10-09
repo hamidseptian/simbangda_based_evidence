@@ -237,18 +237,27 @@ class Data_apbd_kab_kota extends MY_Controller
             $tahap = $this->input->post('tahap');
             $pergeseran_ke = $this->input->post('pergeseran_ke');
             $tahun = tahun_anggaran();
-            if ($pergeseran_ke) {
-                $where = [ 'kode_tahap'=>$tahap,'tahun'=>$tahun,'id_instansi' =>$id_instansi ,'pergeseran_ke' =>$pergeseran_ke];
-                $pagu    = $this->db->get_where('anggaran_instansi_kab_kota', $where);
-                $value = $pagu->row(); 
-                $caption_apbd =   "APBD AWAL<br>Pergeseran Ke-".$pergeseran_ke.'<br>'.'<div id="edit_pergeseran_ke"><button type="button" class="btn btn-outline-info btn-sm" onclick="edit_pergeseran_ke('."'".$pergeseran_ke."'".')">Edit Pergeseran Ke</button></div>';    
-                # code...
-            }else{
-                $where = ['kode_tahap'=>$tahap,'tahun'=>$tahun,   'id_instansi' =>$id_instansi ];
-                $pagu    = $this->db->get_where('anggaran_instansi_kab_kota', $where);
-                $value = $pagu->row(); 
-                $caption_apbd =  "APBD AWAL".'<br>'.'<button type="button" class="btn btn-outline-info btn-sm" onclick="lakukan_pergeseran('."'".$value->id_anggaran_instansi_kab_kota ."'".')">Lakukan Pergeseran</button>';
+            if ($tahap=='4') {
+                    $where = ['kode_tahap'=>$tahap,'tahun'=>$tahun,   'id_instansi' =>$id_instansi ];
+                    $pagu    = $this->db->get_where('anggaran_instansi_kab_kota', $where);
+                    $value = $pagu->row(); 
+                    $caption_apbd =  "APBD PERUBAHAN";
 
+            }else{
+
+                if ($pergeseran_ke) {
+                    $where = [ 'kode_tahap'=>$tahap,'tahun'=>$tahun,'id_instansi' =>$id_instansi ,'pergeseran_ke' =>$pergeseran_ke];
+                    $pagu    = $this->db->get_where('anggaran_instansi_kab_kota', $where);
+                    $value = $pagu->row(); 
+                    $caption_apbd =   "APBD AWAL<br>Pergeseran Ke-".$pergeseran_ke.'<br>'.'<div id="edit_pergeseran_ke"><button type="button" class="btn btn-outline-info btn-sm" onclick="edit_pergeseran_ke('."'".$pergeseran_ke."'".')">Edit Pergeseran Ke</button></div>';    
+                    # code...
+                }else{
+                    $where = ['kode_tahap'=>$tahap,'tahun'=>$tahun,   'id_instansi' =>$id_instansi ];
+                    $pagu    = $this->db->get_where('anggaran_instansi_kab_kota', $where);
+                    $value = $pagu->row(); 
+                    $caption_apbd =  "APBD AWAL".'<br>'.'<button type="button" class="btn btn-outline-info btn-sm" onclick="lakukan_pergeseran('."'".$value->id_anggaran_instansi_kab_kota ."'".')">Lakukan Pergeseran</button>';
+
+                }
             }
 
             $identitas_instansi        = $this->db->query("SELECT nama_instansi from v_instansi_kab_kota where id_instansi='$id_instansi'")->row();
@@ -283,10 +292,10 @@ class Data_apbd_kab_kota extends MY_Controller
                 $output['status'] = true;
            
                   
-                    $output['data']['rea_bo']                  = 0;
-                    $output['data']['rea_bm']                  = 0;
-                    $output['data']['rea_btt']                  = 0;
-                    $output['data']['rea_bt']                  = 0;
+                    // $output['data']['rea_bo']                  = 0;
+                    // $output['data']['rea_bm']                  = 0;
+                    // $output['data']['rea_btt']                  = 0;
+                    // $output['data']['rea_bt']                  = 0;
            
 
             echo json_encode($output);
@@ -599,11 +608,15 @@ class Data_apbd_kab_kota extends MY_Controller
                 $tahun = tahun_anggaran();
                 $id_instansi = sbe_crypt($this->input->post('id_instansi'), 'D');
                 $pergeseran_ke = $this->input->post('pergeseran_ke');
-                if ($this->input->post('pergeseran_ke')) {
-                    $where = ['kode_tahap'=>$tahap,   'id_instansi' => $id_instansi,  'tahun' => $tahun, 'pergeseran_ke'=>$pergeseran_ke];
+                if ($tahap=='4') {
+                        $where = ['kode_tahap'=>$tahap,   'id_instansi' => $id_instansi,  'tahun' => $tahun];
                 }else{
-                    $where = ['kode_tahap'=>$tahap,   'id_instansi' => $id_instansi,  'tahun' => $tahun];
+                    if ($this->input->post('pergeseran_ke')) {
+                        $where = ['kode_tahap'=>$tahap,   'id_instansi' => $id_instansi,  'tahun' => $tahun, 'pergeseran_ke'=>$pergeseran_ke];
+                    }else{
+                        $where = ['kode_tahap'=>$tahap,   'id_instansi' => $id_instansi,  'tahun' => $tahun];
 
+                    }
                 }
 
             if ($validation->run($this)) {
