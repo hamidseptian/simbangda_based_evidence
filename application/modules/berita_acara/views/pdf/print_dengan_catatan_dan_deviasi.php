@@ -18,7 +18,7 @@
     <p style="text-align: center; font-weight: bold; padding: 0; margin: 0"><?php echo $template['kegiatan'] ?></p>
     <p style="text-align: center; font-weight: bold; padding: 0; margin: 0">TAHUN ANGGARAN <?php echo $template['tahun'] ?></p>
 
-    <p>Pada hari ini <?php echo $nama_hari.' '.$caption_jadwal ?>  bertempat <?php echo $template['lokasi'] ?> telah dilaksanakan Rapat Desk Entri Data <?php echo $nama_tahap.' '.$template['tahun'] ?> dengan hasil sebagai berikut :</p>
+    <p>Pada hari ini <?php echo $nama_hari.' '.$caption_jadwal ?>  bertempat <?php echo $template['lokasi'] ?> telah dilaksanakan <?php echo $template['kegiatan'] ?> dengan hasil sebagai berikut :</p>
     
     <p style="font-weight: bold">A. Nama OPD : <?php echo $template['nama_instansi'] ?></p>
     <p style="font-weight: bold">B. Jumlah Pagu Anggaran OPD</p>

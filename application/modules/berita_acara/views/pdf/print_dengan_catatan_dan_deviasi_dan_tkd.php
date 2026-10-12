@@ -18,7 +18,7 @@
     <p style="text-align: center; font-weight: bold; padding: 0; margin: 0"><?php echo $template['kegiatan'] ?></p>
     <p style="text-align: center; font-weight: bold; padding: 0; margin: 0">TAHUN ANGGARAN <?php echo $template['tahun'] ?></p>
 
-    <p>Pada hari ini <?php echo $nama_hari.' '.$caption_jadwal ?>  bertempat <?php echo $template['lokasi'] ?> telah dilaksanakan Rapat Desk Entri Data <?php echo $nama_tahap.' '.$template['tahun'] ?> dengan hasil sebagai berikut :</p>
+    <p>Pada hari ini <?php echo $nama_hari.' '.$caption_jadwal ?>  bertempat <?php echo $template['lokasi'] ?> telah dilaksanakan <?php echo $template['kegiatan'] ?> dengan hasil sebagai berikut :</p>
     
     <p style="font-weight: bold">A. Nama OPD : <?php echo $template['nama_instansi'] ?></p>
     <p style="font-weight: bold">B. Jumlah Pagu Anggaran OPD</p>
@@ -174,6 +174,7 @@
             <?php }else{
 
                 $data_grafik_tambahan = $grafik_tambahan->result_array();
+
                 foreach ($grafik as $key => $v) { 
                     $deviasi_fisik = $v['realisasi_fisik_akumulasi'] - $v['target_fisik_akumulasi'];
                     $deviasi_keuangan = $v['realisasi_keuangan_akumulasi'] - $v['target_keuangan_akumulasi'];
@@ -214,10 +215,7 @@
                     ?>
                 <tr>
                     <td></td>    
-                    <td><?php echo bulan_global($v['bulan']) ?></td>
-                    <td align="center"><?php echo $v['target_fisik_akumulasi'] ?></td>
-                    <td align="center"><?php echo $v['realisasi_fisik_akumulasi'] ?></td>
-                    <td align="center" style="<?php echo $warna_dev_fisik ?>"> <?php echo  round($deviasi_fisik,2) ?> </td>
+                  
                     <?php if ($grafik_tambahan->num_rows()) { 
 
 
@@ -247,18 +245,68 @@
 
 
 
+                    if (bulan_aktif()>$v['bulan']) {
+                        $realisasi_fisik = $v['realisasi_fisik_akumulasi'];
+                        $realisasi_keuangan = round($persen_rk,2);
+                        $deviasi_fisik = round($deviasi_fisik,2);
+                        $deviasi_keuangan = round($deviasi_keuangan_tambahan,2);
+                        $warna_deviasi_fisik = $warna_dev_fisik;
+                        $warna_deviasi_keuangan = $warna_dev_keuangan_tambahan;
+                    }else{
+                        $realisasi_fisik = '-';
+                        $realisasi_keuangan = '-';
+                        $deviasi_fisik = '-';
+                        $deviasi_keuangan = '-';
+                        $warna_deviasi_fisik = '-';
+                        $warna_deviasi_keuangan = '-';
+
+                    }
+
+
+
 
 
                         ?>
+
+                    <td><?php echo bulan_global($v['bulan']) ?></td>
+                    <td align="center"><?php echo $v['target_fisik_akumulasi'] ?></td>
+                    <td align="center"><?php echo $realisasi_fisik ?></td>
+                    <td align="center" style="<?php echo $warna_deviasi_fisik ?>"> <?php echo  $deviasi_fisik ?> </td>
                         <td align="center"><?php echo round($persen_tk,2) ?></td>
-                    <td align="center"><?php echo round($persen_rk,2) ?></td>
-                    <td align="center" style="<?php echo $warna_dev_keuangan_tambahan ?>"> <?php echo  round($deviasi_keuangan_tambahan,2) ?> </td>
+                    <td align="center"><?php echo $realisasi_keuangan ?></td>
+                    <td align="center" style="<?php echo $warna_deviasi_keuangan ?>"> <?php echo $deviasi_keuangan?> </td>
                     
-                    <?php } else{ ?>
+                    <?php } else{ 
+
+
+                    if (bulan_aktif()>$v['bulan']) {      
+                        $realisasi_fisik = $v['realisasi_fisik_akumulasi'];
+                        $realisasi_keuangan = $v['realisasi_keuangan_akumulasi'];
+                        $deviasi_fisik = round($deviasi_fisik,2);
+                        $deviasi_keuangan = round($deviasi_keuangan,2);
+                        $warna_deviasi_fisik = $warna_dev_fisik;
+                        $warna_deviasi_keuangan = $warna_dev_keuangan;
+                    }else{
+                        $realisasi_fisik = '-';
+                        $realisasi_keuangan = '-';
+                        $deviasi_fisik = '-';
+                        $deviasi_keuangan = '-';
+                        $warna_deviasi_fisik = '-';
+                        $warna_deviasi_keuangan = '-';
+
+                    }
+
+
+?>
+
+                    <td><?php echo bulan_global($v['bulan']) ?></td>
+                    <td align="center"><?php echo $v['target_fisik_akumulasi'] ?></td>
+                    <td align="center"><?php echo $realisasi_fisik ?></td>
+                    <td align="center" style="<?php echo $warna_deviasi_fisik ?>"> <?php echo  $deviasi_fisik ?> </td>
                     <td align="center"><?php echo $v['target_keuangan_akumulasi'] ?></td>
-                    <td align="center"><?php echo $v['realisasi_keuangan_akumulasi'] ?></td>
-                    <td align="center" style="<?php echo $warna_dev_keuangan ?>"> <?php echo  round($deviasi_keuangan,2) ?> </td>
-                    <?php }?>
+                    <td align="center"><?php echo $realisasi_keuangan ?></td>
+                    <td align="center" style="<?php echo $warna_deviasi_keuangan ?>"> <?php echo  $deviasi_keuangan ?> </td>
+                    <?php } ?>
                   
                     
                     
@@ -286,7 +334,7 @@
 
 
 
-    <p>Demikian Berita Acara Rapat Desk Entri data  <?php echo $nama_tahap.' Tahun '.$template['tahun'] ?> ini dibuat untuk menjadi bahan seperlunya.</p>
+    <p>Demikian Berita Acara <?php echo $template['kegiatan'] ?> ini dibuat untuk menjadi bahan seperlunya.</p>
     <table style="width: 100%; table-layout: fixed; border: none;">
         <thead>
             <tr>
