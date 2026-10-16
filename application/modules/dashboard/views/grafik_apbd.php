@@ -270,7 +270,7 @@
                 var deviasi_fisik = angka_grafik.rf[i] - angka_grafik.tf[i];
                 $('#tfisik').append('<td>' + angka_grafik.tf[i] + '</td>');
 
-                var deviasi_keuangan = angka_grafik.rf[i] - angka_grafik.tk[i];
+                var deviasi_keuangan = angka_grafik.rk[i] - angka_grafik.tk[i];
                 $('#tkeu').append('<td>' + angka_grafik.tk[i] + '</td>');
                 // $('#dkeu').append('<td>' + angka_grafik.cek[i] + '</td>');
 

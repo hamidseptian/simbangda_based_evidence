@@ -631,30 +631,79 @@ public function saveedit_user()
         ];
         if ($level==2 || $level==4 || $level==6) {
             if ($kategori=='Akumulasi') {
-                 $sync    = $this->dashboard_model->get_grafik_total_akumulasi($tahun, $tahap)->result();
+                 $sync    = $this->dashboard_model->get_grafik_total_akumulasi($tahun, $tahap)->result_array();
+                 $sync_tambahan    = $this->dashboard_model->get_grafik_total_akumulasi_tambahan($tahun, $tahap)->result_array();
             }else{
                  $sync    = $this->dashboard_model->get_grafik_total_bulanan($tahun, $tahap)->result();
             }
 
-            foreach ($sync as $key => $value) {
-                $fisik[$key]   = (float) round($value->target_fisik,2 ) ;
-                $keu[$key]     = (float) round($value->target_keuangan,2 ) ;
+            
 
-                if($bulan_aktif>=$value->bulan){
 
-                    $r_fisik[$key] = (float) round($value->realisasi_fisik,2 ) ;
-                    $d_fisik[$key]     =round( (float) round($value->realisasi_fisik,2 ) -  (float) round($value->target_fisik,2 ) ,2 ) ;
+            for ($i=0; $i < 12; $i++) { 
 
-                    $rea[$key]     = (float) round($value->realisasi_keuangan,2 ) ;
-                    $d_keu[$key]     = round( (float) round($value->realisasi_keuangan,2 ) -  (float) round($value->target_keuangan,2 ) ,2) ;
-                }else{
-                    $r_fisik[$key]= "" ;
-                    $d_fisik[$key]    = "" ;
+                        array_push($data_grafik['apbd']['tf'],  (float) $sync[$i]['target_fisik']);
+                        array_push($data_grafik['apbd']['tk'],  (float) $sync[$i]['target_keuangan']);
+                   if($bulan_aktif>= $sync[$i]['bulan']){
+                        array_push($data_grafik['apbd']['rf'],  (float) $sync[$i]['realisasi_fisik']);
+                        array_push($data_grafik['apbd']['rk'],   (float) $sync[$i]['realisasi_keuangan']);
+                   }
 
-                    $rea[$key]    = "" ;
-                    $d_keu[$key]    = "" ;
+
+
+                if (count($sync_tambahan)>0) {
+
+
+
+                   //      array_push($data_grafik['tambahan']['tf'],  (float) $sync_tambahan[$i]['target_fisik']);
+                   //      array_push($data_grafik['tambahan']['tk'],  (float) $sync_tambahan[$i]['target_keuangan']);
+                   // if($bulan_aktif>= $sync[$i]['bulan']){
+                   //      array_push($data_grafik['tambahan']['rf'],  (float) $sync_tambahan[$i]['realisasi_fisik']);
+                   //      array_push($data_grafik['tambahan']['rk'],   (float) $sync_tambahan[$i]['realisasi_keuangan']);
+                   // }
+
+
+
+
+                   
+
+                    $pagu_total = $sync[$i]['pagu_total'] + $sync_tambahan[$i]['pagu_total'];
+                    $rp_target_keuangan = $sync[$i]['rp_target_keuangan'] + $sync_tambahan[$i]['rp_target_keuangan'];
+                    $rp_realisasi_keuangan = $sync[$i]['rp_realisasi_keuangan'] + $sync_tambahan[$i]['rp_realisasi_keuangan'];
+                    $persen_tk = ($rp_target_keuangan / $pagu_total)  * 100;
+                    $persen_rk = ($rp_realisasi_keuangan / $pagu_total)  * 100;
+                    $data_gabungan = [
+                        'tf'=>$sync[$i]['target_fisik'],
+                        'rf'=>$sync[$i]['realisasi_fisik'],
+                        'tk'=>round($persen_tk,2),
+                        'rk'=>round($persen_rk,2),
+                    ];
+                    // $fisik_apbd
+                   // array_push($data_grafik['apbd'], $data_apbd);
+                    // $df =  $sync[$i]['realisasi_fisik'] - $sync[$i]['target_fisik']; 
+
+                   array_push($data_grafik['gabungan']['tf'],  (float) $sync[$i]['target_fisik']);
+                   array_push($data_grafik['gabungan']['tk'],  (float) round($persen_tk,2));
+
+                    if($bulan_aktif>= $sync[$i]['bulan']){
+                   array_push($data_grafik['gabungan']['rf'],  (float) $sync[$i]['realisasi_fisik']);
+                   array_push($data_grafik['gabungan']['rk'],   (float) round($persen_rk,2));
+                   }
+                   else{
+
+                   }
+                   // array_push($data_grafik['gabungan']['cek'],   number_format($pagu_total));
+                   // array_push($data_grafik['gabungan']['df'], (float) round($df));
                 }
+
             }
+
+
+
+
+
+
+
 
 
 

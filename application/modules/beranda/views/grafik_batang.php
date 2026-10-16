@@ -1,44 +1,69 @@
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    <script type="text/javascript" src="<?php echo base_url() ?>assets/jquery/jquery.js"></script>
+
+<script src="<?php echo base_url('assets/') ?>highchart/code/highcharts.js"></script>
    
                    <div id="grafik_infografis_batang"></div>
 
 
  
-<table class="table table-striped table-bordered">
-                                            <thead>
-                                                <tr><th colspan="2">
-                                                    <center>Bulan / Keterangan</center>
-                                                </th>
-                                                <th>Jan</th>
-                                                <th>Feb</th>
-                                                <th>Mar</th>
-                                                <th>Apr</th>
-                                                <th>Mei</th>
-                                                <th>Jun</th>
-                                                <th>Jul</th>
-                                                <th>Agu</th>
-                                                <th>Sep</th>
-                                                <th>Okt</th>
-                                                <th>Nov</th>
-                                                <th>Des</th>
-                                            </tr>
-                                        </thead>
-                                            <tbody>
 
-
-                                                <tr id="tfisik"><td rowspan="3" align="center">Fisik</td><td>Target</td><td>3.71</td><td>10.56</td><td>20.03</td><td>28.84</td><td>35.75</td><td>45.29</td><td>56.15</td><td>63.96</td><td>72.53</td><td>80.92</td><td>88.47</td><td>97.4</td></tr>
-                                                <tr id="rfisik"><td>Realisasi</td><td>3.73</td><td>15.47</td><td>25.6</td><td>33.13</td><td>38.23</td><td>49.89</td><td>53.83</td><td>59.1</td><td></td><td></td><td></td><td></td></tr>
-                                                <tr id="dfisik"><td>Deviasi</td><td>0.02</td><td>4.91</td><td>5.57</td><td>4.29</td><td>2.48</td><td>4.6</td><td>-2.32</td><td>-4.86</td><td></td><td></td><td></td><td></td></tr>
-                                                <tr id="tkeu"><td rowspan="3" align="center">Keuangan</td><td>Target</td><td>3.34</td><td>7.77</td><td>15.58</td><td>25.77</td><td>31.3</td><td>41.2</td><td>56</td><td>63.73</td><td>74.23</td><td>80.53</td><td>89.98</td><td>99.83</td></tr>
-                                                <tr id="rkeu"><td>Realisasi</td><td>2.84</td><td>7</td><td>14.73</td><td>20.95</td><td>28.58</td><td>38.66</td><td>44.75</td><td>54.61</td><td></td><td></td><td></td><td></td></tr>
-                                                <tr id="dkeu"><td>Deviasi</td><td>-0.5</td><td>-0.77</td><td>-0.85</td><td>-4.82</td><td>-2.72</td><td>-2.54</td><td>-11.25</td><td>-9.12</td><td></td><td></td><td></td><td></td></tr>
-                                            </tbody>
-                                        </table>
-
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th colspan="2" rowspan="2"><center>Bulan / Keterangan</center></th>
+                         
+                            <th colspan="12" id="capt_tabel_grafik"></th>
+                        </tr>
+                        <tr>
+                            
+                            <th>Jan</th>
+                            <th>Feb</th>
+                            <th>Mar</th>
+                            <th>Apr</th>
+                            <th>Mei</th>
+                            <th>Jun</th>
+                            <th>Jul</th>
+                            <th>Agu</th>
+                            <th>Sep</th>
+                            <th>Okt</th>
+                            <th>Nov</th>
+                            <th>Des</th>
+                            
+               
+                        </tr>
+                    </thead>
+                    <tbody>
+                      
+                       
+                        <tr id="tfisik">
+                            <td rowspan="3" align="center">Fisik</td>
+                        </tr>
+                        <tr id="rfisik">
+                        </tr>
+                        <tr id="dfisik">
+                        </tr>
+                          <tr id="tkeu">
+                            <td rowspan="3" align="center">Keuangan</td>
+                        </tr>
+                        <tr id="rkeu">
+                        </tr>
+                        <tr id="dkeu">
+                        </tr>
+                    </tbody>
+                </table>
 <script>
     
+          var tipe = 'gabungan';
+         grafik('Akumulasi', tipe);
+    function grafik(kategori, tipe){
+        $('#tipe_grafik').val(tipe);
+        var sumber_data = requestData(kategori, tipe);
+        var angka_grafik = sumber_data.grafik
+        console.log(angka_grafik)
+        $('#capt_tabel_grafik').html(sumber_data.caption_data_grafik)
+
+
         Highcharts.chart('grafik_infografis_batang', {
           chart: {
             zoomType: 'xy'
@@ -47,7 +72,7 @@
             text: 'Pencapaian Total SKPD'
           },
           subtitle: {
-            text: 'Berdasarkan Akumulasi' ,
+            text: sumber_data.caption_data_grafik + ' ' + kategori
           },
           xAxis: [{
             categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -112,7 +137,7 @@
                 type: 'column',
                 yAxis: 0,
                 color: 'pink',
-                data: [3.71, 10.56, 20.03, 28.84,35.75, 45.29, 56.15, 63.96,72.53, 80.92, 88.47, 97.40],
+                data: angka_grafik.tf,
                 tooltip: {
                   valueSuffix: '%'
                 }
@@ -122,7 +147,7 @@
                 type: 'column',
                 yAxis: 1,
                 color: 'aqua',
-                data: [ 3.73, 15.47, 25.60, 33.13,38.23, 49.89, 53.83, 59.10,null, null, null, null],
+                data: angka_grafik.tk,
                 tooltip: {
                   valueSuffix: '%'
                 }
@@ -133,7 +158,7 @@
 
                 color: 'red',
                 yAxis: 0,
-                data: [3.34, 7.77, 15.58, 25.77,31.30, 41.20, 56.00, 63.73,74.23, 80.53, 89.98, 99.83],
+                data: angka_grafik.rf,
                 // color: '#caf3d5',
                 tooltip: {
                   valueSuffix: '%'
@@ -146,7 +171,7 @@
                  color: 'blue',
 
                 yAxis: 1,
-                data: [ 2.84, 7.00, 14.73, 20.95,28.58, 38.66, 44.75, 54.61,null, null, null, null],
+                data: angka_grafik.rk,
                 // color: '#caf3d5',
                 tooltip: {
                   valueSuffix: '%'
@@ -154,4 +179,82 @@
               }
           ]
         });
+
+
+
+
+        $('#tfisik').html('<td rowspan="3" align="center">Fisik</td>');
+        $('#rfisik').html('');
+        $('#dfisik').html('');
+        $('#tkeu').html('<td rowspan="3" align="center">Keuangan</td>');
+        $('#rkeu').html('');
+        $('#dkeu').html('');
+
+        $('#tfisik').append('<td>Target</td>');
+        $('#rfisik').append('<td>Realisasi</td>');
+        $('#dfisik').append('<td>Deviasi</td>');
+        $('#tkeu').append('<td>Target</td>');
+        $('#rkeu').append('<td>Realisasi</td>');
+        $('#dkeu').append('<td>Deviasi</td>');
+
+
+        var ba = <?php echo bulan_aktif(); ?>;
+        for (var i = 0; i < 12; i++) {
+                var deviasi_fisik = angka_grafik.rf[i] - angka_grafik.tf[i];
+                $('#tfisik').append('<td>' + angka_grafik.tf[i] + '</td>');
+
+                var deviasi_keuangan = angka_grafik.rf[i] - angka_grafik.tk[i];
+                $('#tkeu').append('<td>' + angka_grafik.tk[i] + '</td>');
+                // $('#dkeu').append('<td>' + angka_grafik.cek[i] + '</td>');
+
+                if (i<ba) {
+                  $('#rkeu').append('<td>' + angka_grafik.rk[i] + '</td>');
+                  $('#rfisik').append('<td>' + angka_grafik.rf[i] + '</td>');
+                  $('#dkeu').append('<td>' + deviasi_keuangan.toFixed(2) + '</td>');
+                  $('#dfisik').append('<td>' + deviasi_fisik.toFixed(2) + '</td>');
+
+                }
+      
+
+
+
+        }
+    
+    }
+
+// console.log(requestData('Akumulasi'));
+
+    function requestData(kategori, tipe) {
+        var rf = [];
+        var rk = [];
+        var ba = <?php echo bulan_aktif(); ?>;
+
+        $.ajax({
+            url: '<?php echo base_url('dashboard/show_chart'); ?>',
+            type: "GET",
+            data : {
+                id_instansi : 91,
+                id_group : '2',
+                kategori : kategori,
+                tipe : tipe,
+            },
+            dataType: "json",
+
+            async: false,
+            success: function(data) {
+                // console.log(data.grafik);
+                // $('#cekdata').html(data.grafik);
+                result = data;
+                
+            },
+            error: function(data) {
+               alert('error');
+                
+            },
+            // cache: false
+        });
+
+        return result;
+    }
+
 </script>

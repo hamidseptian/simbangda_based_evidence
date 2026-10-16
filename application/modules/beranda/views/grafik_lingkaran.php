@@ -24,17 +24,6 @@
 
 </style>
     <div id="container"></div>
-<figure class="highcharts-figure">
-    <p class="highcharts-description">
-        In Highcharts, pie charts can also feature an empty center, they are
-        often referred to as donut charts.
-    </p>
-</figure>
-
-
-
-
-
 
 
 
@@ -49,155 +38,206 @@
         type: 'pie',
         custom: {},
         events: {
-            render() {
-                const chart = this,
-                    series = chart.series[0];
+            render: function () {
+                const chart = this;
+                const series = chart.series[0];
+
                 let customLabel = chart.options.chart.custom.label;
 
+                // Membuat label hanya sekali
                 if (!customLabel) {
-                  customLabel = chart.options.chart.custom.label =
-    chart.renderer.label(
-        'Total Realisasi Keuangan<br/>' +
-        '<strong>Rp. 6,495,480,791,071</strong><br>' + 
-        '<strong>50%</strong>'
-    )
-    .css({
-        color: 'var(--highcharts-neutral-color-100, #000)',
-        textAnchor: 'middle',
-        fontSize: '6px'
-    })
-    .add();
+                    customLabel = chart.options.chart.custom.label =
+                        chart.renderer.label(
+                            `
+                            <div style="
+                                width: 200px;
+                                text-align: center;
+                                color: #333;
+                                font-family: Arial, sans-serif;
+                            ">
+                                <div style="
+                                    font-size: 13px;
+                                    font-weight: bold;
+                                    margin-bottom: 2px;
+                                ">
+                                    Statistika Deviasi Fisik
+                                </div>
+
+                                <table style="
+                                    width: 100%;
+                                    border-collapse: collapse;
+                                    font-size: 9px;
+                                    background: #fff;
+                                ">
+                                    <thead>
+                                        <tr style="background: #eaf2f8;">
+                                            <th style="border: 1px solid #bbb; padding: 2px;">
+                                                Warna
+                                            </th>
+                                            <th style="border: 1px solid #bbb; padding: 2px;">
+                                                Ket Deviasi
+                                            </th>
+                                            <th style="border: 1px solid #bbb; padding: 2px;">
+                                                Jumlah
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="border: 1px solid #bbb; padding: 2px;">
+                                                <span style="color: #f8b2b2;">&#9632;</span>
+                                            </td>
+                                            <td style="border: 1px solid #bbb; padding: 2px;">
+                                                (≥ -10%)
+                                            </td>
+                                            <td style="border: 1px solid #bbb; padding: 2px;">
+                                                <?php echo $deviasi_opd['fisik']['opd_merah'] ?>  OPD
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #bbb; padding: 2px;">
+                                                <span style="color: #fcf3cf;">&#9632;</span>
+                                            </td>
+                                            <td style="border: 1px solid #bbb; padding: 2px;">
+                                                (≥ -5 s.d -10%)
+                                            </td>
+                                            <td style="border: 1px solid #bbb; padding: 2px;">
+                                                <?php echo $deviasi_opd['fisik']['opd_kuning'] ?> OPD
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #bbb; padding: 2px;">
+                                                <span style="color: #d5f5e3;">&#9632;</span>
+                                            </td>
+                                            <td style="border: 1px solid #bbb; padding: 2px;">
+                                                (≥ -5%)
+                                            </td>
+                                            <td style="border: 1px solid #bbb; padding: 2px;">
+                                                <?php echo $deviasi_opd['fisik']['opd_hijau'] ?> OPD
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #bbb; padding: 2px;">
+                                                <span style="color: #ff7cfd;">&#9632;</span>
+                                            </td>
+                                            <td style="border: 1px solid #bbb; padding: 2px;">
+                                                (Melebihi Target)
+                                            </td>
+                                            <td style="border: 1px solid #bbb; padding: 2px;">
+                                                <?php echo $deviasi_opd['fisik']['opd_ungu'] ?> OPD
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            `,
+                            0,
+                            0,
+                            undefined,
+                            undefined,
+                            undefined,
+                            true
+                        ).add();
                 }
 
-                const x = series.center[0] + chart.plotLeft,
-                    y = series.center[1] + chart.plotTop -
-                    (customLabel.attr('height') / 2);
+                // Memposisikan tabel tepat di tengah donut
+                const box = customLabel.getBBox();
+
+                const x = chart.plotLeft +
+                    series.center[0] - box.width / 2;
+
+                const y = chart.plotTop +
+                    series.center[1] - box.height / 2;
 
                 customLabel.attr({
-                    x,
-                    y
-                });
-                // Set font size based on chart diameter
-                customLabel.css({
-                    fontSize: `${series.center[2] / 22}px`
+                    x: x,
+                    y: y
                 });
             }
         }
     },
+
     accessibility: {
         point: {
             valueSuffix: '%'
         }
     },
+
     title: {
-        text: 'PERBANDINGAN RATA-RATA Realisasi (%)'
+        text: 'ANALISIS DEVIASI REALISASI FISIK TERHADAP TARGET'
     },
+
     subtitle: {
-        text: 'Source: <a href="https://www.ssb.no/transport-og-reiseliv/faktaside/bil-og-transport">SSB</a>'
+        text: ''
     },
+
     tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.0f}%</b>'
+        pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
     },
+
     legend: {
         enabled: false
     },
-    plotOptions: {
-        series: {
-            allowPointSelect: true,
-            cursor: 'pointer',
-            borderRadius: 8,
-            dataLabels: [{
-                enabled: true,
-                distance: 20,
-                format: '{point.name}'
-            }, {
-                enabled: true,
-                backgroundColor: 'contrast',
-                distance: -18,
-                format: '{point.percentage:.0f}%',
-                style: {
-                    fontSize: '0.9em'
-                }
-            }],
-            showInLegend: true
-        }
-    },
+
+        plotOptions: {
+            series: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                borderRadius: 3,
+                showInLegend: false
+            },
+            pie: {
+                dataLabels: [{
+                    // Label di luar lingkaran
+                    enabled: true,
+                    distance: 7,
+                    format: '{point.name}',
+                    connectorWidth: 1,
+                    allowOverlap: false,
+                    style: {
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        textOutline: 'none'
+                    }
+                }, {
+                    // Label di dalam lingkaran
+                    enabled: true,
+                    distance: -35,
+                    format: '{point.percentage:.2f}%',
+                    backgroundColor: 'contrast',
+                    style: {
+                        fontSize: '11px',
+                        fontWeight: 'bold',
+                        textOutline: 'none'
+                    }
+                }]
+            }
+        },
+
     series: [{
-        name: 'pAGU',
+        name: 'Pagu',
         colorByPoint: true,
         size: '100%',
         innerSize: '85%',
 
-
-dataLabels: [{
-    enabled: true,
-    distance: 25,
-    format: '{point.name}',
-    connectorWidth: 1,
-    allowOverlap: false,
-    style: {
-        fontSize: '14px',
-        fontWeight: 'bold'
-    }
-}, {
-    enabled: true,
-    distance: 25,
-    format: '{point.percentage:.0f}%',
-    backgroundColor: 'contrast'
-}],
-
-
         data: [{
-            name: 'P-BO',
-            y: 23.9,
-        color: 'blue'
+            name: '> -10%',
+            y: <?php echo $deviasi_opd['fisik']['opd_merah'] ?> ,
+            color: '#f8b2b2'
         }, {
-            name: 'P-BP',
-            y: 12.6
+            name: '-5 s/d -10%',
+            y: <?php echo $deviasi_opd['fisik']['opd_kuning'] ?>,
+            color: '#fcf3cf'
         }, {
-            name: 'P-BTT',
-            y: 37.0
+            name: '< -5%',
+            y: <?php echo $deviasi_opd['fisik']['opd_hijau'] ?>,
+            color: '#d5f5e3'
         }, {
-            name: 'P-BT',
-            y: 26.4
+            name: '+',
+            y: <?php echo $deviasi_opd['fisik']['opd_ungu'] ?>,
+            color: '#ff7cfd'
         }]
-    },
-    {
-        name: 'Registrations',
-        colorByPoint: true,
-        size: '85%',
-        innerSize: '75%',
-
-
- 
-dataLabels: [{
-    enabled: true,
-    distance: 10,
-    format: '{point.name}',
-    connectorWidth: 1,
-    allowOverlap: false,
-    style: {
-        fontSize: '14px',
-        fontWeight: 'bold'
-    }
-}],
-
-
-        data: [{
-            name: 'R-BO',
-            y: 23.9
-        }, {
-            name: 'R-BP',
-            y: 12.6
-        }, {
-            name: 'R-BTT',
-            y: 37.0
-        }, {
-            name: 'R-BT',
-            y: 26.4
-        }]
-    }
-    ]
+    }]
 });
 
 

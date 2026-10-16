@@ -519,8 +519,10 @@ array_multisort($deviasi_keu_terendah, SORT_DESC);
         $tahap = tahapan_apbd();
         $bulan = $this->input->get('bulan') ? $this->input->get('bulan') : bulan_aktif();
         $deskripsi_bulan = '' . jml_hari_dalam_bulan($bulan, $tahun) . ' ' . bulan_global($bulan) . ' ' .$tahun;
-        $data['penginputan'] = 'Sampai ' . jml_hari_dalam_bulan($bulan, $tahun) . ' ' . (bulan_global($bulan)) . ' ' .$tahun;
        $select = "
+            g.id_instansi,
+            mi.nama_instansi,
+            mi.singkatan_nama_instansi,
             realisasi_keuangan_akumulasi,
             pagu_total,
             target_fisik_akumulasi,
@@ -535,7 +537,7 @@ array_multisort($deviasi_keu_terendah, SORT_DESC);
             rp_realisasi_keuangan_akumulasi,
             rp_realisasi_keuangan_bulanan,
 
-            count(id_instansi) OVER () AS total_opd,
+            count(g.id_instansi) OVER () AS total_opd,
             SUM(pagu_total) OVER () AS total_pagu_apbd,
 
 
@@ -543,142 +545,338 @@ array_multisort($deviasi_keu_terendah, SORT_DESC);
             SUM(realisasi_fisik_akumulasi) OVER () AS sum_realisasi_fisik_akumulasi,
             SUM(target_fisik_bulanan) OVER () AS sum_target_fisik_bulanan,
             SUM(realisasi_fisik_bulanan) OVER () AS sum_realisasi_fisik_bulanan,
+
             SUM(rp_target_keuangan_akumulasi) OVER () AS sum_rp_target_keuangan_akumulasi,
             SUM(rp_realisasi_keuangan_akumulasi) OVER () AS sum_rp_realisasi_keuangan_akumulasi,
             SUM(rp_target_keuangan_bulanan) OVER () AS sum_rp_target_keuangan_bulanan,
             SUM(rp_realisasi_keuangan_bulanan) OVER () AS sum_rp_realisasi_keuangan_bulanan
         ";
-        $q_grafik = $this->db->query("SELECT $select from grafik where tahun='$tahun' and kode_tahap='$tahap' and bulan='$bulan'");
-        $q_tambahan = $this->db->query("SELECT $select from grafik_tambahan where tahun='$tahun' and kode_tahap='$tahap' and bulan='$bulan'");
+
+        $join = "LEFT JOIN master_instansi mi on g.id_instansi = mi.id_instansi";
+        $q_grafik = $this->db->query("SELECT $select from grafik g $join where tahun='$tahun' and g.kode_tahap='$tahap' and g.bulan='$bulan'");
+        $q_tambahan = $this->db->query("SELECT $select from grafik_tambahan g $join where tahun='$tahun' and g.kode_tahap='$tahap' and g.bulan='$bulan'");
 
         
 
         $data_tambahan = [];
         foreach ($q_tambahan->result_array() as $k => $v) {
              $data_tambahan[$v['id_instansi']] = $v;
-            // $opd_pagu_tambahan =$v['total_opd'];
-            // $total_pagu_tambahan= $v['total_pagu_apbd'];
-
-
-
-            // $total_rp_tk_tambahan= $v['sum_rp_target_keuangan_akumulasi'];
-            // $total_rp_rk_tambahan= $v['sum_rp_realisasi_keuangan_akumulasi'];
-            // $total_rp_tk_bulanan_tambahan= $v['sum_rp_target_keuangan_bulanan'];
-            // $total_rp_rk_bulanan_tambahan= $v['sum_rp_realisasi_keuangan_bulanan'];
-
         }
 
 
 
-
+        $data['cek'] = $data_tambahan;
 
         $data_grafik = [];
       
 
-        $total_pagu_tambahan =0;
-        $opd_pagu_tambahan=0;
-        $total_tk_akumulasi = 0;
-        $total_rk_akumulasi = 0;
-        $total_tk_bulanan = 0;
-        $total_rk_bulanan = 0;
+        $jumlah_opd = 0;
+        $jumlah_opd_tkd = 0;
+
+        $pagu_apbd = 0;
+        $pagu_tkd = 0;
+        $pagu_semua = 0;
+
+        $total_rp_tk = 0 ;
+        $total_rp_rk = 0 ;
+        $total_rp_tk_bulanan = 0 ;
+        $total_rp_rk_bulanan = 0 ;
         foreach ($q_grafik->result_array() as $k => $v) {
             $id_instansi = $v['id_instansi'];
-            $data = $v;
-            $total_pagu_apbd = $v['total_pagu_apbd'];
+            // $v_grafik = $v;
+                $pagu_apbd +=$v['pagu_total'] ;
+                $v_grafik['nama_instansi'] =  $v['nama_instansi']  ;
+                $v_grafik['realisasi_fisik_akumulasi'] =  $v['realisasi_fisik_akumulasi']  ;
+                $v_grafik['singkatan_nama_instansi'] =  $v['singkatan_nama_instansi']  ;
 
+            $jumlah_opd++;
+            $total_tf =  $v['sum_target_fisik_akumulasi'];
+            $total_rf =  $v['sum_realisasi_fisik_akumulasi'];
+            $total_tf_bulanan =  $v['sum_target_fisik_bulanan'];
+            $total_rf_bulanan =  $v['sum_realisasi_fisik_bulanan'];
+
+            $v_grafik['deviasi_fisik'] =  $v['realisasi_fisik_akumulasi']  -  $v['target_fisik_akumulasi'] ;
 
 
              if (isset($data_tambahan[$id_instansi])) {
-                $opd_pagu_tambahan++;
+                $jumlah_opd_tkd++;
 
                 $tambahan = $data_tambahan[$id_instansi];
-                $total_pagu_tambahan +=$tambahan['pagu_total'];
+                $pagu_tkd +=$tambahan['pagu_total'];
 
                 // Gabungkan nilai Query 1 + Query 2
-                $data['pagu_total_gabungan'] =
-                    (float)$v['pagu_total'] +
-                    (float)$tambahan['pagu_total'];
+                $pagu_total_gabungan = (float)$v['pagu_total'] +(float)$tambahan['pagu_total'];
+                $v_grafik['pagu'] =$pagu_total_gabungan  ;
 
-                $data['rp_target_keuangan_akumulasi_gabungan'] =
-                    (float)$v['rp_target_keuangan_akumulasi'] +
-                    (float)$tambahan['rp_target_keuangan_akumulasi'];
+                $d_total_rp_tk = (float)$v['rp_target_keuangan_akumulasi'] + (float)$tambahan['rp_target_keuangan_akumulasi'];
+                $d_total_rp_rk = (float)$v['rp_realisasi_keuangan_akumulasi'] + (float)$tambahan['rp_realisasi_keuangan_akumulasi']; 
+                $d_total_rp_tk_bulanan = (float)$v['rp_target_keuangan_bulanan'] + (float)$tambahan['rp_target_keuangan_bulanan'];
+                $d_total_rp_rk_bulanan = (float)$v['rp_realisasi_keuangan_bulanan'] + (float)$tambahan['rp_realisasi_keuangan_bulanan'];
+                $v_grafik['rp_realisasi_keuangan_akumulasi'] = $d_total_rp_rk;
 
-                $data['rp_realisasi_keuangan_akumulasi_gabungan'] =
-                    (float)$v['rp_realisasi_keuangan_akumulasi'] +
-                    (float)$tambahan['rp_realisasi_keuangan_akumulasi'];
+                $persen_rk_akumulasi = ($d_total_rp_rk / $pagu_total_gabungan) * 100 ; 
+                $persen_tk_akumulasi = ($d_total_rp_tk / $pagu_total_gabungan) * 100 ; 
+                $v_grafik['deviasi_keuangan'] =  $persen_rk_akumulasi  -  $persen_tk_akumulasi ;
+                //     (float)$v['rp_target_keuangan_akumulasi'] +
+                //     (float)$tambahan['rp_target_keuangan_akumulasi'];
+
+                // $v_grafik['rp_realisasi_keuangan_akumulasi_gabungan'] =
+                //     (float)$v['rp_realisasi_keuangan_akumulasi'] +
+                //     (float)$tambahan['rp_realisasi_keuangan_akumulasi'];
 
             } else {
 
                 // Tidak ada Query 2
                 // Jadi tetap menggunakan Query 1
-                $data['pagu_total_gabungan'] =
-                    (float)$v['pagu_total'];
+                $pagu_total_gabungan = (float)$v['pagu_total'];
+                $v_grafik['pagu'] =$pagu_total_gabungan  ;
 
-                $data['rp_target_keuangan_akumulasi_gabungan'] =
-                    (float)$v['rp_target_keuangan_akumulasi'];
 
-                $data['rp_realisasi_keuangan_akumulasi_gabungan'] =
-                    (float)$v['rp_realisasi_keuangan_akumulasi'];
+                $d_total_rp_tk = (float)$v['rp_target_keuangan_akumulasi'];
+                $d_total_rp_rk = (float)$v['rp_realisasi_keuangan_akumulasi'];
+                $d_total_rp_tk_bulanan = (float)$v['rp_target_keuangan_bulanan'];
+                $d_total_rp_rk_bulanan = (float)$v['rp_realisasi_keuangan_bulanan'];
+
+                $persen_rk_akumulasi = ($d_total_rp_rk / $pagu_total_gabungan) * 100 ; 
+                $persen_tk_akumulasi = ($d_total_rp_tk / $pagu_total_gabungan) * 100 ; 
+                $v_grafik['deviasi_keuangan'] =  $persen_rk_akumulasi  -  $persen_tk_akumulasi ;
+
+                $v_grafik['rp_realisasi_keuangan_akumulasi'] = $d_total_rp_rk;
+
+                // $v_grafik['pagu_total_gabungan'] =$pagu_total_gabungan;
+
+                // $v_grafik['rp_target_keuangan_akumulasi_gabungan'] =
+                //     (float)$v['rp_target_keuangan_akumulasi'];
+
+                // $v_grafik['rp_realisasi_keuangan_akumulasi_gabungan'] =
+                //     (float)$v['rp_realisasi_keuangan_akumulasi'];
             }
 
-            $data_grafik[] = $data;
+
+                $total_rp_tk +=$d_total_rp_tk;
+                $total_rp_rk +=$d_total_rp_rk;
+                $total_rp_tk_bulanan +=$d_total_rp_tk_bulanan;
+                $total_rp_rk_bulanan +=$d_total_rp_rk_bulanan;
+                $pagu_semua += $pagu_total_gabungan;
 
 
-
-
-
-
-
-
-        $opd_pagu_apbd = $v['total_opd'];
-            $total_tf = $v['sum_target_fisik_akumulasi'];
-            $total_rf = $v['sum_realisasi_fisik_akumulasi'];
-            $total_tf_bulanan = $v['sum_target_fisik_bulanan'];
-            $total_rf_bulanan = $v['sum_realisasi_fisik_bulanan'];
-
-            // $total_rp_tk = $v['sum_rp_target_keuangan_akumulasi'];
-            // $total_rp_rk = $v['sum_rp_realisasi_keuangan_akumulasi'];
-            // $total_rp_tk_bulanan = $v['sum_rp_target_keuangan_bulanan'];
-            // $total_rp_rk_bulanan = $v['sum_rp_realisasi_keuangan_bulanan'];
+            $data_grafik[] = $v_grafik;
 
         }
         
 
 
 
-        $tf_akumulasi = ($total_tf /$opd_pagu_apbd);
-        $rf_akumulasi = ($total_rf /$opd_pagu_apbd);
-        $df_akumulasi = $rf_akumulasi - $tf_akumulasi ; 
+        $tf_akumulasi =($total_tf /$jumlah_opd);
+        $rf_akumulasi =($total_rf /$jumlah_opd);
+        $df_akumulasi =$rf_akumulasi - $tf_akumulasi ; 
 
-        $tf_bulanan = ($total_tf_bulanan /$opd_pagu_apbd);
-        $rf_bulanan = ($total_rf_bulanan /$opd_pagu_apbd);
+        $tf_bulanan = ($total_tf_bulanan /$jumlah_opd);
+        $rf_bulanan = ($total_rf_bulanan /$jumlah_opd);
         $df_bulanan = $rf_bulanan - $tf_bulanan ; 
 
 
-        $pagu_total = $total_pagu_apbd + $total_pagu_tambahan ;
-        $rp_tk_total = $total_rp_tk + $total_rp_tk_tambahan ;
-        $rp_rk_total = $total_rp_rk + $total_rp_rk_tambahan ;
-        $rp_tk_bulanan_total = $total_rp_tk_bulanan + $total_rp_tk_bulanan_tambahan ;
-        $rp_rk_bulanan_total = $total_rp_rk_bulanan + $total_rp_rk_bulanan_tambahan ;
+        $pagu_total = $pagu_semua;
+        // $rp_tk_total = 0;//$total_rp_tk + $total_rp_tk_tambahan ;
+        // $rp_rk_total = 0;//$total_rp_rk + $total_rp_rk_tambahan ;
+        // $rp_tk_bulanan_total = 0;//$total_rp_tk_bulanan + $total_rp_tk_bulanan_tambahan ;
+        // $rp_rk_bulanan_total = 0;//$total_rp_rk_bulanan + $total_rp_rk_bulanan_tambahan ;
 
-        $persen_tk_akumulasi = ($rp_tk_total / $pagu_total) * 100;
-        $persen_rk_akumulasi = ($rp_rk_total / $pagu_total) * 100;
+        $persen_tk_akumulasi = ($total_rp_tk / $pagu_total) * 100;
+        $persen_rk_akumulasi = ($total_rp_rk / $pagu_total) * 100;
 
-        $persen_tk_bulanan = ($rp_tk_bulanan_total / $pagu_total) * 100;
-        $persen_rk_bulanan = ($rp_rk_bulanan_total / $pagu_total) * 100;
+        $persen_tk_bulanan = ($total_rp_tk_bulanan / $pagu_total) * 100;
+        $persen_rk_bulanan = ($total_rp_rk_bulanan / $pagu_total) * 100;
 
         $dk_akumulasi = $persen_rk_akumulasi - $persen_tk_akumulasi;
         $dk_bulanan = $persen_rk_bulanan - $persen_tk_bulanan;
 
 
         $data['pagu'] = [
-        'pagu' => $total_pagu_apbd,
-        'opd_apbd' => $opd_pagu_apbd,
-        'pagu_tambahan' => $total_pagu_tambahan,
-        'pagu_total' => $pagu_total,
-        'opd_tkd' =>$opd_pagu_tambahan,
+        'pagu' => $pagu_apbd,
+        'opd_apbd' => $jumlah_opd,
+        'pagu_tambahan' => $pagu_tkd,
+        'pagu_total' => $pagu_semua,
+        'opd_tkd' =>$jumlah_opd_tkd,
         ];
       
+
+
+
+
+$fisik_diatas_rata = [];
+$fisik_dibawah_rata = [];
+$keuangan_diatas_rata = [];
+$keuangan_dibawah_rata = [];
+// $hitung_deviasi_fisik = [];
+
+$dev_fisik_merah =0;
+$dev_fisik_kuning =0;
+$dev_fisik_hijau =0;
+$dev_fisik_ungu =0;
+$dev_keu_merah =0;
+$dev_keu_kuning =0;
+$dev_keu_hijau =0;
+$dev_keu_ungu =0;
+
+foreach ($data_grafik as $v) {
+
+     $realisasi_fisik = (float)$v['realisasi_fisik_akumulasi'];
+       $opd_fisik = [
+            'nilai' => $realisasi_fisik,
+            'nama'  => $v['singkatan_nama_instansi'],
+        ];
+
+
+     $deviasi_fisik = (float)$v['deviasi_fisik'];
+     $deviasi_keuangan = (float)$v['deviasi_keuangan'];
+
+    
+
+
+
+          if ($deviasi_fisik < -10) {
+            $dev_fisik_merah ++; 
+          }
+          elseif ($deviasi_fisik <-5  && $deviasi_fisik >=-10) {
+            $dev_fisik_kuning ++; 
+          }
+          elseif ($deviasi_fisik <=0  && $deviasi_fisik >=-5) {
+            $dev_fisik_hijau ++; 
+          }else{
+            $dev_fisik_ungu ++; 
+          }
+
+          if ($deviasi_keuangan < -10) {
+            $dev_keu_merah ++; 
+          }
+          elseif ($deviasi_keuangan <-5  && $deviasi_keuangan >=-10) {
+            $dev_keu_kuning ++; 
+          }
+          elseif ($deviasi_keuangan <=0  && $deviasi_keuangan >=-5) {
+            $dev_keu_hijau ++; 
+          }else{
+            $dev_keu_ungu ++; 
+          }
+
+
+
+
+
+
+
+    if ($realisasi_fisik > $rf_akumulasi) {
+        $fisik_diatas_rata[] = $opd_fisik;
+    } else {
+        $fisik_dibawah_rata[] = $opd_fisik;
+    } 
+
+     $realisasi_keuangan = ($v['rp_realisasi_keuangan_akumulasi'] / $v['pagu']) * 100;
+
+       $opd_keuangan = [
+            'nilai' => round($realisasi_keuangan,2),
+            'nama'  => $v['singkatan_nama_instansi'],
+        ];
+
+    if ($realisasi_keuangan > $persen_rk_akumulasi) {
+        $keuangan_diatas_rata[] = $opd_keuangan;
+    } else {
+        $keuangan_dibawah_rata[] = $opd_keuangan;
+    } 
+}
+
+        // ======================================
+        // FISIK TERTINGGI: terbesar ke terkecil
+        // ======================================
+        $fisik_tertinggi = $fisik_diatas_rata;
+
+        usort($fisik_tertinggi, function ($a, $b) {
+            return $b['nilai'] <=> $a['nilai'];
+        });
+        $fisik_tertinggi = array_slice($fisik_tertinggi, 0, 10);
+
+
+        // ======================================
+        // FISIK TERENDAH: terkecil ke terbesar
+        // ======================================
+        $fisik_terendah = $fisik_dibawah_rata;
+
+        usort($fisik_terendah, function ($a, $b) {
+            return $a['nilai'] <=> $b['nilai'];
+        });
+
+        $fisik_terendah = array_slice($fisik_terendah, 0, 10);
+
+
+        // ======================================
+        // KEUANGAN TERTINGGI: terbesar ke terkecil
+        // ======================================
+        $keuangan_tertinggi = $keuangan_diatas_rata;
+
+        usort($keuangan_tertinggi, function ($a, $b) {
+            return $b['nilai'] <=> $a['nilai'];
+        });
+
+        $keuangan_tertinggi = array_slice($keuangan_tertinggi, 0, 10);
+
+
+        // ======================================
+        // KEUANGAN TERENDAH: terkecil ke terbesar
+        // ======================================
+        $keuangan_terendah = $keuangan_dibawah_rata;
+
+        usort($keuangan_terendah, function ($a, $b) {
+            return $a['nilai'] <=> $b['nilai'];
+        });
+
+        $keuangan_terendah = array_slice($keuangan_terendah, 0, 10);
+
+
+
+
+
+
+       
+$data['cek'] = $data_grafik;
+
+
+
+
+       
+// $fisik_tertinggi = $data_grafik;
+// $fisik_terendah = $data_grafik;
+
+// $keuangan_tertinggi = $data_grafik;
+// $keuangan_terendah = $data_grafik;
+
+// // Fisik: tertinggi ke terendah
+// usort($fisik_tertinggi, function ($a, $b) {
+//     return (float)$b['realisasi_fisik_akumulasi']
+//         <=> (float)$a['realisasi_fisik_akumulasi'];
+// });
+
+// // Fisik: terendah ke tertinggi
+// usort($fisik_terendah, function ($a, $b) {
+//     return (float)$a['realisasi_fisik_akumulasi']
+//         <=> (float)$b['realisasi_fisik_akumulasi'];
+// });
+
+// // Keuangan: tertinggi ke terendah
+// usort($keuangan_tertinggi, function ($a, $b) {
+//     return (float)$b['rp_realisasi_keuangan_akumulasi']
+//         <=> (float)$a['rp_realisasi_keuangan_akumulasi'];
+// });
+
+// // Keuangan: terendah ke tertinggi
+// usort($keuangan_terendah, function ($a, $b) {
+//     return (float)$a['rp_realisasi_keuangan_akumulasi']
+//         <=> (float)$b['rp_realisasi_keuangan_akumulasi'];
+// });
+
+
+
+        $data['penginputan'] = 'Sampai ' . jml_hari_dalam_bulan($bulan, $tahun) . ' ' . (bulan_global($bulan)) . ' ' .$tahun;
+
         $data['pencapaian'] = [
         'fisik' => [
             'tf_a' =>number_format($tf_akumulasi,2),
@@ -687,6 +885,10 @@ array_multisort($deviasi_keu_terendah, SORT_DESC);
             'tf_b' =>number_format($tf_bulanan,2),
             'rf_b' =>number_format($rf_bulanan,2),
             'df_b' =>number_format($df_bulanan,2),
+            'diatas_ratarata' =>$fisik_diatas_rata,
+            'dibawah_ratarata' =>$fisik_dibawah_rata,
+            'tertinggi' =>$fisik_tertinggi,
+            'terendah' =>$fisik_terendah,
         ],
         'keuangan' => [
             'tk_a' =>number_format($persen_tk_akumulasi,2),
@@ -695,11 +897,35 @@ array_multisort($deviasi_keu_terendah, SORT_DESC);
             'tk_b' =>number_format($persen_tk_bulanan,2),
             'rk_b' =>number_format($persen_rk_bulanan,2),
             'dk_b' =>number_format($dk_bulanan,2),
+            'diatas_ratarata' =>$keuangan_diatas_rata,
+            'dibawah_ratarata' =>$keuangan_dibawah_rata,
+            'tertinggi' =>$keuangan_tertinggi,
+            'terendah' =>$keuangan_terendah,
         ],
-        // 'opd_apbd' => $opd_pagu_apbd,
-        // 'pagu_tambahan' => $total_pagu_tambahan,
-        // 'pagu_total' => $pagu_total,
-        // 'opd_tkd' => $opd_pagu_tambahan,
+        ];
+        $data['deviasi_opd'] = [
+        'fisik' => [
+            'opd_ungu' =>$dev_fisik_merah,
+            'opd_hijau' =>$dev_fisik_kuning,
+            'opd_kuning' =>$dev_fisik_hijau,
+            'opd_merah' =>$dev_fisik_ungu,
+
+            'persen_ungu' => ($dev_fisik_merah / count($data_grafik) * 100) ,
+            'persen_hijau' => ($dev_fisik_kuning / count($data_grafik) * 100) ,
+            'persen_kuning' => ($dev_fisik_hijau / count($data_grafik) * 100) ,
+            'persen_merah' => ($dev_fisik_ungu / count($data_grafik) * 100) ,
+        ],
+        'keuangan' => [
+            'opd_ungu' =>$dev_keu_merah,
+            'opd_hijau' =>$dev_keu_kuning,
+            'opd_kuning' =>$dev_keu_hijau,
+            'opd_merah' =>$dev_keu_ungu,
+
+            'persen_ungu' => ($dev_keu_merah / count($data_grafik) * 100) ,
+            'persen_hijau' => ($dev_keu_kuning / count($data_grafik) * 100) ,
+            'persen_kuning' => ($dev_keu_hijau / count($data_grafik) * 100) ,
+            'persen_merah' => ($dev_keu_ungu / count($data_grafik) * 100) ,
+        ],
         ];
       
 

@@ -245,7 +245,7 @@
 
 
 
-                    if (bulan_aktif()>$v['bulan']) {
+                    if ($v['bulan']<=bulan_aktif()) {
                         $realisasi_fisik = $v['realisasi_fisik_akumulasi'];
                         $realisasi_keuangan = round($persen_rk,2);
                         $deviasi_fisik = round($deviasi_fisik,2);
@@ -279,7 +279,7 @@
                     <?php } else{ 
 
 
-                    if (bulan_aktif()>$v['bulan']) {      
+                    if ($v['bulan']<=bulan_aktif()) {      
                         $realisasi_fisik = $v['realisasi_fisik_akumulasi'];
                         $realisasi_keuangan = $v['realisasi_keuangan_akumulasi'];
                         $deviasi_fisik = round($deviasi_fisik,2);

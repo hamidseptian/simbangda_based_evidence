@@ -137,11 +137,7 @@
                         <?php } ?>
 
 
-                    <!-- <div class="form-group">
-                        <label for="idParent">User Parent</label>
-                        <select name="idParent" class="form-control" id="idParent" style="width: 100%;" onchange="showGroup(this.value)">
-                        </select>
-                    </div> -->
+                
                     <div class="form-group">
                         <label for="fullName">Nama</label>
                         <input type="text" class="form-control" id="fullName" name="fullName">
