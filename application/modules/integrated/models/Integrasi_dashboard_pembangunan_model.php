@@ -20,13 +20,53 @@ class Integrasi_dashboard_pembangunan_model extends CI_Model
 	public function total_dashboard($tahun, $kode_tahap, $bulan)
 	{	
 		
-		$q = $this->db->query("SELECT sum(pagu_total) as total_pagu, 
-			sum(rp_target_keuangan_akumulasi) as total_target_keuangan, sum(rp_realisasi_keuangan_akumulasi) as total_realisasi_keuangan,
-			sum(rp_target_keuangan_bulanan) as total_target_keuangan_bulanan, sum(rp_realisasi_keuangan_bulanan) as total_realisasi_keuangan_bulanan,
-			sum(target_fisik_akumulasi) as target_fisik, sum(target_fisik_bulanan) as target_fisik_bulanan,
-			sum(realisasi_fisik_akumulasi) as realisasi_fisik, sum(realisasi_fisik_bulanan) as realisasi_fisik_bulanan,
+
+		  $query_sql = 'g.target_fisik_akumulasi as target_fisik,
+                   g.realisasi_fisik_akumulasi as realisasi_fisik,
+                   g.target_keuangan_akumulasi as target_keuangan,
+                   g.realisasi_keuangan_akumulasi as realisasi_keuangan,
+                   g.pagu_total,
+                   g.rp_target_keuangan_akumulasi as rp_target_keuangan,
+                   g.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan
+                   ';
+         $query_sql_tambahan = 'gt.target_fisik_akumulasi as target_fisik_tambahan,
+                   gt.realisasi_fisik_akumulasi as realisasi_fisik_tambahan,
+                   gt.target_keuangan_akumulasi as target_keuangan_tambahan,
+                   gt.realisasi_keuangan_akumulasi as realisasi_keuangan_tambahan,
+                   gt.pagu_total as pagu_total_tambahan,
+                   gt.rp_target_keuangan_akumulasi as rp_target_keuangan_tambahan,
+                   gt.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan_tambahan
+                   ';
+
+	
+
+
+		$this->db->query("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
+		$q = $this->db->query("SELECT (sum(g.pagu_total) + sum(gt.pagu_total)) as total_pagu, 
+			(sum(g.rp_target_keuangan_akumulasi) + sum(gt.rp_target_keuangan_akumulasi)) as total_target_keuangan,
+			(sum(g.rp_realisasi_keuangan_akumulasi) + sum(gt.rp_realisasi_keuangan_akumulasi)) as total_realisasi_keuangan,
+
+			(sum(g.rp_target_keuangan_bulanan) + sum(gt.rp_target_keuangan_bulanan)) as total_target_keuangan_bulanan,
+			(sum(g.rp_realisasi_keuangan_bulanan) + sum(gt.rp_realisasi_keuangan_bulanan)) as total_realisasi_keuangan_bulanan,
+
+			(sum(g.target_fisik_akumulasi) ) as target_fisik,
+			(sum(g.target_fisik_bulanan) ) as target_fisik_bulanan,
+
+			(sum(g.realisasi_fisik_akumulasi) ) as realisasi_fisik,
+			(sum(g.realisasi_fisik_bulanan)  ) as realisasi_fisik_bulanan,
+
 			(SELECT count(id_instansi) from master_instansi where kategori='OPD' and is_active=1) as banyak_opd
-			from grafik where tahun = '$tahun' and kode_tahap='$kode_tahap' and bulan='$bulan'");
+
+
+			from grafik g 
+
+	          LEFT JOIN grafik_tambahan gt ON g.id_instansi COLLATE utf8mb4_unicode_ci = gt.id_instansi COLLATE utf8mb4_unicode_ci
+	          AND g.tahun COLLATE utf8mb4_unicode_ci = gt.tahun COLLATE utf8mb4_unicode_ci
+	          AND g.kode_tahap COLLATE utf8mb4_unicode_ci = gt.kode_tahap COLLATE utf8mb4_unicode_ci
+	          AND g.bulan COLLATE utf8mb4_unicode_ci = gt.bulan COLLATE utf8mb4_unicode_ci
+
+
+			where g.tahun = '$tahun' and g.kode_tahap='$kode_tahap' and g.bulan='$bulan'");
 		return $q;
 	}
 	public function laporan_opd($tahun, $kode_tahap, $bulan, $id_instansi='' , $urutan_ranking='', $ranking_berdasarkan='')

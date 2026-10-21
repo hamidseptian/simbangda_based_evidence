@@ -2840,15 +2840,31 @@ ini_set("pcre.backtrack_limit", "5000000");
                    g.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan
                    ';
 
+         $query_sql_inspektorat_tambahan = 'gt.target_fisik_akumulasi as target_fisik_tambahan,
+                   gt.realisasi_fisik_akumulasi as realisasi_fisik_tambahan,
+                   gt.target_keuangan_akumulasi as target_keuangan_tambahan,
+                   gt.realisasi_keuangan_akumulasi as realisasi_keuangan_tambahan,
+                   gt.pagu_total as pagu_total_tambahan,
+                   gt.rp_target_keuangan_akumulasi as rp_target_keuangan_tambahan,
+                   gt.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan_tambahan
+                   ';
+
 
     $query_inspektorat  = $this->db->query("SELECT
                                		mi.nama_instansi, 
                                    $query_sql_inspektorat,
+                                   $query_sql_inspektorat_tambahan,
                                     g.last_update
 
-                                FROM
-                                  grafik g 
-                                  left join master_instansi mi on g.id_instansi = mi.id_instansi
+                                   FROM
+                                  master_instansi mi
+                                  LEFT JOIN grafik g ON mi.id_instansi COLLATE utf8mb4_unicode_ci = g.id_instansi COLLATE utf8mb4_unicode_ci
+                                  LEFT JOIN grafik_tambahan gt ON g.id_instansi COLLATE utf8mb4_unicode_ci = gt.id_instansi COLLATE utf8mb4_unicode_ci
+                                  AND g.tahun COLLATE utf8mb4_unicode_ci = gt.tahun COLLATE utf8mb4_unicode_ci
+                                  AND g.kode_tahap COLLATE utf8mb4_unicode_ci = gt.kode_tahap COLLATE utf8mb4_unicode_ci
+                                  AND g.bulan COLLATE utf8mb4_unicode_ci = gt.bulan COLLATE utf8mb4_unicode_ci
+
+                                  
                                 WHERE
                                    g.id_instansi='70'
                                   AND g.kode_tahap = '$tahap'

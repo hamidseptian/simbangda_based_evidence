@@ -50,13 +50,13 @@
                         chart.renderer.label(
                             `
                             <div style="
-                                width: 200px;
+                                width: 180px;
                                 text-align: center;
                                 color: #333;
                                 font-family: Arial, sans-serif;
                             ">
                                 <div style="
-                                    font-size: 13px;
+                                    font-size: 12px;
                                     font-weight: bold;
                                     margin-bottom: 2px;
                                 ">
@@ -66,18 +66,18 @@
                                 <table style="
                                     width: 100%;
                                     border-collapse: collapse;
-                                    font-size: 9px;
+                                    font-size: 8px;
                                     background: #fff;
                                 ">
                                     <thead>
                                         <tr style="background: #eaf2f8;">
-                                            <th style="border: 1px solid #bbb; padding: 2px;">
+                                            <th style="border: 1px solid #bbb; padding: 2px;font-size: 8px; text-align:center">
                                                 Warna
                                             </th>
-                                            <th style="border: 1px solid #bbb; padding: 2px;">
+                                            <th style="border: 1px solid #bbb; padding: 2px;font-size: 8px; text-align:center">
                                                 Ket Deviasi
                                             </th>
-                                            <th style="border: 1px solid #bbb; padding: 2px;">
+                                            <th style="border: 1px solid #bbb; padding: 2px;font-size: 8px; text-align:center">
                                                 Jumlah
                                             </th>
                                         </tr>
@@ -172,68 +172,81 @@
     },
 
     tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
+        useHTML: true,
+        formatter: function () {
+            return '<b>' + this.point.name + '</b><br>' +
+                   'Jumlah: ' + this.point.y + ' OPD<br>' +
+                   'Persentase: ' + this.point.percentage.toFixed(2) + '%';
+        }
     },
 
     legend: {
         enabled: false
     },
 
-        plotOptions: {
-            series: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                borderRadius: 3,
-                showInLegend: false
+        
+
+plotOptions: {
+    series: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        borderRadius: 3,
+        showInLegend: false
+    },
+    pie: {
+        dataLabels: [{
+            // Label luar: selalu nama pendek
+            enabled: true,
+            distance: 10,
+            formatter: function () {
+                return this.point.options.short;
             },
-            pie: {
-                dataLabels: [{
-                    // Label di luar lingkaran
-                    enabled: true,
-                    distance: 7,
-                    format: '{point.name}',
-                    connectorWidth: 1,
-                    allowOverlap: false,
-                    style: {
-                        fontSize: '12px',
-                        fontWeight: 'bold',
-                        textOutline: 'none'
-                    }
-                }, {
-                    // Label di dalam lingkaran
-                    enabled: true,
-                    distance: -35,
-                    format: '{point.percentage:.2f}%',
-                    backgroundColor: 'contrast',
-                    style: {
-                        fontSize: '11px',
-                        fontWeight: 'bold',
-                        textOutline: 'none'
-                    }
-                }]
+            connectorWidth: 1,
+            allowOverlap: false,
+            style: {
+                fontSize: '11px',
+                fontWeight: 'bold',
+                textOutline: 'none'
             }
-        },
+        }, {
+            // Label dalam: persentase
+            enabled: true,
+            distance: -25,
+            format: '{point.percentage:.2f}%',
+            backgroundColor: 'contrast',
+            style: {
+                fontSize: '11px',
+                textOutline: 'none'
+            }
+        }]
+    }
+},
+
 
     series: [{
-        name: 'Pagu',
+        name: 'Persentasi',
         colorByPoint: true,
-        size: '100%',
+        size: '80%',
         innerSize: '85%',
 
         data: [{
-            name: '> -10%',
+            name: 'Deviasi >-10%',
+            short: '>-10%',
             y: <?php echo $deviasi_opd['fisik']['opd_merah'] ?> ,
             color: '#f8b2b2'
         }, {
-            name: '-5 s/d -10%',
+            name: 'Deviasi -5 s/d -10%',
+            short: '-5 s/d -10%',
             y: <?php echo $deviasi_opd['fisik']['opd_kuning'] ?>,
             color: '#fcf3cf'
         }, {
-            name: '< -5%',
+            name: 'Deviasi < -5%',
+            short: '< -5%',
             y: <?php echo $deviasi_opd['fisik']['opd_hijau'] ?>,
             color: '#d5f5e3'
         }, {
-            name: '+',
+            name: 'Deviasi Positif',
+            short: '+',
             y: <?php echo $deviasi_opd['fisik']['opd_ungu'] ?>,
             color: '#ff7cfd'
         }]

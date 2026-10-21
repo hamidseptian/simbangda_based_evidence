@@ -515,7 +515,7 @@ array_multisort($deviasi_keu_terendah, SORT_DESC);
 
 
     public function show_infografis(){
-        $tahun = tahun_anggaran();
+        $tahun = $this->input->get('tahun') ? $this->input->get('tahun') : tahun_anggaran();
         $tahap = tahapan_apbd();
         $bulan = $this->input->get('bulan') ? $this->input->get('bulan') : bulan_aktif();
         $deskripsi_bulan = '' . jml_hari_dalam_bulan($bulan, $tahun) . ' ' . bulan_global($bulan) . ' ' .$tahun;
@@ -874,8 +874,50 @@ $data['cek'] = $data_grafik;
 // });
 
 
+        if ($tahun==date('Y')) {
+            if ($bulan >= bulan_aktif()) {
+                $data['penginputan'] = 'Sampai ' . date('d') . ' ' . (bulan_global(bulan_aktif())) . ' ' .$tahun;
+                # code...
+            }
+            else{
+                $data['penginputan'] = 'Sampai ' . jml_hari_dalam_bulan($bulan, $tahun)  . ' ' . (bulan_global($bulan)) . ' ' .$tahun;
+                
+            }
+        }
+        elseif ($tahun<=date('Y')) {
+                $data['penginputan'] = 'Sampai ' . jml_hari_dalam_bulan($bulan, $tahun)  . ' ' . (bulan_global($bulan)) . ' ' .$tahun;
+            # code...
+        }else{
+                $data['penginputan'] = 'Sampai ' . date('d') . ' ' . (bulan_global(bulan_aktif())) . ' ' .tahun_anggaran();
 
-        $data['penginputan'] = 'Sampai ' . jml_hari_dalam_bulan($bulan, $tahun) . ' ' . (bulan_global($bulan)) . ' ' .$tahun;
+        }
+
+
+
+
+
+
+
+
+        // if ($bulan == bulan_aktif() && $tahun==date('Y')) {
+        //     # code...
+        // }else{
+        //     if ($tahun==date('Y')) {
+        //         if ($bulan == bulan_aktif()) {
+        //             # code...
+        //         }else{
+
+        //         }
+        //     }
+        //     elseif ($tahun<=date('Y')) {
+        //         # code...
+        //     }else{
+
+        //     }
+
+        //     $data['penginputan'] = 'Sampai ' . jml_hari_dalam_bulan($bulan, $tahun) . ' ' . (bulan_global($bulan)) . ' ' .$tahun;
+
+        // }
 
         $data['pencapaian'] = [
         'fisik' => [

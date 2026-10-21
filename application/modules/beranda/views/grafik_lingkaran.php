@@ -215,7 +215,7 @@
         },
 
     series: [{
-        name: 'Pagu',
+        name: 'Jumlah OPD',
         colorByPoint: true,
         size: '100%',
         innerSize: '85%',

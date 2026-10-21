@@ -619,7 +619,7 @@
   <div class="app-content">
 
   <div class="pagu-bar pagu-bg-uang-1">
-    <div class="icon-circle bg-emas pagu-icon" style="width:60px;height:60px;font-size:1.7rem;">🏛️</div>
+    <!-- <div class="icon-circle bg-emas pagu-icon" style="width:60px;height:60px;font-size:1.7rem;"></div> -->
     <div class="pagu-main">
       <?php //var_dump($cek) ?>
       <div class="label-kecil">PAGU ANGGARAN</div>
@@ -785,7 +785,7 @@
     </div>
 
     <!-- KANAN (1/3): ANALISIS DEVIASI — 2 kotak terpisah: FISIK di atas, KEUANGAN di bawah -->
-    <div class="flex-col" style="display:flex;gap:16px;height:100%;">
+    <div class="flex-col" style="display:flex;gap:16px;">
 
       <div class="card-panel panel-transparan deviasi-sub-fisik" style="flex:1;display:flex;flex-direction:column;">
         <?php $this->load->view('beranda/grafik_lingkaran_dev_fisik') ?>
