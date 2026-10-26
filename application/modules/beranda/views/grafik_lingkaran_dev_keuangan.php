@@ -60,7 +60,7 @@
                                     font-weight: bold;
                                     margin-bottom: 2px;
                                 ">
-                                    Statistika Deviasi Fisik
+                                    Statistika Deviasi Keuangan
                                 </div>
 
                                 <table style="
@@ -164,7 +164,7 @@
     },
 
     title: {
-        text: 'ANALISIS DEVIASI REALISASI FISIK TERHADAP TARGET'
+        text: 'ANALISIS DEVIASI REALISASI KEUANGAN TERHADAP TARGET'
     },
 
     subtitle: {

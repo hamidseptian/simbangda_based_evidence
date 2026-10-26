@@ -117,6 +117,147 @@ class Integrasi_dashboard_pembangunan_model extends CI_Model
 		}
 		return $q;
 	}
+	public function laporan_opd_new($tahun, $kode_tahap, $bulan, $id_instansi='' , $urutan_ranking='', $ranking_berdasarkan='')
+	{	
+		if ($id_instansi=='') {
+				$sql = 'g.target_fisik_akumulasi as target_fisik,
+					g.realisasi_fisik_akumulasi as realisasi_fisik,
+					g.target_keuangan_akumulasi as target_keuangan,
+					g.realisasi_keuangan_akumulasi as realisasi_keuangan,
+					g.pagu_total,
+					g.rp_target_keuangan_akumulasi as rp_target_keuangan,
+					g.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan
+					';
+				$sql_tambahan = 'gt.target_fisik_akumulasi as target_fisik_tambahan,
+					gt.realisasi_fisik_akumulasi as realisasi_fisik_tambahan,
+					gt.target_keuangan_akumulasi as target_keuangan_tambahan,
+					gt.realisasi_keuangan_akumulasi as realisasi_keuangan_tambahan,
+					gt.pagu_total as pagu_total_tambahan,
+					gt.rp_target_keuangan_akumulasi as rp_target_keuangan_tambahan,
+					gt.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan_tambahan
+					';
+
+
+
+			$sql = "SELECT mi.nama_instansi, mi.singkatan_nama_instansi, mi.id_instansi,	
+			$sql, $sql_tambahan
+
+	 		
+	 			from grafik g  
+ 			left join master_instansi mi on g.id_instansi = mi.id_instansi
+	          LEFT JOIN grafik_tambahan gt ON g.id_instansi COLLATE utf8mb4_unicode_ci = gt.id_instansi COLLATE utf8mb4_unicode_ci
+	          AND g.tahun COLLATE utf8mb4_unicode_ci = gt.tahun COLLATE utf8mb4_unicode_ci
+	          AND g.kode_tahap COLLATE utf8mb4_unicode_ci = gt.kode_tahap COLLATE utf8mb4_unicode_ci
+	          AND g.bulan COLLATE utf8mb4_unicode_ci = gt.bulan COLLATE utf8mb4_unicode_ci
+			where g.tahun = '$tahun' and g.kode_tahap='$kode_tahap' and g.bulan='$bulan'
+			" ;
+
+			$this->db->query("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
+			$q = $this->db->query($sql);
+			$data_opd = [];
+			foreach ($q->result_array() as $k => $v) {
+				if ($v['pagu_total_tambahan']) {
+					$pagu = $v['pagu_total_tambahan'] + $v['pagu_total'];
+					$rp_tk = $v['rp_target_keuangan_tambahan'] + $v['rp_target_keuangan'];
+					$rp_rk = $v['rp_realisasi_keuangan_tambahan'] + $v['rp_realisasi_keuangan'];
+				}else{
+					$pagu = $v['pagu_total'];
+					$rp_tk = $v['rp_target_keuangan'];
+					$rp_rk = $v['rp_realisasi_keuangan'];
+
+				}
+					$persen_tk = $rp_tk / $pagu * 100;
+					$persen_rk = $rp_rk / $pagu * 100;
+
+
+	            $deviasi_fisik_akumulasi = $v['realisasi_fisik'] - $v['target_fisik'] ;
+	            $deviasi_keuangan_akumulasi =  $persen_rk - $persen_tk; 
+	            // $deviasi_fisik_bulanan = $persen_rk - $persen_tk;
+
+
+	            // $persen_target_keuangan = '?';//$v['pagu_total'] == 0 ? 0 : ($v['rp_target_keuangan_akumulasi'] / $v['pagu_total']) * 100; 
+	            // $persen_realisasi_keuangan = '?';//$v['pagu_total'] == 0 ? 0 : ($v['rp_realisasi_keuangan_akumulasi'] / $v['pagu_total']) * 100; 
+
+	            // $persen_target_keuangan_bulanan = '?';// $v['pagu_total'] == 0 ? 0 : ($v['rp_target_keuangan_bulanan'] / $v['pagu_total']) * 100; 
+	            // $persen_realisasi_keuangan_bulanan = '?';// $v['pagu_total'] == 0 ? 0 : ($v['rp_realisasi_keuangan_bulanan'] / $v['pagu_total']) * 100; 
+	            // $deviasi_keuangan_bulanan = '?';//$persen_realisasi_keuangan_bulanan - $persen_target_keuangan_bulanan ; 
+
+
+				   $data_push = [
+	                'urutan'=>($k + 1),
+	                'skpd'=>$v['nama_instansi'],
+	                // 'id_parent'=>$v['id_parent'],
+	                'singkatan_skpd'=>$v['singkatan_nama_instansi'],
+	                'pagu'=>$pagu,
+
+	                'target_fisik_akumulasi'=>$v['target_fisik'],
+	                'realisasi_fisik_akumulasi'=>$v['realisasi_fisik'],
+	                'deviasi_fisik_akumulasi'=>round($deviasi_fisik_akumulasi,2),
+
+	                'rp_target_keuangan'=>$rp_tk,
+	                'persen_target_keuangan'=>round($persen_tk,2),
+	                'rp_realisasi_keuangan'=>$rp_rk,
+	                'persen_realisasi_keuangan'=>round($persen_rk,2),
+	                'deviasi_realisasi_keuangan'=>round($deviasi_keuangan_akumulasi,2),
+
+
+	            //     'target_fisik_bulanan'=>$v['target_fisik_bulanan'],
+	            //     'realisasi_fisik_bulanan '=>$v['realisasi_fisik_bulanan'],
+	            //     'deviasi_fisik_bulanan'=>round($deviasi_fisik_akumulasi,2),
+	                
+
+
+	            //     'rp_target_keuangan_bulanan'=>$v['rp_target_keuangan_bulanan'],
+	            //     'persen_target_keuangan_bulanan'=>round($persen_target_keuangan_bulanan,2),
+	            //     'rp_realisasi_keuangan_bulanan'=>$v['rp_realisasi_keuangan_bulanan'],
+	            //     'persen_realisasi_keuangan_bulanan'=>round($persen_realisasi_keuangan_bulanan,2),
+	            //     'deviasi_realisasi_keuangan_bulanan'=>round($deviasi_keuangan_bulanan,2),
+
+	                'detail'=> [
+	                    'url'=> base_url().'integrated/api/dashboard_pembangunan/detail_data_opd_pengelompokan/'.$v['id_instansi'].'?tahun='.$tahun.'&tahap='.$kode_tahap, //.'/'.$v['tahun'].'/'.$v['kode_tahap'].'/'.$v['bulan'].'/',
+	                	'url' =>base_url().'integrated/api/dashboard_pembangunan/detail_data_opd_pengelompokan/',
+	                	'id_instansi'=> $v['id_instansi'] , 
+	                	// 'id_satker'=> $v['integrasi_sipedal_id_instansi'] , 
+	                	'tahun'=> $tahun, 
+	                	'kode_tahap'=> $kode_tahap, 
+	                	'bulan'=> $bulan, 
+	                ]
+	            ];
+	            array_push($data_opd,$data_push); 
+			}
+
+			$data_opd_diurutkan = $data_opd;
+			if ($urutan_ranking=='') {
+				$data_opd_diurutkan	 = $data_opd;
+			}else{
+	// 			// $ranking_berdasarkan = "";
+				if ($ranking_berdasarkan == 'realisasi_keuangan') {
+					usort($data_opd_diurutkan, function ($a, $b) {
+					    return $b['persen_realisasi_keuangan'] <=> $a['persen_realisasi_keuangan']; // terbesar ke terkecil
+					});
+
+	// 				# code...
+				}else{
+					usort($data_opd_diurutkan, function ($a, $b) {
+					    return $b['singkatan_skpd'] <=> $a['singkatan_skpd']; // terbesar ke terkecil
+					});
+
+				}
+	// 		
+			}
+			
+		}else{
+	// 		$q = $this->db->query("SELECT mi.nama_instansi, mi.singkatan_nama_instansi, g.pagu_total, g.rp_target_keuangan_akumulasi, g.rp_target_keuangan_bulanan,  g.rp_realisasi_keuangan_akumulasi, g.rp_realisasi_keuangan_bulanan,
+	// 			 g.target_fisik_akumulasi, g.target_fisik_bulanan, g.realisasi_fisik_akumulasi, g.realisasi_fisik_bulanan , 
+	// 			 g.id_instansi, g.tahun, g.kode_tahap, g.bulan
+	// 			from grafik g  
+	// 			left join master_instansi mi on g.id_instansi = mi.id_instansi
+	// 			where
+	// 			g.tahun = '$tahun' and g.kode_tahap='$kode_tahap' and g.bulan='$bulan' and g.id_instansi='$id_instansi'");
+
+		}
+		return $data_opd_diurutkan;
+	}
 	public function opd_belum_ada_data($tahun, $tahap, $bulan)
 	{	
 	

@@ -143,7 +143,7 @@ class Data_apbd extends MY_Controller
                 $program = [];
                 foreach ($q_program->result_array() as $item) {
                     $kode = $item['kode_rekening_program'];
-                    $pagu = $item['pagu'];
+                    $pagu = $item['pagu'] + $item['pagu_tambahan'];
 
                     if (!isset($program[$kode])) {
                         $program[$kode] = [
