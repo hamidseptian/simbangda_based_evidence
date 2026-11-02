@@ -1497,7 +1497,7 @@ public function sub_kegiatan_apbd_instansi()
             $onclick2 = "input_anggaran('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_tahap."','".tahun_anggaran()."','instansi')";
             $onclick4 = "get_sumber_dana('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->pagu_tambahan."')";
 
-            $onclick_copy = "copy_data_apbd_sub_kegiatan('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".tahapan_apbd()."','".$lists->kode_bidang_urusan."','".$nama_sub_kegiatan."')";
+            $onclick_copy = "copy_data_apbd_sub_kegiatan('".$lists->kode_rekening_sub_kegiatan."','".tahapan_apbd()."','".$lists->id_sub_kegiatan_instansi."','".$lists->pergeseran_ke."','".$nama_sub_kegiatan."')";
 
             $cek_count_data_pagu = $this->db->query("
                 SELECT id_anggaran_sub_kegiatan FROM anggaran_sub_kegiatan
@@ -2077,7 +2077,7 @@ public function sub_kegiatan_apbd_instansi()
 
                  $q_status_pengalihan = $this->db->query("SELECT * from sub_kegiatan_instansi where id_instansi='$id_instansi' and tahun='$tahun' and kode_tahap='4' and kode_sub_kegiatan='$krsk'");
                  $cek_status_pengalihan = $q_status_pengalihan->num_rows()==0 ? 'Dinonaktifkan' : 'Dialihkan ke APBD Perubahan';
-                $row[]  = $lists->status==1 ? $kode_tahap[$lists->kode_tahap] : $cek_status_pengalihan;
+                $row[]  = $lists->status==1 ? ($lists->pergeseran_ke ? $kode_tahap[$lists->kode_tahap].'<br>Pergeseran ke-'.$lists->pergeseran_ke : $kode_tahap[$lists->kode_tahap]) : $cek_status_pengalihan;
                 $row[]  = number_format($pagu);
 
 
@@ -2697,50 +2697,76 @@ public function sub_kegiatan_apbd_instansi()
             ];
             $kode_rekening_sub_kegiatan = $this->input->post('kode_rekening_sub_kegiatan');
             $kode_kegiatan = $this->input->post('kode_kegiatan');
-            $id_table_kegiatan = str_replace('.', '-', $kode_kegiatan);
-            $kode_program = $this->input->post('kode_program');
-            $id_table_program = str_replace('.', '-', $kode_program);
-            $kode_bidang_urusan = $this->input->post('kode_bidang_urusan');
+            $id_sub_kegiatan_instansi = $this->input->post('id_sub_kegiatan_instansi');
+            $pergeseran_ke = $this->input->post('pergeseran_ke');
             $tahap = $this->input->post('tahap');
             $id_instansi = id_instansi();
             $tahun = tahun_anggaran();
+            if ($pergeseran_ke) {
             $where_awal = [
-                'kode_bidang_urusan' => $kode_bidang_urusan, 
-                'kode_rekening_program' => $kode_program, 
-                'kode_rekening_kegiatan' => $kode_kegiatan, 
+                // 'kode_bidang_urusan' => $kode_bidang_urusan, 
+                // 'kode_rekening_program' => $kode_program, 
+                // 'kode_rekening_kegiatan' => $kode_kegiatan, 
                 'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 
+                'pergeseran_ke' => $pergeseran_ke, 
                 'kode_tahap' => 2,
                 'id_instansi' => id_instansi(),
                 'tahun'=>$tahun
             ];
             $where_pagu_awal = [
-                'kode_bidang_urusan' => $kode_bidang_urusan, 
-                'kode_program' => $kode_program, 
-                'kode_kegiatan' => $kode_kegiatan, 
+                // 'kode_bidang_urusan' => $kode_bidang_urusan, 
+                // 'kode_program' => $kode_program, 
+                // 'kode_kegiatan' => $kode_kegiatan, 
+                'pergeseran_ke' => $pergeseran_ke, 
                 'kode_sub_kegiatan' => $kode_rekening_sub_kegiatan, 
                 'kode_tahap' => 2,
                 'id_instansi' => id_instansi(),
                 'tahun'=>$tahun
             ];
 
-            $where_perubahan = [
-                'kode_bidang_urusan' => $kode_bidang_urusan, 
-                'kode_rekening_program' => $kode_program, 
-                'kode_rekening_kegiatan' => $kode_kegiatan, 
+            }else{
+            $where_awal = [
+                // 'kode_bidang_urusan' => $kode_bidang_urusan, 
+                // 'kode_rekening_program' => $kode_program, 
+                // 'kode_rekening_kegiatan' => $kode_kegiatan, 
                 'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 
-                'kode_tahap' => tahapan_apbd(),
+                'kode_tahap' => 2,
                 'id_instansi' => id_instansi(),
                 'tahun'=>$tahun
             ];
-            $where_pagu_perubahan = [
-                'kode_bidang_urusan' => $kode_bidang_urusan, 
-                'kode_program' => $kode_program, 
-                'kode_kegiatan' => $kode_kegiatan, 
+            $where_pagu_awal = [
+                // 'kode_bidang_urusan' => $kode_bidang_urusan, 
+                // 'kode_program' => $kode_program, 
+                // 'kode_kegiatan' => $kode_kegiatan, 
                 'kode_sub_kegiatan' => $kode_rekening_sub_kegiatan, 
-                'kode_tahap' => tahapan_apbd(),
+                'kode_tahap' => 2,
                 'id_instansi' => id_instansi(),
                 'tahun'=>$tahun
             ];
+
+            }
+                
+            $where_rk = [
+                // 'kode_bidang_urusan' => $kode_bidang_urusan, 
+                // 'kode_program' => $kode_program, 
+                // 'kode_kegiatan' => $kode_kegiatan, 
+                'kode_sub_kegiatan' => $kode_rekening_sub_kegiatan, 
+                'kode_tahap' => 2,
+                'id_instansi' => id_instansi(),
+                'tahun'=>$tahun
+            ];
+
+
+                $where_pagu_perubahan = [
+                    // 'kode_bidang_urusan' => $kode_bidang_urusan, 
+                    // 'kode_program' => $kode_program, 
+                    // 'kode_kegiatan' => $kode_kegiatan, 
+                    'pergeseran_ke' => $pergeseran_ke, 
+                    'kode_sub_kegiatan' => $kode_rekening_sub_kegiatan, 
+                    'kode_tahap' => tahapan_apbd(),
+                    'id_instansi' => id_instansi(),
+                    'tahun'=>$tahun
+                ];
 
             // data APBD awal
 
@@ -2750,9 +2776,9 @@ public function sub_kegiatan_apbd_instansi()
 
             $where_usk_lama = [
                 'id_instansi' => id_instansi(),
-                'kode_bidang_urusan' => $kode_bidang_urusan, 
-                'kode_rekening_program' => $kode_program, 
-                'kode_rekening_kegiatan' => $kode_kegiatan, 
+                // 'kode_bidang_urusan' => $kode_bidang_urusan, 
+                // 'kode_rekening_program' => $kode_program, 
+                // 'kode_rekening_kegiatan' => $kode_kegiatan, 
                 'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 
                 'tahun_anggaran '=> $tahun
             ];
@@ -2764,7 +2790,7 @@ public function sub_kegiatan_apbd_instansi()
 
 
             $target                 = $this->db->order_by('bulan', 'ASC')->get_where('target_apbd', $where_awal);
-            $realisasi_keuangan          = $this->db->order_by('bulan', 'ASC')->get_where('realisasi_keuangan', $where_pagu_awal);
+            $realisasi_keuangan          = $this->db->order_by('bulan', 'ASC')->get_where('realisasi_keuangan', $where_rk);
 
             $sumber_dana                 = $this->db->get_where('sumber_dana', $where_awal);
             $anggaran_awal                 = $this->db->get_where('anggaran_sub_kegiatan', $where_pagu_awal);
@@ -2922,8 +2948,13 @@ public function sub_kegiatan_apbd_instansi()
                if ($realisasi_keuangan->num_rows()>0) {
                $this->db->insert_batch('realisasi_keuangan', $kumpul_realisasi_keuangan_baru);
                }
+               $this->db->update('sub_kegiatan_instansi',['pergeseran_ke'=>''], ['id_sub_kegiatan_instansi'=>$id_sub_kegiatan_instansi]);
             }
 
+
+
+            $id_table_kegiatan = str_replace('.', '-', $anggaran_apbd_awal['kode_kegiatan']);
+            $id_table_program = str_replace('.', '-', $anggaran_apbd_awal['kode_program']);
                $output['data']['id_table_kegiatan'] = $id_table_kegiatan;
                $output['data']['id_table_program'] = $id_table_program;
             // header('Content-Type: application/json');
@@ -3809,6 +3840,7 @@ public function sub_kegiatan_apbd_instansi()
                 'created_on'=>$ski['created_on'],
                 'updated_on'=>$ski['updated_on'],
                 'created_by'=>$ski['created_by'],
+                'pergeseran_ke'=>$ski['pergeseran_ke'],
                 'updated_by'=>$ski['updated_by'],
                 'input_by'=>"Pengalihan APBD Awal Ke APBD Perubahan",
                 'status'=>$ski['status'],

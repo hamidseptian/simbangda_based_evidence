@@ -1,49 +1,113 @@
+
+
+
+      <style>
+        .font_laporan{
+          font-size:9px;
+          font-family: 'arial';
+        }
+        .table {
+          
+          border-collapse: collapse;
+          width:100%;
+        }
+        .table td, th {
+          border: 0.01em solid ;
+          padding:3px;
+        }
+
+        .header{
+          font-weight:bold;
+          text-align : center;
+        }
+
+
+        .logo{
+          float:left;
+          width : 90px;
+        }
+        .skpd{
+          float:right;
+          margin-left:10px;
+          
+        }
+        .clearfix{
+          clear:both;
+          
+        }
+        .kop{
+          /*text-align:center;*/
+          font-family: 'arial';
+        }
+        .penutup{
+          font-size:6px;
+        }
+        .copyright{
+          font-size:7px;
+          float:left;
+        }
+        .page{
+          float:right;
+          font-size:7px;
+        }
+        .pemprov_sumbar{
+          font-weight: 900;  
+          font-size:16px;
+        }
+        .nama_instansi{
+          font-size:22px;
+          text-align: justify;
+        }
+        .garis_kop1{
+          margin-top:5px;
+          border-width: 1.6px;
+          border-style: solid;
+        }
+        .garis_kop2{
+          margin-top:1px;
+          border-width: 1px;
+          border-style: solid;
+        }
+        .judul_laporan{
+          /*text-align : center;*/
+          font-family: 'arial';
+          font-size:13px;
+        }
+        .nama_kegiatan{
+          white-space:pre;
+          left: 30px;
+        }
+      </style>
+
         <?php   
 $hasil = [];
-// $total_pagu_opd = 0;
-$total_bobot_ski = 0;
-$total_tft_ski = 0;
-$total_rft_ski = 0;
 
-$total_rp_tk =0;
-$total_rp_rk =0;
-$total_persen_tf = 0 ;
-$total_persen_rf = 0 ;
-$total_persen_tk = 0 ;
-$total_persen_rk = 0 ;
-$total_sisa_pagu = 0;
+
 foreach ($sub_kegiatan_tambahan as $row) {
 
     $program  = $row['kode_rekening_program'];
     $kegiatan = $row['kode_rekening_kegiatan'];
     $sub      = $row['kode_rekening_sub_kegiatan'];
     $pagu     = (int) $row['pagu_tambahan']; // null jadi 0
-    // $total_pagu_opd	+= $pagu;
 
-
-   
-    // $q_realisasi_keuangan = $this->realisasi_akumulasi_model->get_realisasi_keuangan($row['id_instansi'], $sub, $bulan, $ope,  $row['tahun'], $row['kode_tahap'])->row_array();
-
-    $q_realisasi_keuangan_tambahan = $this->realisasi_akumulasi_model->get_realisasi_keuangan_tambahan($row['id_instansi'], $sub, $bulan, $ope,  $row['tahun'], $row['kode_tahap'],$id_tambahan_anggaran)->row_array();
-    $q_realisasi_keuangan = $q_realisasi_keuangan_tambahan;
+    $q_realisasi_keuangan = $this->realisasi_akumulasi_model->get_realisasi_keuangan_tambahan($row['id_instansi'], $sub, $bulan, $ope,  $row['tahun'], $row['kode_tahap'], $id_tambahan_anggaran)->row_array();
 
     if ($kode_tahap==2) {
-      $target = $this->realisasi_akumulasi_model->get_target_tambahan($row['id_instansi'], $sub, $bulan, $row['kode_tahap'], $row['tahun'],$id_tambahan_anggaran)->row_array();
+      $target = $this->realisasi_akumulasi_model->get_target_tambahan($row['id_instansi'], $sub, $bulan, $row['kode_tahap'], $row['tahun'], 1)->row_array();
       $nama_tahap = pilihan_nama_tahapan($row['kode_tahap']);
       $where_paket = "AND pp.kode_tahap = 2";
     }else if($kode_tahap ==3){
       $where_paket = "AND pp.kode_tahap = 2";
       if (empty($row['pergeseran_ke'])) {
-          $target = $this->realisasi_akumulasi_model->get_target_tambahan($row['id_instansi'], $sub, $bulan, $row['kode_tahap'], $row['tahun'],$id_tambahan_anggaran)->row_array();
+          $target = $this->realisasi_akumulasi_model->get_target_tambahan($row['id_instansi'], $sub, $bulan, $row['kode_tahap'], $row['tahun'], 1)->row_array();
           $nama_tahap = "APBD AWAL";
       } else {
-          // $target = $this->realisasi_akumulasi_model->get_target_pergeseran($row['id_instansi'], $sub, $row['pergeseran_ke'], $bulan, $row['kode_tahap'], $row['tahun'])->row_array();
-          $target = $this->realisasi_akumulasi_model->get_target_tambahan($row['id_instansi'], $sub, $bulan, $row['kode_tahap'], $row['tahun'],$id_tambahan_anggaran)->row_array();
+          $target = $this->realisasi_akumulasi_model->get_target_tambahan($row['id_instansi'], $sub, $bulan, $row['kode_tahap'], $row['tahun'], 1)->row_array();
           $nama_tahap = "APBD AWAL<br>Pergeseran ke-" . $row['pergeseran_ke'];
       }
     }else{
 
-          $target = $this->realisasi_akumulasi_model->get_target_tambahan($row['id_instansi'], $sub, $bulan, $row['kode_tahap'], $row['tahun'],$id_tambahan_anggaran)->row_array();
+          $target = $this->realisasi_akumulasi_model->get_target_tambahan($row['id_instansi'], $sub, $bulan, $row['kode_tahap'], $row['tahun'], 1)->row_array();
       $where_paket = "AND pp.status = 1";
       if ($row['kode_tahap']==4) {
         $nama_tahap = "APBD PERUBAHAN";
@@ -60,26 +124,8 @@ foreach ($sub_kegiatan_tambahan as $row) {
       }
     }
 
-    $realisasi_keuangan =$q_realisasi_keuangan['total_realisasi'];
-    $persen_realisasi_keuangan = $pagu ==0 ? 0 : ($q_realisasi_keuangan['total_realisasi'] / $pagu) * 100;
-    if ($kategori=='akumulasi') {
-      $target_fisik = $target['target_fisik'];
-      $target_keuangan = $target['target_keuangan'];
-      $persen_tk = $pagu == 0 ? 0 : ($target_keuangan / $pagu) * 100;
-    }else{
-      $target_fisik = $target['target_fisik_bulanan'];
-      $target_keuangan = $target['target_keuangan_bulanan'];
-      $persen_tk = $pagu == 0 ? 0 : ($target_keuangan / $pagu) * 100;
-    }
 
 
-    $capaian_keu = $persen_tk == 0 ? 0 : ($persen_realisasi_keuangan / $persen_tk)  * 100;
-    $sisa_anggaran = $pagu - $realisasi_keuangan ; 
-    $deviasi_keuangan = $persen_realisasi_keuangan - $persen_tk;
-
-
-
-        // $total_paket = $this->realisasi_akumulasi_model->get_total_paket_tambahan($id_instansi, $sub, $row['tahun'], $row['kode_tahap'], $id_tambahan_anggaran)->num_rows();
         $jenis_paket = $this->db->query("SELECT
                     id_paket_pekerjaan, jenis_paket
                   FROM
@@ -88,89 +134,138 @@ foreach ($sub_kegiatan_tambahan as $row) {
                     pp.kode_rekening_sub_kegiatan = '{$sub}'
                     AND pp.id_instansi = {$id_instansi}
                     AND pp.tahun='$tahun' 
+
                     AND pp.id_tambahan_anggaran='$id_tambahan_anggaran' 
+                    AND pp.pagu_tkd>0 
                     $where_paket");
 
-       	$jlm_rutin = 0;
-       	$jlm_swakelola = 0;
-       	$jlm_penyedia = 0;
-       	$total_paket = 0;
+        $jlm_rutin = 0;
+        $jlm_swakelola = 0;
+        $jlm_penyedia = 0;
+        $total_paket = 0;
         $kumpul_id_paket_swakelola = [];
         $kumpul_id_paket_penyedia = [];
-       	foreach ($jenis_paket->result_array() as $k_jp => $v_jp) {
-	       	$total_paket++;
-       		if ($v_jp['jenis_paket']=='SWAKELOLA') {
-       			$jlm_swakelola++;
+        foreach ($jenis_paket->result_array() as $k_jp => $v_jp) {
+          $total_paket++;
+          if ($v_jp['jenis_paket']=='SWAKELOLA') {
+            $jlm_swakelola++;
             array_push($kumpul_id_paket_swakelola, $v_jp['id_paket_pekerjaan']);
-       		}
-       		elseif ($v_jp=='PENYEDIA') {
-       			$jlm_penyedia++;
+          }
+          elseif ($v_jp=='PENYEDIA') {
+            $jlm_penyedia++;
             array_push($kumpul_id_paket_penyedia, $v_jp['id_paket_pekerjaan']);
-       		}else{
-       			$jlm_rutin++;
-       		}
-       	}
+          }else{
+            $jlm_rutin++;
+          }
+        }
 
-    // $convert
-		$swa = $this->realisasi_akumulasi_model->get_realisasi_fisik_new($id_instansi, $sub, $bulan, 'SWAKELOLA', $ope, $tahun,$row['kode_tahap'], $kumpul_id_paket_swakelola)->row_array();
-		$pen = $this->realisasi_akumulasi_model->get_realisasi_fisik_new($id_instansi, $sub, $bulan, 'PENYEDIA', $ope, $tahun,$row['kode_tahap'], $kumpul_id_paket_penyedia)->row_array();
-		$swa_tot  = !empty($swa['total']) ? $swa['total'] : 0;
-		$pen_tot  = !empty($pen['total']) ? $pen['total'] : 0;
-		$jumlah_fisik_per_sub_kegiatan = $total_paket > 0 ? ($swa_tot + $pen_tot ) / $total_paket : 0 ;
-		$realisasi_fisik  = $jumlah_fisik_per_sub_kegiatan > 100 ? 100 : $jumlah_fisik_per_sub_kegiatan;
-		$capaian_fisik = ($realisasi_fisik / $target_fisik) * 100;
-		$deviasi_fisik = ($realisasi_fisik - $target_fisik);
+    $swa = $this->realisasi_akumulasi_model->get_realisasi_fisik_new($id_instansi, $sub, $bulan, 'SWAKELOLA', $ope, $tahun,$row['kode_tahap'], $kumpul_id_paket_swakelola)->row_array();
+    $pen = $this->realisasi_akumulasi_model->get_realisasi_fisik_new($id_instansi, $sub, $bulan, 'PENYEDIA', $ope, $tahun,$row['kode_tahap'], $kumpul_id_paket_penyedia)->row_array();
+    $swa_tot  = !empty($swa['total']) ? $swa['total'] : 0;
+    $pen_tot  = !empty($pen['total']) ? $pen['total'] : 0;
+    $jumlah_fisik_per_sub_kegiatan = $total_paket > 0 ? ($swa_tot + $pen_tot ) / $total_paket : 0 ;
 
 
-		// mencari bobot dan tertimbang fisik
-          $bobot_ski =( $pagu/$pagu_skpd_tambahan)*100;
-          $tft_ski =$target_fisik * $bobot_ski /100;
-          $rft_ski =$realisasi_fisik * $bobot_ski /100;
-           $total_bobot_ski += $bobot_ski;
-          $total_tft_ski += $tft_ski;
-          $total_rft_ski += $rft_ski;
 
-          
+
+    if ($pagu==0) {
+        $target_fisik = 0;
+        $target_keuangan = 0;
+        $persen_tk = 0;
+
+        $realisasi_keuangan=0;
+        $persen_realisasi_keuangan=0;
+
+
+
+        $realisasi_fisik  =0;
+        $capaian_fisik =0;
+        $deviasi_fisik =0;
+
+        $bobot_ski =0;
+        $tft_ski =0;
+        $rft_ski =0;
+
+
+
+        $capaian_keu = 0;
+        $sisa_anggaran = 0;
+        $deviasi_keuangan = 0;
+
+    }else{
+
+      if ($kategori=='akumulasi') {
+        $target_fisik =  $target['target_fisik'];
+        $target_keuangan = $target['target_keuangan'];
+        $persen_tk = $pagu == 0 ? 0 : ($target_keuangan / $pagu) * 100;
+      }else{
+        $target_fisik = $target['target_fisik_bulanan'];
+        $target_keuangan = $target['target_keuangan_bulanan'];
+        $persen_tk = $pagu == 0 ? 0 : ($target_keuangan / $pagu) * 100;
+      }
+      $realisasi_keuangan =$q_realisasi_keuangan['total_realisasi'];
+      $persen_realisasi_keuangan = $pagu ==0 ? 0 : ($q_realisasi_keuangan['total_realisasi'] / $pagu) * 100;
+
+
+
+      $realisasi_fisik  = $jumlah_fisik_per_sub_kegiatan > 100 ? 100 : $jumlah_fisik_per_sub_kegiatan;
+      $capaian_fisik = ($realisasi_fisik / $target_fisik) * 100;
+      $deviasi_fisik = ($realisasi_fisik - $target_fisik);
+
+      $bobot_ski =( $pagu/$pagu_skpd_tambahan)*100;
+      $tft_ski =$target_fisik * $bobot_ski /100;
+      $rft_ski =$realisasi_fisik * $bobot_ski /100;
+    
+
+    $capaian_keu = $persen_tk == 0 ? 0 : ($persen_realisasi_keuangan / $persen_tk)  * 100;
+    $sisa_anggaran = $pagu - $realisasi_keuangan ; 
+    $deviasi_keuangan = $persen_realisasi_keuangan - $persen_tk;
+
+    }
+
+
+
+
+
+
 
 
 
 
 
           if ($deviasi_fisik < -10) {
-          	$warna_dev_fisik_ski = 'background:#f8b2b2'; 
-          	$total_peringatan_dev_fisik_merah += 1; 
+            $warna_dev_fisik_ski = 'background:#f8b2b2'; 
+            $total_peringatan_dev_fisik_merah += 1; 
           }
           elseif ($deviasi_fisik <-5  && $deviasi_fisik >=-10) {
-          	$warna_dev_fisik_ski = 'background:#fcf3cf';
-          	$total_peringatan_dev_fisik_kuning += 1; 
+            $warna_dev_fisik_ski = 'background:#fcf3cf';
+            $total_peringatan_dev_fisik_kuning += 1; 
           }
           elseif ($deviasi_fisik <=0  && $deviasi_fisik >=-5) {
-          	$warna_dev_fisik_ski = 'background:#d5f5e3';
-          	$total_peringatan_dev_fisik_hijau += 1; 
+            $warna_dev_fisik_ski = 'background:#d5f5e3';
+            $total_peringatan_dev_fisik_hijau += 1; 
           }else{
-          	$warna_dev_fisik_ski = 'background:#ff7cfd';
-          	$total_peringatan_dev_fisik_ungu += 1; 
+            $warna_dev_fisik_ski = 'background:#ff7cfd';
+            $total_peringatan_dev_fisik_ungu += 1; 
           }
 
           if ($deviasi_keuangan < -10) {
-          	$warna_dev_keu_ski = 'background:#f8b2b2'; 
-          	$total_peringatan_dev_keu_merah += 1; 
+            $warna_dev_keu_ski = 'background:#f8b2b2'; 
+            $total_peringatan_dev_keu_merah += 1; 
           }
           elseif ($deviasi_keuangan <-5  && $deviasi_keuangan >=-10) {
-          	$warna_dev_keu_ski = 'background:#fcf3cf';
-          	$total_peringatan_dev_keu_kuning += 1; 
+            $warna_dev_keu_ski = 'background:#fcf3cf';
+            $total_peringatan_dev_keu_kuning += 1; 
           }
           elseif ($deviasi_keuangan <=0  && $deviasi_keuangan >=-5) {
-          	$warna_dev_keu_ski = 'background:#d5f5e3';
-          	$total_peringatan_dev_keu_hijau += 1; 
+            $warna_dev_keu_ski = 'background:#d5f5e3';
+            $total_peringatan_dev_keu_hijau += 1; 
           }else{
-          	$warna_dev_keu_ski = 'background:#ff7cfd';
-          	$total_peringatan_dev_keu_ungu += 1; 
+            $warna_dev_keu_ski = 'background:#ff7cfd';
+            $total_peringatan_dev_keu_ungu += 1; 
           }
 
           
-
-
 
 
 
@@ -205,13 +300,7 @@ foreach ($sub_kegiatan_tambahan as $row) {
 
     // list sub kegiatan
 
-    $total_persen_tf += $target_fisik;
-    $total_persen_rf += $realisasi_fisik;
-    $total_persen_tk += $persen_tk;
-    $total_persen_rk += $persen_realisasi_keuangan;
-	$total_rp_tk += $target_keuangan;
-	$total_rp_rk += $realisasi_keuangan;
-	$total_sisa_pagu += $sisa_anggaran;
+   
   if ($row['kategori']=='Unit Pelaksana') {
     $nama_sub_kegiatan = $row['nama_sub_kegiatan'].'<br>'.$row['jenis_sub_kegiatan'].' - '.$row['keterangan'];
     $pecah_kode_ski = explode('-', $row['kode_rekening_sub_kegiatan']);
@@ -226,7 +315,7 @@ foreach ($sub_kegiatan_tambahan as $row) {
         'kode_sub_kegiatan' => $kode_sub_kegiatan,
         'nama_sub_kegiatan' => $nama_sub_kegiatan,
         'tahap_apbd' => $nama_tahap,
-        'pagu' =>$pagu,
+        'pagu' => $pagu,
         'tf'=>$target_fisik,
         'rf'=>$realisasi_fisik,
         'tk'=>$target_keuangan,
@@ -240,7 +329,6 @@ foreach ($sub_kegiatan_tambahan as $row) {
         'deviasi_fisik'=>$deviasi_fisik ,
         'warna_deviasi_fisik_ski'=>$warna_dev_fisik_ski ,
         'warna_deviasi_keu_ski'=>$warna_dev_keu_ski ,
-        'cek'=>'',//json_encode($q_realisasi_keuangan),
     ];
 
 }
@@ -283,78 +371,96 @@ $show_data = [];
   $total_kegiatan = 0;
   $total_sub_keg = 0;
 
+
+
+
+  $total_bobot_skpd = 0;
+  $total_tf_ttb_skpd = 0;
+  $total_rf_ttb_skpd = 0;
+  $total_rp_tk_skpd =0;
+  $total_rp_rk_skpd =0;
+
+
 foreach ($hasil as $k_p => $v_p) {
   $total_program++;
-	$kumpul_kegiatan = [];
+  $kumpul_kegiatan = [];
 
 
-		$total_bobot_program = 0;
-		$total_tf_ttb_program = 0;
-		$total_rf_ttb_program = 0;
-		$total_rp_tk_program =0;
-		$total_rp_rk_program =0;
+    $total_bobot_program = 0;
+    $total_tf_ttb_program = 0;
+    $total_rf_ttb_program = 0;
+    $total_rp_tk_program =0;
+    $total_rp_rk_program =0;
 
 
-		$total_rp_tk_program =0;
-		$total_rp_rk_program =0;
+    $total_rp_tk_program =0;
+    $total_rp_rk_program =0;
 
-	foreach ($v_p['kegiatan'] as $k_k => $v_k) {
+  foreach ($v_p['kegiatan'] as $k_k => $v_k) {
     $total_kegiatan++;
-		$kumpul_sub_kegiatan = [];
+    $kumpul_sub_kegiatan = [];
 
-		$total_bobot_kegiatan = 0;
-		$total_tf_ttb_kegiatan = 0;
-		$total_rf_ttb_kegiatan = 0;
+    $total_bobot_kegiatan = 0;
+    $total_tf_ttb_kegiatan = 0;
+    $total_rf_ttb_kegiatan = 0;
 
-		$total_rp_tk_kegiatan =0;
-		$total_rp_rk_kegiatan =0;
-		foreach ($v_k['sub_kegiatan'] as $k_ski => $v_ski) {
+    $total_rp_tk_kegiatan =0;
+    $total_rp_rk_kegiatan =0;
+    foreach ($v_k['sub_kegiatan'] as $k_ski => $v_ski) {
 
       $total_sub_keg++;
-			$bobot_ski_kegiatan =( $v_ski['pagu']/$v_k['total_pagu'])*100;
-			$tft_ski_kegiatan =($v_ski['tf'] * $bobot_ski_kegiatan) /100;
-			$rft_ski_kegiatan =($v_ski['rf'] * $bobot_ski_kegiatan) /100;
-			$total_bobot_kegiatan += $bobot_ski_kegiatan ; 
-			$total_tf_ttb_kegiatan += $tft_ski_kegiatan ; 
-			$total_rf_ttb_kegiatan += $rft_ski_kegiatan ; 
-			$total_rp_tk_kegiatan += $v_ski['tk'] ; 
-			$total_rp_rk_kegiatan += $v_ski['rk'] ; 
+      $bobot_ski_kegiatan = ( $v_ski['pagu']/$v_k['total_pagu'])*100;
+      $tft_ski_kegiatan =($v_ski['tf'] * $bobot_ski_kegiatan) /100;
+      $rft_ski_kegiatan =($v_ski['rf'] * $bobot_ski_kegiatan) /100;
+      $total_bobot_kegiatan += $bobot_ski_kegiatan ; 
+      $total_tf_ttb_kegiatan += $tft_ski_kegiatan ; 
+      $total_rf_ttb_kegiatan += $rft_ski_kegiatan ; 
+      $total_rp_tk_kegiatan += $v_ski['tk'] ; 
+      $total_rp_rk_kegiatan += $v_ski['rk'] ; 
 
-			$bobot_ski_program =( $v_ski['pagu']/$v_p['total_pagu'])*100;
-			$tft_ski_program =($v_ski['tf'] * $bobot_ski_program) /100;
-			$rft_ski_program =($v_ski['rf'] * $bobot_ski_program) /100;
-			$total_bobot_program += $bobot_ski_program ; 
-			$total_tf_ttb_program += $tft_ski_program ; 
-			$total_rf_ttb_program += $rft_ski_program ; 
-			$total_rp_tk_program += $v_ski['tk'] ; 
-			$total_rp_rk_program += $v_ski['rk'] ; 
-
-
+      $bobot_ski_program =( $v_ski['pagu']/$v_p['total_pagu'])*100;
+      $tft_ski_program =($v_ski['tf'] * $bobot_ski_program) /100;
+      $rft_ski_program =($v_ski['rf'] * $bobot_ski_program) /100;
+      $total_bobot_program += $bobot_ski_program ; 
+      $total_tf_ttb_program += $tft_ski_program ; 
+      $total_rf_ttb_program += $rft_ski_program ; 
+      $total_rp_tk_program += $v_ski['tk'] ; 
+      $total_rp_rk_program += $v_ski['rk'] ; 
 
 
-			$data_sub_kegiatan = [
-				'kode_sub_kegiatan'=>$v_ski['kode_sub_kegiatan'],
-				'nama_sub_kegiatan'=>$v_ski['nama_sub_kegiatan'],
-				'tahap_apbd'=>$v_ski['tahap_apbd'],
-				'pagu'=>$v_ski['pagu'],
-				'bobot'=>$bobot_ski_kegiatan,
-				'tf'=>$v_ski['tf'],
-				'rf'=>$v_ski['rf'],
-				'tk'=>$v_ski['tk'],
-				'persen_tk'=>$v_ski['persen_tk'],
-				'rk'=>$v_ski['rk'],
-				'persen_rk'=>$v_ski['persen_rk'],
-				'capaian_keu'=>$v_ski['capaian_keu'],
-				'capaian_fisik'=>$v_ski['capaian_fisik'],
-				'sisa_anggaran'=>$v_ski['sisa_anggaran'],
-				'deviasi_keuangan'=>$v_ski['deviasi_keuangan'],
-				'deviasi_fisik'=>$v_ski['deviasi_fisik'],
-				'warna_deviasi_fisik_ski'=>$v_ski['warna_deviasi_fisik_ski'],
-				'warna_deviasi_keu_ski'=>$v_ski['warna_deviasi_keu_ski'],
-        'cek'=>$v_ski['cek'],
+      $bobot_ski_skpd = ( $v_ski['pagu']/$pagu_skpd_tambahan)*100;
+      $tft_ski_skpd =($v_ski['tf'] * $bobot_ski_skpd) /100;
+      $rft_ski_skpd =($v_ski['rf'] * $bobot_ski_skpd) /100;
+      $total_bobot_skpd += $bobot_ski_skpd ; 
+      $total_tf_ttb_skpd += $tft_ski_skpd ; 
+      $total_rf_ttb_skpd += $rft_ski_skpd ; 
+      $total_rp_tk_skpd += $v_ski['tk'] ; 
+      $total_rp_rk_skpd += $v_ski['rk'] ; 
 
-			];
-			array_push($kumpul_sub_kegiatan, $data_sub_kegiatan);
+
+
+      $data_sub_kegiatan = [
+        'kode_sub_kegiatan'=>$v_ski['kode_sub_kegiatan'],
+        'nama_sub_kegiatan'=>$v_ski['nama_sub_kegiatan'],
+        'tahap_apbd'=>$v_ski['tahap_apbd'],
+        'pagu'=>$v_ski['pagu'],
+        'bobot'=>$bobot_ski_skpd,
+        'tf'=>$v_ski['tf'],
+        'rf'=>$v_ski['rf'],
+        'tk'=>$v_ski['tk'],
+        'persen_tk'=>$v_ski['persen_tk'],
+        'rk'=>$v_ski['rk'],
+        'persen_rk'=>$v_ski['persen_rk'],
+        'capaian_keu'=>$v_ski['capaian_keu'],
+        'capaian_fisik'=>$v_ski['capaian_fisik'],
+        'sisa_anggaran'=>$v_ski['sisa_anggaran'],
+        'deviasi_keuangan'=>$v_ski['deviasi_keuangan'],
+        'deviasi_fisik'=>$v_ski['deviasi_fisik'],
+        'warna_deviasi_fisik_ski'=>$v_ski['warna_deviasi_fisik_ski'],
+        'warna_deviasi_keu_ski'=>$v_ski['warna_deviasi_keu_ski'],
+
+      ];
+      array_push($kumpul_sub_kegiatan, $data_sub_kegiatan);
 
       
 
@@ -382,18 +488,18 @@ foreach ($hasil as $k_p => $v_p) {
             $total_def_k_subkeg_ungu++; 
           }
 
-			
-		}
+      
+    }
 
 
-		$persen_tk_kegiatan = ($total_rp_tk_kegiatan / $v_k['total_pagu']) * 100 ;
-		$persen_rk_kegiatan = ($total_rp_rk_kegiatan / $v_k['total_pagu']) * 100 ;
+    $persen_tk_kegiatan = ($total_rp_tk_kegiatan / $v_k['total_pagu']) * 100 ;
+    $persen_rk_kegiatan = ($total_rp_rk_kegiatan / $v_k['total_pagu']) * 100 ;
 
-		$df_kegiatan = $total_rf_ttb_kegiatan - $total_tf_ttb_kegiatan ; 
-		$capaian_f_kegiatan = ($total_rf_ttb_kegiatan / $total_tf_ttb_kegiatan) * 100 ; 
-		$dk_kegiatan = $persen_rk_kegiatan - $persen_tk_kegiatan ; 
-		$capaian_k_kegiatan = ($persen_rk_kegiatan / $persen_tk_kegiatan) * 100 ; 
-		$sisa_anggaran_kegiatan =$v_k['total_pagu'] - $total_rp_rk_kegiatan;
+    $df_kegiatan = $total_rf_ttb_kegiatan - $total_tf_ttb_kegiatan ; 
+    $capaian_f_kegiatan = ($total_rf_ttb_kegiatan / $total_tf_ttb_kegiatan) * 100 ; 
+    $dk_kegiatan = $persen_rk_kegiatan - $persen_tk_kegiatan ; 
+    $capaian_k_kegiatan = ($persen_rk_kegiatan / $persen_tk_kegiatan) * 100 ; 
+    $sisa_anggaran_kegiatan =$v_k['total_pagu'] - $total_rp_rk_kegiatan;
 
 
 
@@ -433,41 +539,41 @@ foreach ($hasil as $k_p => $v_p) {
 
 
 
-		$data_kegiatan = [
-			'kode_kegiatan'=>$v_k['kode_kegiatan'],
-			'nama_kegiatan'=>$v_k['nama_kegiatan'],
-			'pagu'=>$v_k['total_pagu'],
-			'bobot'=>$total_bobot_kegiatan,
-			'tf'=>$total_tf_ttb_kegiatan,
-			'rf'=>$total_rf_ttb_kegiatan,
-			'df'=>$df_kegiatan,
-			'capaian_fisik'=>$capaian_f_kegiatan,
-			'capaian_keuangan'=>$capaian_k_kegiatan,
-			'tk'=>$total_rp_tk_kegiatan,
-			'persen_tk'=>$persen_tk_kegiatan,
-			'rk'=>$total_rp_rk_kegiatan,
-			'sisa'=>$sisa_anggaran_kegiatan,
-			'persen_rk'=>$persen_rk_kegiatan,
-			'dk'=>$dk_kegiatan,
-			'data_sub_kegiatan' =>$kumpul_sub_kegiatan,
+    $data_kegiatan = [
+      'kode_kegiatan'=>$v_k['kode_kegiatan'],
+      'nama_kegiatan'=>$v_k['nama_kegiatan'],
+      'pagu'=>$v_k['total_pagu'],
+      'bobot'=>$total_bobot_kegiatan,
+      'tf'=>$total_tf_ttb_kegiatan,
+      'rf'=>$total_rf_ttb_kegiatan,
+      'df'=>$df_kegiatan,
+      'capaian_fisik'=>$capaian_f_kegiatan,
+      'capaian_keuangan'=>$capaian_k_kegiatan,
+      'tk'=>$total_rp_tk_kegiatan,
+      'persen_tk'=>$persen_tk_kegiatan,
+      'rk'=>$total_rp_rk_kegiatan,
+      'sisa'=>$sisa_anggaran_kegiatan,
+      'persen_rk'=>$persen_rk_kegiatan,
+      'dk'=>$dk_kegiatan,
+      'data_sub_kegiatan' =>$kumpul_sub_kegiatan,
 
       'warna_deviasi_fisik_kegiatan'=>$warna_df_kegiatan,
       'warna_deviasi_keu_kegiatan'=>$warna_dk_kegiatan,
 
-		];
-		array_push($kumpul_kegiatan, $data_kegiatan);
-		
-	}
+    ];
+    array_push($kumpul_kegiatan, $data_kegiatan);
+    
+  }
 
 
-	$persen_tk_program = ($total_rp_tk_program / $v_p['total_pagu']) * 100 ;
-	$persen_rk_program = ($total_rp_rk_program / $v_p['total_pagu']) * 100 ;
+  $persen_tk_program = ($total_rp_tk_program / $v_p['total_pagu']) * 100 ;
+  $persen_rk_program = ($total_rp_rk_program / $v_p['total_pagu']) * 100 ;
 
-	$df_program = $total_rf_ttb_program - $total_tf_ttb_program ; 
-	$capaian_f_program = ($total_rf_ttb_program / $total_tf_ttb_program) * 100 ; 
-	$dk_program = $persen_rk_program - $persen_tk_program ; 
-	$capaian_k_program = ($persen_rk_program / $persen_tk_program) * 100 ; 
-	$sisa_anggaran_program =$v_p['total_pagu'] - $total_rp_rk_program;
+  $df_program = $total_rf_ttb_program - $total_tf_ttb_program ; 
+  $capaian_f_program = ($total_rf_ttb_program / $total_tf_ttb_program) * 100 ; 
+  $dk_program = $persen_rk_program - $persen_tk_program ; 
+  $capaian_k_program = ($persen_rk_program / $persen_tk_program) * 100 ; 
+  $sisa_anggaran_program =$v_p['total_pagu'] - $total_rp_rk_program;
 
 
 
@@ -509,29 +615,28 @@ foreach ($hasil as $k_p => $v_p) {
 
 
 
-	$data_program = [
-		'kode_program'=>$v_p['kode_program'],
-		'nama_program'=>$v_p['nama_program'],
-		'pagu'=>$v_p['total_pagu'],
-		'bobot'=>$total_bobot_program,
-		'tf'=>$total_tf_ttb_program,
-		'rf'=>$total_rf_ttb_program,
-		'tk'=>$total_rp_tk_program,
-		'rk'=>$total_rp_rk_program,
-		'persen_tk'=>$persen_tk_program,
-		'df'=>$df_program,
-		'sisa'=>$sisa_anggaran_program,
-		'dk'=>$dk_program,
-		'persen_rk'=>$persen_rk_program,
-		'capaian_fisik'=>$capaian_f_program,
-		'capaian_keuangan'=>$capaian_k_program,
-		'data_kegiatan' =>$kumpul_kegiatan,
+  $data_program = [
+    'kode_program'=>$v_p['kode_program'],
+    'nama_program'=>$v_p['nama_program'],
+    'pagu'=>$v_p['total_pagu'],
+    'bobot'=>$total_bobot_program,
+    'tf'=>$total_tf_ttb_program,
+    'rf'=>$total_rf_ttb_program,
+    'tk'=>$total_rp_tk_program,
+    'rk'=>$total_rp_rk_program,
+    'persen_tk'=>$persen_tk_program,
+    'df'=>$df_program,
+    'sisa'=>$sisa_anggaran_program,
+    'dk'=>$dk_program,
+    'persen_rk'=>$persen_rk_program,
+    'capaian_fisik'=>$capaian_f_program,
+    'capaian_keuangan'=>$capaian_k_program,
+    'data_kegiatan' =>$kumpul_kegiatan,
     'warna_deviasi_fisik_program'=>$warna_df_program,
     'warna_deviasi_keu_program'=>$warna_dk_program,
-	];
-	array_push($show_data, $data_program);
+  ];
+  array_push($show_data, $data_program);
 }
-
  ?>
 
         <table class="font_laporan border table"> 
@@ -616,17 +721,17 @@ foreach ($hasil as $k_p => $v_p) {
       <th> - </th>
       <th align="left"><?php echo $v_p['kode_program'] ?></th>
       <th align="left"><?php echo $master_program[$v_p['kode_program']] ?></th>
-      <th  align="right"><?php echo number_format($v_p['pagu']) ?></th>
+      <th align="right"><?php echo number_format($v_p['pagu']) ?></th>
       <th align="center"> <?php echo round($v_p['tf'],2) ?> </th>
       <th align="center"> <?php echo round($v_p['rf'],2) ?> </th>
-	      <th align="center"> <?php echo round($v_p['capaian_fisik'],2) ?> </th>
-	      <th align="center" style="<?php echo $v_p['warna_deviasi_fisik_program'] ?>"> <?php echo round($v_p['df'],2) ?> </th>
+        <th align="center"> <?php echo round($v_p['capaian_fisik'],2) ?> </th>
+        <th align="center" style="<?php echo $v_p['warna_deviasi_fisik_program'] ?>"> <?php echo round($v_p['df'],2) ?> </th>
         <th align="right"><?php echo number_format($v_p['tk']) ?> </th>
       <th align="center"> <?php echo round($v_p['persen_tk'],2) ?> </th>
         <th align="right"><?php echo number_format($v_p['rk']) ?> </th>
       <th align="center"> <?php echo round($v_p['persen_rk'],2) ?> </th>
-	      <th align="center"> <?php echo round($v_p['capaian_keuangan'],2) ?> </th>
-	      <th align="center"  style="<?php echo $v_p['warna_deviasi_keuangan_program'] ?>"> <?php echo round($v_p['dk'],2) ?> </th>
+        <th align="center"> <?php echo round($v_p['capaian_keuangan'],2) ?> </th>
+        <th align="center"  style="<?php echo $v_p['warna_deviasi_keuangan_program'] ?>"> <?php echo round($v_p['dk'],2) ?> </th>
         <th align="right"><?php echo number_format($v_p['sisa']) ?> </th>
     </tr>
     <?php 
@@ -639,16 +744,16 @@ foreach ($hasil as $k_p => $v_p) {
         <th align="left"><?php echo $v_k['kode_kegiatan'] ?></th>
         <th align="left"><?php echo $master_kegiatan[$v_k['kode_kegiatan']] ?></th>
         <th align="right"><?php echo number_format($v_k['pagu']) ?> </th>
-	      <th align="center"> <?php echo round($v_k['tf'],2) ?> </th>
-	      <th align="center"> <?php echo round($v_k['rf'],2) ?> </th>
-	      <th align="center"> <?php echo round($v_k['capaian_fisik'],2) ?> </th>
-	      <th align="center"  style="<?php echo $v_k['warna_deviasi_fisik_kegiatan'] ?>"> <?php echo round($v_k['df'],2) ?> </th>
+        <th align="center"> <?php echo round($v_k['tf'],2) ?> </th>
+        <th align="center"> <?php echo round($v_k['rf'],2) ?> </th>
+        <th align="center"> <?php echo round($v_k['capaian_fisik'],2) ?> </th>
+        <th align="center"  style="<?php echo $v_k['warna_deviasi_fisik_kegiatan'] ?>"> <?php echo round($v_k['df'],2) ?> </th>
         <th align="right"><?php echo number_format($v_k['tk']) ?> </th>
-	      <th align="center"> <?php echo round($v_k['persen_tk'],2) ?> </th>
+        <th align="center"> <?php echo round($v_k['persen_tk'],2) ?> </th>
         <th align="right"><?php echo number_format($v_k['rk']) ?> </th>
-	      <th align="center"> <?php echo round($v_k['persen_rk'],2) ?> </th>
-	      <th align="center"> <?php echo round($v_k['capaian_keuangan'],2) ?> </th>
-	      <th align="center"  style="<?php echo $v_k['warna_deviasi_keu_kegiatan'] ?>"> <?php echo round($v_k['dk'],2) ?> </th>
+        <th align="center"> <?php echo round($v_k['persen_rk'],2) ?> </th>
+        <th align="center"> <?php echo round($v_k['capaian_keuangan'],2) ?> </th>
+        <th align="center"  style="<?php echo $v_k['warna_deviasi_keu_kegiatan'] ?>"> <?php echo round($v_k['dk'],2) ?> </th>
         <th align="right"><?php echo number_format($v_k['sisa']) ?> </th>
       </tr>
       <?php 
@@ -658,7 +763,7 @@ foreach ($hasil as $k_p => $v_p) {
 
 
 
-		// mencari bobot dan tertimbang fisik
+    // mencari bobot dan tertimbang fisik
           $bobot_ski_kegiatan =( $v_ski['pagu']/$v_k['total_pagu'])*100;
           $tft_ski_kegiatan =$v_ski['tf'] * $bobot_ski_kegiatan /100;
           $rft_ski_kegiatan =$v_ski['rf'] * $bobot_ski_kegiatan /100;
@@ -706,111 +811,115 @@ foreach ($hasil as $k_p => $v_p) {
 
 
 
-<tfoot >
+<tfoot>
 
 
 
-	<tr>
-		<td colspan="4" align="center">Total</td>
-		
-		<td align="right"><?php echo number_format($pagu_skpd_tambahan) ?></td>
-		<td align="center" align="center"> <?php echo round($total_persen_tf,2) ?> </td>
-		<td align="center" align="center"> <?php echo round($total_persen_rf,2) ?> </td>
-		<td  align="center"> -- <?php //echo round($deviasi_total_fisik,2) ?> </td>
-		<td  align="center"> -- <?php //echo round($deviasi_total_fisik,2) ?> </td>
-		<td align="right">  <?php echo number_format($total_rp_tk) ?> </td>
-		
-		<td align="center" align="center"> <?php echo round($total_persen_tk,2) ?> </td>
-		<td align="right">  <?php echo number_format($total_rp_rk) ?> </td>
-		
-		<td align="center" align="center"> <?php echo round($total_persen_rk,2) ?> </td>
-		<td align="center"> --  <?php //echo round($deviasi_total_keuangan_akuntansi,2) ?> </td>
-		<td align="center"> --  <?php //echo round($deviasi_total_keuangan_akuntansi,2) ?> </td>
 
-		<?php if ($ope=='<=') { ?>
-			<td align="right">  <?php echo number_format($total_sisa_pagu) ?> </td>
-		<?php } ?>
-	</tr>
+  <?php 
+  $persen_tk_skpd = ($total_rp_tk_skpd / $pagu_skpd_tambahan) * 100;
+  $persen_rk_skpd = ($total_rp_rk_skpd / $pagu_skpd_tambahan) * 100;
+  $capaian_fisik = ($total_rf_ttb_skpd / $total_tf_ttb_skpd) * 100;
+  $capaian_keuangan = ($persen_rk_skpd / $persen_tk_skpd) * 100;
 
+  $deviasi_fisik_opd = $total_rf_ttb_skpd - $total_tf_ttb_skpd ; 
+  $deviasi_keuangan_opd = $persen_rk_skpd - $persen_tk_skpd ; 
 
-	<?php 
-	$tk_skpd = ($total_rp_tk / $pagu_skpd_tambahan) * 100;
-	$rk_skpd = ($total_rp_rk / $pagu_skpd_tambahan) * 100;
-	$capaian_fisik = ($total_rft_ski / $total_tft_ski) * 100;
-	$capaian_keuangan = ($rk_skpd / $tk_skpd) * 100;
+    if ($deviasi_fisik_opd < -10) {
+      $warna_deviasi_fisik_opd = 'background: #f8b2b2'; 
+    }
+    elseif ($deviasi_fisik_opd <-5  && $deviasi_fisik_opd >=-10) {
+      $warna_deviasi_fisik_opd = 'background: #fcf3cf';
+    }
+    elseif ($deviasi_fisik_opd <=0  && $deviasi_fisik_opd >=-5) {
+      $warna_deviasi_fisik_opd = 'background: #d5f5e3';
+    }else{
+      $warna_deviasi_fisik_opd = 'background: #ff7cfd';
+    }
 
-	$deviasi_fisik_opd = $total_rft_ski - $total_tft_ski ; 
-	$deviasi_keuangan_opd = $rk_skpd - $tk_skpd ; 
-
-		if ($deviasi_fisik_opd < -10) {
-			$warna_deviasi_fisik_opd = 'background: #f8b2b2'; 
-		}
-		elseif ($deviasi_fisik_opd <-5  && $deviasi_fisik_opd >=-10) {
-			$warna_deviasi_fisik_opd = 'background: #fcf3cf';
-		}
-		elseif ($deviasi_fisik_opd <=0  && $deviasi_fisik_opd >=-5) {
-			$warna_deviasi_fisik_opd = 'background: #d5f5e3';
-		}else{
-			$warna_deviasi_fisik_opd = 'background: #ff7cfd';
-		}
-
-		if ($deviasi_keuangan_opd < -10) {
-			$warna_deviasi_keuangan_opd = 'background: #f8b2b2'; 
-		}
-		elseif ($deviasi_keuangan_opd <-5  && $deviasi_keuangan_opd >=-10) {
-			$warna_deviasi_keuangan_opd = 'background: #fcf3cf';
-		}
-		elseif ($deviasi_keuangan_opd <=0  && $deviasi_keuangan_opd >=-5) {
-			$warna_deviasi_keuangan_opd = 'background: #d5f5e3';
-		}else{
-			$warna_deviasi_keuangan_opd = 'background: #ff7cfd';
-		}
+    if ($deviasi_keuangan_opd < -10) {
+      $warna_deviasi_keuangan_opd = 'background: #f8b2b2'; 
+    }
+    elseif ($deviasi_keuangan_opd <-5  && $deviasi_keuangan_opd >=-10) {
+      $warna_deviasi_keuangan_opd = 'background: #fcf3cf';
+    }
+    elseif ($deviasi_keuangan_opd <=0  && $deviasi_keuangan_opd >=-5) {
+      $warna_deviasi_keuangan_opd = 'background: #d5f5e3';
+    }else{
+      $warna_deviasi_keuangan_opd = 'background: #ff7cfd';
+    }
 
 
 
-	 ?>
-	<tr>
-				<?php 
+   ?>
+
+
+  <tr>
+    <td colspan="4" align="center">Total</td>
+    
+    <td align="right"><?php echo number_format($pagu_skpd_tambahan) ?></td>
+    <td align="center" align="center"> <?php echo '--';//round($total_persen_tf,2) ?> </td>
+    <td align="center" align="center"> <?php echo '--';//round($total_persen_rf,2) ?> </td>
+    <td  align="center"> -- <?php //echo round($deviasi_total_fisik,2) ?> </td>
+    <td  align="center"> -- <?php //echo round($deviasi_total_fisik,2) ?> </td>
+    <td align="right">  <?php echo number_format($total_rp_tk_skpd) ?> </td>
+    
+    <td align="center" align="center"> <?php echo round($persen_tk_skpd,2) ?> </td>
+    <td align="right">  <?php echo number_format($total_rp_rk_skpd) ?> </td>
+    
+    <td align="center" align="center"> <?php echo round($persen_rk_skpd,2) ?> </td>
+    <td align="center"> --  <?php //echo round($deviasi_total_keuangan_akuntansi,2) ?> </td>
+    <td align="center"> --  <?php //echo round($deviasi_total_keuangan_akuntansi,2) ?> </td>
+
+    <?php if ($ope=='<=') { ?>
+      <td align="right">  <?php echo number_format($total_sisa_pagu) ?> </td>
+    <?php } ?>
+  </tr>
+
+
+
+  <tr>
+        <?php 
 
 
     if ($ope=='<=') {
-      if ($total_rp_rk==$grafik_tambahan['rp_realisasi_keuangan_akumulasi'] && $total_rp_tk==$grafik_tambahan['rp_target_keuangan_akumulasi'] && round($total_tft_ski,2)==$grafik_tambahan['target_fisik_akumulasi'] && round($total_rft_ski,2)==$grafik_tambahan['realisasi_fisik_akumulasi']) {
-        $status_synch = 'Terakhir synchronize pada '.timestamp_lengkap($grafik_tambahan['last_update']);
+      if ($total_rp_rk==$grafik['rp_realisasi_keuangan_akumulasi'] && $total_rp_tk==$grafik['rp_target_keuangan_akumulasi'] && round($total_tf_ttb_skpd,2)==$grafik['target_fisik_akumulasi'] && round($total_rf_ttb_skpd,2)==$grafik['realisasi_fisik_akumulasi']) {
+        $status_synch = 'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
       }else{
-        $status_synch = 'Belum di synchronize | '.'Terakhir synchronize pada '.timestamp_lengkap($grafik_tambahan['last_update']);
+        $status_synch = 'Belum di synchronize | '.'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
       }
-            // $cek = $grafik_tambahan['realisasi_fisik_akumulasi'];
+            // $cek = $grafik['realisasi_fisik_akumulasi'];
     }else{
-      if ($total_realisasi_keuangan==$grafik_tambahan['rp_realisasi_keuangan_bulanan'] && $total_angka_target_keuangan==$grafik_tambahan['rp_target_keuangan_bulanan']) {
-        $status_synch = 'Terakhir synchronize pada '.timestamp_lengkap($grafik_tambahan['last_update']);
+      if ($total_realisasi_keuangan==$grafik['rp_realisasi_keuangan_bulanan'] && $total_angka_target_keuangan==$grafik['rp_target_keuangan_bulanan']) {
+        $status_synch = 'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
       }else{
-        $status_synch = 'Belum di synchronize | '.'Terakhir synchronize pada '.timestamp_lengkap($grafik_tambahan['last_update']);
+        $status_synch = 'Belum di synchronize | '.'Terakhir synchronize pada '.timestamp_lengkap($grafik['last_update']);
       }
-            // $cek = $grafik_tambahan['rp_realisasi_keuangan_bulanan'];
+            // $cek = $grafik['rp_realisasi_keuangan_bulanan'];
     }
 
      ?>
 
     <td colspan="4" align="center"><b>Pencapaian</b> <br> <?php echo $status_synch;?></td>
 .
-		<th align="center">-</th>
-		
-		<th> <?php echo round($total_tft_ski,2) ?></th>
-		<th> <?php echo round($total_rft_ski,2) ?></th>
-		<th align="center"><?php echo round($capaian_fisik,2) ?></th>
-		<th align="center" style="<?php  echo $warna_deviasi_fisik_opd ?>"> <?php echo round($deviasi_fisik_opd,2) ?> </th>
+    <th align="center">-</th>
+    
+    <th> <?php echo round($total_tf_ttb_skpd,2) ?></th>
+    <th> <?php echo round($total_rf_ttb_skpd,2) ?></th>
+    <th align="center"><?php echo round($capaian_fisik,2) ?></th>
+    <th align="center" style="<?php echo $warna_deviasi_fisik_opd ?>"> <?php echo round($deviasi_fisik_opd,2) ?> </th>
 
-		<th colspan="2" align="center" style=""><?php echo round($tk_skpd,2) ?></th>
-		<th colspan="2" align="center" style=""><?php echo round($rk_skpd,2) ?></th>
-		<th align="center"><?php echo round($capaian_keuangan,2) ?></th>
-		<th align="center" style="<?php echo $warna_deviasi_keuangan_opd ?>">  <?php echo round($deviasi_keuangan_opd,2) ?> </th>
-		<?php if ($ope=='<=') { ?>
-			<th align="center"> - </th>
-		<?php } ?>
-		
-		
-	</tr>
-	
+    <th colspan="2" align="center" style=""><?php echo round($persen_tk_skpd,2) ?></th>
+    <th colspan="2" align="center" style=""><?php echo round($persen_rk_skpd,2) ?></th>
+    <th align="center"><?php echo round($capaian_keuangan,2) ?></th>
+    <th align="center" style="<?php echo $warna_deviasi_keuangan_opd ?>">  <?php echo round($deviasi_keuangan_opd,2) ?> </th>
+    <?php if ($ope=='<=') { ?>
+      <th align="center"> - </th>
+    <?php } ?>
+    
+    
+  </tr>
+  
 
 </tfoot>
 
@@ -819,13 +928,5 @@ foreach ($hasil as $k_p => $v_p) {
 </table>
 
 
-<hr>
-
-<div>
-  
-
-
-
-</div>
 
 </body>

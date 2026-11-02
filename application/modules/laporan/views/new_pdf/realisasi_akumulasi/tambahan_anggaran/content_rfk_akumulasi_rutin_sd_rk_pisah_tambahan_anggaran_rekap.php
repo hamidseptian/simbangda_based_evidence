@@ -65,8 +65,11 @@ foreach ($sub_kegiatan as $row) {
       }
     }
 
-    $realisasi_keuangan =$q_realisasi_keuangan['total_realisasi'];
-    $persen_realisasi_keuangan = $pagu ==0 ? 0 : ($q_realisasi_keuangan['total_realisasi'] / $pagu) * 100;
+
+
+
+    $realisasi_keuangan =  $pagu ==0 ? 0 : $q_realisasi_keuangan['total_realisasi'];
+    $persen_realisasi_keuangan = $pagu ==0 ? 0 : ($realisasi_keuangan / $pagu) * 100;
 
 
     if ($row['id_tambahan_anggaran']=='') {
@@ -112,7 +115,7 @@ foreach ($sub_kegiatan as $row) {
                     AND pp.id_instansi = {$id_instansi}
                     AND pp.tahun='$tahun' 
 
-                    AND pp.id_tambahan_anggaran='' 
+                    AND pp.pagu>0 
                     $where_paket");
 
         $jlm_rutin = 0;
@@ -140,16 +143,28 @@ foreach ($sub_kegiatan as $row) {
 		$swa_tot  = !empty($swa['total']) ? $swa['total'] : 0;
 		$pen_tot  = !empty($pen['total']) ? $pen['total'] : 0;
 		$jumlah_fisik_per_sub_kegiatan = $total_paket > 0 ? ($swa_tot + $pen_tot ) / $total_paket : 0 ;
-		$realisasi_fisik  = $jumlah_fisik_per_sub_kegiatan > 100 ? 100 : $jumlah_fisik_per_sub_kegiatan;
-		$capaian_fisik = ($realisasi_fisik / $target_fisik) * 100;
-		$deviasi_fisik = ($realisasi_fisik - $target_fisik);
+
+    if ( $pagu ==0) {
+      $realisasi_fisik =0;
+      $capaian_fisik=0;
+      $deviasi_fisik=0;
 
 
-		// mencari bobot dan tertimbang fisik
+          $bobot_ski=0;
+          $rft_ski=0;
+    }else{
+  		$realisasi_fisik  = $jumlah_fisik_per_sub_kegiatan > 100 ? 100 : $jumlah_fisik_per_sub_kegiatan;
+  		$capaian_fisik = ($realisasi_fisik / $target_fisik) * 100;
+  		$deviasi_fisik = ($realisasi_fisik - $target_fisik);
           $bobot_ski =( $pagu/$pagu_skpd)*100;
           $rft_ski =$realisasi_fisik * $bobot_ski /100;
+
+    }
+
            $total_bobot_ski += $bobot_ski;
           $total_rft_ski += $rft_ski;
+
+		// mencari bobot dan tertimbang fisik
 
           
 
@@ -163,7 +178,9 @@ $jenis_paket_tambahan = $this->db->query("SELECT
                     pp.kode_rekening_sub_kegiatan = '{$sub}'
                     AND pp.id_instansi = {$id_instansi}
                     AND pp.tahun='$tahun' 
+
                     AND pp.id_tambahan_anggaran='$id_tambahan_anggaran' 
+                    AND pp.pagu_tkd>0 
                     $where_paket");
         $jlm_rutin_tambahan = 0;
         $jlm_swakelola_tambahan = 0;
@@ -184,17 +201,30 @@ $jenis_paket_tambahan = $this->db->query("SELECT
             $jlm_rutin_tambahan++;
           }
         }
-    $swa_tambahan = $this->realisasi_akumulasi_model->get_realisasi_fisik_new($id_instansi, $sub, $bulan, 'SWAKELOLA', $ope, $tahun,$row['kode_tahap'], $kumpul_id_paket_penyedia_tambahan)->row_array();
+    $swa_tambahan = $this->realisasi_akumulasi_model->get_realisasi_fisik_new($id_instansi, $sub, $bulan, 'SWAKELOLA', $ope, $tahun,$row['kode_tahap'], $kumpul_id_paket_swakelola_tambahan)->row_array();
     $pen_tambahan = $this->realisasi_akumulasi_model->get_realisasi_fisik_new($id_instansi, $sub, $bulan, 'PENYEDIA', $ope, $tahun,$row['kode_tahap'], $kumpul_id_paket_penyedia_tambahan)->row_array();
     $swa_tot_tambahan  = !empty($swa_tambahan['total']) ? $swa_tambahan['total'] : 0;
     $pen_tot_tambahan  = !empty($pen_tambahan['total']) ? $pen_tambahan['total'] : 0;
     $jumlah_fisik_per_sub_kegiatan_tambahan = $total_paket_tambahan > 0 ? ($swa_tot_tambahan + $pen_tot_tambahan ) / $total_paket_tambahan : 0 ;
-    $realisasi_fisik_tambahan  = $jumlah_fisik_per_sub_kegiatan_tambahan > 100 ? 100 : $jumlah_fisik_per_sub_kegiatan_tambahan;
-    $capaian_fisik_tambahan = ($realisasi_fisik_tambahan / $target_fisik) * 100;
-    $deviasi_fisik_tambahan = ($realisasi_fisik_tambahan - $target_fisik);
-    // mencari bobot dan tertimbang fisik
+
+
+    if ( $pagu_tambahan ==0) {
+      $realisasi_fisik_tambahan  =0;
+      $capaian_fisik_tambahan =0;
+      $deviasi_fisik_tambahan =0;
+      // mencari bobot dan tertimbang fisik
+      $bobot_ski_tambahan =0;
+      $rft_ski_tambahan =0;
+
+    }else{
+          $realisasi_fisik_tambahan  = $jumlah_fisik_per_sub_kegiatan_tambahan > 100 ? 100 : $jumlah_fisik_per_sub_kegiatan_tambahan;
+          $capaian_fisik_tambahan = ($realisasi_fisik_tambahan / $target_fisik) * 100;
+          $deviasi_fisik_tambahan = ($realisasi_fisik_tambahan - $target_fisik);
           $bobot_ski_tambahan =( $pagu_tambahan/$pagu_skpd_tambahan)*100;
           $rft_ski_tambahan =($realisasi_fisik_tambahan * $bobot_ski_tambahan) /100;
+    }
+
+
            $total_bobot_ski_tambahan += $bobot_ski_tambahan;
           $total_rft_ski_tambahan += $rft_ski_tambahan;
           
@@ -425,7 +455,7 @@ foreach ($hasil as $k_p => $v_p) {
 				'bobot'=>$bobot_ski_kegiatan,
 				'tf'=>$v_ski['tf'],
 				'rf'=>$v_ski['rf'],
-        'rf_tambahan'=>$v_ski['pagu_tambahan'] == '' ? '-' : round($v_ski['rf_tambahan'],2), 
+        'rf_tambahan'=>$v_ski['pagu_tambahan'] == '' ? '-' : ($v_ski['rf_tambahan']), 
 				'tk'=>$v_ski['tk'],
 				'persen_tk'=>$v_ski['persen_tk'],
 				'rk'=>$v_ski['rk'],

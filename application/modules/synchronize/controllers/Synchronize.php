@@ -21,6 +21,7 @@ class Synchronize extends MY_Controller
             'Laporan/realisasi_akumulasi_model'     => 'realisasi_akumulasi_model',
 
             'synchronize/synchronize_model'       => 'synchronize_model',
+            'synchronize/synchronize_model_new'       => 'synchronize_model_new',
         ]);
     }
 
@@ -1186,13 +1187,271 @@ return $kumpul_realisasi_keuangan_ratarata;
 
 
 
+    public function synch_baru_2027($tahun, $tahap, $id_instansi, $input='manual'){
+header('Content-Type: application/json');
+
+        $q_opd = $this->db->query("SELECT nama_instansi, kode_opd from master_instansi where id_instansi='$id_instansi'")->row_array();
+        $kode_opd = $q_opd['kode_opd'];
+        $nama_instansi = $q_opd['nama_instansi'];
+        $kode_tahap = $tahap;
+        $synchronize    = $this->synchronize_model_new;
+        $sub_kegiatan = $synchronize->get_sub_kegiatan_new($id_instansi, $tahun, $tahap);
+        $pagu = $synchronize->get_pagu_all($id_instansi, $tahun);
+        $realisasi_keuangan = $synchronize->get_rk_all($id_instansi, $tahun);
+        $realisasi_fisik = $synchronize->get_rf_all($id_instansi, $tahun);
+
+// Pagu APBD -------------------------------------------------------------Start
+
+        $group_pagu = [];
+        $pagu = $pagu->result_array();
+        foreach ($pagu as $row) {
+            $kode = $row['kode_sub_kegiatan'];
+
+            if (!isset($group_pagu[$kode])) {
+                $group_pagu[$kode] = ['data' => []];
+            }
+            $group_pagu[$kode]['data'][] = $row;
+        }
+// $p = $this->ambil_pagu($group_pagu, '4.01.08.1.01.0003', '2',1);   
+// echo json_encode($p);
+// Pagu APBD -------------------------------------------------------------End
+// Target APBD -------------------------------------------------------------Start
+        $target = $synchronize->get_target_all($id_instansi, $tahun, $tahap);
+        $group_target = [];
+        $target=$target->result_array();
+        foreach ($target as $row) {
+            $kode = $row['kode_rekening_sub_kegiatan'];
+
+            if (!isset($group_target[$kode])) {
+                $group_target[$kode] = [
+                    // 'kode_rekening_sub_kegiatan' => $kode,
+                    'target' => [],
+                ];
+            }
+            $group_target[$kode]['target'][] = $row;
+        }
+// Target APBD -------------------------------------------------------------End
+
+
+
+
+// Realisasi Keuagan APBD -------------------------------------------------------------Start
+
+        $group_realisasi_keuangan = [];
+        $realisasi_keuangan = $realisasi_keuangan->result_array();
+        foreach ($realisasi_keuangan as $row) {
+            $kode = $row['kode_sub_kegiatan'];
+
+            if (!isset($group_realisasi_keuangan[$kode])) {
+                $group_realisasi_keuangan[$kode] = ['data' => []];
+            }
+            $group_realisasi_keuangan[$kode]['data'][] = $row;
+        }
+// Realisasi Keuagan APBD -------------------------------------------------------------End
+
+
+
+
+// Realisasi fisik APBD -------------------------------------------------------------Start
+
+        
+        $realisasi_fisik = $realisasi_fisik->result_array();
+        $group_realisasi_fisik = [];
+        $paket_set   = [];   // [kode][id_paket] => true
+        $nilai_bulan = [];   // [kode][bulan] => total nilai di bulan itu
+
+        foreach ($realisasi_fisik as $r) {
+            $kode  = $r['kode_rekening_sub_kegiatan'];
+            $paket = $r['id_paket_pekerjaan'];
+            $bulan = (int) $r['bulan'];
+
+            if (!isset($group_realisasi_fisik[$kode])) {
+                $group_realisasi_fisik[$kode] = [
+                    'jumlah_paket' => 0,
+                    'data'         => [],
+                ];
+            }
+
+            $group_realisasi_fisik[$kode]['data'][] = $r;
+            $paket_set[$kode][$paket] = true;
+
+            // tambahan: jumlah nilai per bulan
+            $nilai_bulan[$kode][$bulan] = ($nilai_bulan[$kode][$bulan] ?? 0) + (float) $r['nilai'];
+        }
+
+        foreach ($paket_set as $kode => $set) {
+            $group_realisasi_fisik[$kode]['jumlah_paket'] = count($set);
+        }
+                    // echo json_encode($group_realisasi_fisik);
+// Realisasi fisik APBD -------------------------------------------------------------End
+
+
+
+// Sub Kegiatan ------------------------------------------------------------- Start
+        $kumpul_ski = [];
+            foreach ($sub_kegiatan->result_array() as $k_ski => $v_ski) {
+                if ($v_ski['pergeseran_ke']) {
+                    $t = $this->ambil_target($group_target, $v_ski['kode_rekening_sub_kegiatan'], $v_ski['pergeseran_ke']); 
+                    $p = $this->ambil_pagu($group_pagu, $v_ski['kode_rekening_sub_kegiatan'], $v_ski['kode_tahap'], $v_ski['pergeseran_ke']); 
+
+                        
+                }else{
+                    $t = $this->ambil_target($group_target, $v_ski['kode_rekening_sub_kegiatan']); 
+                    $p = $this->ambil_pagu($group_pagu, $v_ski['kode_rekening_sub_kegiatan'], $v_ski['kode_tahap']); 
+
+                }
+                $rk = $this->ambil_realisasi_keuangan($group_realisasi_keuangan, $v_ski['kode_rekening_sub_kegiatan'], $v_ski['kode_tahap']); 
+                    $rf_ski = [];
+                for ($i=0; $i < 12 ; $i++) { 
+                    $bulan = $i + 1;
+                    $fisik = $this->fisik_kumulatif($group_realisasi_fisik, $nilai_bulan, $kode, $bulan);
+                    $rf_ski[$i] = [
+                        'bulan'=>$bulan,
+                        'fisik'=>$fisik,
+                    ];
+                }
+                $output = [
+                    'pagu'=>$p,
+                    'target'=>$t,
+                    'rk'=>$rk,
+                    'rf'=>$rf_ski,
+                ];
+                    $kumpul_ski[$v_ski['kode_rekening_sub_kegiatan']] = $output;
+                // foreach ($t as $k_t => $v_t) {
+                //     // echo json_encode($v_t).'<br>';
+                // }
+            }
+                    echo json_encode($kumpul_ski);
+                    // echo json_encode($kumpul_ski);
+// Sub Kegiatan ------------------------------------------------------------- end
+
+
+
+// echo json_encode($pagu->result_array());
 
 
 
 
 
+        $bulan = 12;
+        $ope = '<=';
+
+        $total_sub_kegiatan = 0;
+        $no_sub_kegiatan = 0;
+        $total_pagu_sub_kegiatan_instansi=0;
+        $kumpul_sub_kegiatan = [];
+        $ada_tkd = 0;
 
 
+        // $q_program = $this->db->query("SELECT kode_program, nama_program from master_program");
+        // $kumpul_program = [];
+        // foreach ($q_program->result_array() as $k_program => $v_program) {
+        //     $kumpul_program[$v_program['kode_program']] = $v_program['nama_program'];
+        // }
+
+
+        // $kumpul_kegiatan = [];
+        // $q_kegiatan = $this->db->query("SELECT kode_kegiatan, nama_kegiatan from master_kegiatan");
+        // foreach ($q_kegiatan->result_array() as $k_kegiatan => $v_kegiatan) {
+        //     $kumpul_kegiatan[$v_kegiatan['kode_kegiatan']] = $v_kegiatan['nama_kegiatan'];
+        // }
+
+
+        $kumpul_pptk = [];
+        $q_pptk = $this->db->query("SELECT mu.full_name, usk.kode_rekening_sub_kegiatan from users_sub_kegiatan usk
+            left join master_users mu on usk.id_user = mu.id_user
+            where usk.tahun_anggaran='$tahun' and usk.kode_tahap='$tahap' and usk.id_instansi='$id_instansi'
+            ");
+        foreach ($q_pptk->result_array() as $k_pptk => $v_pptk) {
+            $kumpul_pptk[$v_pptk['kode_rekening_sub_kegiatan']] = $v_pptk['full_name'];
+          }
+
+    }
+
+private function fisik_kumulatif(array $group, array $nilai_bulan, string $kode, int $bulan): float
+{
+    $total = 0;
+    for ($b = 1; $b <= $bulan; $b++) {
+        $total += $nilai_bulan[$kode][$b] ?? 0;
+    }
+
+    $jml_paket = $group[$kode]['jumlah_paket'] ?? 0;
+
+    return $jml_paket > 0 ? $total : 0;
+}
+
+private function ambil_pagu(array $data, string $kode, ?string $kode_tahap = null, ?string $pergeseran_ke = null): array
+{
+    if (!isset($data[$kode])) {
+        return [];
+    }
+
+    // '' dianggap sama dengan null
+    $kode_tahap    = ($kode_tahap === '') ? null : $kode_tahap;
+    $pergeseran_ke = ($pergeseran_ke === '') ? null : $pergeseran_ke;
+
+    return array_values(array_filter($data[$kode]['data'], function ($r) use ($kode_tahap, $pergeseran_ke) {
+
+        // filter kode_tahap (kalau null, tidak difilter)
+        if ($kode_tahap !== null && (string) ($r['kode_tahap'] ?? '') !== (string) $kode_tahap) {
+            return false;
+        }
+
+        // filter pergeseran_ke
+        $geser = $r['pergeseran_ke'] ?? null;
+        $geser = ($geser === '') ? null : $geser;
+
+        if ($pergeseran_ke === null) {
+            return $geser === null;                           // hanya yang tanpa pergeseran
+        }
+
+        return (string) $geser === (string) $pergeseran_ke;   // pergeseran tertentu
+    }));
+}
+
+
+private function ambil_target(array $data, string $kode, ?string $geser = null): array
+{
+    if (!isset($data[$kode])) {
+        return [];
+    }
+
+    $semua = $data[$kode]['target'];
+
+    // '' dianggap sama dengan null
+    $geser = ($geser === '') ? null : $geser;
+
+    return array_values(array_filter($semua, function ($t) use ($geser) {
+        $nilai = $t['pergeseran_ke'] ?? null;
+        $nilai = ($nilai === '') ? null : $nilai;   // string kosong di DB dianggap null
+
+        if ($geser === null) {
+            return $nilai === null;                  // tanpa pergeseran
+        }
+
+        return (string) $nilai === (string) $geser;  // pergeseran tertentu
+    }));
+}
+
+
+
+private function ambil_realisasi_keuangan(array $data, string $kode, ?string $kode_tahap = null): array
+{
+    if (!isset($data[$kode])) {
+        return [];
+    }
+
+    // '' dianggap sama dengan null (tidak difilter)
+    $kode_tahap = ($kode_tahap === '') ? null : $kode_tahap;
+
+    if ($kode_tahap === null) {
+        return $data[$kode]['data'];
+    }
+
+    return array_values(array_filter($data[$kode]['data'], function ($r) use ($kode_tahap) {
+        return (string) ($r['kode_tahap'] ?? '') === $kode_tahap;
+    }));
+}
 
     public function synch_baru($tahun, $tahap, $id_instansi, $input='manual')
     {

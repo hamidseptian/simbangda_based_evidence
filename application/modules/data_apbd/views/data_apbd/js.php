@@ -3544,7 +3544,7 @@ function ceklis_realisasi(id){
 
 
 
-function copy_data_apbd_sub_kegiatan(kode_rekening_sub_kegiatan, kode_kegiatan, kode_program, tahap, kode_bidang_urusan, nama_sub_kegiatan)
+function copy_data_apbd_sub_kegiatan(kode_rekening_sub_kegiatan,  tahap, id_sub_kegiatan_instansi, pergeseran_ke, nama_sub_kegiatan)
 	{	
 
 
@@ -3566,9 +3566,8 @@ function copy_data_apbd_sub_kegiatan(kode_rekening_sub_kegiatan, kode_kegiatan, 
 				            type    : 'POST',
 				            data    : { 
 				            	kode_rekening_sub_kegiatan : kode_rekening_sub_kegiatan,
-				            	kode_kegiatan : kode_kegiatan,
-				            	kode_program : kode_program,
-				            	kode_bidang_urusan : kode_bidang_urusan,
+				            	id_sub_kegiatan_instansi : id_sub_kegiatan_instansi,
+				            	pergeseran_ke : pergeseran_ke,
 				            	tahap : tahap
 				            },
 				            success : function(data)
