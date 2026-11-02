@@ -1496,8 +1496,8 @@ public function sub_kegiatan_apbd_instansi()
             $onclick  = "hapus_sub_kegiatan_instansi('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."', '".$lists->kode_tahap."', '".$lists->tahun."','instansi')";
             $onclick2 = "input_anggaran('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_tahap."','".tahun_anggaran()."','instansi')";
             $onclick4 = "get_sumber_dana('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->pagu_tambahan."')";
-
-            $onclick_copy = "copy_data_apbd_sub_kegiatan('".$lists->kode_rekening_sub_kegiatan."','".tahapan_apbd()."','".$lists->id_sub_kegiatan_instansi."','".$lists->pergeseran_ke."','".$nama_sub_kegiatan."')";
+            $js_nama_sub_keg = str_replace(["\r", "\n"], '', $nama_sub_kegiatan);
+            $onclick_copy = "copy_data_apbd_sub_kegiatan('".$lists->kode_rekening_sub_kegiatan."','".tahapan_apbd()."','".$lists->id_sub_kegiatan_instansi."','".$lists->pergeseran_ke."','".$js_nama_sub_keg."')";
 
             $cek_count_data_pagu = $this->db->query("
                 SELECT id_anggaran_sub_kegiatan FROM anggaran_sub_kegiatan

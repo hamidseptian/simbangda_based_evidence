@@ -3547,7 +3547,6 @@ function ceklis_realisasi(id){
 function copy_data_apbd_sub_kegiatan(kode_rekening_sub_kegiatan,  tahap, id_sub_kegiatan_instansi, pergeseran_ke, nama_sub_kegiatan)
 	{	
 
-
 		Swal.fire({
 			  title: 'Warning',
 			  text: 'Copy Pagu, target, sumber dana pada APBD Awal sub kegiatan ' + nama_sub_kegiatan +' ke APBD Perubahan.??',
