@@ -406,8 +406,10 @@ public function get_token_csrf()
         }
         // $q = $dashboard_pembangunan->laporan_opd($tahun, $tahap, $bulan);
         $q = $dashboard_pembangunan->laporan_opd($tahun, $tahap, $bulan, '', 'tertinggi', 'keuangan');
+        
+        $data_opd = $dashboard_pembangunan->laporan_opd_new($tahun, $tahap, $bulan, '', 'tertinggi', 'realisasi_keuangan');
 
-        $data_opd = [];
+        // $data_opd = [];
         foreach ($q->result_array() as $k => $v) {
             $deviasi_fisik_akumulasi = $v['realisasi_fisik_akumulasi'] - $v['target_fisik_akumulasi'] ;
             $deviasi_fisik_bulanan = $v['realisasi_fisik_bulanan'] - $v['target_fisik_bulanan'] ;
@@ -460,7 +462,7 @@ public function get_token_csrf()
                     'bulan'=> $v['bulan'] , 
                 ]
             ];
-            array_push($data_opd,$data_push);
+            // array_push($data_opd,$data_push);
         }
 
 
@@ -507,7 +509,7 @@ public function get_token_csrf()
             ];
 
 
-            array_push($data_opd,$data_push);
+            // array_push($data_opd,$data_push);
         }
 
 

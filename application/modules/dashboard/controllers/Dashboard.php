@@ -138,19 +138,20 @@ class Dashboard extends MY_Controller
 
             if ($grafik->num_rows()==0) {
             $pagu_grafik                      = 0;// $grafik->result_array()[$index_bulan];
-            $pagu_bo                = 0;// $pagu_grafik['pagu_bo_bp'] + $pagu_grafik['pagu_bo_bbj'] + $pagu_grafik['pagu_bo_bs'] + $pagu_grafik['pagu_bo_bh'] + $pagu_grafik['pagu_bo_bbs'];
-            $pagu_bm                = 0;// $pagu_grafik['pagu_bm_bmt'] + $pagu_grafik['pagu_bm_bmpm'] + $pagu_grafik['pagu_bm_bmgb'] + $pagu_grafik['pagu_bm_bmjji'] + $pagu_grafik['pagu_bm_bmatl'] + $pagu_grafik['pagu_bm_bmatb'];
-            $pagu_btt                = 0;// $pagu_grafik['pagu_btt'];
-            $pagu_bt                = 0;// $pagu_grafik['pagu_bt_bbk'] + $pagu_grafik['pagu_bt_bbh'];
-            $pagu_total                = 0;// $pagu_bo + $pagu_bm + $pagu_btt + $pagu_bt;
+            $pagu_bo_total                = 0;// $pagu_grafik['pagu_bo_bp'] + $pagu_grafik['pagu_bo_bbj'] + $pagu_grafik['pagu_bo_bs'] + $pagu_grafik['pagu_bo_bh'] + $pagu_grafik['pagu_bo_bbs'];
+            $pagu_bm_total                = 0;// $pagu_grafik['pagu_bm_bmt'] + $pagu_grafik['pagu_bm_bmpm'] + $pagu_grafik['pagu_bm_bmgb'] + $pagu_grafik['pagu_bm_bmjji'] + $pagu_grafik['pagu_bm_bmatl'] + $pagu_grafik['pagu_bm_bmatb'];
+            $pagu_btt_total                = 0;// $pagu_grafik['pagu_btt'];
+            $pagu_bt_total                = 0;// $pagu_grafik['pagu_bt_bbk'] + $pagu_grafik['pagu_bt_bbh'];
+            $show_pagu_total                = 0;// $pagu_bo + $pagu_bm + $pagu_btt + $pagu_bt;
 
-            $realisasi_bo                = 0;// $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bp'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbj'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bs'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bh'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbs'];
-            $realisasi_bm                = 0;// $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmt'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmpm'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmgb'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmjji'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatl'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatb'];
-            $realisasi_btt                = 0;// $pagu_grafik['rp_realisasi_keuangan_akumulasi_btt'];
-            $realisasi_bt                = 0;// $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbk'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbh'];
-            $realisasi_total                = 0;// $realisasi_bo + $realisasi_bm + $realisasi_btt + $realisasi_bt;
+            $realisasi_bo_total                = 0;// $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bp'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbj'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bs'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bh'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bo_bbs'];
+            $realisasi_bm_total                = 0;// $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmt'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmpm'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmgb'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmjji'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatl'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bm_bmatb'];
+            $realisasi_btt_total                = 0;// $pagu_grafik['rp_realisasi_keuangan_akumulasi_btt'];
+            $realisasi_bt_total                = 0;// $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbk'] + $pagu_grafik['rp_realisasi_keuangan_akumulasi_bt_bbh'];
+            $show_realisasi_total                = 0;// $realisasi_bo + $realisasi_bm + $realisasi_btt + $realisasi_bt;
             $data['persen_realisasi_total'] = 0;// ($realisasi_total / $pagu_total)   * 100;
-                # code...
+             
+                 $data['menerima_tkd'] = 0;
             }else{
 
 

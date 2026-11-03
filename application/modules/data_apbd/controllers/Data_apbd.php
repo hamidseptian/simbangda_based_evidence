@@ -1089,6 +1089,21 @@ public function sync_eplanning()
         $target_fisik   = $this->input->post('value');
         $tahun = tahun_anggaran();
         $target         = $this->db->get_where('target_apbd', ['id_target_apbd' => $id_target_apbd])->row_array();
+
+        // PErubahan Baru agar target setelahnya ikut terubah-----------------------------------------------------------start
+        $bulan_diubah = $target['bulan'];
+        $target_all    = $this->db->get_where('target_apbd', ['kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan,'kode_tahap' => $tahap,'tahun' => tahun_anggaran(), 'id_instansi'=>id_instansi()])->result_array();
+        // for ($i=0; $i < 12; $i++) { 
+        //     // $bulan_target = $i+1;
+        //     $data = $target_all[$i];
+        //     $bulan_target = $data['bulan'];
+        //     if ($bulan_diubah>$bulan_target) {
+        //         # code...
+        //     }
+        // }
+        // PErubahan Baru agar target setelahnya ikut terubah-----------------------------------------------------------end
+    
+
         $target_lalu    = $this->db->get_where('target_apbd', ['kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan, 'bulan' => $target['bulan'] - 1, 'kode_tahap' => $tahap,'tahun' => tahun_anggaran(), 'id_instansi'=>id_instansi()])->row_array();
 
         if ($target['bulan'] == 1) {
@@ -1107,6 +1122,7 @@ public function sync_eplanning()
                 }
             }
         } else {
+
             $this->db->update('target_apbd', ['target_fisik' => $nilai,'target_fisik_bulanan' => $target_fisik,  'input_by' => 'Manual Input'], ['id_target_apbd' => $id_target_apbd]);
         }
     }
