@@ -405,35 +405,35 @@ public function get_token_csrf()
             $bulan = bulan_aktif();
         }
         // $q = $dashboard_pembangunan->laporan_opd($tahun, $tahap, $bulan);
-        $q = $dashboard_pembangunan->laporan_opd($tahun, $tahap, $bulan, '', 'tertinggi', 'keuangan');
-        
-        $data_opd = $dashboard_pembangunan->laporan_opd_new($tahun, $tahap, $bulan, '', 'tertinggi', 'realisasi_keuangan');
+        // $q = $dashboard_pembangunan->laporan_opd($tahun, $tahap, $bulan, '', 'tertinggi', 'keuangan');
 
-        // $data_opd = [];
-        foreach ($q->result_array() as $k => $v) {
+        $q = $dashboard_pembangunan->laporan_opd_new($tahun, $tahap, $bulan, '', 'tertinggi', 'realisasi_keuangan');
+
+        $data_opd = [];
+        foreach ($q as $k => $v) {
             $deviasi_fisik_akumulasi = $v['realisasi_fisik_akumulasi'] - $v['target_fisik_akumulasi'] ;
             $deviasi_fisik_bulanan = $v['realisasi_fisik_bulanan'] - $v['target_fisik_bulanan'] ;
 
 
-            $persen_target_keuangan = ($v['rp_target_keuangan_akumulasi'] / $v['pagu_total']) * 100; 
-            $persen_realisasi_keuangan = ($v['rp_realisasi_keuangan_akumulasi'] / $v['pagu_total']) * 100; 
+            $persen_target_keuangan = ($v['rp_target_keuangan'] / $v['pagu']) * 100; 
+            $persen_realisasi_keuangan = ($v['rp_realisasi_keuangan'] / $v['pagu']) * 100; 
             $deviasi_keuangan_akumulasi = $persen_realisasi_keuangan - $persen_target_keuangan ; 
 
-            $persen_target_keuangan_bulanan = ($v['rp_target_keuangan_bulanan'] / $v['pagu_total']) * 100; 
-            $persen_realisasi_keuangan_bulanan = ($v['rp_realisasi_keuangan_bulanan'] / $v['pagu_total']) * 100; 
+            $persen_target_keuangan_bulanan = ($v['rp_target_keuangan_bulanan'] / $v['pagu']) * 100; 
+            $persen_realisasi_keuangan_bulanan = ($v['rp_realisasi_keuangan_bulanan'] / $v['pagu']) * 100; 
             $deviasi_keuangan_bulanan = $persen_realisasi_keuangan_bulanan - $persen_target_keuangan_bulanan ; 
             $data_push = [
-                'skpd'=>$v['nama_instansi'],
-                'singkatan_skpd'=>$v['singkatan_nama_instansi'],
-                'pagu'=>$v['pagu_total'],
+                'skpd'=>$v['skpd'],
+                'singkatan_skpd'=>$v['singkatan_skpd'],
+                'pagu'=>$v['pagu'],
 
                 'target_fisik_akumulasi'=>$v['target_fisik_akumulasi'],
                 'realisasi_fisik_akumulasi'=>$v['realisasi_fisik_akumulasi'],
                 'deviasi_fisik_akumulasi'=>round($deviasi_fisik_akumulasi,2),
 
-                'rp_target_keuangan'=>$v['rp_target_keuangan_akumulasi'],
+                'rp_target_keuangan'=>$v['rp_target_keuangan'],
                 'persen_target_keuangan'=>round($persen_target_keuangan,2),
-                'rp_realisasi_keuangan'=>$v['rp_realisasi_keuangan_akumulasi'],
+                'rp_realisasi_keuangan'=>$v['rp_realisasi_keuangan'],
                 'persen_realisasi_keuangan'=>round($persen_realisasi_keuangan,2),
                 'deviasi_realisasi_keuangan'=>round($deviasi_keuangan_akumulasi,2),
 
@@ -453,16 +453,16 @@ public function get_token_csrf()
                 // 'url'=> base_url().'integrated/api/dashboard_pembangunan/detail_data_opd_pengelompokan/'.$v['id_instansi'], //.'/'.$v['tahun'].'/'.$v['kode_tahap'].'/'.$v['bulan'].'/',
        
                 'detail'=> [
-                    'url'=> base_url().'integrated/api/dashboard_pembangunan/detail_data_opd_pengelompokan_tpp/'.$v['id_instansi'].'/'.$v['tahun'].'/'.$v['kode_tahap'].'/'.$v['bulan'].'/',
+                    'url'=> base_url().'integrated/api/dashboard_pembangunan/detail_data_opd_pengelompokan_tpp/'.$v['id_instansi'].'/'.$tahun.'/'.$tahap.'/'.$bulan.'/',
                     // 'url' =>base_url().'integrated/api/dashboard_pembangunan/detail_data_opd_pengelompokan/',
                     'id_instansi'=> $v['id_instansi'] , 
                     'id_satker'=> $v['integrasi_sipedal_id_instansi'] , 
-                    'tahun'=> $v['tahun'] , 
-                    'kode_tahap'=> $v['kode_tahap'] , 
-                    'bulan'=> $v['bulan'] , 
+                    'tahun'=> $tahun , 
+                    'kode_tahap'=> $tahap , 
+                    'bulan'=> $bulan , 
                 ]
             ];
-            // array_push($data_opd,$data_push);
+            array_push($data_opd,$data_push);
         }
 
 

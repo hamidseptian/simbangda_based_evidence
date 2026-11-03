@@ -120,26 +120,42 @@ class Integrasi_dashboard_pembangunan_model extends CI_Model
 	public function laporan_opd_new($tahun, $kode_tahap, $bulan, $id_instansi='' , $urutan_ranking='', $ranking_berdasarkan='')
 	{	
 		if ($id_instansi=='') {
-				$sql = 'g.target_fisik_akumulasi as target_fisik,
+				$sql = '
+					g.pagu_total,
+					g.target_fisik_akumulasi as target_fisik,
 					g.realisasi_fisik_akumulasi as realisasi_fisik,
 					g.target_keuangan_akumulasi as target_keuangan,
 					g.realisasi_keuangan_akumulasi as realisasi_keuangan,
-					g.pagu_total,
 					g.rp_target_keuangan_akumulasi as rp_target_keuangan,
-					g.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan
+					g.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan,
+
+					g.target_fisik_bulanan as target_fisik_bulanan,
+					g.realisasi_fisik_bulanan as realisasi_fisik_bulanan,
+					g.target_keuangan_bulanan as target_keuangan_bulanan,
+					g.realisasi_keuangan_bulanan as realisasi_keuangan_bulanan,
+					g.rp_target_keuangan_bulanan as rp_target_keuangan_bulanan,
+					g.rp_realisasi_keuangan_bulanan as rp_realisasi_keuangan_bulanan
 					';
-				$sql_tambahan = 'gt.target_fisik_akumulasi as target_fisik_tambahan,
+				$sql_tambahan = '
+					gt.pagu_total as pagu_total_tambahan,
+					gt.target_fisik_akumulasi as target_fisik_tambahan,
 					gt.realisasi_fisik_akumulasi as realisasi_fisik_tambahan,
 					gt.target_keuangan_akumulasi as target_keuangan_tambahan,
 					gt.realisasi_keuangan_akumulasi as realisasi_keuangan_tambahan,
-					gt.pagu_total as pagu_total_tambahan,
 					gt.rp_target_keuangan_akumulasi as rp_target_keuangan_tambahan,
-					gt.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan_tambahan
+					gt.rp_realisasi_keuangan_akumulasi as rp_realisasi_keuangan_tambahan,
+
+					gt.target_fisik_bulanan as target_fisik_tambahan_bulanan,
+					gt.realisasi_fisik_bulanan as realisasi_fisik_tambahan_bulanan,
+					gt.target_keuangan_bulanan as target_keuangan_tambahan_bulanan,
+					gt.realisasi_keuangan_bulanan as realisasi_keuangan_tambahan_bulanan,
+					gt.rp_target_keuangan_bulanan as rp_target_keuangan_tambahan_bulanan,
+					gt.rp_realisasi_keuangan_bulanan as rp_realisasi_keuangan_tambahan_bulanan
 					';
 
 
 
-			$sql = "SELECT mi.nama_instansi, mi.singkatan_nama_instansi, mi.id_instansi,	
+			$sql = "SELECT mi.nama_instansi, mi.singkatan_nama_instansi, mi.id_instansi, mi.integrasi_sipedal_id_instansi,	
 			$sql, $sql_tambahan
 
 	 		
@@ -160,10 +176,14 @@ class Integrasi_dashboard_pembangunan_model extends CI_Model
 					$pagu = $v['pagu_total_tambahan'] + $v['pagu_total'];
 					$rp_tk = $v['rp_target_keuangan_tambahan'] + $v['rp_target_keuangan'];
 					$rp_rk = $v['rp_realisasi_keuangan_tambahan'] + $v['rp_realisasi_keuangan'];
+					$rp_tk_bulanan = $v['rp_target_keuangan_tambahan_bulanan'] + $v['rp_target_keuangan_bulanan'];
+					$rp_rk_bulanan = $v['rp_realisasi_keuangan_tambahan_bulanan'] + $v['rp_realisasi_keuangan_bulanan'];
 				}else{
 					$pagu = $v['pagu_total'];
 					$rp_tk = $v['rp_target_keuangan'];
 					$rp_rk = $v['rp_realisasi_keuangan'];
+					$rp_tk_bulanan = $v['rp_target_keuangan_bulanan'];
+					$rp_rk_bulanan = $v['rp_realisasi_keuangan_bulanan'];
 
 				}
 					$persen_tk = $rp_tk / $pagu * 100;
@@ -185,6 +205,7 @@ class Integrasi_dashboard_pembangunan_model extends CI_Model
 
 				   $data_push = [
 	                'urutan'=>($k + 1),
+	                'id_instansi'=>$v['id_instansi'],
 	                'skpd'=>$v['nama_instansi'],
 	                // 'id_parent'=>$v['id_parent'],
 	                'singkatan_skpd'=>$v['singkatan_nama_instansi'],
@@ -192,11 +213,20 @@ class Integrasi_dashboard_pembangunan_model extends CI_Model
 
 	                'target_fisik_akumulasi'=>$v['target_fisik'],
 	                'realisasi_fisik_akumulasi'=>$v['realisasi_fisik'],
-	                'deviasi_fisik_akumulasi'=>round($deviasi_fisik_akumulasi,2),
-
 	                'rp_target_keuangan'=>$rp_tk,
-	                'persen_target_keuangan'=>round($persen_tk,2),
 	                'rp_realisasi_keuangan'=>$rp_rk,
+
+	                // bulanan ----------------start
+	                'rp_target_keuangan_bulanan'=>$rp_tk_bulanan,
+	                'rp_realisasi_keuangan_bulanan'=>$rp_rk_bulanan,
+	                'target_fisik_bulanan'=>$v['target_fisik_bulanan'],
+	                'realisasi_fisik_bulanan'=>$v['realisasi_fisik_bulanan'],
+	                // bulanan ----------------end
+
+	                'deviasi_fisik_akumulasi'=>round($deviasi_fisik_akumulasi,2),
+	                'integrasi_sipedal_id_instansi'=>$v['integrasi_sipedal_id_instansi'],
+
+	                'persen_target_keuangan'=>round($persen_tk,2),
 	                'persen_realisasi_keuangan'=>round($persen_rk,2),
 	                'deviasi_realisasi_keuangan'=>round($deviasi_keuangan_akumulasi,2),
 
