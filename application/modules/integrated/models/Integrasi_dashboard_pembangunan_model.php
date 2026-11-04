@@ -120,6 +120,10 @@ class Integrasi_dashboard_pembangunan_model extends CI_Model
 	public function laporan_opd_new($tahun, $kode_tahap, $bulan, $id_instansi='' , $urutan_ranking='', $ranking_berdasarkan='')
 	{	
 		if ($id_instansi=='') {
+			$where_instansi = "";
+			}else{
+			$where_instansi = "AND g.id_instansi='$id_instansi'";
+			}
 				$sql = '
 					g.pagu_total,
 					g.target_fisik_akumulasi as target_fisik,
@@ -165,7 +169,7 @@ class Integrasi_dashboard_pembangunan_model extends CI_Model
 	          AND g.tahun COLLATE utf8mb4_unicode_ci = gt.tahun COLLATE utf8mb4_unicode_ci
 	          AND g.kode_tahap COLLATE utf8mb4_unicode_ci = gt.kode_tahap COLLATE utf8mb4_unicode_ci
 	          AND g.bulan COLLATE utf8mb4_unicode_ci = gt.bulan COLLATE utf8mb4_unicode_ci
-			where g.tahun = '$tahun' and g.kode_tahap='$kode_tahap' and g.bulan='$bulan'
+			where g.tahun = '$tahun' and g.kode_tahap='$kode_tahap' and g.bulan='$bulan' $where_instansi
 			" ;
 
 			$this->db->query("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
@@ -276,16 +280,7 @@ class Integrasi_dashboard_pembangunan_model extends CI_Model
 	// 		
 			}
 			
-		}else{
-	// 		$q = $this->db->query("SELECT mi.nama_instansi, mi.singkatan_nama_instansi, g.pagu_total, g.rp_target_keuangan_akumulasi, g.rp_target_keuangan_bulanan,  g.rp_realisasi_keuangan_akumulasi, g.rp_realisasi_keuangan_bulanan,
-	// 			 g.target_fisik_akumulasi, g.target_fisik_bulanan, g.realisasi_fisik_akumulasi, g.realisasi_fisik_bulanan , 
-	// 			 g.id_instansi, g.tahun, g.kode_tahap, g.bulan
-	// 			from grafik g  
-	// 			left join master_instansi mi on g.id_instansi = mi.id_instansi
-	// 			where
-	// 			g.tahun = '$tahun' and g.kode_tahap='$kode_tahap' and g.bulan='$bulan' and g.id_instansi='$id_instansi'");
-
-		}
+		
 		return $data_opd_diurutkan;
 	}
 	public function opd_belum_ada_data($tahun, $tahap, $bulan)

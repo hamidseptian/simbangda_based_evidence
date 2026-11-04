@@ -1091,7 +1091,7 @@ public function get_token_csrf()
 
       
          $skpd = $q_opd['nama_instansi'];
-         $pagu_total = $q_opd['pagu_total'] == '' ? 0 : $q_opd['pagu_total'] ;
+         // $pagu_total = $q_opd['pagu_total'] == '' ? 0 : $q_opd['pagu_total'] ;
         if ($q_opd['pagu_total']==0) {
           
             $rp_target_keuangan_akumulasi = 0;
@@ -1107,12 +1107,18 @@ public function get_token_csrf()
             $realisasi_fisik_bulanan = 0;
             $rp_target_keuangan_bulanan = 0;
         }else{
-            $q_pencapaian_opd = $dashboard_pembangunan->laporan_opd($tahun, $tahap, $bulan, $id_instansi)->row_array();
-            $rp_target_keuangan_akumulasi = $q_pencapaian_opd['rp_target_keuangan_akumulasi'] == '' ? 0 : $q_pencapaian_opd['rp_target_keuangan_akumulasi'];
-            $rp_realisasi_keuangan_akumulasi = $q_pencapaian_opd['rp_realisasi_keuangan_akumulasi'] == '' ? 0 : $q_pencapaian_opd['rp_realisasi_keuangan_akumulasi'];
-            $persen_target_keuangan = $q_pencapaian_opd['pagu_total'] == '' ? 0 : ($q_pencapaian_opd['rp_target_keuangan_akumulasi'] / $q_pencapaian_opd['pagu_total']) * 100; 
-            $persen_target_keuangan_bulanan = $q_pencapaian_opd['pagu_total'] == '' ? 0 : ($q_pencapaian_opd['rp_target_keuangan_bulanan'] / $q_pencapaian_opd['pagu_total']) * 100; 
-            $persen_realisasi_keuangan = $q_pencapaian_opd['pagu_total'] == '' ? 0 : ($q_pencapaian_opd['rp_realisasi_keuangan_akumulasi'] / $q_pencapaian_opd['pagu_total']) * 100; 
+
+
+            $q_pencapaian_opd = $dashboard_pembangunan->laporan_opd_new($tahun, $tahap, $bulan, $id_instansi, '', '');
+            $q_pencapaian_opd = $q_pencapaian_opd[0];
+
+
+            // $q_pencapaian_opd = $dashboard_pembangunan->laporan_opd($tahun, $tahap, $bulan, $id_instansi)->row_array();
+            $rp_target_keuangan_akumulasi = $q_pencapaian_opd['rp_target_keuangan'] == '' ? 0 : $q_pencapaian_opd['rp_target_keuangan'];
+            $rp_realisasi_keuangan_akumulasi = $q_pencapaian_opd['rp_realisasi_keuangan'] == '' ? 0 : $q_pencapaian_opd['rp_realisasi_keuangan'];
+            $persen_target_keuangan = $q_pencapaian_opd['pagu'] == '' ? 0 : ($q_pencapaian_opd['rp_target_keuangan'] / $q_pencapaian_opd['pagu']) * 100; 
+            $persen_target_keuangan_bulanan = $q_pencapaian_opd['pagu'] == '' ? 0 : ($q_pencapaian_opd['rp_target_keuangan_bulanan'] / $q_pencapaian_opd['pagu']) * 100; 
+            $persen_realisasi_keuangan = $q_pencapaian_opd['pagu'] == '' ? 0 : ($q_pencapaian_opd['rp_realisasi_keuangan'] / $q_pencapaian_opd['pagu']) * 100; 
             $deviasi_fisik_akumulasi = $q_pencapaian_opd['realisasi_fisik_akumulasi'] - $q_pencapaian_opd['target_fisik_akumulasi'] ;
             $deviasi_fisik_bulanan = $q_pencapaian_opd['realisasi_fisik_bulanan'] - $q_pencapaian_opd['target_fisik_bulanan'] ;
             $target_fisik_akumulasi = $q_pencapaian_opd['target_fisik_akumulasi'] == '' ? 0 : $q_pencapaian_opd['target_fisik_akumulasi'];
@@ -1124,7 +1130,7 @@ public function get_token_csrf()
 
         $pencapaian_opd = [
             'skpd'=> $skpd,
-            'pagu'=> $pagu_total,
+            'pagu'=> $q_pencapaian_opd['pagu'],
             'rp_target_keuangan'=>$rp_target_keuangan_akumulasi,
             'persen_target_keuangan'=>round($persen_target_keuangan,2),
             'rp_realisasi_keuangan'=>$rp_realisasi_keuangan_akumulasi,
@@ -1137,12 +1143,9 @@ public function get_token_csrf()
             'target_fisik_bulanan'=>$target_fisik_bulanan,
             'target_keuangan_bulanan'=>$rp_target_keuangan_bulanan,
             'persen_target_keuangan_bulanan'=>$persen_target_keuangan_bulanan,
-            // 'target_fisik_bulanan'=>$v['target_fisik_bulanan'],
-            // 'realisasi_fisik_bulanan '=>$v['realisasi_fisik_bulanan'],
-            // 'deviasi_fisik_bulanan'=>round($deviasi_fisik_akumulasi,2),
-
-            // 'url'=> base_url().'integrated/api/dashboard_pembangunan/detail_data_opd_pengelompokan/'.$v['id_instansi'].'/'.$v['tahun'].'/'.$v['kode_tahap'].'/'.$v['bulan'].'/',
+          
         ];
+        // $pencapaian_opd = $q_pencapaian_opd;
 
 
 
