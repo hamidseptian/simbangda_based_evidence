@@ -1291,26 +1291,46 @@ header('Content-Type: application/json');
 
 // pengambilan pagu total SKPD -------------------------------------------------------------Start
 $pagu_total = 0;
+$kosong = 0;
+$jumlah_ski = 0;
+$jumlah_pagu = 0;
+$kumpul_pagu_bermasalah = [];
   foreach ($sub_kegiatan->result_array() as $k_ski => $v_ski) {
+$jumlah_ski++;
+$pagu_vska = $v_ski['pagu'];
                 if ($v_ski['pergeseran_ke']) {
                     $q_pagu = $this->ambil_pagu($group_pagu, $v_ski['kode_rekening_sub_kegiatan'], $v_ski['kode_tahap'], $v_ski['pergeseran_ke']); 
                 }else{
                     $q_pagu = $this->ambil_pagu($group_pagu, $v_ski['kode_rekening_sub_kegiatan'], $v_ski['kode_tahap']); 
                 }
-                // if ($q_pagu['kosong']==true) {
-                //     $pagu_ski = '';
-                //     # code...
-                // }else{
-                //     $d_pagu = $q_pagu;
-                // // $pagu_ski = $d_pagu['bo_bp'] + $d_pagu['bo_bbj'] + $d_pagu['bo_bs'] + $d_pagu['bo_bh'] + $d_pagu['bm_bmt'] + $d_pagu['bm_bmpm'] + $d_pagu['bm_bmgb'] + $d_pagu['bm_bmjji'] + $d_pagu['bm_bmatl'] + $d_pagu['btt'] + $d_pagu['bt_bbh'] + $d_pagu['bt_bbk'];
+                if ($q_pagu['kosong']) {
+                    $d_pagu = $q_pagu['data'];
+                   $kosong++;
+                   $pagu_ski =0 ;
+                }else{
+                   $kosong=0;
+                    $d_pagu = $q_pagu['data'][0];
+                    $pagu_ski = $d_pagu['bo_bp'] + $d_pagu['bo_bbj'] + $d_pagu['bo_bs'] + $d_pagu['bo_bh'] + $d_pagu['bm_bmt'] + $d_pagu['bm_bmpm'] + $d_pagu['bm_bmgb'] + $d_pagu['bm_bmjji'] + $d_pagu['bm_bmatl'] + $d_pagu['btt'] + $d_pagu['bt_bbh'] + $d_pagu['bt_bbk'];
+                    if ($pagu_ski!=$pagu_vska) {
+                        array_push($kumpul_pagu_bermasalah['tidak_sama'], $q_pagu['kode']);
+                        # code...
+                    }
 
-                // }
-                echo json_encode($q_pagu['data']);
-// $pagu_total += $pagu_ski;
+                }
+
+                if ($q_pagu['jumlah']>1) {
+                    array_push($kumpul_pagu_bermasalah['double'], $q_pagu['kode']);
+                }
+                // echo json_encode($d_pagu);
+                $pagu_total += $pagu_vska;
+                $jumlah_pagu += $q_pagu['jumlah'];
 
 }
-
-die;
+echo json_encode($kumpul_pagu_bermasalah);
+// echo $jumlah_ski;
+// // echo '<br>';
+// // echo $jumlah_pagu;
+die;        
 // pengambilan pagu total SKPD -------------------------------------------------------------End
 
 // Sub Kegiatan ------------------------------------------------------------- Start
@@ -1340,14 +1360,47 @@ die;
                 }
                   
 
-                if ($t['jumlah']>12) {
-                   array_push($kumpul_target_double, $t['kode']);
-                } 
-                if ($t['kosong']) {
-                   array_push($kumpul_target_kosong, $t['kode']);
-                }
                 // $q_pagu = $q_pagu[0];
-                $pagu_ski = $q_pagu['bo_bp'] + $q_pagu['bo_bbj'] + $q_pagu['bo_bs'] + $q_pagu['bo_bh'] + $q_pagu['bm_bmt'] + $q_pagu['bm_bmpm'] + $q_pagu['bm_bmgb'] + $q_pagu['bm_bmjji'] + $q_pagu['bm_bmatl'] + $q_pagu['btt'] + $q_pagu['bt_bbh'] + $q_pagu['bt_bbk'];
+
+                  if ($q_pagu['kosong']) {
+                    $d_pagu = $q_pagu['data'];
+                   $pagu_ski =0 ;
+                    for ($i=0; $i < 12 ; $i++) { 
+                        $bulan = $i + 1;
+
+                        $kumpul_target[$bulan] =[
+                            'bulan'=> $bulan,
+                            'tf'=> 0,
+                            'tf_ttb'=> 0,
+                            'tf_bulanan'=> 0,
+                            'tf_ttb_bulanan'=> 0,
+                            'rp_tk'=> 0,
+                            'rp_tk_bulanan'=> 0,
+                        ];
+                       $rf_ski[$bulan] = [
+                            'bulan'=>$bulan,
+                            'rf'=>0,
+                            'rf_bulanan'=>0,
+                            'rf_ttb'=>0,
+                            'rf_ttb_bulanan'=>0,
+                        ];
+                        $rk_ski[$bulan] = [
+                            'bulan'=>$bulan,
+                            'realisasi_keuangan_akumulasi_total'=>0,
+                            'realisasi_keuangan_bulanan_total'=>0,
+                        ];
+
+                    }
+                }else{
+                    $d_pagu = $q_pagu['data'][0];
+                $pagu_ski = $d_pagu['bo_bp'] + $d_pagu['bo_bbj'] + $d_pagu['bo_bs'] + $d_pagu['bo_bh'] + $d_pagu['bm_bmt'] + $d_pagu['bm_bmpm'] + $d_pagu['bm_bmgb'] + $d_pagu['bm_bmjji'] + $d_pagu['bm_bmatl'] + $d_pagu['btt'] + $d_pagu['bt_bbh'] + $d_pagu['bt_bbk'];
+
+               
+
+
+
+
+
                 $bobot_ski = $pagu_ski == 0 ? 0 : ( $pagu_ski /  $pagu_total)*100;
                 $total_bobot+= $bobot_ski;
                 $rk = $this->ambil_realisasi_keuangan($group_realisasi_keuangan, $v_ski['kode_rekening_sub_kegiatan'], $v_ski['kode_tahap']); 
@@ -1475,12 +1528,14 @@ die;
                     // 'tahun'=>$tahun,
                     'kode_tahap'=> $v_ski['kode_tahap'],
                     // 'bobot'=>$bobot_ski,
-                    // 'pagu_ski'=>$pagu_total ,
+                    'pagu_ski'=>$pagu_total ,
                     // 'pagu_jenis_belanja'=>$q_pagu ,
-                    'target'=>$kumpul_target,
+                    // 'target'=>$kumpul_target,
                     // 'rk'=>$rk_ski,
                     // 'rf'=>$rf_ski,
                 ];
+
+            }
                     $kumpul_ski[$v_ski['kode_rekening_sub_kegiatan']] = $output;
                     $cek_kumpul_ski[$v_ski['kode_rekening_sub_kegiatan']] =$cek_hasil;
               
@@ -1488,8 +1543,8 @@ die;
                     $cek_kumpul_ski['double'] =$kumpul_target_double;
 
 
-                    // echo json_encode($cek_kumpul_ski);
-                    // die;
+                    echo json_encode($cek_kumpul_ski);
+                    die;
 // Sub Kegiatan ------------------------------------------------------------- end
 
 
