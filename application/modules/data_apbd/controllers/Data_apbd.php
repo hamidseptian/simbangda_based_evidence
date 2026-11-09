@@ -1428,7 +1428,7 @@ public function sub_kegiatan_apbd_instansi()
 
         $column_order   = ['', 'nama_sub_kegiatan'];
         $column_search  = ['nama_sub_kegiatan', 'kode_rekening_sub_kegiatan', 'keterangan'];
-        $caption_status = [2 => 'Melanjutkan data APBD AWAL pada APBD PERUBAHAN', '', 'APBD PERUBAHAN'];
+        // $caption_status = [2 => 'Melanjutkan data APBD AWAL pada APBD PERUBAHAN', '', 'APBD PERUBAHAN'];
         $order          = ['nama_sub_kegiatan' => 'ASC'];
         $list           = $this->datatables_model->get_datatables('v_sub_kegiatan_apbd', $column_order, $column_search, $order, $where);
         $data           = [];
@@ -1497,11 +1497,20 @@ public function sub_kegiatan_apbd_instansi()
 
             // Tentukan caption tahapan dan onclick target
             if ($tahap_aktif == 4) {
-                $caption_tahapan = $caption_status[$lists->kode_tahap];
-                $onclick3 = "get_target('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->id_tambahan_anggaran."')";
+
+                 if ($lists->pergeseran_ke == null || $lists->pergeseran_ke == '') {
+                    $caption_tahapan = "Melanjutkan data APBD AWAL pada APBD PERUBAHAN";
+                    $onclick3 = "get_target('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->id_tambahan_anggaran."')";
+                } else {
+                    $caption_tahapan = "Melanjutkan data <u>APBD AWAL Pergeseran ke-".$lists->pergeseran_ke."</u> pada APBD PERUBAHAN";
+                    $onclick3 = "get_target_pergeseran('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->pergeseran_ke."','".$lists->id_tambahan_anggaran."')"; 
+                }
+
+
+
             } else {
                 if ($lists->pergeseran_ke == null || $lists->pergeseran_ke == '') {
-                    $caption_tahapan = "APBD AWAL".$lists->pergeseran_ke;
+                    $caption_tahapan = "APBD AWAL";
                     $onclick3 = "get_target('".$lists->kode_rekening_sub_kegiatan."','".$lists->kode_rekening_kegiatan."', '".$lists->kode_rekening_program."','".$lists->kode_tahap."','".tahun_anggaran()."','".$lists->kode_bidang_urusan."','".$lists->pagu."','".$lists->id_tambahan_anggaran."')";
                 } else {
                     $caption_tahapan = "APBD AWAL<br>Pergeseran ke-".$lists->pergeseran_ke;
@@ -2646,7 +2655,7 @@ public function sub_kegiatan_apbd_instansi()
             $output['pagu_tambahan']              = $subkeg->pagu_tambahan;
             $output['pagu_total']              = $subkeg->pagu + $subkeg->pagu_tambahan;
             $output['kode_sub_kegiatan']     = $kode_rekening_sub_kegiatan;
-            $output['nama_tahapan']  = "APBD PERGESERAN <br>Pergeseran Ke ".$pergeseran_ke;
+            $output['nama_tahapan']  = "APBD AWAL <br>Pergeseran Ke ".$pergeseran_ke;
             if ($target->num_rows() > 0) {
                 foreach ($target->result() as $key => $value) {
                     $output['data'][$key]['id']         = sbe_crypt($value->id_target_apbd, 'E');

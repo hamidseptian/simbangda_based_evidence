@@ -1983,15 +1983,21 @@ class Laporan extends MY_Controller {
 			    		total_anggaran_sub_kegiatan(ski.kode_sub_kegiatan,2, ski.id_instansi, ski.kode_kegiatan, ski.kode_program, ski.tahun) as pagu,
 			    		total_anggaran_sub_kegiatan_tambahan(ski.kode_sub_kegiatan,2, ski.id_instansi, ski.kode_kegiatan, ski.kode_program, ski.tahun, ski.id_tambahan_anggaran) as pagu_tambahan,
 			    		ski.kode_tahap, ski.pergeseran_ke, ski.id_instansi, ski.tahun
-			    	 from sub_kegiatan_instansi ski where ski.id_instansi='$id_instansi' and ski.tahun='$tahun' and ski.kode_tahap = '2'")->result_array();
+			    	 from sub_kegiatan_instansi ski where ski.id_instansi='$id_instansi' and ski.tahun='$tahun' and ski.kode_tahap = '2' 
+			    	 order by ski.kode_sub_kegiatan asc
+			    	 ")->result_array();
 				}elseif ($tahap==3) {
 			    	$sub_kegiatan = $this->db->query("SELECT kode_rekening_program, kategori, jenis_sub_kegiatan, keterangan, kode_rekening_kegiatan, kode_rekening_sub_kegiatan, pagu, nama_sub_kegiatan,
 			    	kode_tahap, pergeseran_ke, id_instansi, tahun, id_tambahan_anggaran, pagu_tambahan 
-			    		from v_sub_kegiatan_apbd where id_instansi='$id_instansi' and tahun='$tahun' and kode_tahap = '2'")->result_array();
+			    		from v_sub_kegiatan_apbd where id_instansi='$id_instansi' and tahun='$tahun' and kode_tahap = '2'
+
+			    	 order by kode_rekening_sub_kegiatan asc
+			    	 ")->result_array();
 				}else{
 			    	$sub_kegiatan = $this->db->query("SELECT kode_rekening_program, kategori, jenis_sub_kegiatan, keterangan, kode_rekening_kegiatan, kode_rekening_sub_kegiatan, pagu, nama_sub_kegiatan,
 			    	kode_tahap, pergeseran_ke, id_instansi, tahun, id_tambahan_anggaran, pagu_tambahan 
-			    		from v_sub_kegiatan_apbd where id_instansi='$id_instansi' and tahun='$tahun' and status = '1'")->result_array();
+			    		from v_sub_kegiatan_apbd where id_instansi='$id_instansi' and tahun='$tahun' and status = '1'
+			    	 order by kode_rekening_sub_kegiatan asc")->result_array();
 
 				}
 				$total_pagu_opd = 0;

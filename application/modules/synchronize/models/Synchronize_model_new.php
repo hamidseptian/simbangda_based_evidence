@@ -44,12 +44,12 @@ class Synchronize_model_new extends CI_Model
 
 
 
-	public function get_target_all($id_instansi, $tahun, $tahap)
+	public function get_target_all($id_instansi, $tahun)
 	{
 		
 	    $where = [
 	        'id_instansi'                => $id_instansi,
-	        'kode_tahap'                 => $tahap,
+	        // 'kode_tahap'                 => $tahap,
 	        'tahun'                      => $tahun,
 	        // 'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan,
 	    ];
@@ -57,6 +57,8 @@ class Synchronize_model_new extends CI_Model
 
 			$this->db->select('
 				bulan, 
+				kode_tahap, 
+				pergeseran_ke, 
 				kode_rekening_sub_kegiatan,
 				target_fisik,
 				target_keuangan,
@@ -78,7 +80,7 @@ class Synchronize_model_new extends CI_Model
 	    ];
 	
 
-			$this->db->select(' kode_sub_kegiatan,
+			$this->db->select('kode_sub_kegiatan,
 								kode_tahap,
 								status,
 								pergeseran_ke,
@@ -131,24 +133,48 @@ class Synchronize_model_new extends CI_Model
 
 
 
-	public function get_rf_all($id_instansi, $tahun)
+	public function get_rf_all($id_instansi, $tahun, $tahap)
 	{
-		
-	    $where = [
-	        'id_instansi'                => $id_instansi,
-	        // 'kode_tahap'                 => $tahap,
-	        'tahun'                      => $tahun,
-	        // 'kode_rekening_sub_kegiatan' => $kode_rekening_sub_kegiatan,
-	    ];
+		if ($tahap==2) {
+		    $where = [
+		        'rf.id_instansi'                => $id_instansi,
+		        'pp.kode_tahap'                 => $tahap,
+		        'rf.tahun'                      => $tahun,
+		    ];
+			# code...
+		}else{
+		    $where = [
+		        'rf.id_instansi'                => $id_instansi,
+		        'pp.status'                 => 1,
+		        'rf.tahun'                      => $tahun,
+		    ];
+
+		}
 	
 
-			$q = $this->db->select(' kode_rekening_sub_kegiatan,
-				id_paket_pekerjaan,
-				dokumen,
-								bulan,
-								nilai');
+			// $q = $this->db->select(' kode_rekening_sub_kegiatan,
+			// 	id_paket_pekerjaan,
+			// 	dokumen,
+			// 					bulan,
+			// 					nilai');
 			$this->db->order_by('kode_rekening_sub_kegiatan ASC, bulan ASC');
-		return $this->db->get_where('realisasi_fisik', $where);
+
+			$this->db->select('rf.kode_rekening_sub_kegiatan,
+			rf.id_paket_pekerjaan,
+			rf.dokumen,
+			rf.bulan,
+			rf.nilai,
+			');   // sesuaikan kolom dari tabel paket pekerjaan
+			$this->db->from('realisasi_fisik rf');
+			$this->db->join('paket_pekerjaan pp', 'pp.id_paket_pekerjaan = rf.id_paket_pekerjaan', 'left');
+			$this->db->where($where);
+			$this->db->order_by('rf.kode_rekening_sub_kegiatan ASC, CAST(rf.bulan AS UNSIGNED) ASC', '', false);
+			return $this->db->get();
+
+
+
+
+		// return $this->db->get_where('realisasi_fisik', $where);
 	}
 
 

@@ -2155,7 +2155,7 @@ class Realisasi extends MY_Controller
                     kode_rekening_program ='$kode_program' and 
                     kode_rekening_kegiatan ='$kode_kegiatan' and 
                     kode_rekening_sub_kegiatan ='$kode_rekening_sub_kegiatan' and 
-                    kode_tahap ='$tahap' and 
+                    kode_tahap ='$tahap' and
                     tahun ='$tahun' and 
                     id_instansi ='$id_instansi' and 
                     bulan<='$bulan_aktif' ");
